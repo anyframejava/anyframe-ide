@@ -28,7 +28,7 @@
 <plugin name="core" description="Core Plugin is the basic plugin 중략...">
   <groupId>org.anyframe.plugin</groupId>
   <artifactId>anyframe-core-pi</artifactId>
-  <version>1.0.1</version>
+  <version>x.x.x</version>
   <dependent-plugins>
     <dependent-plugin name="datasource" version="1.0.0-SNAPSHOT&lt;=*"/>
     <dependent-plugin name="logging" version="1.0.0-SNAPSHOT&lt;=*"/>

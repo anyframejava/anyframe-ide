@@ -229,24 +229,17 @@ public class BoardController {
 					<li><b>UI JSP 파일</b> (src/main/webapp/WEB-INF/jsp/generation/[Entity명]/*.jsp)
 						<table cellspacing="0" cellpadding="0" width="80%" border="1">
 							<tr>
-								<td><pre>&lt;%@ page language="java" errorPage="/sample/common/error.jsp" 
-                pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %&gt;
-&lt;%@ include file="/sample/common/taglibs.jsp"%&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;%@ include file="/sample/common/meta.jsp" %&gt;
-    &lt;title&gt;&lt;fmt:message key="boardList.title"/&gt;&lt;/title&gt;
-    &lt;meta name="heading" content="&lt;fmt:message key='boardList.heading'/&gt;"/&gt;      
-    &lt;link rel="stylesheet" href="&lt;c:url value='/sample/css/admin.css'/&gt;" 
-        type="text/css"&gt;
-	
-    &lt;script type="text/javascript" 
-        src="&lt;c:url value='/sample/javascript/CommonScript.js'/&gt;"&gt;&lt;/script&gt;    
-    &lt;script language="JavaScript"&gt;
-        function fncCreateBoardView() {
-            document.location.href="&lt;c:url value='/board.do?method=createView'/&gt;";
-        }	
-            중략... </pre></td></tr>
+								<td><pre>&lt;%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %&gt;
+&lt;%@ include file="/sample/common/top.jsp"%&gt;
+		&lt;div class="location"&gt;&lt;a href="&lt;c:url value='/anyframe.jsp'/&gt;"&gt;Home&lt;/a&gt; &gt; &lt;a href="&lt;c:url value='/boardF.do?method=list'/&gt;"&gt;Board&lt;/a&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;hr /&gt;
+&lt;script type="text/javascript" src="&lt;c:url value='/sample/javascript/CommonScript.js'/&gt;"&gt;&lt;/script&gt;    
+&lt;script type="text/javascript"&gt;
+	function fncCreateBoardView() {
+		document.location.href="&lt;c:url value='/board.do?method=createView'/&gt;";
+	}	
+    중략... </pre></td></tr>
 						</table>
 					</li>
 					<li><b>단위 test case</b> (src/test/java/[대표패키지]/[-package 값]/web/[Entity 클래스명]ControllerTest.java)

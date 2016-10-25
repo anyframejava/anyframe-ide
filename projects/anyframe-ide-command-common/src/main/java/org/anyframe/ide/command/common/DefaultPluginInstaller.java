@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.Exclude;
 import org.anyframe.ide.command.common.plugin.Include;
@@ -355,8 +354,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			if (springPlugin != null)
 				springPluginJar = pluginInfoManager
 						.getPluginFile(request, springPlugin.getGroupId(),
-								springPlugin.getArtifactId(), springPlugin
-										.getVersion());
+								springPlugin.getArtifactId(),
+								springPlugin.getVersion());
 		} else {
 			// 2. uninstall
 			if (visitedPlugins.get(CommonConstants.SPRING_PLUGIN) != null) {
@@ -364,8 +363,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 						.get(CommonConstants.SPRING_PLUGIN).getPluginInfo();
 				springPluginJar = pluginInfoManager
 						.getPluginFile(request, springPlugin.getGroupId(),
-								springPlugin.getArtifactId(), springPlugin
-										.getVersion());
+								springPlugin.getArtifactId(),
+								springPlugin.getVersion());
 			}
 		}
 
@@ -436,14 +435,14 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			}
 
 			if (pluginInfoFromJar != null) {
-				if (targetPluginInfo.getPluginInfo().getName().equals(
-						pluginInfoFromJar.getName())) {
+				if (targetPluginInfo.getPluginInfo().getName()
+						.equals(pluginInfoFromJar.getName())) {
 					targetPluginJar = pluginJar;
 				}
 			}
-			installPlugin(request, context, pio, baseDir, targetPluginInfo
-					.getPluginInfo(), targetPluginJar, encoding, pomHandling,
-					pomProperties);
+			installPlugin(request, context, pio, baseDir,
+					targetPluginInfo.getPluginInfo(), targetPluginJar,
+					encoding, pomHandling, pomProperties);
 		}
 	}
 
@@ -672,11 +671,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			String targetPluginVersion, PluginInfo dependentPluginInfo)
 			throws Exception {
 		String versionRange = getDependentPluginVersionRange(request,
-				targetPluginName, targetPluginVersion, dependentPluginInfo
-						.getName());
+				targetPluginName, targetPluginVersion,
+				dependentPluginInfo.getName());
 
-		if (VersionComparator.isMatched(versionRange, dependentPluginInfo
-				.getVersion())) {
+		if (VersionComparator.isMatched(versionRange,
+				dependentPluginInfo.getVersion())) {
 			return true;
 		}
 
@@ -716,9 +715,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 		// 1. download archetype jar from maven repository
 		if (pluginJar == null) {
-			pluginJar = pluginInfoManager.getPluginFile(request, pluginInfo
-					.getGroupId(), pluginInfo.getArtifactId(), pluginInfo
-					.getVersion());
+			pluginJar = pluginInfoManager.getPluginFile(request,
+					pluginInfo.getGroupId(), pluginInfo.getArtifactId(),
+					pluginInfo.getVersion());
 		}
 
 		// 2. get zipfile from plugin jar file
@@ -778,10 +777,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 					for (File templateType : templateTypes) {
 						if (FileUtil.isExistsTemplates(templateType)) {
 							getLogger()
-									.debug(
-											"Templates directory ["
-													+ templateHome
-													+ "] already exists. So, Templates installation is skipped.");
+									.debug("Templates directory ["
+											+ templateHome
+											+ "] already exists. So, Templates installation is skipped.");
 							return;
 						}
 					}
@@ -827,10 +825,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 			if (inspectionHomeDir.exists()) {
 				getLogger()
-						.debug(
-								"Inspection resource directory ["
-										+ inspectionHome
-										+ "] already exists. So, Inspection resource installation is skipped.");
+						.debug("Inspection resource directory ["
+								+ inspectionHome
+								+ "] already exists. So, Inspection resource installation is skipped.");
 				return;
 			}
 
@@ -967,8 +964,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			processTransactionFile(targetDir, pluginInfo.getName());
 
 			// 6. add a hyperlink to welcome file
-			processWelcomeFile(targetDir, pluginInfo.getName(), pluginInfo
-					.getVersion(), pluginJar, encoding);
+			processWelcomeFile(targetDir, pluginInfo.getName(),
+					pluginInfo.getVersion(), pluginJar, encoding);
 
 			// 7. add a tiles definition
 			processTiles(targetDir, pluginInfo.getName(), pluginJar, encoding);
@@ -984,8 +981,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 		// 10. add installation information to plugin-installed.xml file,
 		// plugin-build.xml file
-		updateInstallationInfo(request, targetDir, pluginInfo, pluginInfo
-				.getName(), excludeSrc);
+		updateInstallationInfo(request, targetDir, pluginInfo,
+				pluginInfo.getName(), excludeSrc);
 	}
 
 	/**
@@ -1027,9 +1024,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			}
 		} else {
 			getLogger()
-					.warn(
-							"Merging current pom file with that of plugin is skipped. The reason is a pom.xml in "
-									+ pluginZip.getName() + " doesn't exist.");
+					.warn("Merging current pom file with that of plugin is skipped. The reason is a pom.xml in "
+							+ pluginZip.getName() + " doesn't exist.");
 		}
 	}
 
@@ -1077,16 +1073,17 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 			// 2.2 get installed plugin libraries
 			Map<String, File> installedPluginJars = pluginInfoManager
-					.getInstalledPluginJars(request, targetDir
-							.getAbsolutePath());
+					.getInstalledPluginJars(request,
+							targetDir.getAbsolutePath());
 			Iterator<String> keyItr = installedPluginJars.keySet().iterator();
 			while (keyItr.hasNext()) {
 				String installedPluginName = keyItr.next();
 
 				// 2.3 get installed dependencies
 				List<Dependency> installedDependencies = pluginPomManager
-						.getDependencies(installedPluginJars
-								.get(installedPluginName), pomProperties);
+						.getDependencies(
+								installedPluginJars.get(installedPluginName),
+								pomProperties);
 				Map<String, Dependency> convertedInstalledDependencies = pluginPomManager
 						.convertDependencyList(installedDependencies);
 
@@ -1186,10 +1183,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		File classpath = new File(targetDir, ".classpath");
 		if (!classpath.exists()) {
 			getLogger()
-					.warn(
-							"'"
-									+ classpath.getAbsolutePath()
-									+ "' file is not found. Please check a location of your project.");
+					.warn("'"
+							+ classpath.getAbsolutePath()
+							+ "' file is not found. Please check a location of your project.");
 
 			return;
 		}
@@ -1207,8 +1203,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 		for (PluginInfo installedPluginInfo : insatlledPluginsValues) {
 			File pluginJar = pluginInfoManager.getPluginFile(request,
-					installedPluginInfo.getGroupId(), installedPluginInfo
-							.getArtifactId(), installedPluginInfo.getVersion());
+					installedPluginInfo.getGroupId(),
+					installedPluginInfo.getArtifactId(),
+					installedPluginInfo.getVersion());
 
 			List<Dependency> dependencies = pluginPomManager.getDependencies(
 					pluginJar, pomProperties);
@@ -1259,8 +1256,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			}
 		}
 
-		FileUtil.replaceFileContent(classpath,
-				"<!--Add new classpathentry here-->", "</classpath>",
+		FileUtil.replaceFileContent(
+				classpath,
+				"<!--Add new classpathentry here-->",
+				"</classpath>",
 				"<!--Add new classpathentry here-->\n</classpath>",
 				"<!--Add new classpathentry here-->",
 				"<!--Add new classpathentry here-->\n"
@@ -1312,7 +1311,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			}
 
 			// 2.3 scan resources
-			List<String> templates = FileUtil.findFiles(fileNames,
+			List<String> templates = FileUtil.findFiles(
+					fileNames,
 					CommonConstants.PLUGIN_RESOURCES
 							+ CommonConstants.fileSeparator
 							+ pluginResource.getDir(), includes, excludes);
@@ -1324,10 +1324,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			getLogger().debug("Copying fileset " + pluginResource);
 
 			// 4. merge template and copy files to output directory
-			processTemplate(context, targetDir, pluginZip, pluginResource
-					.getDir(), (String) context.get("package"), pluginResource
-					.isPackaged(), pluginResource.isFiltered(), templates,
-					encoding);
+			processTemplate(context, targetDir, pluginZip,
+					pluginResource.getDir(), (String) context.get("package"),
+					pluginResource.isPackaged(), pluginResource.isFiltered(),
+					templates, encoding);
 			getLogger().debug("Copied " + templates.size() + " files");
 		}
 	}
@@ -1450,18 +1450,17 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 			if (contents != null) {
 				if (pluginName.equals(CommonConstants.CORE_PLUGIN)) {
-					FileUtil
-							.addFileContent(
-									file,
-									"<!--Add new configuration here-->",
-									"<!--"
-											+ pluginName
-											+ "-configuration-START-->\n"
-											+ contents
-											+ "\n<!--"
-											+ pluginName
-											+ "-configuration-END-->\n<!--Add new configuration here-->",
-									true);
+					FileUtil.addFileContent(
+							file,
+							"<!--Add new configuration here-->",
+							"<!--"
+									+ pluginName
+									+ "-configuration-START-->\n"
+									+ contents
+									+ "\n<!--"
+									+ pluginName
+									+ "-configuration-END-->\n<!--Add new configuration here-->",
+							true);
 				} else {
 					FileUtil.addFileContent(file,
 							"<!--Add new configuration here-->",
@@ -1496,26 +1495,23 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		try {
 			if (pluginName.equals(CommonConstants.HIBERNATE_PLUGIN)) {
 				// 1. get a transaction configuration file
-				File file = new File(targetDir.getAbsolutePath() + CommonConstants.SRC_MAIN_RESOURCES
-						+ "spring", CommonConstants.CONFIG_TX_FILE);
-				
-				FileUtil
-						.replaceFileContent(
-								file,
-								"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
-								"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
-				
-				FileUtil
-						.replaceFileContent(
-								file,
-								"<property name=\"dataSource\" ref=\"dataSource\" />",
-								"<property name=\"sessionFactory\" ref=\"sessionFactory\" />");
+				File file = new File(targetDir.getAbsolutePath()
+						+ CommonConstants.SRC_MAIN_RESOURCES + "spring",
+						CommonConstants.CONFIG_TX_FILE);
+
+				FileUtil.replaceFileContent(
+						file,
+						"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
+						"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
+
+				FileUtil.replaceFileContent(file,
+						"<property name=\"dataSource\" ref=\"dataSource\" />",
+						"<property name=\"sessionFactory\" ref=\"sessionFactory\" />");
 			}
 		} catch (Exception e) {
 			getLogger()
-					.warn(
-							"Processing a context-transaction.xml of current project is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
+					.warn("Processing a context-transaction.xml of current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
 
@@ -1569,9 +1565,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				FileUtil.addFileContent(file, "<!--Add new " + separator
 						+ " here-->", "<!--Add new " + separator
 						+ " here-->\n<!--" + pluginName + "-" + separator
-						+ "-START-->\n" + "<font size=\"2\">- " + menuName
-						+ " " + pluginVersion + "</font><br/>" + "\n<!--"
-						+ pluginName + "-" + separator + "-END-->", false);
+						+ "-START-->\n" + "<li>" + menuName + " "
+						+ pluginVersion + "</li>" + "\n<!--" + pluginName + "-"
+						+ separator + "-END-->", false);
 			}
 		} catch (Exception e) {
 			getLogger().warn(
@@ -1652,8 +1648,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			for (int i = 0; i < dbResources.size(); i++) {
 				String dbResourceTemplate = (String) dbResources.get(i);
 
-				File dbResource = new File(targetDir, dbResourceTemplate
-						.substring(path.length()));
+				File dbResource = new File(targetDir,
+						dbResourceTemplate.substring(path.length()));
 				replaceDBResource(pluginName, pluginJar, dbResource,
 						dbResourceTemplate);
 			}
@@ -1922,8 +1918,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 					skipUndefinedPropertyIndex);
 
 			if (start != -1) {
-				end = interpolatedResult.indexOf(DELIMITER, start
-						+ DELIMITER.length());
+				end = interpolatedResult.indexOf(DELIMITER,
+						start + DELIMITER.length());
 
 				if (end != -1) {
 					propertyToken = interpolatedResult.substring(start
@@ -2047,8 +2043,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			Model model = pluginPomManager.readPom(pluginZip);
 
 			URLClassLoader interceptorLoader = pluginArtifactManager
-					.makeArtifactClassLoader(request, model.getGroupId(), model
-							.getArtifactId(), model.getVersion(), originalUrls);
+					.makeArtifactClassLoader(request, model.getGroupId(),
+							model.getArtifactId(), model.getVersion(),
+							originalUrls);
 
 			interceptor = ObjectUtil.loadClass(interceptorLoader, pluginJar,
 					pluginInfo.getInterceptor().getClassName().trim());
@@ -2172,9 +2169,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				"WARNING");
 		velocity.setProperty("velocimacro.library", "");
 		velocity.setProperty("resource.loader", "classpath");
-		velocity
-				.setProperty("classpath.resource.loader.class",
-						"org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader");
+		velocity.setProperty("classpath.resource.loader.class",
+				"org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader");
 		velocity.setProperty("runtime.log.logsystem.class",
 				"org.apache.velocity.runtime.log.NullLogSystem");
 		velocity.init();

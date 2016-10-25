@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-ant-2.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-aspect-2.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-cli-2.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-common-2.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-maven-plugin-2.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-ant-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-aspect-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-cli-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-common-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-maven-plugin-2.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/wagon-http-lightweight-1.0-beta-2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/wagon-provider-api-1.0-beta-2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aspectjrt-1.6.8.jar"/>

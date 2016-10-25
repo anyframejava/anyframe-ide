@@ -20,7 +20,7 @@
 			For version, the default is 1.0-SNAPSHOT, and for package, the default is the same as groupId. 
 		<programlisting language="xml"><![CDATA[Define value for property 'groupId': : org.anyframe.plugin 
 Define value for property 'artifactId': : anyframe-query-pi
-Define value for property 'version': 1.0-SNAPSHOT: 1.0.0
+Define value for property 'version': 1.0-SNAPSHOT: x.x.x
 Define value for property 'package': org.anyframe.plugin:]]></programlisting>					
 		</para>		
 	</section>
@@ -57,7 +57,7 @@ Define value for property 'package': org.anyframe.plugin:]]></programlisting>
 <dependency>
     <groupId>org.anyframe</groupId>
     <artifactId>anyframe-query</artifactId>
-    <version>1.0.0</version> 
+    <version>x.x.x</version> 
 </dependency>   
 <dependency>
 	<groupId>org.apache.velocity</groupId>
@@ -581,7 +581,7 @@ mvn clean test]]></programlisting>
       		<programlisting language="xml"><![CDATA[<plugin name="query" description="Query Plugin consists of sample code that provides...">
 	<groupId>org.anyframe.plugin</groupId>
 	<artifactId>anyframe-query-pi</artifactId>
-	<version>1.0.0</version>
+	<version>x.x.x</version>
 	<dependent-plugins>
 		<dependent-plugin name="core" version="2.0.0&gt;*" />
 	</dependent-plugins>
@@ -634,7 +634,7 @@ mvn clean test]]></programlisting>
 			<dependency>
 				<groupId>org.anyframe</groupId>
 				<artifactId>anyframe-ide-command-common</artifactId>
-				<version>2.0.0</version>
+				<version>x.x.x</version>
 				<scope>interceptor</scope>
 			</dependency>
 			<dependency>
@@ -683,7 +683,7 @@ mvn clean test]]></programlisting>
     <groupId>org.anyframe.plugin</groupId>
     <artifactId>anyframe-query-pi</artifactId>
     <versions>
-      <version>1.0.0</version>
+      <version>x.x.x</version>
                 :
     </versions>
   </plugin>

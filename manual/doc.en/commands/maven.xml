@@ -27,7 +27,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                     <artifactId>anyframe-maven-plugin</artifactId>
-                    <version>2.0.0</version>
+                    <version>x.x.x</version>
                     <dependencies>
                         <dependency>
                             <groupId>hsqldb</groupId>
@@ -215,8 +215,8 @@
 1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.plugin.foundation (foundation plugin (latest release is 4.2.0))
 2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 4.6.1))
 3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 1.0.1))
-4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 5.0.0))
-5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 2.0.0.))
+4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable x.x.x))
+5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable x.x.x))
 Choose a number: : 4]]></programlisting>
 				<para>			
 				The archetype named anyframe-basic-archetype defined in the archetype-catalog.xml file is shown in the Command window as can be seen above.
@@ -732,9 +732,9 @@ Y: y]]></programlisting>
 			<programlisting language="java"><![CDATA[ Name		: core
  GroupId		: org.anyframe.plugin
  ArtifactId		: anyframe-core-pi
- Latest Version	: 1.0.1
+ Latest Version	: x.x.x
  Samples		: Included
- Releases		: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1
+ Releases		: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1, ...
  Dependencies	: datasource(1.0.0-SNAPSHOT<=*),logging(1.0.0-SNAPSHOT<=*),spring(1.0.0-SNAPSHOT<=*)
  Description	: Core Plugin is the basic plugin which is the basis of all
                    plugins provided by Anyframe, and consists of sample code
@@ -1232,23 +1232,16 @@ public class BoardController {
 					</listitem>
 					<listitem>
 						<para>JSP (src/main/webapp/WEB-INF/jsp/generation/{Entity class name (lower case)}/*.jsp)</para>
-						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp"
-                 pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>                 
-<%@ include file="/sample/common/taglibs.jsp"%>
-<html>
-<head>
-    <%@ include file="/sample/common/meta.jsp" %>
-    <title><spring:message code="boardList.title"/></title>
-    <meta name="heading" content="<spring:message code='boardList.heading'/>"/>    
-    <link rel="stylesheet" href="<c:url value='/sample/css/admin.css'/>" 
-        type="text/css">
-	
-    <script type="text/javascript" 
-        src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
-    <script language="JavaScript">
-        function fncCreateBoardView() {
-            document.location.href="<c:url value='/board.do?method=createView'/>";
-        }
+						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/boardF.do?method=list'/>">Board</a></div>
+    </div>
+    <hr />
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+<script type="text/javascript">
+	function fncCreateBoardView() {
+		document.location.href="<c:url value='/board.do?method=createView'/>";
+	}	
 ...]]></programlisting>
 					</listitem>
 					<listitem>

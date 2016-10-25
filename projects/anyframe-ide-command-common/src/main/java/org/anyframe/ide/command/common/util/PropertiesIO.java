@@ -191,8 +191,7 @@ public class PropertiesIO {
 						trimmedLine = trimmedLine.replace("\\", "/");
 
 						if (idx != -1) {
-							String key = trimmedLine.substring(0, idx);
-
+							String key = trimmedLine.substring(0, idx).trim();
 							if (keys.contains(key)) {
 								oldKeyList.add(key);
 							}

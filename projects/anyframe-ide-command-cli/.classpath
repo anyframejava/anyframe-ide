@@ -6,7 +6,7 @@
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant/1.8.1/ant-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-launcher/1.8.1/ant-launcher-1.8.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.2/anyframe-ide-command-aspect-2.0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.1.0/anyframe-ide-command-aspect-2.1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.6.8/aspectjrt-1.6.8.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.5/commons-lang-2.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/emma/emma/2.1.5320/emma-2.1.5320.jar"/>

@@ -9,7 +9,7 @@
     </description>
 
 	<property name="book.name" value="anyframe" />
-	<property name="version" value="2.0.2"/>	
+	<property name="version" value="5.1.0"/>	
 	<!--
 	  - set dbf installer folder and sample project folder
 	 -->

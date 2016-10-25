@@ -177,7 +177,7 @@
 												To generate a project adopting Maven build type, Maven should be installed in Local, 
 												and MAVEN_HOME, the system parameter for the installed Maven, should be set.  
 												Also, the Remote Repository information that Maven project should use should be defined in settings.xml.
-												For detailed guides on this, refer to [<ulink url="http://www.anyframejava.org/project/anyframe/quickstart">Maven installation and configuration</ulink>] of Quick Start of Anyframe portal. 
+												For detailed guides on this, refer to [<ulink url="http://en.anyframejava.org/project/anyframe/quickstart">Maven installation and configuration</ulink>] of Quick Start of Anyframe portal. 
 											</entry>
 										</row>
 									</tbody>

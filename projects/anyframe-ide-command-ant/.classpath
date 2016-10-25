@@ -10,10 +10,10 @@
   <classpathentry kind="var" path="M2_REPO/ant/ant-launcher/1.8.1/ant-launcher-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-nodeps/1.8.1/ant-nodeps-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/antlr/antlr/2.7.7/antlr-2.7.7.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.2/anyframe-ide-command-aspect-2.0.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.0.2/anyframe-ide-command-cli-2.0.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.0.2/anyframe-ide-command-common-2.0.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.0.2/anyframe-maven-plugin-2.0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.1.0/anyframe-ide-command-aspect-2.1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.1.0/anyframe-ide-command-cli-2.1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.1.0/anyframe-ide-command-common-2.1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.1.0/anyframe-maven-plugin-2.1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/appfuse-maven-plugin/2.1.0-M1/appfuse-maven-plugin-2.1.0-M1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/archetype/archetype-common/2.0-alpha-4/archetype-common-2.0-alpha-4.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm/3.3/asm-3.3.jar"/>

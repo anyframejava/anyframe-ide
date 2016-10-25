@@ -543,9 +543,9 @@
 			<programlisting language="java"><![CDATA[[info]  Name		: core
 [info]  GroupId	: org.anyframe.plugin
 [info]  ArtifactId	: anyframe-core-pi
-[info]  Latest Version	: 1.0.1
+[info]  Latest Version	: x.x.x
 [info]  Samples	: Included
-[info]  Releases	: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1
+[info]  Releases	: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1, ...
 [info]  Dependencies	: datasource(1.0.0-SNAPSHOT<=*),logging(1.0.0-SNAPSHOT<=*),spring(1.0.0-SNAPSHOT<=*)
 [info]  Description	: Core Plugin is the basic plugin which is the basis of all
 [info]		plugins provided by Anyframe, and consists of sample code
@@ -1031,23 +1031,16 @@ public class BoardController {
 					</listitem>
 					<listitem>
 						<para>JSP (src/main/webapp/WEB-INF/jsp/generation/{Entity class name}/*.jsp)</para>
-						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp"
-                 pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>                 
-<%@ include file="/sample/common/taglibs.jsp"%>
-<html>
-<head>
-    <%@ include file="/sample/common/meta.jsp" %>
-    <title><fmt:message key="boardList.title"/></title>
-    <meta name="heading" content="<spring:message code='boardList.heading'/>"/>    
-    <link rel="stylesheet" href="<c:url value='/sample/css/admin.css'/>" 
-        type="text/css">
-	
-    <script type="text/javascript" 
-        src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
-    <script language="JavaScript">
-        function fncCreateBoardView() {
-            document.location.href="<c:url value='/board.do?method=createView'/>";
-        }
+						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/boardF.do?method=list'/>">Board</a></div>
+    </div>
+    <hr />
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+<script type="text/javascript">
+	function fncCreateBoardView() {
+		document.location.href="<c:url value='/board.do?method=createView'/>";
+	}	
 ...]]></programlisting>
 					</listitem>
 					<listitem>

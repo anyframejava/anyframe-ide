@@ -117,7 +117,7 @@
 						(단, command 창에서 등록한 환경변수는 해당 창에서만 유효하고, 새로운 command 창을 열었을 경우에는 다시 등록해주어야 한다.)
 						<programlisting language="java"><![CDATA[ANYFRAME_HOME/bin>env
 ERROR: Environment variable ANYFRAME_HOME not set.
-ANYFRAME_HOME/bin>set ANYFRAME_HOME=C:/ats-5.0.0/anyframe-5.0.0
+ANYFRAME_HOME/bin>set ANYFRAME_HOME=C:/ats-x.x.x/anyframe-x.x.x
 
 ANYFRAME_HOME/bin>env]]></programlisting>
 					</para>
@@ -206,7 +206,7 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 [install]  <action>  <name>	<version>
 [install]  Install   datasource	1.0.0
 [install]  Install   spring	1.0.0
-[install]  Install   core		1.0.0
+[install]  Install   core		1.0.3
 [install]  Install   logging	1.0.0
 [install] ------------------------------------------------------------------------------
 [install] Is this OK? (y, n):]]></programlisting>
@@ -219,7 +219,7 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 		</para>
 		<programlisting language="java"><![CDATA[anyframe installed]]></programlisting>
 		<programlisting language="java"><![CDATA[[installed]  <name>		<current>	<latest>
-[installed]  core		1.0.0            1.0.0
+[installed]  core		1.0.3            1.0.3
 [installed]  datasource	1.0.0            1.0.0
 [installed]  spring		1.0.0            1.0.0
 [installed]  logging		1.0.0            1.0.0]]></programlisting>

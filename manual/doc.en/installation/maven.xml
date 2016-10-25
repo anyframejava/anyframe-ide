@@ -141,8 +141,8 @@
 1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.plugin.foundation (foundation plugin (latest release is 4.2.0))
 2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 4.6.1))
 3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 1.0.1))
-4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 5.0.0))
-5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 2.0.0.))
+4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable x.x.x))
+5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable x.x.x))
 Choose a number: : 4
 Choose version:
 1: 5.0.0.RC1
@@ -321,7 +321,7 @@ Is this OK? (y, n):]]></programlisting>
 									<entry align="center">settings.xml</entry>
 									<entry align="center">
 										<ulink
-											url="http://dev.anyframejava.org/docs/anyframe/ide/2.0.0/reference/download/installation/settings.xml">Download</ulink>
+											url="http://dev.anyframejava.org/docs.en/anyframe/5.0.1/reference/download/installation/settings.xml">Download</ulink>
 									</entry>
 								</row>
 							</tbody>

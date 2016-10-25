@@ -27,7 +27,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                     <artifactId>anyframe-maven-plugin</artifactId>
-                    <version>2.0.0</version>
+                    <version>x.x.x</version>
                     <dependencies>
                         <dependency>
                             <groupId>hsqldb</groupId>
@@ -211,15 +211,13 @@
 					파일 내에 정의된 Maven Archetype 목록이 제시될 것이다. 
 				</para>
 				<programlisting language="java"><![CDATA[Choose archetype:
-1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.plugin.foundation (foundation plugin (latest release is 4.2.0))
-2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 4.6.1))
-3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 1.0.1))
-4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 5.0.0))
-5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 2.0.0.))
-Choose a number: : 4]]></programlisting>
+1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-basic-archetype (anyframe basic archetype (latest stable 5.1.0))
+2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-service-archetype (anyframe service archetype (latest stable 2.1.0))
+3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.archetype:anyframe-basic-archetype (-)
+Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): : 1]]></programlisting>
 				<para>			
 					위와 같이 archetype-catalog.xml 파일 내에 정의된 anyframe-basic-archetype 이라는 이름의 archetype이 Command
-					창에 제시됨을 알 수 있다. 제시된 Maven Archetype 목록 중 최신 anyframe-basic-archetype에 해당하는 번호('4')를 선택한다. 				
+					창에 제시됨을 알 수 있다. 제시된 Maven Archetype 목록 중 최신 anyframe-basic-archetype에 해당하는 번호('1')를 선택한다. 				
 				</para>
 			</listitem>
 			<listitem>
@@ -228,11 +226,7 @@ Choose a number: : 4]]></programlisting>
 					아래와 같이 버전을 선택할 수 있도록 버전 목록이 제시될 것이다.
 					설치할 anyframe-basic-archetype의 버전에 해당하는 번호를 선택하면 된다.
 					(등록된 anyframe-basic-archetype의 버전이 1개일 경우 버전 목록이 제시되지 않고 바로 다음 단계로 이동한다.)
-				</para>
-				<programlisting language="java"><![CDATA[Choose version:
-1: 5.0.0.RC1
-2: 5.0.0
-Choose a number: 2: 2]]></programlisting>				
+				</para>			
 			</listitem>
 			<listitem>
 				<para>				
@@ -731,9 +725,9 @@ Y: y]]></programlisting>
 			<programlisting language="java"><![CDATA[ Name		: core
  GroupId		: org.anyframe.plugin
  ArtifactId		: anyframe-core-pi
- Latest Version	: 1.0.0
+ Latest Version	: x.x.x
  Samples		: Included
- Releases		: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1
+ Releases		: 1.0.0-SNAPSHOT,1.0.0.RC1,1.0.0,1.0.1-SNAPSHOT, 1.0.1, ...
  Dependencies	: datasource(1.0.0-SNAPSHOT<=*),logging(1.0.0-SNAPSHOT<=*),spring(1.0.0-SNAPSHOT<=*)
  Description	: Core Plugin is the basic plugin which is the basis of all
                    plugins provided by Anyframe, and consists of sample code
@@ -1228,23 +1222,16 @@ public class BoardController {
 					</listitem>
 					<listitem>
 						<para>JSP (src/main/webapp/WEB-INF/jsp/generation/{Entity 클래스명(소문자)}/*.jsp)</para>
-						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp"
-                 pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>                 
-<%@ include file="/sample/common/taglibs.jsp"%>
-<html>
-<head>
-    <%@ include file="/sample/common/meta.jsp" %>
-    <title><spring:message code="boardList.title"/></title>
-    <meta name="heading" content="<spring:message code='boardList.heading'/>"/>    
-    <link rel="stylesheet" href="<c:url value='/sample/css/admin.css'/>" 
-        type="text/css">
-	
-    <script type="text/javascript" 
-        src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
-    <script language="JavaScript">
-        function fncCreateBoardView() {
-            document.location.href="<c:url value='/board.do?method=createView'/>";
-        }
+						<programlisting><![CDATA[<%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/boardF.do?method=list'/>">Board</a></div>
+    </div>
+    <hr />
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+<script type="text/javascript">
+	function fncCreateBoardView() {
+		document.location.href="<c:url value='/board.do?method=createView'/>";
+	}	
 ...]]></programlisting>
 					</listitem>
 					<listitem>

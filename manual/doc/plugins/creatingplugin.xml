@@ -20,7 +20,7 @@
 			version의 경우 디폴트 값이 1.0-SNAPSHOT으로 주어지고, package의 경우 디폴트 값이 groupId와 동일한 값으로 주어진다. 
 		<programlisting language="xml"><![CDATA[Define value for property 'groupId': : org.anyframe.plugin 
 Define value for property 'artifactId': : anyframe-query-pi
-Define value for property 'version': 1.0-SNAPSHOT: 1.0.0
+Define value for property 'version': 1.0-SNAPSHOT: x.x.x
 Define value for property 'package': org.anyframe.plugin:]]></programlisting>					
 		</para>		
 	</section>
@@ -570,7 +570,7 @@ mvn clean test]]></programlisting>
       		<programlisting language="xml"><![CDATA[<plugin name="query" description="Query Plugin consists of sample code that provides...">
 	<groupId>org.anyframe.plugin</groupId>
 	<artifactId>anyframe-query-pi</artifactId>
-	<version>1.0.0</version>
+	<version>x.x.x</version>
 	<dependent-plugins>
 		<dependent-plugin name="core" version="2.0.0&gt;*" />
 	</dependent-plugins>
@@ -667,11 +667,11 @@ mvn clean test]]></programlisting>
 				plugin-catalog-optional.xml 파일에 Plugin 정보가 작성되어 있는 것을 확인해볼 수 있다.
 			</para>
 <programlisting language="xml"><![CDATA[<plugins>
-<plugin name="query" description="Query Plugin consists of sample code that provides ..." latestVersion="1.0.0">
+<plugin name="query" description="Query Plugin consists of sample code that provides ..." latestVersion="x.x.x">
     <groupId>org.anyframe.plugin</groupId>
     <artifactId>anyframe-query-pi</artifactId>
     <versions>
-      <version>1.0.0</version>
+      <version>x.x.x</version>
                 :
     </versions>
   </plugin>

@@ -26,6 +26,9 @@
                         두번째 Update Site의 Name에는 m2eclipse extras Update Site를, Location에는 <emphasis role="bold">http://m2eclipse.sonatype.org/sites/m2e-extras</emphasis>를 입력한다. 
                         이렇게 m2eclipse update site에 대한 url 주소를 추가해 주면, 이후 Anyframe IDE Plugin 설치 시 함께 설치된다. 
 						</para>
+						<para>
+							만약 Anyfrmae Query Manager를 함께 설치할 경우, SQLExplorer Update Site(<emphasis role="bold">http://eclipsesql.sourceforge.net</emphasis>) 역시 추가해 주어야 한다.
+						</para>
 					</listitem>
 					<listitem>
 						<para>[Available Software] 화면: 우측 상단의 Add...버튼을 클릭하여 Anyframe
@@ -36,8 +39,7 @@
 					<listitem>
 						<para>[Available Software] 화면: 중앙에 Anyframe Plugin Update Site 를
 							루트로 하는 Plugin Tree가 나타난다.
-							(Anyframe Common, Anyframe IDE, Anyframe Query Manager 목록
-							조회됨) 여기서 하단 항목 중 "Contact all
+							여기서 하단 항목 중 "Contact all
 							update sites during install to find
 							required software" 체크 박스를 해제하여
 							다른 Plugin이 함께 설치되는 것을 방지한다. 그러나 <emphasis role="bold">사용하는 Eclipse에 m2eclipse를 설치하지 않은 상태라면 체크 박스에 체크를 하여 m2eclipse가 함께 설치되도록 한다.</emphasis></para>
@@ -45,6 +47,9 @@
 					<listitem>
 						<para>[Available Software] 화면: Plugin Tree 중 Anyframe IDE을 선택하고
 							하단의 Next 버튼을 클릭한다.</para>
+						<para>
+							최신 버전인 Anyframe Tools 2.1.0의 Anyframe IDE임을 유의한다.
+						</para>
 					</listitem>
 					<listitem>
 						<para>[Install Details] 화면: Anyframe IDE하위로 Anyframe Common
