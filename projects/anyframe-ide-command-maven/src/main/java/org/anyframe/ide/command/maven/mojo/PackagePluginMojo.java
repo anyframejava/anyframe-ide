@@ -44,10 +44,8 @@ public class PackagePluginMojo extends AbstractPluginMojo {
 
 			pluginPackager.packagePlugin(request, baseDir.getAbsolutePath());
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute PackagePluginMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute PackagePluginMojo.");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 }

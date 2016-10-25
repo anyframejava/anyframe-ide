@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -62,7 +62,7 @@ import org.hibernate.util.StringHelper;
  * 
  * @goal create-model
  * @author Matt Raible
- * @author modified by SooYeon Park
+ * @author extended by SooYeon Park
  */
 public class GenerateModelMojo extends ModelGeneratorMojo {
 	/** @component role="org.codehaus.plexus.components.interactivity.Prompter" */
@@ -154,10 +154,6 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 		componentConfigurations.add(new JPAComponentConfiguration());
 	}
 
-	/**
-	 * main method for executing GenerateModelMojo. This mojo is executed when
-	 * you input 'mvn anyframe:create-model [-options]'
-	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
 		try {
@@ -170,13 +166,9 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 			}
 			generateModel();
 			executeInstaller();
-			
-			System.out.println("Domain classes for the given table names are generated successfully.");
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute GenerateModelMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute GenerateModelMojo.");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 
@@ -285,7 +277,7 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 				while ((line = reader.readLine()) != null)
 					configFile.append(line).append("\n");
 				reader.close();
-				getLog().debug(
+				getLog().info(
 						(new StringBuilder("Writing 'hibernate.reveng.xml' to "))
 								.append(existingConfig.getPath()).toString());
 				FileUtils.writeStringToFile(existingConfig,
@@ -381,11 +373,11 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 				if (this.daoframework.equals("hibernate")) {
 					if (e instanceof FileNotFoundException)
 						getLog().warn(
-								"The process of adding new packages information in context-hibernate.xml is skipped.\n"
+								"[warn] The process of adding new packages information in context-hibernate.xml is skipped.\n"
 										+ "        context-hibernate.xml is not found in /src/main/resources/spring/.");
 					else
 						getLog().warn(
-								"The process of adding new packages information in context-hibernate.xml is skipped.\n"
+								"[warn] The process of adding new packages information in context-hibernate.xml is skipped.\n"
 										+ "        <!--Add new Packages to scan here--> token is not found in /src/main/resources/spring/context-hibernate.xml.");
 				}
 			}
@@ -580,7 +572,7 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 			}
 			reader.close();
 
-			getLog().debug(
+			getLog().info(
 					"Writing 'hibernate.reveng.xml' to "
 							+ existingConfig.getPath());
 			FileUtils.writeStringToFile(existingConfig, configFile.toString());
@@ -604,7 +596,7 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 				tableFilterString = tempString;
 			}
 
-			getLog().debug(
+			getLog().info(
 					"Writing table filter string [" + tableFilterString
 							+ "] to 'hibernate.reveng.xml'");
 

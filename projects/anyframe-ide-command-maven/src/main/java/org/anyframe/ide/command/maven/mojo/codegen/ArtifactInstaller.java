@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -35,8 +35,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * This is an ArtifactInstaller class to copy generated codes to destination
- * folder.
+ * This is an ArtifactInstaller class.
  * 
  * @author Matt Raible
  * @author modified by SooYeon Park
@@ -348,8 +347,7 @@ public class ArtifactInstaller {
 	}
 
 	private void addEntityToSpringHibernateXml() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
 				.equals(CommonConstants.DAO_HIBERNATE)) {
 			String className = this.modelpackage + "." + pojoName;
 
@@ -364,8 +362,7 @@ public class ArtifactInstaller {
 				log.info("Adding '" + pojoName
 						+ "' to spring hibernate xml(context-hibernate.xml)...");
 			} catch (Exception e) {
-				if (project.getProperties()
-						.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+				if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
 						.equals("hibernate")) {
 					// ignore Exception
 					if (e instanceof FileNotFoundException)
@@ -454,8 +451,7 @@ public class ArtifactInstaller {
 	}
 
 	private void installHibernateFiles() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
 				.equals(CommonConstants.DAO_HIBERNATE)) {
 			log.info("Installing Hibernate xml...");
 			// 1. create dynamic-hibernate-pojo.xml
@@ -509,11 +505,9 @@ public class ArtifactInstaller {
 	}
 
 	private void installQueryFiles() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
 				.equals(CommonConstants.DAO_QUERY)) {
-			if (project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
+			if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE)
 					.startsWith("miplatform")) {
 				log.info("Installing MiPlatform Query xml...");
 				// 1. create mapping-query-pojo.xml file
@@ -583,8 +577,7 @@ public class ArtifactInstaller {
 	}
 
 	private void installIBatis2Files() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
 				.equals(CommonConstants.DAO_IBATIS2)) {
 			log.info("Installing iBatis2 xml...");
 			// 1. create pojo.xml file for ibatis2
@@ -643,8 +636,7 @@ public class ArtifactInstaller {
 	private void installSpringControllerBeanDefinitions() {
 
 		try {
-			if (project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
+			if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE)
 					.startsWith("miplatform")) {
 
 				executeLoadWebFileTask(
@@ -677,8 +669,7 @@ public class ArtifactInstaller {
 	private void installSpringViews() {
 
 		try {
-			if (!project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
+			if (!project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE)
 					.startsWith("miplatform")) {
 				copyGeneratedObjects(this.sourceDirectory,
 						this.webDestinationDirectory,

@@ -77,7 +77,6 @@
 				<copy todir="${web.bin.dir}">
 					<fileset dir="${bin.dir}">
 						<include name="**/*.*" />
-						<include name="**/*" />
 					</fileset>
 				</copy>
 			</then>
@@ -146,7 +145,6 @@
 				<war destfile="${basedir}/dist/${web.context.path}.war" webxml="${web.src.dir}/WEB-INF/web.xml">
 					<fileset dir="${web.src.dir}">
 						<include name="**/*.*" />
-						<include name="**/*" />
 					</fileset>
 				</war>
 				<delete failonerror="false">

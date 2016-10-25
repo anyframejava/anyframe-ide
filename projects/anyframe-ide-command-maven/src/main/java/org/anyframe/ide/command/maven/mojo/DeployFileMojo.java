@@ -132,10 +132,8 @@ public class DeployFileMojo extends AbstractPluginMojo {
 				}
 			}
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute DeployFileMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute DeployFileMojo.");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 }

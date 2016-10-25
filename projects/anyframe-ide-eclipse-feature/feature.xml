@@ -2,7 +2,7 @@
 <feature
       id="org.anyframe.ide.eclipse.core"
       label="Anyframe IDE"
-      version="2.0.0.v20110531-Final"
+      version="2.0.0.v20110405"
       provider-name="SAMSUNG SDS"
       plugin="org.anyframe.common.eclipse.core">
 
@@ -255,26 +255,31 @@ each open source software information page.
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.ui.externaltools"/>
       <import plugin="org.maven.ide.eclipse" version="0.10.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ant.core"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.wst.common.modulecore"/>
-      <import plugin="org.eclipse.wst.common.project.facet.core"/>
-      <import plugin="org.eclipse.wst.common.project.facet.ui"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.wst.xml.ui"/>
+      <import plugin="org.eclipse.wst.xml.core"/>
+      <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.eclipse.wst.sse.ui"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="net.sourceforge.sqlexplorer" version="3.5.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.filesystem"/>
+      <import plugin="org.apache.commons.collections"/>
+      <import plugin="org.apache.commons.lang"/>
+      <import feature="org.anyframe.common.eclipse.core" version="4.0.0"/>
    </requires>
 
    <plugin
          id="org.anyframe.ide.eclipse.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20110531-Final"
+         version="2.0.0.v20110405"
          unpack="false"/>
 
    <plugin
-         id="org.anyframe.common.eclipse.core"
+         id="org.anyframe.querymanager.eclipse.core"
          download-size="0"
          install-size="0"
-         version="4.0.1"
+         version="2.1.8"
          unpack="false"/>
 
 </feature>

@@ -56,7 +56,7 @@ public class AnyframeIDEExecutionTestCase extends TestCase{
         
         try {
             appLocation = "./src/test/resources/";
-            pio = new PropertiesIO(appLocation+"/META-INF/project.mf");
+            pio = new PropertiesIO(appLocation+"/.metadata/project.mf");
             anyframeHomeLocation = pio.readValue("anyframe.home");
         } catch (Exception e) {
             ExceptionUtil.showException(MessageUtil
@@ -70,7 +70,7 @@ public class AnyframeIDEExecutionTestCase extends TestCase{
         String[] args =
             {"create-crud", domainClassName, "-project", serviceProjectName,
                 "-package", packageName, "-scope", scope, "-project.home",
-                appLocation, "-anyframeHome", anyframeHomeLocation };
+                appLocation, "-genHome", anyframeHomeLocation };
 
         List<String[]> antConfigList = new ArrayList<String[]>();
         antConfigList.add(args);       

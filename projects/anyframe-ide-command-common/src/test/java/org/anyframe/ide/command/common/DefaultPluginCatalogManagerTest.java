@@ -142,7 +142,7 @@ public class DefaultPluginCatalogManagerTest extends AbstractCommandTest {
 	/**
 	 * [Flow #-6] Positive Case : display all plugins in plugin-catalog-xxx.xml.
 	 */
-//	public void testShowPlugins() throws Exception {
-//		pluginCatalogManager.showPlugins(createRequest(""));
-//	}
+	public void testShowPlugins() throws Exception {
+		pluginCatalogManager.showPlugins(createRequest(""));
+	}
 }

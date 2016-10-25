@@ -56,13 +56,13 @@ public class CLIAntRunnerTest extends TestCase {
 		// 1. execute CLIAntRunner with 'create-project' command
 		String[] args = new String[] { "create-project" };
 		runner.prepare(args);		
-		
+
 		// 2. execute CLIAntRunner with 'install' command
-		args = new String[] { "install", PluginConstants.CORE_PLUGIN };
+		args = new String[] { "install", PluginConstants.FOUNDATION_PLUGIN };
 		runner.prepare(args);
 
-		assertEquals("Fail to check no arguments.", PluginConstants.CORE_PLUGIN, System
-				.getProperty("name")); 
+		assertEquals("Fail to check no arguments.", PluginConstants.FOUNDATION_PLUGIN, System
+				.getProperty("pluginName"));
 	}
 
 	/**

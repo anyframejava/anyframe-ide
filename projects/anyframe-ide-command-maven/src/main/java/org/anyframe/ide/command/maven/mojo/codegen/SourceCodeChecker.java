@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -36,32 +36,12 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * This is a SourceCodeChecker class to check existing model classes and crud
- * codes.
+ * This is an SourceCodeChecker class.
  * 
  * @author SooYeon Park
  * 
  */
 public class SourceCodeChecker {
-
-	/**
-	 * check existing model files
-	 * 
-	 * @param isCLIMode
-	 *            whether current mode is cli mode or not
-	 * @param prompter
-	 *            prompter to interact with user input
-	 * @param pio
-	 *            project information properties
-	 * @param projectHome
-	 *            project root path
-	 * @param packageName
-	 *            target package name to generate model files
-	 * @param table
-	 *            db table names
-	 * @return messages to display
-	 * @throws Exception
-	 */
 	public String checkExistingModel(boolean isCLIMode, Prompter prompter,
 			PropertiesIO pio, String projectHome, String packageName,
 			String table) throws Exception {
@@ -108,32 +88,6 @@ public class SourceCodeChecker {
 		return null;
 	}
 
-	/**
-	 * check existing crud files
-	 * 
-	 * @param isCLIMode
-	 *            whether current mode is cli mode or not
-	 * @param prompter
-	 *            prompter to interact with user input
-	 * @param templateType
-	 *            selected template type
-	 * @param templateHome
-	 *            template root path
-	 * @param projectHome
-	 *            project root path
-	 * @param basePackage
-	 *            base package name
-	 * @param packageName
-	 *            target package name
-	 * @param entityClassName
-	 *            entity class name
-	 * @param scope
-	 *            generation scope(all,service,web)
-	 * @param daoframework
-	 *            dao framework name
-	 * @return messages to display
-	 * @throws Exception
-	 */
 	public String checkExistingCrud(boolean isCLIMode, Prompter prompter,
 			String templateType, String templateHome, String projectHome,
 			String basePackage, String packageName, String entityClassName,

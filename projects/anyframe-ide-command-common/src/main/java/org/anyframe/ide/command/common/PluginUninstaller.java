@@ -50,7 +50,7 @@ public interface PluginUninstaller {
 	void uninstall(ArchetypeGenerationRequest request, String baseDir,
 			String pluginName, String excludes, String encoding,
 			boolean pomHandling) throws Exception;
-
+	
 	/**
 	 * uninstall a plugin
 	 * 
@@ -90,22 +90,31 @@ public interface PluginUninstaller {
 	 * in case of uninstalling using maven, find dependencies to be removed
 	 * 
 	 * @param baseDir
-	 *            the path of current project
+	 *            target folder
 	 * @param installedPluginJars
-	 *            installed plugin jar files
-	 * @param pluginJar
+	 *            installed plugin list
+	 * @param removePluginJar
 	 *            plugin jar file to be removed
-	 * @param backupDir
-	 *            directory for backup
-	 * @param properties
-	 *            properties of pom in current project
+	 * @throws Exception
 	 */
 	void processPom(String baseDir, Map<String, File> installedPluginJars,
-			File pluginJar, File backupDir, Properties properties)
-			throws Exception;
+			File removePluginJar, File backupDir, Properties properties) throws Exception;
 
 	/**
-	 * backup dependent libraries of current plugin
+	 * copy dependent libraries of plugin to target folder
+	 * 
+	 * @param request
+	 *            information includes maven repository, db settings, etc.
+	 * @param projectType
+	 *            generated project's style ('web' or 'service')
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginJar
+	 *            plugin binary file
+	 */
+
+	/**
+	 * remove dependent libraries of current plugin
 	 * 
 	 * @param baseDir
 	 *            the path of current project
@@ -117,34 +126,27 @@ public interface PluginUninstaller {
 	 *            jar files of installed plugins
 	 * @param removePluginJar
 	 *            jar file of plugin to remove
-	 * @param properties
-	 *            properties of pom in current project
-	 * @param backupDir
-	 *            directory for backup
 	 * @throws Exception
 	 */
 	void processDependencyLibs(String baseDir, String projectType,
 			String pluginName, Map<String, File> installedPluginJars,
-			File removePluginJar, Properties properties, File backupDir)
-			throws Exception;
+			File removePluginJar, Properties properties) throws Exception;
 
 	/**
 	 * find dependencies to be removed
 	 * 
 	 * @param installedPluginJars
-	 *            installed plugin jar files
-	 * @param pluginJar
+	 *            installed plugin list
+	 * @param removePluginJar
 	 *            plugin jar file to be removed
-	 * @param properties
-	 *            properties of pom in current project
 	 * @return jar file names to be removed
 	 * @throws Exception
 	 */
 	List<String> findRemoveDependencies(Map<String, File> installedPluginJars,
-			File pluginJar, Properties properties) throws Exception;
+			File removePluginJar, Properties properties) throws Exception;
 
 	/**
-	 * Updates .classpath file
+	 * update .classpath file
 	 * 
 	 * @param installedPluginJars
 	 *            installed plugin jar files

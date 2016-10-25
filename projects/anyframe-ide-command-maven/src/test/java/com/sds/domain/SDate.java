@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -33,80 +33,79 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * This is a SDate class.
- * 
+ * This is an SDate class.
  * @author Sooyeon Park
  */
 @Entity
 @Table(name = "S_DATE", schema = "PUBLIC")
 public class SDate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private SDateId id;
-	private TDate tDate;
-	private Set<Forums> forumses = new HashSet<Forums>(0);
+    private static final long serialVersionUID = 1L;
+    private SDateId id;
+    private TDate tDate;
+    private Set<Forums> forumses = new HashSet<Forums>(0);
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "SId1", column = @Column(name = "S_ID1", nullable = false)),
-			@AttributeOverride(name = "SId2", column = @Column(name = "S_ID2", nullable = false)),
-			@AttributeOverride(name = "TId1", column = @Column(name = "T_ID1", nullable = false)),
-			@AttributeOverride(name = "TId2", column = @Column(name = "T_ID2", nullable = false)) })
-	public SDateId getId() {
-		return this.id;
-	}
+    @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "SId1", column = @Column(name = "S_ID1", nullable = false)),
+        @AttributeOverride(name = "SId2", column = @Column(name = "S_ID2", nullable = false)),
+        @AttributeOverride(name = "TId1", column = @Column(name = "T_ID1", nullable = false)),
+        @AttributeOverride(name = "TId2", column = @Column(name = "T_ID2", nullable = false)) })
+    public SDateId getId() {
+        return this.id;
+    }
 
-	public void setId(SDateId id) {
-		this.id = id;
-	}
+    public void setId(SDateId id) {
+        this.id = id;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "T_ID1", referencedColumnName = "T_ID1", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "T_ID2", referencedColumnName = "T_ID2", nullable = false, insertable = false, updatable = false) })
-	public TDate getTDate() {
-		return this.tDate;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "T_ID1", referencedColumnName = "T_ID1", nullable = false, insertable = false, updatable = false),
+        @JoinColumn(name = "T_ID2", referencedColumnName = "T_ID2", nullable = false, insertable = false, updatable = false) })
+    public TDate getTDate() {
+        return this.tDate;
+    }
 
-	public void setTDate(TDate tDate) {
-		this.tDate = tDate;
-	}
+    public void setTDate(TDate tDate) {
+        this.tDate = tDate;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "SDate")
-	public Set<Forums> getForumses() {
-		return this.forumses;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "SDate")
+    public Set<Forums> getForumses() {
+        return this.forumses;
+    }
 
-	public void setForumses(Set<Forums> forumses) {
-		this.forumses = forumses;
-	}
+    public void setForumses(Set<Forums> forumses) {
+        this.forumses = forumses;
+    }
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public int hashCode() {
-		int result = 0;
+    public int hashCode() {
+        int result = 0;
 
-		return result;
-	}
+        return result;
+    }
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
 
-		sb.append(" [");
-		sb.append("id").append("='").append(getId()).append("', ");
+        sb.append(" [");
+        sb.append("id").append("='").append(getId()).append("', ");
 
-		sb.append("]");
+        sb.append("]");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

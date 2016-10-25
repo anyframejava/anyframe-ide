@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -41,8 +41,7 @@ import org.hibernate.tool.hbm2x.pojo.POJOClass;
 import org.hibernate.util.ReflectHelper;
 
 /**
- * This is an AnyframeDBData class to access pojo data(field and column
- * information) in freemarker template files.
+ * This is an AnyframeDBData class.
  * 
  * @author Sooyeon Park
  */
@@ -578,8 +577,7 @@ public class AnyframeDBData {
 		return columnFieldMap;
 	}
 
-	public ListOrderedMap getColumnFieldOnlyIdWithoutNestedPropertyMap(
-			POJOClass pojo) {
+	public ListOrderedMap getColumnFieldOnlyIdWithoutNestedPropertyMap(POJOClass pojo) {
 		ListOrderedMap columnFieldMap = new ListOrderedMap();
 
 		Iterator<?> pojoItr = pojo.getAllPropertiesIterator();
@@ -611,7 +609,7 @@ public class AnyframeDBData {
 
 		return columnFieldMap;
 	}
-
+	
 	public ListOrderedMap getColumnFieldCompositeKeyIdMap(POJOClass pojo) {
 		ListOrderedMap columnFieldMap = new ListOrderedMap();
 
@@ -747,10 +745,10 @@ public class AnyframeDBData {
 
 	public String getIdGetterMethodName(String fieldName) {
 		int seperator = fieldName.indexOf(".");
-
-		if (seperator != -1)
+		
+		if(seperator != -1)
 			fieldName = fieldName.substring(seperator + 1);
-
+		
 		return getGetterMethodName(fieldName);
 	}
 }

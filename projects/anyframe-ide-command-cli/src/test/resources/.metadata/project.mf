@@ -1,0 +1,25 @@
+#Wed Aug 11 14:14:08 KST 2010
+db.password=
+project.build=ant
+project.version=1.0.0
+db.artifactId=hsqldb
+db.userId=SA
+web.context.path=emarketplace
+anyframe.home=
+db.name=sampledb
+package.name=com.sds.emp
+project.template=default
+project.home=
+db.driver=org.hsqldb.jdbcDriver
+db.type=hsqldb
+project.name=emarketplace
+db.schema=PUBLIC
+project.daoframework=query
+db.server=localhost
+db.version=2.0.0
+db.url=jdbc\:hsqldb\:hsql\://localhost/sampledb
+project.type=web
+db.port=-1
+db.lib=db/hsqldb/hsqldb-2.0.0.jar
+db.dialect=org.hibernate.dialect.HSQLDialect
+db.groupId=hsqldb

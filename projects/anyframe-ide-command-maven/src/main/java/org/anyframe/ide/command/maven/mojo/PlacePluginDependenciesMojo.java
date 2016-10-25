@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.anyframe.ide.command.common.CommandException;
+import org.anyframe.ide.command.common.DefaultPluginPomManager;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -38,6 +39,10 @@ import org.apache.maven.project.MavenProject;
  * @author Soyon Lim
  */
 public class PlacePluginDependenciesMojo extends AbstractPluginMojo {
+	/**
+	 * @component role="org.anyframe.ide.command.common.DefaultPluginPomManager"
+	 */
+	private DefaultPluginPomManager pomManager;
 
 	/**
 	 * The maven project.
@@ -82,14 +87,9 @@ public class PlacePluginDependenciesMojo extends AbstractPluginMojo {
 			}
 
 			copyDependencyLibs(request, destination);
-			
-			System.out.println("Dependent libraries of a current project are copied to the web library folder successfully.");
-			
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute PlacePluginDependenciesMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute PlacePluginDependenciesMojo");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 

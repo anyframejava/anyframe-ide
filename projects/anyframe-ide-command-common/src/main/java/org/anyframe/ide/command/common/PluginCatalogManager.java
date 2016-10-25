@@ -16,6 +16,7 @@
 package org.anyframe.ide.command.common;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.anyframe.ide.command.common.plugin.PluginInfo;
@@ -38,17 +39,6 @@ public interface PluginCatalogManager {
 	 */
 	Map<String, PluginInfo> getPlugins(ArchetypeGenerationRequest request)
 			throws Exception;
-
-	/**
-	 * get essential plugins
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @return essential plugins.
-	 * @throws Exception
-	 */
-	Map<String, PluginInfo> getEssentialPlugins(
-			ArchetypeGenerationRequest request) throws Exception;
 
 	/**
 	 * get plugin with name and version
@@ -94,6 +84,15 @@ public interface PluginCatalogManager {
 			String pluginVersion) throws Exception;
 
 	/**
+	 * get all archetypes.
+	 * 
+	 * @param archetypeCatalog
+	 *            path which includes archetype-catalog.xml
+	 * @return all archetypes
+	 */
+	List<PluginInfo> getArchetypes(String archetypeCatalog) throws Exception;
+
+	/**
 	 * display all plugins in plugin-catalog-xxx.xml
 	 * 
 	 * @param request
@@ -104,23 +103,19 @@ public interface PluginCatalogManager {
 	/**
 	 * update plugin-catalog=xxx.xml file in {user.home}/.anyframe/ directory
 	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
 	 * @param isEssential
 	 *            whether the plugin is essential
 	 * @param pluginInfo
 	 *            information about plugin
 	 */
-	void updatePluginCatalog(ArchetypeGenerationRequest request,
-			boolean isEssential, PluginInfo pluginInfo) throws Exception;
+	void updatePluginCatalog(ArchetypeGenerationRequest request, boolean isEssential, PluginInfo pluginInfo)
+			throws Exception;
 
 	/**
-	 * update plugin-catalog-xxx.xml file in remote repository
+	 * update plugin-catalog=xxx.xml file in remote repository
 	 * 
 	 * @param request
 	 *            information includes maven repositories in settings.xml
-	 * @param baseDir
-	 *            target project folder path to install a plugin
 	 * @param url
 	 *            url for remote repository
 	 * @param userName
@@ -129,12 +124,10 @@ public interface PluginCatalogManager {
 	 *            password to connect to remote repository
 	 * @param isEssential
 	 *            whether the plugin is essential
-	 * @param isLatest
-	 *            whether version of target plugin is latest
 	 * @param pluginInfo
 	 *            information about plugin
 	 */
 	void updatePluginCatalog(ArchetypeGenerationRequest request, File baseDir,
 			String url, String userName, String password, boolean isEssential,
-			boolean isLatest, PluginInfo pluginInfo) throws Exception;
+			PluginInfo pluginInfo) throws Exception;
 }

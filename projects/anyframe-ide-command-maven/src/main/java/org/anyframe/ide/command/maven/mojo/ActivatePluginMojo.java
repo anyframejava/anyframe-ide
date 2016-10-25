@@ -21,8 +21,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * This is an ActivatePluginMojo class. This mojo is for creating a plugin build
- * file.
+ * This is an ActivatePluginMojo class. This mojo is for creating a plugin
+ * build file.
  * 
  * @goal activate-plugin
  * @author Sooyeon Park
@@ -36,8 +36,8 @@ public class ActivatePluginMojo extends AbstractPluginMojo {
 	PluginBuildManager pluginBuildManager;
 
 	/**
-	 * main method for executing ActivatePluginMojo. This mojo is executed when
-	 * you input 'mvn anyframe:activate-plugin'
+	 * main method for executing ActivatePluginMojo. This mojo is executed
+	 * when you input 'mvn anyframe:activate-plugin'
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
@@ -46,10 +46,8 @@ public class ActivatePluginMojo extends AbstractPluginMojo {
 
 			pluginBuildManager.activate(request, baseDir.getAbsolutePath());
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute ActivatePluginMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute ActivatePluginMojo.");
+			throw new MojoFailureException(ex.getMessage());
 		}
 
 	}

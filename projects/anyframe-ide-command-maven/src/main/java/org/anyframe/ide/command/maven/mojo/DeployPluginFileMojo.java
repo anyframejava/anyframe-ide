@@ -32,6 +32,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.settings.Server;
+import org.apache.maven.settings.Settings;
 
 /**
  * This is an DeployPluginFileMojo class. This mojo is for deploy plugin binary
@@ -70,12 +71,13 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 	private String repositoryId;
 
 	/**
-	 * define whether version of target plugin is latest. If this paramter value
-	 * is 'true', then change value of latest in plugin-catalog-xxx.xml
+	 * The current user system settings for use in Maven.
 	 * 
-	 * @parameter expression="${isLatest}" default-value="true"
+	 * @parameter default-value="${settings}"
+	 * @required
+	 * @readonly
 	 */
-	private boolean isLatest;
+	private Settings settings;
 
 	/**
 	 * main method for executing DeployPluginFileMojo. This mojo is executed
@@ -166,7 +168,7 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 			PluginInfo pluginInfo = (PluginInfo) FileUtil
 					.getObjectFromXML(pluginBuildXML);
 
-			Server server = super.settings.getServer(repositoryId);
+			Server server = this.settings.getServer(repositoryId);
 			if (server == null) {
 				throw new CommandException(
 						"You need define authentication profile about "
@@ -176,12 +178,10 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 			// 6. update plugin catalig file in remote repository
 			pluginCatalogManager.updatePluginCatalog(request, baseDir, url,
 					server.getUsername(), server.getPassword(), pluginInfo
-							.isEssential(), isLatest, pluginInfo);
+							.isEssential(), pluginInfo);
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute DeployPluginFileMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute DeployPluginFileMojo.");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 }

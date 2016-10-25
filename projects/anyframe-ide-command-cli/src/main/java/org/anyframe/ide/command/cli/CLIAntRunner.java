@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2009 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -23,6 +23,7 @@ import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.cli.util.Messages;
 import org.anyframe.ide.command.cli.util.PluginConstants;
 import org.anyframe.ide.command.cli.util.PropertiesIO;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.launch.Launcher;
 
 /**

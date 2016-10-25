@@ -15,6 +15,11 @@
  */
 package org.anyframe.ide.command.common;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -25,14 +30,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.anyframe.ide.command.common.util.CommonConstants;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.ArchetypeArtifactManager;
 import org.apache.maven.archetype.common.ArchetypeRegistryManager;
+import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.archetype.common.DefaultArchetypeArtifactManager;
+import org.apache.maven.archetype.exception.UnknownArchetype;
+import org.apache.maven.archetype.metadata.ArchetypeDescriptor;
+import org.apache.maven.archetype.metadata.io.xpp3.ArchetypeDescriptorXpp3Reader;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -45,6 +58,8 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
+import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
  * This is an DefaultPluginArtifactManager class. This class is overrided for
@@ -94,15 +109,6 @@ public class DefaultPluginArtifactManager extends
 	 */
 	protected ArtifactMetadataSource artifactMetadataSource;
 
-	/**
-	 * download dependency libraries from local/remote repository
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param dependencies
-	 *            dependency libraries
-	 * @return dowdloaded libraries
-	 */
 	public Set<Artifact> downloadArtifact(ArchetypeGenerationRequest request,
 			List<Dependency> dependencies) throws Exception {
 		Set<Artifact> dependencyArtifacts = new HashSet<Artifact>();
@@ -135,22 +141,6 @@ public class DefaultPluginArtifactManager extends
 		return dependencyArtifacts;
 	}
 
-	/**
-	 * make a classloader for a specified artifact
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param groupId
-	 *            a groupId of a specified artifact
-	 * @param artifactId
-	 *            a artifactId of a specified artifact
-	 * @param version
-	 *            a version of a specified artifact
-	 * @param originalUrls
-	 *            urls which a classloader of plugin library has
-	 * @return a classloader
-	 */
-	@SuppressWarnings("unchecked")
 	public URLClassLoader makeArtifactClassLoader(
 			ArchetypeGenerationRequest request, String groupId,
 			String artifactId, String version, URL[] originalUrls)
@@ -203,15 +193,6 @@ public class DefaultPluginArtifactManager extends
 		return new URLClassLoader(newUrls);
 	}
 
-	/**
-	 * 
-	 * @param artifactFactory
-	 * @param projectId
-	 * @param dependencyManagement
-	 * @return
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
 	private Map createManagedVersionMap(ArtifactFactory artifactFactory,
 			String projectId, DependencyManagement dependencyManagement)
 			throws Exception {

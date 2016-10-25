@@ -53,19 +53,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class MavenCommand implements Command {
 
-    private IPreferenceStore store = null;
-    private String logLevel = CommonConstants.LOG_LEVEL_ERROR;
-    private String logOption = "-q";
-
-    public MavenCommand() {
-        store = AnyframeIDEPlugin.getDefault().getPreferenceStore();
-        logLevel = store.getString(IdePreferencesPage.LOG_LEVEL);
-        if (logLevel.equals(CommonConstants.LOG_LEVEL_INFO))
-            logOption = "";
-        else if (logLevel.equals(CommonConstants.LOG_LEVEL_DEBUG))
-            logOption = "--debug";
-    }
-
     public void execute(CommandVO commandVo) {
         try {
             String command = commandVo.getCommand();
@@ -79,7 +66,7 @@ public class MavenCommand implements Command {
                         + vo.getPackageName() + " -Dprojecthome="
                         + vo.getProjectHome() + " -Dscope=" + vo.getScope()
                         + " -Dbasedir=" + vo.getBasedir()
-                        + " -DisCLIMode=false " + logOption;
+                        + " -DisCLIMode=false";
                 launchMaven(mvnCommand, vo);
             } else if (command.equals(CommandUtil.CMD_CREATE_MODEL)) {
 
@@ -87,12 +74,11 @@ public class MavenCommand implements Command {
                 mvnCommand +=
                     " -Dtable=" + vo.getTableName() + " -Dpackage="
                         + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir()
-                        + " -DisCLIMode=false " + logOption;
+                        + " -DisCLIMode=false";
                 launchMaven(mvnCommand, vo);
             } else if (command.equals(CommandUtil.CMD_CHANGE_DB)) {
 
-                mvnCommand +=
-                    " -Dbasedir=" + commandVo.getBasedir() + " " + logOption;
+                mvnCommand += " -Dbasedir=" + commandVo.getBasedir();
                 launchMaven(mvnCommand, commandVo);
             } else if (command.equals(CommandUtil.CMD_INSTALL)) {
 
@@ -101,21 +87,20 @@ public class MavenCommand implements Command {
                     " -Dname=" + vo.getPluginNames() + " -Dpackage="
                         + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir()
                         + " -DisCLIMode=false" + " -DexcludeSrc="
-                        + new Boolean(vo.isExcludeSrc()).toString() + " "
-                        + logOption;
+                        + new Boolean(vo.isExcludeSrc()).toString();
                 launchMaven(mvnCommand, vo);
             } else if (command.equals(CommandUtil.CMD_UNINSTALL)) {
                 UninstallPluginVO vo = (UninstallPluginVO) commandVo;
                 mvnCommand +=
                     " -Dname=" + vo.getPluginNames() + " -Dbasedir="
-                        + vo.getBasedir() + " " + logOption;
+                        + vo.getBasedir();
                 launchMaven(mvnCommand, vo);
             } else if (command.equals(CommandUtil.CMD_UPDATE_CATALOG)) {
 
-                mvnCommand +=
-                    " -Dbasedir=" + commandVo.getBasedir() + " " + logOption;
+                mvnCommand += " -Dbasedir=" + commandVo.getBasedir();
                 launchMaven(mvnCommand, commandVo);
             } else if (command.equals(CommandUtil.CMD_CREATE_PROJECT)) {
+
                 CreatePJTVO vo = (CreatePJTVO) commandVo;
                 createProject(vo);
             }
@@ -144,6 +129,8 @@ public class MavenCommand implements Command {
                 CommonConstants.ARCHETYPE_BASIC_ARTIFACT_ID;
             String archetypeVersion = "";
 
+            IPreferenceStore store =
+                AnyframeIDEPlugin.getDefault().getPreferenceStore();
             if (vo.getProjectType()
                 .equals(CommonConstants.PROJECT_TYPE_SERVICE)) {
                 archetypeArtifactId =
@@ -231,8 +218,7 @@ public class MavenCommand implements Command {
                 "anyframe:install -Dname=core -Dpackage=" + vo.getPackageName()
                     + " -DisCLIMode=false -Dbasedir=" + projectHome
                     + " -DtemplateHome=\"" + vo.getTemplateHome() + "\""
-                    + " -DinspectionHome=\"" + vo.getInspectionHome() + "\" "
-                    + logOption;
+                    + " -DinspectionHome=\"" + vo.getInspectionHome() + "\"";
 
             vo.setBasedir(projectHome);
             launchMaven(mvnCommand, vo);

@@ -16,7 +16,6 @@
 package org.anyframe.ide.command.maven.mojo;
 
 import org.anyframe.ide.command.common.PluginUninstaller;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -60,19 +59,12 @@ public class UninstallPluginMojo extends AbstractPluginMojo {
 			ArchetypeGenerationRequest request = new ArchetypeGenerationRequest();
 			setRepository(request);
 
-			// 2. check name option
-			if (StringUtils.isEmpty(name))
-				throw new Exception(
-						"You must specify plugin name to uninstall. Try check command options.");
-
 			// 2. try to uninstall
 			pluginUninstaller.uninstall(request, baseDir.getAbsolutePath(),
 					name, excludes, encoding, true);
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute UninstallPluginMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute UninstallPluginMojo");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 }

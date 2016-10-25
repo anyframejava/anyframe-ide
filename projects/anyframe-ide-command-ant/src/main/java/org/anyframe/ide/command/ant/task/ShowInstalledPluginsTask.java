@@ -55,13 +55,6 @@ public class ShowInstalledPluginsTask extends AbstractPluginTask {
 	}
 
 	// for anyframegen
-	/**
-	 * get all installed plugins
-	 * 
-	 * @param baseDir
-	 *            folder which includes META-INF/plugin-installed.xml
-	 * @return all installed plugins
-	 */
 	public Map<String, PluginInfo> getInstalledPlugins(String baseDir)
 			throws Exception {
 		initialize();

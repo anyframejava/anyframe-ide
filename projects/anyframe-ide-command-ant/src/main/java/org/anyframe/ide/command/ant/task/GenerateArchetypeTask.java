@@ -18,7 +18,9 @@ package org.anyframe.ide.command.ant.task;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.zip.ZipFile;
 
 import org.anyframe.ide.command.common.DefaultPluginCatalogManager;
@@ -29,6 +31,7 @@ import org.anyframe.ide.command.common.PluginCatalogManager;
 import org.anyframe.ide.command.common.PluginInfoManager;
 import org.anyframe.ide.command.common.PluginInstaller;
 import org.anyframe.ide.command.common.catalog.ArchetypeCatalogDataSource;
+import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -107,8 +110,8 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 			}
 
 			this.offlineMode = new Boolean(this.offline.substring(0, 1)
-					.toUpperCase()
-					+ offline.substring(1).toLowerCase()).booleanValue();
+					.toUpperCase() + offline.substring(1).toLowerCase())
+					.booleanValue();
 
 			initialize(this.offlineMode);
 			lookupComponents();
@@ -175,8 +178,8 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
 			boolean pomHandling = true;
 			if (metadataFile.exists()) {
-				PropertiesIO pio = new PropertiesIO(metadataFile
-						.getAbsolutePath());
+				PropertiesIO pio = new PropertiesIO(
+						metadataFile.getAbsolutePath());
 
 				pio.setProperty(CommonConstants.ANYFRAME_HOME,
 						getAnyframeHome());
@@ -207,8 +210,7 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 
 				// 7.2 change .classpath file
 				pluginInstaller.processClasspath(getRequest(), new File(
-						getTarget(), pjtname), null, pomHandling,
-						currentProperties);
+						getTarget(), pjtname), null, pomHandling, currentProperties);
 			}
 			// 8. remove pom.xml
 			removePom();
@@ -227,6 +229,9 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 * argument 'pjtname'. If pjtname is null or empty string, set a default
 	 * value ('myproject')
 	 * 
+	 * @throws BuildException
+	 *             when there is a install information under the target folder
+	 *             or pjtname is null or empty string
 	 */
 	private void checkValidation() throws Exception {
 		File pluginsXML = new File(getTarget() + CommonConstants.fileSeparator
@@ -287,7 +292,8 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 					+ CommonConstants.PLUGIN_FILE + "]", Project.MSG_DEBUG);
 
 			// 3.1 scan resources
-			List<String> templates = FileUtil.findFiles(fileNames,
+			List<String> templates = FileUtil.findFiles(
+					fileNames,
 					Constants.ARCHETYPE_RESOURCES
 							+ CommonConstants.fileSeparator
 							+ fileSet.getDirectory(), fileSet.getIncludes(),
@@ -381,8 +387,10 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 		File classpathFile = new File(getTarget()
 				+ CommonConstants.fileSeparator + pjtname, ".classpath");
 
-		FileUtil.replaceFileContent(classpathFile,
-				"<!--Add new classpathentry here-->", "</classpath>",
+		FileUtil.replaceFileContent(
+				classpathFile,
+				"<!--Add new classpathentry here-->",
+				"</classpath>",
 				"<!--Add new classpathentry here-->\n</classpath>",
 				"<!--Add new classpathentry here-->",
 				"<!--Add new classpathentry here-->\n"

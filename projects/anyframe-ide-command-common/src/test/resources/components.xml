@@ -155,6 +155,10 @@
 			<implementation>org.anyframe.ide.command.common.DefaultPluginPomManager</implementation>
 			<requirements>
 				<requirement>
+					<role>org.apache.maven.archetype.common.ArchetypeArtifactManager</role>
+					<field-name>archetypeArtifactManager</field-name>
+				</requirement>
+				<requirement>
 					<role>org.anyframe.ide.command.common.DefaultPluginInfoManager</role>
 					<field-name>pluginInfoManager</field-name>
 				</requirement>					

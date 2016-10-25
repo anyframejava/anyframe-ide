@@ -124,18 +124,21 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			// 7. generate JAR file from current project
 			createArchive(baseDir, tempDir, pluginPom);
 
-			System.out.println("'" + pluginInfo.getName()
-					+ "' plugin is packaged successfully.");
+			getLogger().info(
+					"'" + pluginInfo.getName()
+							+ "' plugin is packaged successfully.");
 
 		} catch (Exception e) {
 			if (e instanceof CommandException)
 				throw e;
 			if (pluginInfo != null)
-				throw new CommandException("Error occurred in packaging a '"
-						+ pluginInfo.getName() + "' plugin. The reason is a '"
-						+ e.getMessage() + "'.");
+				getLogger().warn(
+						"Error occurred in packaging a '"
+								+ pluginInfo.getName()
+								+ "' plugin. The reason is a '"
+								+ e.getMessage() + "'.");
 			else
-				throw new CommandException(
+				getLogger().warn(
 						"Error occurred in packaging a plugin in this project '"
 								+ baseDir + "'. The reason is a '"
 								+ e.getMessage() + "'.");
@@ -217,9 +220,9 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			getLogger().debug("Copying fileset " + fileset);
 
 			// 2.4 merge template and copy files to output directory
-			processTemplate(baseDir, targetDir, fileset.getDir(),
-					pluginInfo.getName(), packageName, projectName,
-					fileset.isPackaged(), fileset.isFiltered(), templates);
+			processTemplate(baseDir, targetDir, fileset.getDir(), pluginInfo
+					.getName(), packageName, projectName, fileset.isPackaged(),
+					fileset.isFiltered(), templates);
 			getLogger().debug("Copied " + templates.size() + " files");
 		}
 
@@ -240,8 +243,12 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 					+ tempDir, interceptorPackageDir);
 
 			srcDir.mkdirs();
-			destDir.mkdirs();
 
+			destDir.mkdirs();
+			// System.out.println("srcDir->" + srcDir.getAbsolutePath());
+			// System.out.println("srcDir exists->" + srcDir.exists());
+			// System.out.println("destDir->" + destDir.getAbsolutePath());
+			// System.out.println("destDir exists->" + destDir.exists());
 			File[] interceptorFiles = srcDir.listFiles();
 			if (interceptorFiles == null || interceptorFiles.length == 0) {
 				throw new CommandException(
@@ -316,28 +323,17 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * write a file which has the contents between plugin name start tag and end
-	 * tag
-	 * 
-	 * @param pluginName
-	 *            plugin name
-	 * @param output
-	 *            output file
-	 * @throws Exception
-	 * @throws FileNotFoundException
-	 */
 	private void writeFileForReplaceRegion(String pluginName, File output)
 			throws Exception, FileNotFoundException {
-		// 1. find plugin name start, end tags
+		// 2.1 find plugin name start, end tags
 		Map<String, String> tokenMap = FileUtil.findReplaceRegion(
 				new FileInputStream(output), pluginName);
 
-		// 2. get contents between start tag and end tag
+		// 2.2 get contents between start tag and end tag
 		if (tokenMap.size() == 1) {
 			// write file only with the contents
-			FileUtil.writeStringToFile(output,
-					tokenMap.values().toArray()[0].toString(), "UTF-8");
+			FileUtil.writeStringToFile(output, tokenMap.values().toArray()[0]
+					.toString(), "UTF-8");
 		} else if (tokenMap.size() == 0)
 			FileUtil.deleteFile(output);
 	}
@@ -345,8 +341,6 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 	/**
 	 * check whether output file is among common templates
 	 * 
-	 * @param pluginName
-	 *            plugin name
 	 * @param output
 	 *            output file
 	 * @return true if output file is among common templates, else false
@@ -518,8 +512,6 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 	 *            plugin information object from plugin-build.xml file
 	 * @param samplePjtPom
 	 *            Model object which has a sample project pom.xml content
-	 * @param dependentPluginJars
-	 *            dependent plugin jar files
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws XmlPullParserException
@@ -533,7 +525,8 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			throws FileNotFoundException, IOException, XmlPullParserException,
 			Exception {
 		getLogger()
-				.debug("Call generatePluginResourcesPomXML() of DefaultPluginPackager");
+				.debug(
+						"Call generatePluginResourcesPomXML() of DefaultPluginPackager");
 		Model pluginResourcesPom = new Model();
 		pluginResourcesPom.setModelVersion(samplePjtPom.getModelVersion());
 		pluginResourcesPom.setGroupId(samplePjtPom.getGroupId());
@@ -575,11 +568,11 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			for (PluginInterceptorDependency interceptorDependency : interceptorDependencies) {
 				String scope = interceptorDependency.getScope();
 				if (scope != null
-						&& scope.equalsIgnoreCase(CommonConstants.SCOPE_INTERCEPTOR)) {
+						&& scope
+								.equalsIgnoreCase(CommonConstants.SCOPE_INTERCEPTOR)) {
 					samplePjtDependenciesMap.remove(interceptorDependency
 							.getGroupId()
-							+ ":"
-							+ interceptorDependency.getArtifactId());
+							+ ":" + interceptorDependency.getArtifactId());
 				}
 			}
 		}
@@ -761,20 +754,28 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		archiver.setOutputFile(jarFile);
 		archive.setForced(false);
 
-		MavenProject project = new MavenProject();
-		project.setGroupId(groupId);
-		project.setArtifactId(artifactId);
-		project.setVersion(version);
-		project.setFile(pomXml);
+		try {
+			MavenProject project = new MavenProject();
+			project.setGroupId(groupId);
+			project.setArtifactId(artifactId);
+			project.setVersion(version);
+			project.setFile(pomXml);
 
-		File contentDirectory = new File(outputDirectory, "temp");
-		if (!contentDirectory.exists()) {
-			getLogger().warn(
-					"JAR will be empty - no content was marked for inclusion.");
-		} else {
-			archiver.getArchiver().addDirectory(contentDirectory);
+			File contentDirectory = new File(outputDirectory, "temp");
+			if (!contentDirectory.exists()) {
+				getLogger()
+						.warn(
+								"JAR will be empty - no content was marked for inclusion.");
+			} else {
+				archiver.getArchiver().addDirectory(contentDirectory);
+			}
+			archiver.createArchive(project, archive);
+		} catch (Exception e) {
+			getLogger().error(
+					"Assembling Plugin JAR  is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
+			throw e;
 		}
-		archiver.createArchive(project, archive);
 	}
 
 	/**
@@ -906,8 +907,8 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		getLogger().debug("Call getOutput() of DefaultPluginPackager");
 
 		if (packaged)
-			template = StringUtils.replaceOnce(template,
-					FileUtil.changePackageForDir(packageName), "");
+			template = StringUtils.replaceOnce(template, FileUtil
+					.changePackageForDir(packageName), "");
 
 		String outputName = filesetDir + CommonConstants.fileSeparator
 				+ CommonConstants.fileSeparator + template;

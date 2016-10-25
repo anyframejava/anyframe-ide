@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -28,120 +28,121 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * This is a Categories class.
- * 
+ * This is an Categories class.
  * @author Sooyeon Park
  */
 @Entity
 @Table(name = "CATEGORIES", schema = "PUBLIC")
 public class Categories implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private Long cId1;
-	private String title;
-	private Long displayOrder;
-	private Long moderated;
-	private Set<Forums> forumses = new HashSet<Forums>(0);
+    private static final long serialVersionUID = 1L;
+    private Long cId1;
+    private String title;
+    private Long displayOrder;
+    private Long moderated;
+    private Set<Forums> forumses = new HashSet<Forums>(0);
 
-	@Id
-	@Column(name = "C_ID1", unique = true, nullable = false)
-	public Long getCId1() {
-		return this.cId1;
-	}
+    @Id
+    @Column(name = "C_ID1", unique = true, nullable = false)
+    public Long getCId1() {
+        return this.cId1;
+    }
 
-	public void setCId1(Long cId1) {
-		this.cId1 = cId1;
-	}
+    public void setCId1(Long cId1) {
+        this.cId1 = cId1;
+    }
 
-	@Column(name = "TITLE", nullable = false, length = 100)
-	public String getTitle() {
-		return this.title;
-	}
+    @Column(name = "TITLE", nullable = false, length = 100)
+    public String getTitle() {
+        return this.title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	@Column(name = "DISPLAY_ORDER", nullable = false)
-	public Long getDisplayOrder() {
-		return this.displayOrder;
-	}
+    @Column(name = "DISPLAY_ORDER", nullable = false)
+    public Long getDisplayOrder() {
+        return this.displayOrder;
+    }
 
-	public void setDisplayOrder(Long displayOrder) {
-		this.displayOrder = displayOrder;
-	}
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
-	@Column(name = "MODERATED")
-	public Long getModerated() {
-		return this.moderated;
-	}
+    @Column(name = "MODERATED")
+    public Long getModerated() {
+        return this.moderated;
+    }
 
-	public void setModerated(Long moderated) {
-		this.moderated = moderated;
-	}
+    public void setModerated(Long moderated) {
+        this.moderated = moderated;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categories")
-	public Set<Forums> getForumses() {
-		return this.forumses;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categories")
+    public Set<Forums> getForumses() {
+        return this.forumses;
+    }
 
-	public void setForumses(Set<Forums> forumses) {
-		this.forumses = forumses;
-	}
+    public void setForumses(Set<Forums> forumses) {
+        this.forumses = forumses;
+    }
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
 
-		Categories pojo = (Categories) o;
+        Categories pojo = (Categories) o;
 
-		if ((title != null) ? (!title.equals(pojo.title))
-				: (pojo.title != null)) {
-			return false;
-		}
+        if ((title != null)
+            ? (!title.equals(pojo.title)) : (pojo.title != null)) {
+            return false;
+        }
 
-		if ((displayOrder != null) ? (!displayOrder.equals(pojo.displayOrder))
-				: (pojo.displayOrder != null)) {
-			return false;
-		}
+        if ((displayOrder != null)
+            ? (!displayOrder.equals(pojo.displayOrder))
+            : (pojo.displayOrder != null)) {
+            return false;
+        }
 
-		if ((moderated != null) ? (!moderated.equals(pojo.moderated))
-				: (pojo.moderated != null)) {
-			return false;
-		}
+        if ((moderated != null)
+            ? (!moderated.equals(pojo.moderated)) : (pojo.moderated != null)) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public int hashCode() {
-		int result = 0;
-		result = ((title != null) ? title.hashCode() : 0);
-		result = (31 * result)
-				+ ((displayOrder != null) ? displayOrder.hashCode() : 0);
-		result = (31 * result)
-				+ ((moderated != null) ? moderated.hashCode() : 0);
+    public int hashCode() {
+        int result = 0;
+        result = ((title != null) ? title.hashCode() : 0);
+        result =
+            (31 * result)
+                + ((displayOrder != null) ? displayOrder.hashCode() : 0);
+        result =
+            (31 * result) + ((moderated != null) ? moderated.hashCode() : 0);
 
-		return result;
-	}
+        return result;
+    }
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
 
-		sb.append(" [");
-		sb.append("cId1").append("='").append(getCId1()).append("', ");
-		sb.append("title").append("='").append(getTitle()).append("', ");
-		sb.append("displayOrder").append("='").append(getDisplayOrder())
-				.append("', ");
-		sb.append("moderated").append("='").append(getModerated())
-				.append("', ");
+        sb.append(" [");
+        sb.append("cId1").append("='").append(getCId1()).append("', ");
+        sb.append("title").append("='").append(getTitle()).append("', ");
+        sb.append("displayOrder").append("='").append(getDisplayOrder())
+            .append("', ");
+        sb.append("moderated").append("='").append(getModerated())
+            .append("', ");
 
-		sb.append("]");
+        sb.append("]");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

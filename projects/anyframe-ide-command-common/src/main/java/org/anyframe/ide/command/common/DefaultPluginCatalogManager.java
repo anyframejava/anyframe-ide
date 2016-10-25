@@ -53,7 +53,7 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	 * 
 	 * @param request
 	 *            information includes maven repository, db settings, etc.
-	 * @return all plugins
+	 * @return all plugins.
 	 * @throws Exception
 	 */
 	public Map<String, PluginInfo> getPlugins(ArchetypeGenerationRequest request)
@@ -65,30 +65,6 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 		if (request.getRemoteArtifactRepositories().size() > 0
 				&& plugins.isEmpty()) {
 			plugins = remotePluginCatalogDataSource.readPluginCatalog(request);
-		}
-
-		return plugins;
-	}
-
-	/**
-	 * get essential plugins
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @return essential plugins
-	 * @throws Exception
-	 */
-	public Map<String, PluginInfo> getEssentialPlugins(
-			ArchetypeGenerationRequest request) throws Exception {
-
-		Map<String, PluginInfo> plugins = localPluginCatalogDataSource
-				.readPluginCatalog(request,
-						CommonConstants.PLUGIN_TYPE_ESSENTIAL);
-
-		if (request.getRemoteArtifactRepositories().size() > 0
-				&& plugins.isEmpty()) {
-			plugins = remotePluginCatalogDataSource.readPluginCatalog(request,
-					CommonConstants.PLUGIN_TYPE_ESSENTIAL);
 		}
 
 		return plugins;
@@ -184,6 +160,34 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	}
 
 	/**
+	 * get all archetypes.
+	 * 
+	 * @param archetypeCatalog
+	 *            path which includes archetype-catalog.xml
+	 * @return all archetypes
+	 * @throws Exception
+	 */
+	public List<PluginInfo> getArchetypes(String archetypeCatalog)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * get name of plugins using plugin catalog
+	 * 
+	 * @param request
+	 *            information includes maven repository
+	 * @return all plugin names
+	 * @throws Exception
+	 */
+	public Map<String, PluginInfo> getPluginNames(
+			ArchetypeGenerationRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
 	 * display all plugins in plugin-catalog-xxx.xml
 	 * 
 	 * @param request
@@ -200,6 +204,17 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 			optionalPlugins = remotePluginCatalogDataSource.readPluginCatalog(
 					request, CommonConstants.PLUGIN_TYPE_OPTIONAL);
 		}
+
+		Map<String, PluginInfo> customPlugins = localPluginCatalogDataSource
+				.readPluginCatalog(request, CommonConstants.PLUGIN_TYPE_CUSTOM);
+
+		if (request.getRemoteArtifactRepositories().size() > 0
+				&& customPlugins.isEmpty()) {
+			customPlugins = remotePluginCatalogDataSource.readPluginCatalog(
+					request, CommonConstants.PLUGIN_TYPE_CUSTOM);
+		}
+
+		optionalPlugins.putAll(customPlugins);
 
 		Collection<PluginInfo> optionalPluginValues = optionalPlugins.values();
 		printPlugins(optionalPluginValues, false);
@@ -234,28 +249,59 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 
 			buffer.append((isEssential ? "Essential" : "Optional")
 					+ " plugins are listed below: \n");
-			buffer.append("--------------------------------------- \n");
+			buffer
+					.append("------------------------------------------------------------------------------ \n");
 			Formatter formatter = new Formatter();
 
 			formatter.format(
-					CommonConstants.PLUGININFO_NAME_LATEST_DESCRIPTION,
-					"<name>", "<latest>");
+					CommonConstants.PLUGININFO_NAME_LATEST_DESCRIPTION, "name",
+					"latest version", "description");
 			buffer.append(formatter.toString() + "\n");
+			buffer
+					.append("------------------------------------------------------------------------------ \n");
 
 			for (PluginInfo pluginInfo : pluginValues) {
 				StringBuilder builder = new StringBuilder();
 				Formatter pluginInfoFormatter = new Formatter(builder);
 
 				String pluginName = pluginInfo.getName();
+				if (pluginName.length() > 17) {
+					pluginName = pluginName.substring(0, 16) + "...";
+				}
+
+				String pluginDescription = pluginInfo.getDescription();
+				if (pluginDescription.length() > 33) {
+					pluginDescription = pluginDescription.substring(0, 32)
+							+ "...";
+				}
 
 				pluginInfoFormatter.format(
 						CommonConstants.PLUGININFO_NAME_LATEST_DESCRIPTION,
-						pluginName, pluginInfo.getLatestVersion());
+						pluginName, pluginInfo.getLatestVersion(),
+						pluginDescription);
 				buffer.append(pluginInfoFormatter.toString() + "\n");
 			}
 
 			System.out.println(buffer.toString());
 		}
+	}
+
+	/**
+	 * select a plugin to install
+	 * 
+	 * @param request
+	 *            information includes maven repository, db settings, plugin
+	 * @param interactiveMode
+	 *            interactive mode processing install
+	 * @param baseDir
+	 *            target folder to install
+	 * @return information about plugins to be selected
+	 * @throws Exception
+	 */
+	public List<PluginInfo> selectPlugin(ArchetypeGenerationRequest request,
+			Boolean interactiveMode, String baseDir) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -273,7 +319,7 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	}
 
 	/**
-	 * update plugin-catalog-xxx.xml file in remote repository
+	 * update plugin-catalog=xxx.xml file in remote repository
 	 * 
 	 * @param request
 	 *            information includes maven repositories in settings.xml
@@ -285,16 +331,13 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	 *            password to connect to remote repository
 	 * @param isEssential
 	 *            whether the plugin is essential
-	 * @param isLatest
-	 *            whether version of target plugin is latest
 	 * @param pluginInfo
 	 *            information about plugin
 	 */
 	public void updatePluginCatalog(ArchetypeGenerationRequest request,
 			File baseDir, String url, String userName, String password,
-			boolean isEssential, boolean isLatest, PluginInfo pluginInfo)
-			throws Exception {
+			boolean isEssential, PluginInfo pluginInfo) throws Exception {
 		remotePluginCatalogDataSource.updatePluginCatalog(request, baseDir,
-				url, userName, password, isEssential, isLatest, pluginInfo);
+				url, userName, password, isEssential, pluginInfo);
 	}
 }

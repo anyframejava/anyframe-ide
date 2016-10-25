@@ -1,18 +1,3 @@
-/*
- * Copyright 2008-2011 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.anyframe.ide.command.common;
 
 import java.io.File;
@@ -79,6 +64,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 *            current project folder
 	 * @param encoding
 	 *            file encoding style
+	 * @throws Exception
 	 */
 	public void change(ArchetypeGenerationRequest request, String baseDir,
 			String encoding) throws Exception {
@@ -94,7 +80,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 						+ "' file. Please check a location of your project.");
 			}
 
-			checkProject(baseDir);
+			checkPlugin(baseDir);
 
 			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
 
@@ -105,13 +91,13 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 					.readValue(CommonConstants.PROJECT_TEMPLATE_HOME);
 
 			// 1. process hibernate.cfg.xml of current project
-			processHibernateCfgFile(pio, baseDir);
+			processHibernateCfgFile(baseDir, pio);
 
 			// 2. process hibernate.reveng.ftl
-			processHibernateReverseEngTemplate(pio, templateHome);
+			processHibernateReverseEngTemplate(templateHome, pio);
 
 			// 3. process context.properties
-			processDBProperties(pio, baseDir);
+			processDBProperties(baseDir, pio);
 
 			// 4. process plugin xml files related to db properties and db
 			// scripts
@@ -125,48 +111,35 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 				String pluginName = instlledPluginItr.next();
 				PluginInfo pluginInfo = installedPluginMap.get(pluginName);
 
-				File pluginJar = pluginInfoManager.getPluginFile(request,
+				File pluginJarFile = pluginInfoManager.getPluginFile(request,
 						pluginInfo.getGroupId(), pluginInfo.getArtifactId(),
 						pluginInfo.getVersion());
 
-				ZipFile pluginZip = pluginArtifactManager
-						.getArchetypeZipFile(pluginJar);
+				ZipFile pluginZipFile = pluginArtifactManager
+						.getArchetypeZipFile(pluginJarFile);
 
 				// 4.1 process plugin xml files related to db properties
-				processXMLFile(baseDir, pluginName, pluginJar, pluginZip,
-						dbType);
+				processXMLFile(pluginName, pluginJarFile, pluginZipFile,
+						baseDir, dbType);
 
 				// 4.2 create custom table, insert data to DB
-				processInitialData(pio, baseDir, pluginName, pluginJar,
-						pluginZip, dbType, encoding);
+				processInitialData(pluginJarFile, dbType, pio, baseDir,
+						pluginName, pluginZipFile, encoding);
 			}
 
 			// 5. copy jdbc jar file and add classpath information
-			processDBLibs(pio, buildType, dbType, baseDir);
+			processDBLibs(buildType, dbType, baseDir, pio);
 
 			// 6. process project.mf
-			processMetadata(pio, buildType);
-
-			System.out
-					.println("Current project is changed to be appropriate for '"
-							+ dbType + "' successfully.");
+			processMetadata(buildType, pio);
 		} catch (Exception e) {
-			if (e instanceof CommandException)
-				throw e;
-			throw new CommandException(
+			getLogger().warn(
 					"Error occurred in changing db. The reason is a '"
 							+ e.getMessage() + "'.");
 		}
 	}
 
-	/**
-	 * check a project status whether change-db is possible
-	 * 
-	 * @param baseDir
-	 *            current project folder
-	 */
-	private void checkProject(String baseDir) throws Exception {
-		getLogger().debug("Call checkProject() of DefaultPluginDBChanger");
+	private void checkPlugin(String baseDir) throws Exception {
 		Map<String, PluginInfo> installedPlugins = pluginInfoManager
 				.getInstalledPlugins(baseDir);
 
@@ -184,12 +157,12 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * change hibernate.cfg.xml file
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param baseDir
 	 *            current project folder
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void processHibernateCfgFile(PropertiesIO pio, String baseDir)
+	private void processHibernateCfgFile(String baseDir, PropertiesIO pio)
 			throws Exception {
 		getLogger().debug(
 				"Call processHibernateCfgFile() of DefaultPluginDBChanger");
@@ -200,10 +173,9 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 
 		if (!hibernateCfgFile.exists()) {
 			getLogger()
-					.warn(
-							"'"
-									+ hibernateCfgFile.getAbsolutePath()
-									+ "' file is not found. Please check a location of your project.");
+					.warn("'"
+							+ hibernateCfgFile.getAbsolutePath()
+							+ "' file is not found. Please check a location of your project.");
 			return;
 		}
 
@@ -241,53 +213,48 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 							+ replaceString, true);
 		} catch (Exception e) {
 			getLogger()
-					.warn(
-							"Replacing hibernate jdbc configuration in hibernate.cfg.xml of current project is skipped."
-									+ ". The reason is a '"
-									+ e.getMessage()
-									+ "'.");
+					.warn("Replacing hibernate jdbc configuration in hibernate.cfg.xml of current project is skipped."
+							+ ". The reason is a '" + e.getMessage() + "'.");
 		}
 	}
 
 	/**
 	 * change hibernate.reveng.ftl template
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param templateHome
 	 *            folder which have templates
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void processHibernateReverseEngTemplate(PropertiesIO pio,
-			String templateHome) throws Exception {
+	private void processHibernateReverseEngTemplate(String templateHome,
+			PropertiesIO pio) throws Exception {
 		getLogger()
-				.debug(
-						"Call processHibernateReverseEngTemplate() of DefaultPluginDBChanger");
+				.debug("Call processHibernateReverseEngTemplate() of DefaultPluginDBChanger");
 		// 1. find templates directory
 		File templateHomeDir = new File(templateHome);
 
 		if (!templateHomeDir.exists()) {
 			getLogger()
-					.warn(
-							"'"
-									+ templateHomeDir.getAbsolutePath()
-									+ "' folder is not found. Please check a location of template home directory.");
+					.warn("'"
+							+ templateHomeDir.getAbsolutePath()
+							+ "' folder is not found. Please check a location of your project.");
 
 			return;
 		}
 
 		// 2. find hibernate.reveng.ftl file
-		File hibernateReverseEngTemplateFile = new File(templateHomeDir
-				.getAbsolutePath(), "default" + CommonConstants.fileSeparator
-				+ "source" + CommonConstants.fileSeparator + "model"
-				+ CommonConstants.fileSeparator + "hibernate.reveng.ftl");
+		File hibernateReverseEngTemplateFile = new File(
+				templateHomeDir.getAbsolutePath(), "default"
+						+ CommonConstants.fileSeparator + "source"
+						+ CommonConstants.fileSeparator + "model"
+						+ CommonConstants.fileSeparator
+						+ "hibernate.reveng.ftl");
 
 		if (!hibernateReverseEngTemplateFile.exists()) {
 			getLogger()
-					.warn(
-							"'"
-									+ hibernateReverseEngTemplateFile
-											.getAbsolutePath()
-									+ "' is not found. Please check a location of hibernate.reveng.ftl in default template directory(default/source/model).");
+					.warn("'"
+							+ hibernateReverseEngTemplateFile.getAbsolutePath()
+							+ "' folder is not found. Please check a location of your project.");
 
 			return;
 		}
@@ -327,12 +294,12 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * change context.properties file
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param baseDir
 	 *            current project folder
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void processDBProperties(PropertiesIO pio, String baseDir)
+	private void processDBProperties(String baseDir, PropertiesIO pio)
 			throws Exception {
 		getLogger().debug(
 				"Call processDBProperties() of DefaultPluginDBChanger");
@@ -345,10 +312,9 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 
 			if (!dbPropertiesFile.exists()) {
 				getLogger()
-						.warn(
-								"'"
-										+ dbPropertiesFile.getAbsolutePath()
-										+ "' is not found. Please check a location of your project.");
+						.warn("'"
+								+ dbPropertiesFile.getAbsolutePath()
+								+ "' folder is not found. Please check a location of your project.");
 
 				return;
 			}
@@ -357,14 +323,14 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 					+ CommonConstants.SRC_MAIN_RESOURCES
 					+ CommonConstants.CONTEXT_PROPERTIES);
 
-			contextPio.setProperty(CommonConstants.APP_DB_DRIVER_CLASS, pio
-					.readValue(CommonConstants.DB_DRIVER_CLASS));
-			contextPio.setProperty(CommonConstants.APP_DB_URL, pio
-					.readValue(CommonConstants.DB_URL));
-			contextPio.setProperty(CommonConstants.APP_DB_USERNAME, pio
-					.readValue(CommonConstants.DB_USERNAME));
-			contextPio.setProperty(CommonConstants.APP_DB_PASSWORD, pio
-					.readValue(CommonConstants.DB_PASSWORD));
+			contextPio.setProperty(CommonConstants.APP_DB_DRIVER_CLASS,
+					pio.readValue(CommonConstants.DB_DRIVER_CLASS));
+			contextPio.setProperty(CommonConstants.APP_DB_URL,
+					pio.readValue(CommonConstants.DB_URL));
+			contextPio.setProperty(CommonConstants.APP_DB_USERNAME,
+					pio.readValue(CommonConstants.DB_USERNAME));
+			contextPio.setProperty(CommonConstants.APP_DB_PASSWORD,
+					pio.readValue(CommonConstants.DB_PASSWORD));
 
 			contextPio.write();
 		} catch (Exception e) {
@@ -379,20 +345,20 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * change all xml files (ex. spring xml, mapping xml, ...)
 	 * 
-	 * @param baseDir
-	 *            current project folder
 	 * @param pluginName
 	 *            plugin's name which have resources to be changed
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
-	 * @param pluginZip
+	 * @param pluginZipFile
 	 *            plugin zip file
-	 * 
+	 * @param baseDir
+	 *            current project folder
 	 * @param dbType
 	 *            db type
 	 */
-	private void processXMLFile(String baseDir, String pluginName,
-			File pluginJar, ZipFile pluginZip, String dbType) throws Exception {
+	private void processXMLFile(String pluginName, File pluginJarFile,
+			ZipFile pluginZipFile, String baseDir, String dbType)
+			throws Exception {
 		getLogger().debug(
 				"Call processXMLFile() of DefaultPluginDBChanger, pluginName is "
 						+ pluginName);
@@ -401,21 +367,20 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 			String path = CommonConstants.DB_RESOURCES
 					+ CommonConstants.fileSeparator + dbType;
 
-			List<String> dbResources = findPluginResources(pluginJar, path,
-					"**");
+			List dbResources = findPluginResources(pluginJarFile, path, "**");
 
 			getLogger().debug("dbResources size : " + dbResources.size());
 
 			for (int i = 0; i < dbResources.size(); i++) {
 				String dbResourceTemplate = (String) dbResources.get(i);
-				File dbResourceFile = new File(baseDir, dbResourceTemplate
-						.substring(path.length()));
+				File dbResourceFile = new File(baseDir,
+						dbResourceTemplate.substring(path.length()));
 
 				getLogger().debug("dbResourceTemplate : " + dbResourceTemplate);
 				getLogger().debug("dbResourceFile : " + dbResourceFile);
 
 				// 3. replace
-				replaceDBResource(pluginName, pluginZip, dbResourceFile,
+				replaceDBResource(pluginName, pluginZipFile, dbResourceFile,
 						dbResourceTemplate);
 
 				getLogger().debug(
@@ -432,47 +397,49 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * create custom table, insert data to DB
 	 * 
+	 * @param pluginJarFile
+	 *            plugin jar file
+	 * @param dbType
+	 *            db type
 	 * @param pio
 	 *            properties includes db information
 	 * @param baseDir
 	 *            target folder
 	 * @param pluginName
 	 *            plugin name to be installed
-	 * @param pluginJar
-	 *            plugin jar file
-	 * @param pluginZip
+	 * @param pluginZipFile
 	 *            plugin zip file
-	 * @param dbType
-	 *            db type
 	 * @param encoding
 	 *            file encoding style
 	 * 
 	 */
-	public void processInitialData(PropertiesIO pio, String baseDir,
-			String pluginName, File pluginJar, ZipFile pluginZip,
-			String dbType, String encoding) throws Exception {
+	public void processInitialData(File pluginJarFile, String dbType,
+			PropertiesIO pio, String baseDir, String pluginName,
+			ZipFile pluginZipFile, String encoding) throws Exception {
 		getLogger()
 				.debug("Call processInitialData() of DefaultPluginDBChanger");
-		List<String> dbScripts = findPluginResources(pluginJar,
+		List dbScripts = findPluginResources(pluginJarFile,
 				CommonConstants.PLUGIN_RESOURCES, "**\\" + pluginName
 						+ "-insert-data-" + dbType + ".sql");
 
 		if (dbScripts.size() > 0) {
 			try {
-				DBUtil.runStatements(new File(baseDir), pluginName, pluginZip,
-						dbScripts, encoding, pio.getProperties());
-				getLogger().debug("Run " + dbScripts
-						+ " dbscripts of plugin [" + pluginName
-						+ "] successfully.");
+				DBUtil.runStatements(new File(baseDir), pluginName,
+						pluginZipFile, dbScripts, encoding, pio.getProperties());
+				getLogger().info(
+						"Run " + dbScripts + " dbscripts of plugin ["
+								+ pluginName + "] successfully.");
 			} catch (Exception e) {
 				if (e.getCause() instanceof SQLException) {
-					getLogger().warn("Executing db script of " + pluginName
-							+ " plugin is skipped. The reason is '"
-							+ e.getMessage() + "'.");
+					getLogger().info(
+							"Executing db script of " + pluginName
+									+ " plugin is skipped. The reason is "
+									+ e.getMessage());
 				} else {
-					getLogger().warn("Processing initial data for "
-							+ pluginName + " is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+					getLogger().warn(
+							"Processing initial data for " + pluginName
+									+ " is skipped. The reason is a '"
+									+ e.getMessage() + "'.");
 				}
 			}
 		}
@@ -481,17 +448,17 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * find plugin resources from plugin jar file
 	 * 
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
 	 * @param path
 	 *            path for finding plugin's resources
 	 * @param pattern
 	 *            pattern for file name
-	 * @return plugin resources
+	 * @return plugin resource list
 	 */
-	private List<String> findPluginResources(File pluginJar, String path,
+	private List findPluginResources(File pluginJarFile, String path,
 			String pattern) throws Exception {
-		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
+		List fileNames = FileUtil.resolveFileNames(pluginJarFile);
 		return FileUtil.findFiles(fileNames, path, pattern, null);
 	}
 
@@ -500,26 +467,26 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * 
 	 * @param pluginName
 	 *            plugin's name which have resources to be changed
-	 * @param pluginZip
+	 * @param pluginZipFile
 	 *            plugin zip file
-	 * @param dbResource
+	 * @param dbResourceFile
 	 *            current configuration file related to db
 	 * @param dbResourceTemplate
 	 *            plugin resource related to db
 	 */
-	private void replaceDBResource(String pluginName, ZipFile pluginZip,
-			File dbResource, String dbResourceTemplate) throws Exception {
-		if (dbResource.exists()) {
+	private void replaceDBResource(String pluginName, ZipFile pluginZipFile,
+			File dbResourceFile, String dbResourceTemplate) throws Exception {
+		if (dbResourceFile.exists()) {
 			// 1. find map includes replace string
-			ZipEntry zipEntry = pluginZip.getEntry(dbResourceTemplate);
-			InputStream templateInputStream = pluginZip
+			ZipEntry zipEntry = pluginZipFile.getEntry(dbResourceTemplate);
+			InputStream templateInputStream = pluginZipFile
 					.getInputStream(zipEntry);
 			Map<String, String> replaceStringMap = FileUtil.findReplaceRegion(
 					templateInputStream, pluginName);
 
 			// 2. find token to be replaced
 			Map<String, String> tokenMap = FileUtil.findReplaceRegion(
-					new FileInputStream(dbResource), pluginName);
+					new FileInputStream(dbResourceFile), pluginName);
 
 			getLogger().debug("token size : " + tokenMap.size());
 			getLogger()
@@ -543,7 +510,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 						String value = startToken + "\n"
 								+ replaceStringMap.get(commentKey) + "\n"
 								+ endToken;
-						FileUtil.replaceFileContent(dbResource, startToken,
+						FileUtil.replaceFileContent(dbResourceFile, startToken,
 								endToken, startToken + endToken, value, false);
 					}
 				}
@@ -556,17 +523,17 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * on maven, change pom.xml file. if current project is based on ant, copy
 	 * library to specific target
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param buildType
 	 *            build type of project ('maven' or 'ant')
 	 * @param dbType
 	 *            db type (hsqldb, oracle, sybase, ...)
 	 * @param baseDir
 	 *            current project folder
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void processDBLibs(PropertiesIO pio, String buildType,
-			String dbType, String baseDir) throws Exception {
+	private void processDBLibs(String buildType, String dbType, String baseDir,
+			PropertiesIO pio) throws Exception {
 		// 1. maven --> pom.xml, .classpath (maven)
 		if (buildType
 				.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
@@ -579,24 +546,16 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 		}
 		// 2. ant --> .classpath, copy
 		String driverPath = pio.readValue(CommonConstants.DB_DRIVER_PATH);
-		copyDBLibs(pio, baseDir, driverPath);
+		copyDBLibs(baseDir, driverPath, pio);
 
 		String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
 		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			changeClasspath(pio, baseDir, dbType, getDBDriverPath(baseDir,
-					driverPath));
+			changeClasspathFile(baseDir, dbType,
+					getDBDriverPath(baseDir, driverPath), pio);
 		}
 	}
 
-	/**
-	 * change project.mf file
-	 * 
-	 * @param pio
-	 *            properties includes db information
-	 * @param buildType
-	 *            build type of project ('maven' or 'ant')
-	 */
-	private void processMetadata(PropertiesIO pio, String buildType)
+	private void processMetadata(String buildType, PropertiesIO pio)
 			throws Exception {
 		if (buildType.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_ANT)) {
 			pio.setProperty(CommonConstants.DB_GROUPID, "");
@@ -626,7 +585,6 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param version
 	 *            version of db library
 	 */
-	@SuppressWarnings("unchecked")
 	private void processPom(String baseDir, String groupId, String artifactId,
 			String version) throws Exception {
 		// 1. get pom file
@@ -688,14 +646,14 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * baseDir/src/main/webapp/WEB-INF/lib, 'service' type project ->
 	 * baseDir/lib)
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param baseDir
 	 *            current project folder
 	 * @param driverPath
 	 *            path includes db library
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void copyDBLibs(PropertiesIO pio, String baseDir, String driverPath)
+	private void copyDBLibs(String baseDir, String driverPath, PropertiesIO pio)
 			throws Exception {
 		driverPath = driverPath.trim();
 
@@ -717,14 +675,13 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 				try {
 					String inDestinationDirectory = baseDir
 							+ CommonConstants.SRC_MAIN_WEBAPP_LIB;
-					FileUtil.copyJars(pio
-							.readValue(CommonConstants.DB_DRIVER_PATH),
+					FileUtil.copyJars(
+							pio.readValue(CommonConstants.DB_DRIVER_PATH),
 							inDestinationDirectory, false);
 				} catch (Exception e) {
 					getLogger()
-							.warn(
-									"Copying jdbc jar file into /src/main/webapp/WEB-INF/lib is skipped. The reason is jdbc jar file is not found in "
-											+ driverPath + ".");
+							.warn("Copying jdbc jar file into /src/main/webapp/WEB-INF/lib is skipped. The reason os jdbc jar file is not found in "
+									+ driverPath + ".");
 				}
 			}
 			// 2. if project.type is service, then copy jdbc jar into [project
@@ -739,11 +696,28 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 			} catch (Exception e) {
 				// ignore Exception
 				getLogger()
-						.warn(
-								"Copying jdbc jar file into /lib is skipped. The reason is jdbc jar file is not found in "
-										+ driverPath + ".");
+						.warn("Copying jdbc jar file into /lib is skipped. The reason is jdbc jar file is not found in "
+								+ driverPath + ".");
 			}
 		}
+	}
+
+	/**
+	 * make classpath information (in case of maven)
+	 * 
+	 * @param groupId
+	 *            groupId of db library
+	 * @param artifactId
+	 *            artifactId of db library
+	 * @param version
+	 *            version of db library
+	 * @return db library path based on M2_REPO
+	 */
+	private String getDBDriverPath(String groupId, String artifactId,
+			String version) throws Exception {
+		String parentPath = groupId.replace(".", "/");
+		return "M2_REPO/" + parentPath + "/" + artifactId + "/" + version + "/"
+				+ artifactId + "-" + version + ".jar";
 	}
 
 	/**
@@ -774,24 +748,23 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * change .classpath file
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param baseDir
 	 *            current project folder
 	 * @param dbType
 	 *            db type (hsqldb, oracle, sybase, ...)
 	 * @param dbDriverPath
 	 *            path includes db library
+	 * @param pio
+	 *            properties includes db information
 	 */
-	private void changeClasspath(PropertiesIO pio, String baseDir,
-			String dbType, String dbDriverPath) throws Exception {
+	private void changeClasspathFile(String baseDir, String dbType,
+			String dbDriverPath, PropertiesIO pio) throws Exception {
 		try {
 			// 1. find .classpath file
 			File classpathFile = new File(baseDir, ".classpath");
 
 			// 2. remove previous driver jar path
-			FileUtil.removeFileContent(classpathFile, "Driver jar path", "",
-					true);
+			FileUtil.removeFileContent(classpathFile, "Driver jar path", "", true);
 
 			if (dbType.equalsIgnoreCase("hsqldb")) {
 				// 3. add current driver jar path
@@ -846,11 +819,9 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 							+ " is not found in " + path + ".");
 		else
 			getLogger()
-					.warn(
-							exceptionMsg + " in " + fileName
-									+ " is skipped. The reason is " + tokenName
-									+ " token is not found in " + path
-									+ fileName + ".");
+					.warn(exceptionMsg + " in " + fileName
+							+ " is skipped. The reason is " + tokenName
+							+ " token is not found in " + path + fileName + ".");
 
 	}
 }

@@ -25,7 +25,7 @@ import org.anyframe.ide.eclipse.core.wizards.NewApplicationWizardJDBCPage;
 import junit.framework.TestCase;
 
 /**
- * This is a NewApplicationWizardJDBCPageTestCase class.
+ * This is an NewApplicationWizardJDBCPageTestCase class.
  * 
  * @author Changje Kim
  * @author Sooyeon Park

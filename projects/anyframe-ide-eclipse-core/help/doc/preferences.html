@@ -38,7 +38,7 @@
 				 		<ul>
 				 		<li><b>Maven 빌드 방식을 채택하는 경우</b><br/>
 				 		<ul><li>
-					    <b>Window >> Preferences >> Anyframe Tools >> IDE</b> 에서
+					    <b>Window >> Preferences >> Anyframe >> IDE</b> 에서
 					    MAVEN클릭<br/>
 					    <b>Maven Home</b> : Maven이 설치된 경로 지정<br/>
 					    <table border="1" cellspacing="0">
@@ -67,7 +67,7 @@
 					    <br/>
 					    <li>
 					    <b>Ant 빌드 방식을 채택하는 경우</b><br/>
-					    <b>Window >> Preferences >> Anyframe Tools >> IDE</b> 에서
+					    <b>Window >> Preferences >> Anyframe >> IDE</b> 에서
 					    ANT클릭<br/>
 					    <b>Anyframe Home</b> : Anyframe이 설치된 root 경로 지정.<br/>
 					    <b>Offline</b> : Anyframe과 연관된 라이브러리를 online으로 연결해서 지원받을지 여부 결정.<br/>
@@ -91,33 +91,7 @@
 					    <br/>
 					    </li>
 					    </ul>
-					    <li>  [선택] Archetype 버전 설정 : Basic Archetype 버전과 Service Archetype 버전을 설정하여 프로젝트 생성 시 사용할 Archetype을 선택할 수 있게 한다. 설정하지 않은 경우, 최신 버전의 Archetype을 이용하여 프로젝트가 생성된다. <br> 
-					    <b>Window >> Preferences >> Anyframe Tools >> IDE >> [Optional] Archetype Version setting</b> 에서
-					    Archetype 버전 목록 설정<br/>
-					    Basic Archetype Version : 콤보 박스를 선택하여 버전 목록을 얻어낸 후 원하는 버전을 설정한다.<br/>
-					    Service Archetype Version : 콤보 박스를 선택하여 버전 목록을 얻어낸 후 원하는 버전을 설정한다.<br/>
-					    Basic Archetype Version과 Service Archetype Version을 설정할 수 있다. 우측의 콤보 박스를 선택하여 버전 목록을 확인해볼 수 있는데 
-								로컬 환경에 archetype-catalog.xml 파일이 존재하면 이 파일로부터 버전 목록을 얻고, 
-								로컬 환경에 파일이 존재하지 않으면 원격 Repository로부터 archetype-catalog.xml 파일을 
-								다운로드 받아서 버전 목록을 얻어온다.  <br/>
-					    <br />
-					    <br/>
-					    </li>
-					    <li>  Log Level 설정 : Maven 명령어 수행 시 나오는 로그 정보들을 레벨(ERROR, INFO, DEBUG) 별로 구분하여 확인해볼 수 있도록 설정한다. 디폴트로 INFO 레벨이 설정되어 있다. <br> 
-					    <b>Window >> Preferences >> Anyframe Tools >> IDE >> Log Level setting</b> 에서
-					    Log 레벨 설정<br/>
-					    Log Level : ERROR, INFO, DEBUG 중 하나의 로그 레벨을 선택하도록 한다. Maven 사용 시, ERROR를 선택하면 실제 Maven 명령어 실행 시 명령어 파라미터로 "-q"를 입력한 것과 동일한 
-								기능으로 에러 로그로 제공되는 로그 메시지들만 보여지게 된다. 
-								INFO를 선택하면 실제 Maven 명령어 실행 시 기본적으로 보여지는 로그 메시지들이 보인다. 
-								DEBUG를 선택하면 실제 Maven 명령어 실행 시 명령어 파라미터로 "--debug"를 입력한 것과 동일한 기능으로 디버그성 로그 메시지들이 모두 함께 보여지게 된다.
-								Ant 사용 시, ERROR를 선택하면 빌드 스크립트 파일을 기준으로 실제 Ant 명령어 실행 시 
-						ERROR 로그 레벨을 설정한 것과 동일하게 에러 로그로 제공되는 로그 메시지들만 보여지게 된다.
-						INFO를 선택하면 실제 Ant 명령어 실행 시 기본적으로 보여지는 로그 메시지들이 보인다. 
-						DEBUG를 선택하면 실제 Ant 명령어 실행 시 DEBUG 로그 레벨을 설정한 것과 동일하게 디버그성 로그 메시지들이 모두 함께 보여지게 된다.
-								<br/>
-					    <br />
-					    <br/>
-					    </li>					    					    
+					    
 					    <li>  Server 설정 : 프로젝트가 구동될 WAS로 Tomcat v6.0을 사용한다.<br> 
 					    <b>Window >> Preferences >> Server >> Runtime Environments</b> 에서
 					    Add..클릭<br/>

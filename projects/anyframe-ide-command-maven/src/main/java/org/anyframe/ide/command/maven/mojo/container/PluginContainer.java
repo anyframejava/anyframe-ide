@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -23,7 +23,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.anyframe.ide.command.common.DefaultPluginPomManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.Constants;
@@ -58,6 +57,9 @@ import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.interpolation.EnvarBasedValueSource;
 import org.codehaus.plexus.util.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import org.anyframe.ide.command.common.DefaultPluginPomManager;
+import org.anyframe.ide.command.common.util.FileUtil;
 
 /**
  * This is an PluginContainer class. This class is for initializing
@@ -96,13 +98,6 @@ public class PluginContainer {
 		}
 	}
 
-	/**
-	 * lookup a component using component's role
-	 * 
-	 * @param role
-	 *            component's identifier
-	 * @return a component
-	 */
 	public Object lookup(String role) throws Exception {
 		try {
 			return this.container.lookup(role);
@@ -111,15 +106,6 @@ public class PluginContainer {
 		}
 	}
 
-	/**
-	 * lookup a component using component's role and hint
-	 * 
-	 * @param role
-	 *            component's identifier
-	 * @param roleHint
-	 *            component's identifier
-	 * @return a component
-	 */
 	public Object lookup(String role, String roleHint) throws Exception {
 		try {
 			return this.container.lookup(role, roleHint);
@@ -133,12 +119,9 @@ public class PluginContainer {
 		return this.request;
 	}
 
-	/**
-	 * initialize maven's settings
-	 */
 	private void initSettings() {
-		File userSettingsFile = new File(new File(System
-				.getProperty("user.home"), ".m2"), "settings.xml");
+		File userSettingsFile = new File(new File(
+				System.getProperty("user.home"), ".m2"), "settings.xml");
 		Settings userSettings = loadSettings(userSettingsFile);
 
 		// look in ${M2_HOME}/conf
@@ -165,9 +148,6 @@ public class PluginContainer {
 		}
 	}
 
-	/**
-	 * create local/remote repository
-	 */
 	private void setRepository() throws Exception {
 		localArtifactRepository = createLocalArtifactRepository();
 		remoteArtifactRepositories = createRemoteArtifactRepositories();
@@ -177,20 +157,12 @@ public class PluginContainer {
 				"super-pom", "2.0", "jar");
 	}
 
-	/**
-	 * create a request and set remote/local repositories
-	 */
 	public void createRequest() throws Exception {
 		request = new ArchetypeGenerationRequest();
 		request.setLocalRepository(this.localArtifactRepository);
 		request.setRemoteArtifactRepositories(this.remoteArtifactRepositories);
 	}
 
-	/**
-	 * create local repository
-	 * 
-	 * @return local repository
-	 */
 	private ArtifactRepository createLocalArtifactRepository() {
 		ArtifactRepositoryLayout repositoryLayout = new DefaultRepositoryLayout();
 
@@ -207,12 +179,6 @@ public class PluginContainer {
 				releases);
 	}
 
-	/**
-	 * create remote repositories
-	 * 
-	 * @return remote reopsitories
-	 */
-	@SuppressWarnings("unchecked")
 	private List<ArtifactRepository> createRemoteArtifactRepositories()
 			throws Exception {
 		List<ArtifactRepository> list = new ArrayList<ArtifactRepository>();
@@ -250,11 +216,6 @@ public class PluginContainer {
 		return list;
 	}
 
-	/**
-	 * create remote repository
-	 * 
-	 * @return remote reopsitory
-	 */
 	private ArtifactRepository createRemoteArtifactRepository(
 			Repository repository) throws Exception {
 		ArtifactRepositoryLayout repositoryLayout = (ArtifactRepositoryLayout) lookup(
@@ -282,13 +243,6 @@ public class PluginContainer {
 		return artifactRepository;
 	}
 
-	/**
-	 * configure wagon manager and lookup a ArtifactRepositoryFactory
-	 * 
-	 * @param repository
-	 *            repository information
-	 * @return ArtifactRepositoryFactory instance
-	 */
 	private ArtifactRepositoryFactory getArtifactRepositoryFactory(
 			Repository repository) throws Exception {
 		WagonManager manager = (WagonManager) lookup(WagonManager.ROLE);
@@ -296,16 +250,16 @@ public class PluginContainer {
 		Server server = settings.getServer(repository.getId());
 
 		if (server != null) {
-			manager.addAuthenticationInfo(repository.getId(), server
-					.getUsername(), server.getPassword(), server
-					.getPrivateKey(), server.getPassphrase());
+			manager.addAuthenticationInfo(repository.getId(),
+					server.getUsername(), server.getPassword(),
+					server.getPrivateKey(), server.getPassphrase());
 		}
 
 		Proxy proxy = settings.getActiveProxy();
 		if (proxy != null) {
-			manager.addProxy(proxy.getProtocol(), proxy.getHost(), proxy
-					.getPort(), proxy.getUsername(), proxy.getPassword(), proxy
-					.getNonProxyHosts());
+			manager.addProxy(proxy.getProtocol(), proxy.getHost(),
+					proxy.getPort(), proxy.getUsername(), proxy.getPassword(),
+					proxy.getNonProxyHosts());
 		}
 
 		Mirror mirror = settings.getMirrorOf(repository.getId());
@@ -319,13 +273,6 @@ public class PluginContainer {
 		return (ArtifactRepositoryFactory) lookup(ArtifactRepositoryFactory.ROLE);
 	}
 
-	/**
-	 * set policy of remote repository
-	 * 
-	 * @param policy
-	 *            repository policy
-	 * @return remote repository information
-	 */
 	private ArtifactRepositoryPolicy buildRemoteArtifactRepositoryPolicy(
 			RepositoryPolicy policy) {
 		boolean enabled = true;
@@ -346,13 +293,6 @@ public class PluginContainer {
 				checksumPolicy);
 	}
 
-	/**
-	 * load settings file
-	 * 
-	 * @param settingsFile
-	 *            maven's settings.xml file
-	 * @return maven's settings
-	 */
 	private Settings loadSettings(File settingsFile) {
 		Settings settings = null;
 		try {
@@ -372,13 +312,6 @@ public class PluginContainer {
 		return settings;
 	}
 
-	/**
-	 * read settings file
-	 * 
-	 * @param settingsFile
-	 *            maven's settings.xml file
-	 * @return maven's settings
-	 */
 	private Settings readSettings(File settingsFile) throws IOException,
 			XmlPullParserException {
 		Settings settings = null;
@@ -417,12 +350,6 @@ public class PluginContainer {
 		return settings;
 	}
 
-	/**
-	 * release a ArtifactRepositoryFactory
-	 * 
-	 * @param repositoryFactory
-	 *            artifactRepositoryFactory instance
-	 */
 	private void releaseArtifactRepositoryFactory(
 			ArtifactRepositoryFactory repositoryFactory) {
 		try {

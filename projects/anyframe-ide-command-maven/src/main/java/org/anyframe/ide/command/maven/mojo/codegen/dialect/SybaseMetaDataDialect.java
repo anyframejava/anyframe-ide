@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -26,12 +26,11 @@ import org.hibernate.cfg.reveng.dialect.ResultSetIterator;
 import org.hibernate.mapping.Table;
 
 /**
- * This is a SybaseMetaDataDialect class.
- * 
+ * This is an SybaseMetaDataDialect class.
  * @author Sooyeon Park
  */
 public class SybaseMetaDataDialect extends JDBCMetaDataDialect {
-
+	
 	public Iterator getPrimaryKeys(final String xcatalog, final String xschema,
 			final String xtable) {
 		try {
@@ -53,7 +52,7 @@ public class SybaseMetaDataDialect extends JDBCMetaDataDialect {
 					putTablePart(element, rs);
 					element.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
 					element.put("KEY_SEQ", new Short(rs.getShort("KEY_SEQ")));
-					// element.put("PK_NAME", rs.getString("PK_NAME"));
+					//element.put("PK_NAME", rs.getString("PK_NAME"));
 					element.put("PK_NAME", null);
 					return element;
 				}

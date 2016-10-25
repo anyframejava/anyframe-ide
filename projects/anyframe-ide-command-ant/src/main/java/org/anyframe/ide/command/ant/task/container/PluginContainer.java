@@ -53,8 +53,7 @@ public class PluginContainer {
 
 	private String anyframeHome = "";
 
-	public PluginContainer(String anyframeHome, String baseDir,
-			boolean isOffline) {
+	public PluginContainer(String anyframeHome, String baseDir, boolean isOffline) {
 		try {
 			ClassWorld classWorld = new ClassWorld();
 			classWorld.newRealm("plexus.core", getClass().getClassLoader());
@@ -77,13 +76,6 @@ public class PluginContainer {
 		}
 	}
 
-	/**
-	 * lookup a component using component's role
-	 * 
-	 * @param role
-	 *            component's identifier
-	 * @return a component
-	 */
 	public Object lookup(String role) {
 		try {
 			return this.container.lookup(role);
@@ -92,15 +84,6 @@ public class PluginContainer {
 		}
 	}
 
-	/**
-	 * lookup a component using component's role and hint
-	 * 
-	 * @param role
-	 *            component's identifier
-	 * @param roleHint
-	 *            component's identifier
-	 * @return a component
-	 */
 	public Object lookup(String role, String roleHint) {
 		try {
 			return this.container.lookup(role, roleHint);
@@ -117,9 +100,6 @@ public class PluginContainer {
 	/*********************************************************************/
 	/************ set up artifact repository *****************************/
 	/*********************************************************************/
-	/**
-	 * create local/remote repository
-	 */
 	private void setRepository(boolean isOffline) throws Exception {
 		localArtifactRepository = createLocalArtifactRepository();
 		remoteArtifactRepositories = createRemoteArtifactRepositories(isOffline);
@@ -129,9 +109,6 @@ public class PluginContainer {
 				"super-pom", "2.0", "jar");
 	}
 
-	/**
-	 * create a request and set remote/local repositories
-	 */
 	public void createRequest(String baseDir) throws Exception {
 		request = new ArchetypeGenerationRequest();
 		request.setLocalRepository(this.localArtifactRepository);
@@ -139,11 +116,6 @@ public class PluginContainer {
 		request.setOutputDirectory(baseDir);
 	}
 
-	/**
-	 * create local repository
-	 * 
-	 * @return local repository
-	 */
 	private ArtifactRepository createLocalArtifactRepository() {
 		ArtifactRepositoryLayout repositoryLayout = (ArtifactRepositoryLayout) lookup(ArtifactRepositoryLayout.ROLE);
 
@@ -160,11 +132,6 @@ public class PluginContainer {
 				snapshots, releases);
 	}
 
-	/**
-	 * create remote repositories
-	 * 
-	 * @return remote reopsitories
-	 */
 	private List<ArtifactRepository> createRemoteArtifactRepositories(
 			boolean isOffline) throws Exception {
 
@@ -176,11 +143,6 @@ public class PluginContainer {
 		return remoteRepositories;
 	}
 
-	/**
-	 * create remote repository
-	 * 
-	 * @return remote reopsitory
-	 */
 	private ArtifactRepository createRemoteArtifactRepository() {
 		ArtifactRepositoryLayout repositoryLayout = (ArtifactRepositoryLayout) lookup(
 				ArtifactRepositoryLayout.ROLE, "default");
@@ -210,12 +172,6 @@ public class PluginContainer {
 		return artifactRepository;
 	}
 
-	/**
-	 * release a ArtifactRepositoryFactory
-	 * 
-	 * @param repositoryFactory
-	 *            artifactRepositoryFactory instance
-	 */
 	protected void releaseArtifactRepositoryFactory(
 			ArtifactRepositoryFactory repositoryFactory) {
 		try {

@@ -45,13 +45,9 @@ public class UpdatePluginCatalogMojo extends AbstractPluginMojo {
 			setRepository(request);
 
 			pluginCatalogDataSource.readPluginCatalog(request);
-			
-			System.out.println("Plugin catalog files were updated successfully.");
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute UpdatePluginCatalogMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute UpdatePluginCatalogMojo");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 

@@ -88,14 +88,12 @@ public class ConfigPage implements Page {
     // in case of dao framework name is same with
     // plugin name
 
-    // mip-query, query plugin name
+    // mip-query plugin name
     private String pluginMipQuery = CommonConstants.MIP_QUERY_PLUGIN;
-    private String pluginQuery = CommonConstants.QUERY_PLUGIN;
 
-    // miplatform, map template name
+    // miplatform template name
     private String templateMiplatform = "miplatform";
-    private String templateMap = "map";
-    
+
     public boolean useQueryService() {
         return daoRadios[1].getEnabled() && daoRadios[1].getSelection();
     }
@@ -370,8 +368,6 @@ public class ConfigPage implements Page {
                 if (templateCombo.getItemCount() > 0) {
                     if (!pList.contains(pluginMipQuery))
                         templateCombo.remove(templateMiplatform);
-                    if (!pList.contains(pluginQuery))
-                        templateCombo.remove(templateMap);
                 }
             } else {
                 Combo templateCombo = getTemplateCombo();

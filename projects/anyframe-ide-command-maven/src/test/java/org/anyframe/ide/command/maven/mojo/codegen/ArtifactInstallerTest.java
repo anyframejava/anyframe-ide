@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2002-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.maven.mojo.codegen.ArtifactInstaller;
 import org.apache.maven.monitor.logging.DefaultLog;
 import org.apache.maven.project.MavenProject;
+import org.apache.tools.ant.Project;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 
-/**
- * This is an ArtifactInstallerTest class.
- * 
- * @author Sooyeon Park
- */
+
 public class ArtifactInstallerTest extends TestCase {
 
 	public void setUp() {
@@ -50,21 +49,18 @@ public class ArtifactInstallerTest extends TestCase {
 
 		project.setPackaging("jar");
 		project.setGroupId("com.sds.emp");
-		project.getProperties().setProperty(CommonConstants.WEB_FRAMEWORK,
-				"spring");
-		project.getProperties().setProperty(
-				CommonConstants.APP_DAOFRAMEWORK_TYPE, "query");
+		project.getProperties().setProperty(CommonConstants.WEB_FRAMEWORK, "spring");
+		project.getProperties().setProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE, "query");
 		project.getProperties().setProperty("pjt.name", "services");
 		project.getProperties().setProperty("template.type", "default");
 
 		ArtifactInstaller installer = new ArtifactInstaller(project,
 				"com.sds.domain", "Categories", "./src/test/resources/.temp/",
-				"./src/test/java/service/", false,
-				new File(".").getAbsolutePath()
+				"./src/test/java/service/", false, new File(".")
+						.getAbsolutePath()
 						+ "/src/test/resources/templates/");
 
-		installer
-				.setLog(new DefaultLog(new ConsoleLogger(0, "artifactLogger")));
+		installer.setLog(new DefaultLog(new ConsoleLogger(0,"artifactLogger")));
 		installer.execute();
 
 		assertEquals(false, installer.isGenericCore());

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @goal gen
  * @phase generate-sources
  * @execute phase="compile"
- * @author modified by SooYeon Park
+ * @author extended by SooYeon Park
  */
 public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 	private static Log log = LogFactory.getLog(AnyframeGeneratorMojo.class);
@@ -132,7 +132,8 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		// if project is of type "pom", throw an error
 		if (getProject().getPackaging().equalsIgnoreCase("pom")) {
-			String errorMsg = "This plugin must be run from a jar or war project, please run it from a jar or war project.";
+			String errorMsg = "[error] This plugin must be run from a jar or war project, please run it from a jar or war project (i.e. core or web).";
+			// getLog().error(errorMsg);
 			throw new MojoFailureException(errorMsg);
 		}
 
@@ -176,7 +177,7 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 			pathToParent = pathToParent
 					.substring(0, pathToParent
 							.lastIndexOf(CommonConstants.fileSeparator) + 1);
-			getLog().debug("Assuming '"
+			log("Assuming '"
 					+ moduleName
 					+ "' has hibernate.cfg.xml in its src/main/resources directory");
 			getComponentProperties().put(
@@ -288,6 +289,10 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 		this.generateWebOnly = generateWebOnly;
 	}
 
+	private void log(String msg) {
+		getLog().info("[AppFuse] " + msg);
+	}
+
 	private void checkEntityExists() throws MojoFailureException {
 		// allow check to be bypassed when -Dentity.check=false
 		if (!"false".equals(System.getProperty("entity.check"))) {
@@ -320,7 +325,7 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 			if (modelPackage.exists()) {
 				String[] entities = modelPackage.list();
 				for (String entity : entities) {
-					getLog().debug("Found '" + entity + "' in model package...");
+					log("Found '" + entity + "' in model package...");
 					if (entity.contains(pojoName + ".java")) {
 						entityExists = true;
 						break;
@@ -330,11 +335,11 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 				getLog().error(
 						"The path '" + pathToModelPackage + groupIdAsPath
 								+ CommonConstants.fileSeparator
-								+ "model' does not exist.");
+								+ "model' does not exist!");
 			}
 
 			if (!entityExists) {
-				throw new MojoFailureException("The '" + pojoName
+				throw new MojoFailureException("[error] The '" + pojoName
 						+ "' entity does not exist in '" + modelPackage + "'.");
 			} else {
 				// Entity found, make sure it has @Entity annotation
@@ -351,7 +356,7 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 						throw new MojoFailureException(msg);
 					}
 				} catch (IOException io) {
-					throw new MojoFailureException("Class '" + pojoName
+					throw new MojoFailureException("[error] Class '" + pojoName
 							+ ".java' not found in '" + modelPackage + "'");
 				}
 			}

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -34,79 +34,78 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * This is a TDate class.
- * 
+ * This is an TDate class.
  * @author Sooyeon Park
  */
 @Entity
 @Table(name = "T_DATE", schema = "PUBLIC", uniqueConstraints = @UniqueConstraint(columnNames = {
-		"U_ID1", "U_ID2" }))
+    "U_ID1", "U_ID2" }))
 public class TDate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private TDateId id;
-	private UDate uDate;
-	private Set<SDate> sDates = new HashSet<SDate>(0);
+    private static final long serialVersionUID = 1L;
+    private TDateId id;
+    private UDate uDate;
+    private Set<SDate> sDates = new HashSet<SDate>(0);
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "TId1", column = @Column(name = "T_ID1", nullable = false)),
-			@AttributeOverride(name = "TId2", column = @Column(name = "T_ID2", nullable = false)) })
-	public TDateId getId() {
-		return this.id;
-	}
+    @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "TId1", column = @Column(name = "T_ID1", nullable = false)),
+        @AttributeOverride(name = "TId2", column = @Column(name = "T_ID2", nullable = false)) })
+    public TDateId getId() {
+        return this.id;
+    }
 
-	public void setId(TDateId id) {
-		this.id = id;
-	}
+    public void setId(TDateId id) {
+        this.id = id;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "U_ID1", referencedColumnName = "U_ID1", nullable = false),
-			@JoinColumn(name = "U_ID2", referencedColumnName = "U_ID2", nullable = false) })
-	public UDate getUDate() {
-		return this.uDate;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "U_ID1", referencedColumnName = "U_ID1", nullable = false),
+        @JoinColumn(name = "U_ID2", referencedColumnName = "U_ID2", nullable = false) })
+    public UDate getUDate() {
+        return this.uDate;
+    }
 
-	public void setUDate(UDate uDate) {
-		this.uDate = uDate;
-	}
+    public void setUDate(UDate uDate) {
+        this.uDate = uDate;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TDate")
-	public Set<SDate> getSDates() {
-		return this.sDates;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TDate")
+    public Set<SDate> getSDates() {
+        return this.sDates;
+    }
 
-	public void setSDates(Set<SDate> sDates) {
-		this.sDates = sDates;
-	}
+    public void setSDates(Set<SDate> sDates) {
+        this.sDates = sDates;
+    }
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public int hashCode() {
-		int result = 0;
+    public int hashCode() {
+        int result = 0;
 
-		return result;
-	}
+        return result;
+    }
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
 
-		sb.append(" [");
-		sb.append("id").append("='").append(getId()).append("', ");
+        sb.append(" [");
+        sb.append("id").append("='").append(getId()).append("', ");
 
-		sb.append("]");
+        sb.append("]");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

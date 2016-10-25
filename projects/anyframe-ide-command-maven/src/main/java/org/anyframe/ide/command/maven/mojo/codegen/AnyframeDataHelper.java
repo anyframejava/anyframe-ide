@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2009 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -28,8 +28,7 @@ import org.appfuse.tool.DataHelper;
 import org.hibernate.mapping.Column;
 
 /**
- * This is an AnyframeDataHelper class to create test data for junit test case
- * and DbUnit.
+ * This is an AnyframeDataHelper class.
  * 
  * @author hzhang(mb4henry@yahoo.com.au)
  * @author Matt Raible
@@ -65,29 +64,23 @@ public class AnyframeDataHelper extends DataHelper {
 		String type = column.getValue().getType().getReturnedClass().getName();
 		String datetype = column.getValue().getType().getName();
 
-		/*
-		 * messages for debug System.out.println("[AnyframeDataHelper] type: " +
-		 * type); System.out.println("[AnyframeDataHelper] name: " +
-		 * column.getName());
-		 * System.out.println("[AnyframeDataHelper] precision: "+
-		 * column.getPrecision());
-		 * System.out.println("[AnyframeDataHelper] scale: " +
-		 * column.getScale());
-		 * System.out.println("[AnyframeDataHelper] length: " +
-		 * column.getLength());
-		 * System.out.println("-------------------------------------------------"
-		 * );
-		 */
-
+		/* messages for debug 
+		System.out.println("[AnyframeDataHelper] type: " + type);
+		System.out.println("[AnyframeDataHelper] name: " + column.getName());
+		System.out.println("[AnyframeDataHelper] precision: "+ column.getPrecision());
+		System.out.println("[AnyframeDataHelper] scale: " + column.getScale());
+		System.out.println("[AnyframeDataHelper] length: " + column.getLength());
+		System.out.println("-------------------------------------------------");
+	 	*/
+		
 		int precision = (int) Math.pow(10, column.getPrecision());
 		int scale = column.getScale() == 0 ? 2 : column.getScale();
 		int difference = column.getPrecision() - scale;
-		if (difference < 0)
-			difference = 0;
+		if (difference < 0) difference = 0;
 
-		if (precision != 0)
+		if(precision != 0)
 			precision = (int) Math.pow(10, difference);
-
+		
 		if ("java.lang.Integer".equals(type) || "int".equals(type)) {
 			result.append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
 					: precision))) - 1);
@@ -103,8 +96,7 @@ public class AnyframeDataHelper extends DataHelper {
 		} else if ("java.lang.Short".equals(type) || "short".equals(type)) {
 			result.append((short) ((Math.random() * (precision == 0 ? Short.MAX_VALUE
 					: precision))) - 1);
-		} else if ("java.lang.Byte".equals(type) || "byte".equals(type)
-				|| "[B".equals(type)) {
+		} else if ("java.lang.Byte".equals(type) || "byte".equals(type) || "[B".equals(type)) {
 			result.append((byte) ((Math.random() * Byte.MAX_VALUE)));
 		} else if ("java.math.BigDecimal".equals(type)) {
 			result.append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
@@ -150,65 +142,40 @@ public class AnyframeDataHelper extends DataHelper {
 		int precision = (int) Math.pow(10, column.getPrecision());
 		int scale = column.getScale() == 0 ? 2 : column.getScale();
 		int difference = column.getPrecision() - scale;
-		if (difference < 0)
-			difference = 0;
-
-		if (precision != 0)
+		if (difference < 0) difference = 0;
+		
+		if(precision != 0)
 			precision = (int) Math.pow(10, difference);
-
+		
 		if ("java.lang.Integer".equals(type)) {
-			result.append("new Integer(")
-					.append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1).append(")");
+			result.append("new Integer(").append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE: precision))) - 1).append(")");
 		} else if ("int".equals(type)) {
-			result.append("(int) ").append(
-					(int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1);
+			result.append("(int) ").append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) -1);
 		} else if ("java.lang.Float".equals(type)) {
-			result.append("new Float(")
-					.append((float) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1).append(")");
+			result.append("new Float(").append((float) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) -1).append(")");
 		} else if ("java.math.BigDecimal".equals(type)) {
-			result.append("new java.math.BigDecimal(")
-					.append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1).append(")");
+			result.append("new java.math.BigDecimal(").append((int) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) -1).append(")");
 		} else if ("float".equals(type)) {
-			result.append("(float) ")
-					.append((float) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1);
+			result.append("(float) ").append((float) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) -1);
 		} else if ("java.lang.Long".equals(type)) {
-			result.append("new Long(\"")
-					.append((long) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-							: precision))) - 1).append("\")");
+			result.append("new Long(\"").append((long) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) - 1).append("\")");			
 		} else if ("long".equals(type)) {
-			result.append((long) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE
-					: precision))) - 1);
+			result.append((long) ((Math.random() * (precision == 0 ? Integer.MAX_VALUE : precision))) -1);
 		} else if ("java.lang.Double".equals(type)) {
-			result.append("new Double(")
-					.append((long) (Math.random() * (precision == 0 ? Float.MAX_VALUE
-							: precision)) - 1).append(")");
+			result.append("new Double(").append((long) (Math.random() * (precision == 0 ? Float.MAX_VALUE : precision)) -1).append(")");
 		} else if ("double".equals(type)) {
-			result.append((long) ((Math.random() * (precision == 0 ? Float.MAX_VALUE
-					: precision))) - 1);
+			result.append((long) ((Math.random() * (precision == 0 ? Float.MAX_VALUE : precision))) - 1);
 		} else if ("java.lang.Short".equals(type)) {
-			result.append("new Short(\"")
-					.append((short) ((Math.random() * (precision == 0 ? Short.MAX_VALUE
-							: precision))) - 1).append("\")");
+			result.append("new Short(\"").append((short) ((Math.random() * (precision == 0 ? Short.MAX_VALUE : precision))) -1).append("\")");		
 		} else if ("short".equals(type)) {
-			result.append("(short)").append(
-					(short) ((Math.random() * (precision == 0 ? Short.MAX_VALUE
-							: precision))) - 1);
+			result.append("(short)").append((short) ((Math.random() * (precision == 0 ? Short.MAX_VALUE: precision))) - 1);
 		} else if ("java.lang.Byte".equals(type)) {
-			result.append("new Byte(\"")
-					.append((byte) ((Math.random() * Byte.MAX_VALUE)))
-					.append("\")");
+			result.append("new Byte(\"").append((byte) ((Math.random() * Byte.MAX_VALUE))).append("\")");
 		} else if ("byte".equals(type)) {
 			result.append("(byte) ").append(
 					(byte) ((Math.random() * Byte.MAX_VALUE)));
 		} else if ("[B".equals(type)) {
-			result.append("new byte[]{")
-					.append((byte) ((Math.random() * Byte.MAX_VALUE)))
-					.append("}");
+			result.append("new byte[]{").append((byte) ((Math.random() * Byte.MAX_VALUE))).append("}");
 		} else if ("java.lang.Boolean".equals(type)) {
 			result.append("Boolean.FALSE");
 		} else if ("boolean".equals(type)) {

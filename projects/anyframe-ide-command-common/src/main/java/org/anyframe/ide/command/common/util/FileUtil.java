@@ -927,28 +927,27 @@ public class FileUtil {
 	@SuppressWarnings("unchecked")
 	public static boolean moveFile(File srcFolder, File backupDir,
 			List<String> includePatterns, Collection<String> excludeFiles,
-			boolean recursive) throws Exception {
+			List<String> excludePatterns, boolean recursive)
+			throws Exception {
 
 		if (!srcFolder.exists()) {
 			return false;
 		}
 
 		IOFileFilter optionFilter = (recursive) ? TrueFileFilter.TRUE : null;
-		
-		IOFileFilter pluginNameFilter = new WildcardFileFilter(includePatterns,
-				IOCase.INSENSITIVE);
-		
-		if (excludeFiles != null) {
-			IOFileFilter excludesFilter = FileFilterUtils
-					.notFileFilter(new NameFileFilter(excludeFiles
-							.toArray(new String[excludeFiles.size()]),
-							IOCase.SENSITIVE));
-			
-			pluginNameFilter = FileFilterUtils
-			.andFileFilter(excludesFilter, pluginNameFilter);
-		}
 
-		Collection<File> files = FileUtils.listFiles(srcFolder, pluginNameFilter, optionFilter);
+		IOFileFilter excludesFilter = FileFilterUtils
+				.notFileFilter(new NameFileFilter(excludeFiles
+						.toArray(new String[excludeFiles.size()]),
+						IOCase.SENSITIVE));
+
+		IOFileFilter pluginNameFilter = new WildcardFileFilter(includePatterns, IOCase.INSENSITIVE);
+
+		pluginNameFilter = FileFilterUtils.andFileFilter(pluginNameFilter,
+				FileFilterUtils.notFileFilter(new WildcardFileFilter(excludePatterns, IOCase.INSENSITIVE)));
+
+		Collection<File> files = FileUtils.listFiles(srcFolder, FileFilterUtils
+				.andFileFilter(excludesFilter, pluginNameFilter), optionFilter);
 
 		// -- move files
 		for (File src : files) {
@@ -970,7 +969,8 @@ public class FileUtil {
 		IOFileFilter excludesFilter = FileFilterUtils
 				.notFileFilter(new NameFileFilter(excludes
 						.toArray(new String[excludes.size()]), IOCase.SENSITIVE));
-		
+
+		// TODO :
 		Collection<File> files = FileUtils.listFiles(srcFolder, excludesFilter,
 				TrueFileFilter.INSTANCE);
 

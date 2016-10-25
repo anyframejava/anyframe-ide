@@ -67,7 +67,7 @@ public class Messages implements Serializable {
 			+ "Licensed under Apache Standard License 2.0\n"
 			+ "ANYFRAME_HOME is set to: ";
 
-	public static final String ANT_HELP = "Usage (optionals marked with *): anyframe [command] [options]*\n\n"
+	public static final String ANT_HELP = "\nUsage (optionals marked with *): anyframe [command] [options]*\n\n"
 			+ "Available Commands (type 'anyframe -help -command [command]' for more information) \n"
 			+ "anyframe create-project \n"
 			+ "anyframe install [PLUGIN_NAME] \n"

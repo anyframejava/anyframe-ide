@@ -26,9 +26,11 @@ public interface CommonConstants {
 	// 1. plugin catalog
 	String PLUGIN_CATALOG_ESSENTIAL_FILE = "plugin-catalog-essential.xml";
 	String PLUGIN_CATALOG_OPTIONAL_FILE = "plugin-catalog-optional.xml";
+	String PLUGIN_CATALOG_CUSTOM_FILE = "plugin-catalog-custom.xml";
 
 	int PLUGIN_TYPE_ESSENTIAL = 1;
 	int PLUGIN_TYPE_OPTIONAL = 2;
+	int PLUGIN_TYPE_CUSTOM = 3;
 
 	// 2. plugin name
 	String CORE_PLUGIN = "core";
@@ -61,15 +63,17 @@ public interface CommonConstants {
 	String WELCOME_FILE = "anyframe.jsp";
 
 	// 4. print patterns
-	String PLUGININFO_DETAIL = " %-15s : %-60s";
-	String PLUGININFO_DETAIL_REMAINS = " %-15s   %-60s";
-	String PLUGININFO_NAME_LATEST_DESCRIPTION = " %-20s %-15s";
-	String PLUGININFO_NAME_VERSION_LATEST = " %-20s %-15s  %-15s";
-	
-	String PLUGININFO_NAME_VERSION_LATEST_TITLE = " %-20s %-15s  %-15s";
-	
-	String ARCHETYPE_NAME_VERSION = " %-3s %-40s %-15s";
-	String INSTALL_PLUGINS = " %-8s  %-20s %-35s";
+	String PLUGININFO_DETAIL = " %-15s : %-40s";
+	// String PLUGININFO_DEPENDENCIES = " %-15s : %-20s| %-15s";
+	// String PLUGININFO_DEPENDENCIES_BODY = " %-15s   %-20s| %-15s";
+	// String PLUGININFO_DEPENDENCIES_LINE = " %-15s   %-20s";
+	String PLUGININFO_NAME_LATEST_DESCRIPTION = " %-20s| %-15s | %-35s";
+	// String PLUGININFO_NAME_VERSION = " %-20s| %-15s";
+	String PLUGININFO_NAME_VERSION_LATEST = " %-20s| %-15s | %-15s";
+	// String PLUGININFO_RELEASES = " %-15s : %-15s";
+	// String PLUGININFO_RELEASES_BODY = " %-15s   %-15s";
+	String ARCHETYPE_NAME_VERSION = " %-3s| %-40s| %-15s";
+	String INSTALL_PLUGINS = " %-8s | %-20s| %-35s";
 
 	// 5. sample project - project.mf
 	String ANYFRAME_HOME = "anyframe.home";
@@ -171,7 +175,28 @@ public interface CommonConstants {
 	String ARCHETYPE_BASIC_ARTIFACT_ID = "anyframe-basic-archetype";
 	String ARCHETYPE_SERVICE_ARTIFACT_ID = "anyframe-service-archetype";
 	
-	String LOG_LEVEL_DEBUG = "DEBUG";
-	String LOG_LEVEL_ERROR = "ERROR";
-	String LOG_LEVEL_INFO = "INFO";
+	// 1. plugin name
+	/*
+	 * String MIPLATFORM_PLUGIN = "miplatform"; String SECURITY_PLUGIN =
+	 * "security"; String MIPSAMPLE_PLUGIN = "mipsample"; String REMOTING_PLUGIN
+	 * = "remoting";
+	 * 
+	 * String CACHE_PLUGIN = "cache"; String CXF_PLUGIN = "cxf"; String
+	 * STRUTS_PLUGIN = "struts";
+	 * 
+	 * String PROJECT_VERSION = "project.version"; String WEB_ARCHETYPE_ID =
+	 * "anyframe-basic-archetype"; String SERVICE_ARCHETYPE_ID =
+	 * "anyframe-service-archetype";
+	 * 
+	 * // 3. files String FORMAT_PLUGININFO = " %-16s| %-16s| %-34s| %-15s";
+	 * String SIMPLE_FORMAT_PLUGININFO = " %-16s| %-16s"; String
+	 * FORMAT_PLUGININFO_WITH_LATEST = " %-16s| %-16s| %-34s| %-15s | %-15s";
+	 * String INSTALLABLE_FORMAT_PLUGININFO = " %-3s | %-20s| %-15s"; String
+	 * INSTALLABLE_FORMAT_ARCHETYPE = " %-3s | %-40s| %-15s";
+	 * 
+	 * // 5. etc String anyframeHome = System.getProperty("anyframeHome");
+	 * String CUSTOM_PLUGIN_PATH = CommonConstants.fileSeparator + "anyframe" +
+	 * CommonConstants.fileSeparator + "plugin" + CommonConstants.fileSeparator
+	 * + "anyframe.plugin.custom-list";
+	 */
 }

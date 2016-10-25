@@ -46,10 +46,8 @@ public class ShowUpdatablePluginsMojo extends AbstractPluginMojo {
 			pluginInfoManager.showUpdatablePlugins(request, baseDir
 					.getAbsolutePath());
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute ShowUpdatablePluginsMojo. The reason is '"
-							+ ex.getMessage() + "'.");
-			throw new MojoFailureException(null);
+			getLog().error("Fail to execute ShowUpdatablePluginsMojo");
+			throw new MojoFailureException(ex.getMessage());
 		}
 	}
 }

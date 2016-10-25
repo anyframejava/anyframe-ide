@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,10 +34,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.anyframe.ide.command.common.plugin.versioning.VersionComparator;
+import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
+import org.apache.maven.archetype.common.ArchetypeArtifactManager;
 import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.archetype.common.DefaultPomManager;
 import org.apache.maven.archetype.common.util.FileCharsetDetector;
+import org.apache.maven.archetype.exception.UnknownArchetype;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -55,6 +59,9 @@ import com.rits.cloning.Cloner;
  * @author SoYon Lim
  */
 public class DefaultPluginPomManager extends DefaultPomManager {
+	/** @plexus.requirement */
+	private ArchetypeArtifactManager archetypeArtifactManager;
+
 	/**
 	 * @plexus.requirement 
 	 *                     role="org.anyframe.ide.command.common.DefaultPluginInfoManager"
@@ -65,12 +72,13 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * merge a current pom file with other pom file of a specified plugin
 	 * 
 	 * @param currentPom
-	 *            current pom file
+	 *            pom file of current pom
 	 * @param newPom
 	 *            other pom file of a specified plugin
 	 * @return dependent libraries
+	 * @throws IOException
+	 * @throws XmlPullParserException
 	 */
-	@SuppressWarnings("unchecked")
 	public List mergePom(File currentPom, File newPom) throws IOException,
 			XmlPullParserException {
 		// 1. read a pom file
@@ -113,8 +121,8 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * @param removePluginJar
 	 *            plugin jar file to be removed
 	 * @return dependencies to be removed
+	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Dependency> findRemovedDependencies(
 			Map<String, File> installedPluginJars, File removePluginJar,
 			Properties properties) throws Exception {
@@ -165,7 +173,6 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 *            plugin jar file to be compared
 	 * @return duplicated/different-version dependencies
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<Dependency, String> findDuplicatedDepencies(
 			Map<String, File> installedPluginJars, File basePluginJar)
 			throws Exception {
@@ -223,11 +230,11 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * a pom file
 	 * 
 	 * @param currentPom
-	 *            current pom file
+	 *            pom file of current pom
 	 * @param removePluginJar
 	 *            plugin jar file to be removed
+	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public void removePomDependencies(File currentPom, File removePluginJar)
 			throws Exception {
 		// 1. read pom dependencies to be removed
@@ -244,11 +251,12 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * together, those will not be removed.
 	 * 
 	 * @param currentPom
-	 *            current pom file
+	 *            pom file of current pom
 	 * @param installedPluginJars
 	 *            installed plugin list
 	 * @param removePluginJar
 	 *            plugin jar file to be removed
+	 * @throws Exception
 	 */
 	public void removePomDependencies(File currentPom,
 			Map<String, File> installedPluginJars, File removePluginJar,
@@ -262,15 +270,6 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 		writePom(currentPom, removes);
 	}
 
-	/**
-	 * remove dependencies in current pom file
-	 * 
-	 * @param currentPom
-	 *            current pom file
-	 * @param removes
-	 *            dependencies to be removed
-	 */
-	@SuppressWarnings("unchecked")
 	private void writePom(File currentPom, List<Dependency> removes)
 			throws Exception {
 		// 1. read pom dependencies about current sample project
@@ -303,20 +302,18 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * @Override read a pom file. We can't delete a pomFile because of model
 	 *           object. so, we added logics about remove original model object
 	 *           after cloning a model object.
-	 * @param currentPom
-	 *            current pom file
 	 */
-	public Model readPom(final File currentPom) throws IOException,
+	public Model readPom(final File pomFile) throws IOException,
 			XmlPullParserException {
 		Model model;
 		Reader pomReader = null;
 		MavenXpp3Reader reader = null;
 		try {
-			FileCharsetDetector detector = new FileCharsetDetector(currentPom);
+			FileCharsetDetector detector = new FileCharsetDetector(pomFile);
 
 			String fileEncoding = detector.isFound() ? detector.getCharset()
 					: "UTF-8";
-			pomReader = new InputStreamReader(new FileInputStream(currentPom),
+			pomReader = new InputStreamReader(new FileInputStream(pomFile),
 					fileEncoding);
 
 			reader = new MavenXpp3Reader();
@@ -343,35 +340,44 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	}
 
 	/**
+	 * get a plugin-list.xml file about a specified plugin
+	 * 
+	 * @param pluginJarFile
+	 *            plugin jar file
+	 * @return inputstream of plugin-list.xml file
+	 * @throws Exception
+	 */
+	public InputStream getCustomPluginList(File pluginJarFile) throws Exception {
+		return pluginInfoManager.getPluginResource(
+				CommonConstants.METAINF_ANYFRAME + CommonConstants.PLUGIN_FILE,
+				pluginJarFile);
+	}
+
+	/**
 	 * get a pom information about a specified plugin
 	 * 
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
 	 * @return pom information
+	 * @throws XmlPullParserException
+	 * @throws UnknownArchetype
+	 * @throws IOException
 	 */
-	public Model getPluginPom(File pluginJar) throws Exception {
+	public Model getPluginPom(File pluginJarFile) throws Exception {
 		// 1. return a pom information about a specified plugin
 		InputStream stream = pluginInfoManager.getPluginResource(
-				"plugin-resources/" + Constants.ARCHETYPE_POM, pluginJar);
+				"plugin-resources/" + Constants.ARCHETYPE_POM, pluginJarFile);
 
 		if (stream == null)
 			stream = pluginInfoManager.getPluginResource("archetype-resources/"
-					+ Constants.ARCHETYPE_POM, pluginJar);
+					+ Constants.ARCHETYPE_POM, pluginJarFile);
 
 		return readPom(stream);
 
 	}
 
-	/**
-	 * read a pom file
-	 * 
-	 * @param pluginZip
-	 *            plugin zip file
-	 * @return model information related to current pom
-	 */
-	@SuppressWarnings("unchecked")
-	public Model readPom(ZipFile pluginZip) throws Exception {
-		Enumeration enumeration = pluginZip.entries();
+	public Model getPom(ZipFile pluginZipFile) throws Exception {
+		Enumeration enumeration = pluginZipFile.entries();
 		while (enumeration.hasMoreElements()) {
 			ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
 
@@ -379,13 +385,13 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 
 			if (entry.startsWith("META-INF")
 					&& entry.endsWith(Constants.ARCHETYPE_POM)) {
-				ZipEntry resourceEntry = pluginZip.getEntry(entry);
+				ZipEntry resourceEntry = pluginZipFile.getEntry(entry);
 
 				if (resourceEntry == null) {
 					return null;
 				}
 
-				return readPom(pluginZip.getInputStream(resourceEntry));
+				return readPom(pluginZipFile.getInputStream(resourceEntry));
 			}
 		}
 
@@ -400,7 +406,6 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * @param newModel
 	 *            other model of a specified plugin
 	 */
-	@SuppressWarnings("unchecked")
 	private void mergeDependencies(Model currentModel, Model newModel) {
 		// 1. get current dependencies in pom.xml of project
 		Map<String, Dependency> currentDependenciesByIds = convertDependencyList(currentModel
@@ -447,8 +452,8 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * @param installedPluginJars
 	 *            installed plugin list
 	 * @return all dependencies
+	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	private Map<String, Dependency> getInstalledPluginDependencies(
 			Map<String, File> installedPluginJars) throws Exception {
 		Map<String, Dependency> dependencyMap = new HashMap<String, Dependency>();
@@ -488,7 +493,7 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 * 
 	 * @param dependencyMap
 	 *            a map of dependencies
-	 * @return dependencies
+	 * @return dependency list
 	 */
 	public List<Dependency> convertDependencyMap(
 			Map<String, Dependency> dependencyMap) {
@@ -508,14 +513,14 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	/**
 	 * get compile scope dependencies about a specified plugin
 	 * 
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
-	 * @return dependencies
+	 * @return dependency list
+	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Dependency> getCompileScopeDependencies(File pluginJar)
+	public List<Dependency> getCompileScopeDependencies(File pluginJarFile)
 			throws Exception {
-		Model model = getPluginPom(pluginJar);
+		Model model = getPluginPom(pluginJarFile);
 		List<Dependency> dependencies = model.getDependencies();
 
 		List<Dependency> results = new ArrayList<Dependency>();
@@ -535,14 +540,14 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	/**
 	 * get all scope dependencies about a specified plugin
 	 * 
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
-	 * @return dependencies
+	 * @return dependency list
+	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Dependency> getDependencies(File pluginJar,
+	public List<Dependency> getDependencies(File pluginJarFile,
 			Properties properties) throws Exception {
-		Model model = getPluginPom(pluginJar);
+		Model model = getPluginPom(pluginJarFile);
 		model.setProperties(properties);
 		List<Dependency> dependencies = model.getDependencies();
 		List<Dependency> results = new ArrayList<Dependency>();
@@ -566,11 +571,13 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	/**
 	 * get all scope dependencies about a specified plugin
 	 * 
-	 * @param pluginJar
+	 * @param pluginJarFile
 	 *            plugin jar file
-	 * @return dependences
+	 * @return dependency list
+	 * @throws Exception
 	 */
-	public List<Dependency> getDependencies(File pluginJar) throws Exception {
-		return getDependencies(pluginJar, new Properties());
+	public List<Dependency> getDependencies(File pluginJarFile)
+			throws Exception {
+		return getDependencies(pluginJarFile, new Properties());
 	}
 }

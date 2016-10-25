@@ -160,8 +160,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			// 1. check project metadata files
 			PropertiesIO pio = checkProject(baseDir);
 
-			checkTargetPlugin(request, pluginName);
-
 			// 2. set properties for installing plugins
 			Context context = prepareVelocityContext(pio, pomHandling,
 					excludeSrc);
@@ -208,7 +206,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 					pluginVersion, pluginJar, pluginInfoFromJar, visitedPlugins);
 
 			if (visitedPlugins.size() > 0) {
-				System.out.println("Dependencies Resolved.");
+				getLogger().info("Dependencies Resolved.");
 				installPlugin(request, context, pio, baseDir, visitedPlugins,
 						pluginJar, pluginInfoFromJar, encoding, pomHandling,
 						isCLIMode);
@@ -217,9 +215,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			if (e instanceof CommandException) {
 				throw e;
 			}
-			throw new CommandException("Error occurred in installing a '"
-					+ pluginName + "' plugin. The reason is a '"
-					+ e.getMessage() + "'.");
+			getLogger().warn(
+					"Error occurred in installing a '" + pluginName
+							+ "' plugin. The reason is a '" + e.getMessage()
+							+ "'.");
 		} finally {
 			Thread.currentThread().setContextClassLoader(old);
 		}
@@ -246,11 +245,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	public void analyzePluginDependencies(ArchetypeGenerationRequest request,
 			String baseDir, String[] pluginNames, String pluginVersion,
 			File pluginJar, PluginInfo pluginInfoFromJar,
-			Map<String, TargetPluginInfo> visitedPlugins) throws Exception {
-		getLogger().debug(
-				"Call analyzePluginDependencies() of DefaultPluginInstaller");
 
-		System.out.println("Resolving plugin dependencies ...");
+			Map<String, TargetPluginInfo> visitedPlugins) throws Exception {
+		getLogger().info("Resolving plugin dependencies ...");
 		for (String installPluginName : pluginNames) {
 			installPluginName = installPluginName.trim();
 
@@ -271,8 +268,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 			if (pluginInfo == null) {
 				throw new CommandException("Can not find a '"
-						+ installPluginName
-						+ ((pluginVersion != null) ? " " + pluginVersion : "")
+						+ installPluginName + " "
+						+ ((pluginVersion != null) ? pluginVersion : "")
 						+ "' plugin. Please check your repository.");
 			}
 
@@ -287,11 +284,14 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			} else {
 				if (installedPluginInfo.getVersion().equals(
 						pluginInfo.getVersion())) {
-					System.out.println("'" + pluginInfo.getName()
-							+ "' plugin can't be installed. The reason is a '"
-							+ pluginInfo.getName() + " "
-							+ pluginInfo.getVersion()
-							+ "' plugin is already installed.");
+					getLogger()
+							.info(
+									"'"
+											+ pluginInfo.getName()
+											+ "' plugin can't be installed. The reason is a '"
+											+ pluginInfo.getName() + " "
+											+ pluginInfo.getVersion()
+											+ "' plugin is already installed.");
 					continue;
 				}
 				installPluginInfo.setInstalledVersion(installedPluginInfo
@@ -306,37 +306,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * process to install all plugins in order as (core -> tiles -> etc.) which
-	 * visitedPlugins has
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param context
-	 *            velocity context
-	 * @param pio
-	 *            properties in project.mf
-	 * @param baseDir
-	 *            target project folder path to install a plugin
-	 * @param visitedPlugins
-	 *            plugins to be installed
-	 * @param pluginJar
-	 *            plugin binary file
-	 * @param pluginInfoFromJar
-	 *            plugin information reading from plugin jar
-	 * @param encoding
-	 *            file encoding style
-	 * @param pomHandling
-	 *            whether current project is based on maven or ant
-	 * @param isCLIMode
-	 *            execution mode
-	 */
 	private void installPlugin(ArchetypeGenerationRequest request,
 			Context context, PropertiesIO pio, String baseDir,
 			Map<String, TargetPluginInfo> visitedPlugins, File pluginJar,
 			PluginInfo pluginInfoFromJar, String encoding, boolean pomHandling,
 			boolean isCLIMode) throws Exception {
-		getLogger().debug("Call installPlugin() of DefaultPluginInstaller");
 
 		if (isCLIMode) {
 			checkInstall(visitedPlugins, isCLIMode);
@@ -392,40 +366,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * process to install all plugins which visitedPlugins has (except core,
-	 * tiles)
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param context
-	 *            velocity context
-	 * @param pio
-	 *            properties in project.mf
-	 * @param baseDir
-	 *            target project folder path to install a plugin
-	 * @param pluginName
-	 *            a target plugin name to install
-	 * @param visitedPlugins
-	 *            plugins to be installed
-	 * @param pluginJar
-	 *            plugin binary file
-	 * @param pluginInfoFromJar
-	 *            plugin information reading from plugin jar
-	 * @param encoding
-	 *            file encoding style
-	 * @param pomHandling
-	 *            whether current project is based on maven or ant
-	 * @param pomProperties
-	 *            properties of pom in current project
-	 */
 	private void installPlugin(ArchetypeGenerationRequest request,
 			Context context, PropertiesIO pio, String baseDir,
 			String pluginName, Map<String, TargetPluginInfo> visitedPlugins,
 			File pluginJar, PluginInfo pluginInfoFromJar, String encoding,
 			boolean pomHandling, Properties pomProperties) throws Exception {
-		getLogger().debug("Call installPlugin() of DefaultPluginInstaller");
-
 		File targetPluginJar = null;
 		if (visitedPlugins.containsKey(pluginName)) {
 			TargetPluginInfo targetPluginInfo = visitedPlugins.get(pluginName);
@@ -446,20 +391,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * find dependent(child) or depended(parent) plugins
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param baseDir
-	 *            target project folder path to install a plugin
-	 * @param currentPluginInfo
-	 *            target plugin detail information
-	 * @param visitedPlugins
-	 *            plugins to be installed
-	 * @param isChild
-	 *            whether to find dependent plugins or not
-	 */
 	public void findPlugins(ArchetypeGenerationRequest request, String baseDir,
 			PluginInfo currentPluginInfo,
 			Map<String, TargetPluginInfo> visitedPlugins, boolean isChild)
@@ -523,23 +454,15 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				// check using latest version
 				String latestVersion = pluginSummary.getLatestVersion();
 
-				if (latestVersion == null
-						|| !isMatchedToDependentPlugin(request, pluginName,
-								latestVersion, currentPluginInfo)) {
-					latestVersion = VersionComparator.getLatest(pluginSummary
-							.getVersions());
-
-					if (!isMatchedToDependentPlugin(request, pluginName,
-							latestVersion, currentPluginInfo)) {
-						throw new CommandException(
-								"Can't resolve plugin dependencies. The reason is latest version ('latestVersion' value or latest version among <versions> in plugin-catalog-xxx.xml) of '"
-										+ pluginName
-										+ "' plugin isn't matched to a '"
-										+ currentPluginInfo.getName()
-										+ " "
-										+ currentPluginInfo.getVersion()
-										+ "' plugin.");
-					}
+				if (!isMatchedToDependentPlugin(request, pluginName,
+						latestVersion, currentPluginInfo)) {
+					throw new CommandException(
+							"Can't resolve plugin dependencies. The reason is '"
+									+ pluginName + " " + latestVersion
+									+ "' plugin isn't matched to a '"
+									+ currentPluginInfo.getName() + " "
+									+ currentPluginInfo.getVersion()
+									+ "' plugin.");
 				}
 
 				isInstalled = true;
@@ -577,14 +500,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 				// get a latest version based on current version range and
 				// plugin summary
-
-				String latestVersion = pluginSummary.getLatestVersion();
-
-				if (latestVersion == null
-						|| !VersionComparator.isMatched(version, latestVersion)) {
-					latestVersion = VersionComparator.getLatest(version,
-							pluginSummary.getVersions());
-				}
+				String latestVersion = VersionComparator.getLatest(version,
+						pluginSummary.getVersions());
 
 				if (latestVersion == null) {
 					throw new CommandException(
@@ -629,19 +546,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * get version range of plugin which a target plugin depends on
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param targetPluginName
-	 *            a target plugin name to install
-	 * @param targetPluginVersion
-	 *            a target plugin version to install
-	 * @param dependentPluginName
-	 *            a dependent plugin name
-	 * @return version range of a dependent plugin
-	 */
 	private String getDependentPluginVersionRange(
 			ArchetypeGenerationRequest request, String targetPluginName,
 			String targetPluginVersion, String dependentPluginName)
@@ -653,20 +557,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		return dependentPlugins.get(dependentPluginName);
 	}
 
-	/**
-	 * check version of dependent plugin is belong to defined version range in
-	 * plugin.xml
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param targetPluginName
-	 *            a target plugin name to install
-	 * @param targetPluginVersion
-	 *            a target plugin version to install
-	 * @param dependentPluginInfo
-	 *            detail information of a dependent plugin
-	 * @return whether to match version range to version of dependent plugin
-	 */
 	private boolean isMatchedToDependentPlugin(
 			ArchetypeGenerationRequest request, String targetPluginName,
 			String targetPluginVersion, PluginInfo dependentPluginInfo)
@@ -704,8 +594,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 *            file encoding style
 	 * @param pomHandling
 	 *            whether current project is based on maven or ant
-	 * @param pomProperties
-	 *            properties of pom in current project
 	 */
 	@SuppressWarnings("unchecked")
 	private void installPlugin(ArchetypeGenerationRequest request,
@@ -714,28 +602,32 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			boolean pomHandling, Properties pomProperties) throws Exception {
 		getLogger().debug("Call installPlugin() of DefaultPluginInstaller");
 
-		// 1. download archetype jar from maven repository
+		// 1. check whether a target plugin can install
+		// if (checkPlugin(request, baseDir, pluginInfo, encoding, pomHandling))
+		// {
+
+		// 2. download archetype jar from maven repository
 		if (pluginJar == null) {
 			pluginJar = pluginInfoManager.getPluginFile(request, pluginInfo
 					.getGroupId(), pluginInfo.getArtifactId(), pluginInfo
 					.getVersion());
 		}
 
-		// 2. get zipfile from plugin jar file
+		// 3. get zipfile from plugin jar file
 		ZipFile pluginZip = archetypeArtifactManager
 				.getArchetypeZipFile(pluginJar);
 
-		// 3. set classloader for VelocityComponent can load templates
+		// 4. set classloader for VelocityComponent can load templates
 		// inside plugin library
 		ClassLoader pluginJarLoader = archetypeArtifactManager
 				.getArchetypeJarLoader(pluginJar);
 		Thread.currentThread().setContextClassLoader(pluginJarLoader);
 
-		// 4. get interceptor class of a target plugin
+		// 5. get interceptor class of a target plugin
 		Class interceptor = getInterceptor(request, pluginJarLoader,
 				pluginInfo, pluginJar, pluginZip);
 
-		// 5. process to install
+		// 6. process to install
 		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar,
 				interceptor, "preInstall");
 		process(request, context, pio, baseDir, pluginInfo, pluginJar,
@@ -743,19 +635,12 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar,
 				interceptor, "postInstall");
 
-		System.out.println("'" + pluginInfo.getName() + " "
-				+ pluginInfo.getVersion()
-				+ "' plugin is installed successfully.");
+		getLogger().info(
+				"'" + pluginInfo.getName() + " " + pluginInfo.getVersion()
+						+ "' plugin is installed successfully.");
+		// }
 	}
 
-	/**
-	 * copy all freemarker template files (*.ftl)
-	 * 
-	 * @param pio
-	 *            properties in project.mf
-	 * @param templateHome
-	 *            folder which have freemarker templates
-	 */
 	private void installFreemarkerTemplates(PropertiesIO pio,
 			String templateHome) throws Exception {
 		getLogger().debug("Call installTemplates() of DefaultPluginInstaller");
@@ -792,21 +677,12 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 			// 3. copy templates
 			copyFile("templates", templateHome);
-			System.out.println("Templates directory [" + templateHome
-					+ "] is created successfully.");
+			getLogger().info(
+					"Templates directory [" + templateHome
+							+ "] is created successfully.");
 		}
 	}
 
-	/**
-	 * copy all inspection resources
-	 * 
-	 * @param baseDir
-	 *            target project folder path to install a plugin
-	 * @param pomHandling
-	 *            whether current project is based on maven or ant
-	 * @param inspectionHome
-	 *            folder which have inspection resources
-	 */
 	private void installInspectionResources(String baseDir,
 			boolean pomHandling, String inspectionHome) throws Exception {
 		getLogger().debug(
@@ -841,14 +717,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * copy specified resources to target folder
-	 * 
-	 * @param resourceFolderName
-	 *            folder includes specified resources
-	 * @param target
-	 *            target folder to be copied resources
-	 */
 	private void copyFile(String resourceFolderName, String target)
 			throws Exception {
 		// 3. copy templates
@@ -876,14 +744,13 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 				File outputFile = new File(target, template);
 				outputFile.getParentFile().mkdirs();
-				OutputStreamWriter converter = null;
+
 				try {
-					converter = new OutputStreamWriter(new FileOutputStream(
-							outputFile));
+					OutputStreamWriter converter = new OutputStreamWriter(
+							new FileOutputStream(outputFile));
 					IOUtil.copy(inputStream, converter, "UTF-8");
 				} finally {
 					IOUtil.close(inputStream);
-					IOUtil.close(converter);
 				}
 			}
 		} catch (Exception e) {
@@ -912,14 +779,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 *            zip file includes plugin binary file
 	 * @param encoding
 	 *            file encoding style
-	 * @param pomProperties
-	 *            properties of pom in current project
 	 */
 	private void process(ArchetypeGenerationRequest request, Context context,
 			PropertiesIO pio, String baseDir, PluginInfo pluginInfo,
 			File pluginJar, ZipFile pluginZip, String encoding,
 			Properties pomProperties) throws Exception {
-		getLogger().debug("Call process() of DefaultPluginInstaller");
 		// 1. get all file names from archetypeFile
 		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
 
@@ -1044,8 +908,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 *            target project folder to install a plugin
 	 * @param pluginJar
 	 *            plugin binary file
-	 * @param pomProperties
-	 *            properties of pom in current project
 	 */
 	public void processDependencyLibs(ArchetypeGenerationRequest request,
 			String projectType, File targetDir, File pluginJar,
@@ -1121,8 +983,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 															.getClassifier()) ? ""
 													: "-"
 															+ installedDependencyInfo
-																	.getClassifier())
-											+ ".jar");
+																	.getClassifier()) + ".jar");
 							FileUtil.deleteFile(installedDependencyLib);
 						} else {
 							// 2.4.1.2 if target version is less than or equal
@@ -1168,20 +1029,17 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 * 
 	 * @param request
 	 *            information includes maven repository, db settings, etc.
-	 * @param targetDir
+	 * @param baseDir
 	 *            target project folder to install a plugin
-	 * @param pluginInfo
-	 *            plugin detail information
 	 * @param pomHandling
 	 *            whether current project is based on maven or ant
-	 * @param pomProperties
-	 *            properties of pom in current project
 	 */
 	public void processClasspath(ArchetypeGenerationRequest request,
 			File targetDir, PluginInfo pluginInfo, boolean pomHandling,
 			Properties pomProperties) throws Exception {
 
-		getLogger().debug("Call processClasspath() of DefaultPluginInstaller");
+		getLogger().debug(
+				"Call processClasspathFile() of DefaultPluginInstaller");
 
 		File classpath = new File(targetDir, ".classpath");
 		if (!classpath.exists()) {
@@ -1696,12 +1554,12 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 								+ pluginName + "] successfully.");
 			} catch (Exception e) {
 				if (e.getCause() instanceof SQLException) {
-					getLogger().warn(
+					getLogger().info(
 							"Executing db script of " + pluginName
 									+ " plugin is skipped. The reason is "
 									+ e.getMessage());
 				} else {
-					getLogger().warn(
+					getLogger().info(
 							"Processing initial data for " + pluginName
 									+ " is skipped. The reason is a '"
 									+ e.getMessage() + "'.");
@@ -1843,6 +1701,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 */
 	private void mergeTemplate(Context context, String template, File output,
 			String encoding) throws Exception {
+		getLogger().debug("Call mergeTemplate() of DefaultPluginInstaller");
 		try {
 			Writer writer = new OutputStreamWriter(
 					new FileOutputStream(output), encoding);
@@ -2011,7 +1870,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 								+ "() of plugin '" + pluginName
 								+ "' successfully.");
 			} catch (Exception e) {
-				getLogger().warn(
+				getLogger().info(
 						"Invoking of a " + interceptor.getName()
 								+ " is skipped. The reason is a '"
 								+ e.getMessage() + "'.");
@@ -2043,7 +1902,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		if (pluginInfo.getInterceptor() != null) {
 
 			URL[] originalUrls = ((URLClassLoader) pluginJarLoader).getURLs();
-			Model model = pluginPomManager.readPom(pluginZip);
+			Model model = pluginPomManager.getPom(pluginZip);
 
 			URLClassLoader interceptorLoader = pluginArtifactManager
 					.makeArtifactClassLoader(request, model.getGroupId(), model
@@ -2081,8 +1940,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				.append("------------------------------------------------------------------------------ \n");
 		Formatter installPluginInfoFormatter = new Formatter();
 		installPluginInfoFormatter.format(CommonConstants.INSTALL_PLUGINS,
-				"<action>", "<name>", "<version>");
+				"action", "name", "version");
 		queryBuffer.append(installPluginInfoFormatter.toString() + "\n");
+		queryBuffer
+				.append("------------------------------------------------------------------------------ \n");
 
 		for (TargetPluginInfo visitedPluginInfo : visitedPluginValues) {
 			boolean isUpdate = visitedPluginInfo.isUpdate();
@@ -2240,32 +2101,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		}
 
 		return context;
-	}
-
-	/**
-	 * check whether target plugin is installable
-	 * 
-	 * @param request
-	 *            information includes maven repository, db settings, etc.
-	 * @param pluginName
-	 *            a target plugin name to install
-	 */
-	private void checkTargetPlugin(ArchetypeGenerationRequest request,
-			String pluginName) throws Exception {
-		getLogger().debug("Call checkTargetPlugin() of DefaultPluginInstaller");
-		Map<String, PluginInfo> essentialPlugins = pluginCatalogManager
-				.getEssentialPlugins(request);
-
-		if (!pluginName.equals(CommonConstants.CORE_PLUGIN)
-				&& essentialPlugins.containsKey(pluginName)) {
-			throw new CommandException(
-					"Can't install '"
-							+ pluginName
-							+ "' by the piece. Plugin '"
-							+ pluginName
-							+ "' can be installed by installing a core plugin. Please try to install a core plugin.");
-		}
-
 	}
 
 	/**

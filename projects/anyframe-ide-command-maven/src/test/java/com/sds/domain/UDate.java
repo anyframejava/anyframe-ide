@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2002-2009 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -31,64 +31,63 @@ import javax.persistence.Table;
 
 /**
  * This is an UDate class.
- * 
  * @author Sooyeon Park
  */
 @Entity
 @Table(name = "U_DATE", schema = "PUBLIC")
 public class UDate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private UDateId id;
-	private Set<TDate> tDates = new HashSet<TDate>(0);
+    private static final long serialVersionUID = 1L;
+    private UDateId id;
+    private Set<TDate> tDates = new HashSet<TDate>(0);
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "UId1", column = @Column(name = "U_ID1", nullable = false)),
-			@AttributeOverride(name = "UId2", column = @Column(name = "U_ID2", nullable = false)) })
-	public UDateId getId() {
-		return this.id;
-	}
+    @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "UId1", column = @Column(name = "U_ID1", nullable = false)),
+        @AttributeOverride(name = "UId2", column = @Column(name = "U_ID2", nullable = false)) })
+    public UDateId getId() {
+        return this.id;
+    }
 
-	public void setId(UDateId id) {
-		this.id = id;
-	}
+    public void setId(UDateId id) {
+        this.id = id;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "UDate")
-	public Set<TDate> getTDates() {
-		return this.tDates;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "UDate")
+    public Set<TDate> getTDates() {
+        return this.tDates;
+    }
 
-	public void setTDates(Set<TDate> tDates) {
-		this.tDates = tDates;
-	}
+    public void setTDates(Set<TDate> tDates) {
+        this.tDates = tDates;
+    }
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public int hashCode() {
-		int result = 0;
+    public int hashCode() {
+        int result = 0;
 
-		return result;
-	}
+        return result;
+    }
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
 
-		sb.append(" [");
-		sb.append("id").append("='").append(getId()).append("', ");
+        sb.append(" [");
+        sb.append("id").append("='").append(getId()).append("', ");
 
-		sb.append("]");
+        sb.append("]");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }
