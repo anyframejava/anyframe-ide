@@ -16,6 +16,7 @@
 package org.anyframe.ide.command.common;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.SQLException;
@@ -35,6 +36,7 @@ import org.anyframe.ide.command.common.util.FileUtil;
 import org.anyframe.ide.command.common.util.ObjectUtil;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.Constants;
@@ -498,8 +500,24 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				excludeList.add(CommonConstants.HIBERNATE_CFG_XML_FILE);
 			}
 
+			// get plugin names to protect resources of other plugins
+			// (cxf-jaxws, cxf-jaxrs, simpleweb-vo, simpleweb-map, query-ria...)
+			List<String> pluginNames = new ArrayList<String>();
+			Map<String, PluginInfo> pluginsMap = pluginCatalogManager
+					.getPlugins(request);
+
+			if (pluginsMap != null) {
+				Collection<PluginInfo> plugins = pluginsMap.values();
+
+				for (PluginInfo plugin : plugins) {
+					if (!plugin.getName().equals(pluginInfo.getName())) {
+						pluginNames.add(plugin.getName());
+					}
+				}
+			}
+
 			processFiles(baseDir, pluginInfo.getName(), excludeList, pio,
-					backupDir);
+					backupDir, pluginNames);
 
 			// process web.xml of current project
 			processWebXMLFile(baseDir, pluginInfo.getName());
@@ -668,18 +686,36 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            directory for backup
 	 */
 	public void processFiles(String baseDir, String pluginName,
-			List<String> excludeFiles, PropertiesIO pio, File backupDir) {
+			List<String> excludeFiles, PropertiesIO pio, File backupDir,
+			List<String> pluginNames) {
 		getLogger().debug("Call processFiles() of DefaultPluginUninstaller");
 
 		String packageName = pio.readValue("package.name");
+
+		// to protect resources of other plugins (cxf-jaxws, cxf-jaxrs,
+		// simpleweb-vo, simpleweb-map, query-ria...)
+		List<String> excludeFolders = new ArrayList<String>();
+		String tailOfPluginName = "";
+
+		for (String name : pluginNames) {
+			if (!name.equals(pluginName)) {
+				if (name.contains("-")) {
+					tailOfPluginName = name.substring(name.indexOf("-") + 1);
+				}
+				if (StringUtils.isNotEmpty(tailOfPluginName)
+						&& !tailOfPluginName.equals(pluginName)) {
+					excludeFolders.add(tailOfPluginName);
+				}
+			}
+		}
 
 		try {
 			getLogger().debug(
 					"Removing files related to a specified plugin '"
 							+ pluginName + "'.");
-			// backupFile(baseDir, pluginName, excludes);
+
 			backupFiles(baseDir, pluginName, packageName, excludeFiles,
-					backupDir);
+					backupDir, pluginNames);
 
 			getLogger().debug(
 					"Removing directories related to a specified plugin '"
@@ -689,9 +725,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				pluginName = "flex";
 			}
 
-			// backupDir(baseDir, pluginName, packageName, excludes);
 			backupDirectories(baseDir, pluginName, packageName, excludeFiles,
-					backupDir);
+					backupDir, excludeFolders);
 
 		} catch (Exception e) {
 			getLogger().warn(
@@ -789,8 +824,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @throws Exception
 	 */
 	private void backupDirectories(String baseDir, String pluginName,
-			String packageName, List<String> excludes, File backupDir)
-			throws Exception {
+			String packageName, List<String> excludes, File backupDir,
+			List<String> excludeFolders) throws Exception {
 		String pluginFolder = pluginName;
 
 		if (pluginName.contains("-")) {
@@ -802,7 +837,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		File srcFolder = new File(baseDir + CommonConstants.SRC_MAIN_JAVA
 				+ FileUtil.changePackageForDir(packageName), pluginFolder);
 
-		if (FileUtil.moveDirectory(srcFolder, backupDir, excludes)) {
+		if (FileUtil.moveDirectory(srcFolder, backupDir, excludes,
+				excludeFolders)) {
 			getLogger().debug(
 					"Moved directory '" + srcFolder.getAbsolutePath() + "'");
 		}
@@ -810,7 +846,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		// 2. remove generated folder (eg. src/test/java/xxx/xxx/cxf/jaxws)
 		File testFolder = new File(baseDir + CommonConstants.SRC_TEST_JAVA
 				+ FileUtil.changePackageForDir(packageName), pluginFolder);
-		if (FileUtil.moveDirectory(testFolder, backupDir, excludes)) {
+		if (FileUtil.moveDirectory(testFolder, backupDir, excludes,
+				excludeFolders)) {
 			getLogger().debug(
 					"Moved directory '" + testFolder.getAbsolutePath() + "'");
 		}
@@ -941,8 +978,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @throws Exception
 	 */
 	private void backupFiles(String baseDir, String pluginName,
-			String packageName, Collection<String> excludeFiles, File backupDir)
-			throws Exception {
+			String packageName, Collection<String> excludeFiles,
+			File backupDir, List<String> pluginNames) throws Exception {
 
 		// src/main/resources/spring
 		File resourcesSpringDir = new File(baseDir
@@ -974,7 +1011,7 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		// src/main/resources/sql/query
 		// TODO : simpleweb의 version upgrade(uninstall --> install)시에
 		// mapping-simpleweb-{vo|map}-xxx.xml이 삭제될 것이다.
-		if (!CommonConstants.SIMPLEWEB_PLUGIN.equals(pluginName)) {
+		if (!CommonConstants.SIMPLEWEB_PLUGIN.equals(pluginName) && !pluginName.equals("cxf")) {
 			File resourcesSqlDir = new File(baseDir
 					+ CommonConstants.SRC_MAIN_RESOURCES + "sql", "query");
 
@@ -1033,6 +1070,18 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		// src/main/webapp/WEB-INF
 		File webinfFolder = new File(baseDir
 				+ CommonConstants.SRC_MAIN_WEBAPP_WEBINF);
+
+		// to protect files of other plugins
+		for (int i = 0; i < pluginNames.size(); i++) {
+			pluginNames.set(i, pluginNames.get(i) + "*.xml");
+		}
+
+		FilenameFilter fileFilter = new WildcardFileFilter(pluginNames);
+		String[] excludeFileNames = webinfFolder.list(fileFilter);
+		for (String name : excludeFileNames) {
+			excludeFiles.add(name);
+		}
+
 		if (FileUtil.moveFile(webinfFolder, backupDir, includePatterns,
 				excludeFiles, false)) {
 			getLogger().debug(
@@ -1161,13 +1210,13 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				FileUtil
 						.replaceFileContent(
 								txFile,
-								"\"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
-								"\"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
+								"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
+								"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
 				FileUtil
 						.replaceFileContent(
 								txFile,
-								"<property name=\"sessionFactory\" ref=\"sessionFactory\"/>",
-								"<property name=\"dataSource\" ref=\"dataSource\"/>");
+								"<property name=\"sessionFactory\" ref=\"sessionFactory\" />",
+								"<property name=\"dataSource\" ref=\"dataSource\" />");
 			} catch (Exception e) {
 				getLogger()
 						.warn(

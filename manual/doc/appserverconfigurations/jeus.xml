@@ -1,0 +1,48 @@
+<chapter id="app_server_configurations_jeus">
+	<title>JEUS</title>
+	<para>
+		Anyframe의 plugin이 설치된 샘플 어플리케이션을 JEUS에 deploy할 경우 주의해야 할 설정에 대해서 알아보자.
+	</para>
+	
+	<section id="app_server_configurations_jeus_iam">
+		<title>IAM plugin 사용 시</title>
+		<itemizedlist>
+   			<listitem>
+   				<para>
+   					6.0 : IAM Plugin 설치로 생성된 샘플 어플리케이션에서 활용하는 Spring Security 라이브러리와의 호환을 위해 
+   					JEUS 6.0 최신 패치가 설치되어 있어야 한다.
+   				</para>
+   			</listitem>
+   		</itemizedlist>
+	</section>
+	
+	<section id="app_server_configurations_jeus_cxf">
+		<title>cxf plugin 사용 시</title>
+		<para>
+			Apache CXF는 JDK 1.5 이상을 지원하므로 JEUS 서버의 경우, JEUS 5와 JEUS 6 버전의 서버가 대상이 되나, JEUS 5의 경우 JAXB 라이브러리의 충돌로 
+			Apache CXF 사용이 불가능하다. JEUS 서버에 대한 설명 및 다운로드는 TmaxSoft 홈페이지를 참고하도록 한다.
+    	</para>
+     	<para>
+			단, Plugin 설치로 생성된 샘플 어플리케이션일 경우, 오픈소스 활용을 위한 WAS별 조치 사항을 확인하기 위해 먼저 설치된 각 Plugin 별 유의사항
+			을 참고하도록 한다.
+     	</para>
+     	<itemizedlist>
+			<listitem>
+				<para>
+					5.0 : Apache CXF 사용이 불가능 하다. JEUS 서버 라이브러리에 배포된 JAXB API, IMPL 및 참조 라이브러리(JAXB 1.x)와 Apache CXF를 사용하여 구현한 웹 어플리케이션에 
+				배포된 라이브러리들(JAXB 2.x)과 버전 차이로 동작하지 않는다.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					6.0 : 추가 설정 없이 Apache CXF 사용이 가능하다. JEUS 서버 라이브러리에 배포된 JAXB API, IMPL 및 참조 라이브러리(JAXB 2.x)와 Apache CXF를 사용하여 구현한 
+					웹 어플리케이션에 배포된 라이브러리들(JAXB 2.x)의 버전 일치로 문제없이 동작한다.
+				</para>
+				<para>
+					단, Anyframe에서 제공하는 Plugin들은 Jetty 기반으로 구성되어 있으므로 기본적으로 8080 포트를 이용한다. 따라서, JEUS를 활용할 경우에는 샘플 어플리케이션의
+					cxf-jaxws-servlet.xml 파일을 열고, 'http://localhost:8080/...' 부분을 'http://localhost:{JEUS 사용 포트}/...'로 변경해주어야 한다.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</chapter>

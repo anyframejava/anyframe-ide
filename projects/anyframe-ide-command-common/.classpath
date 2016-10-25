@@ -7,7 +7,7 @@
   <classpathentry kind="var" path="M2_REPO/ant/ant/1.8.1/ant-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-launcher/1.8.1/ant-launcher-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-nodeps/1.8.1/ant-nodeps-1.8.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.1/anyframe-ide-command-aspect-2.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.2/anyframe-ide-command-aspect-2.0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/archetype/archetype-common/2.0-alpha-4/archetype-common-2.0-alpha-4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.6.8/aspectjrt-1.6.8.jar"/>
   <classpathentry kind="var" path="M2_REPO/classworlds/classworlds/1.1-alpha-2/classworlds-1.1-alpha-2.jar"/>

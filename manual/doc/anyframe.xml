@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[
+<!ENTITY introduction_overview SYSTEM "introduction/overview.xml">
+<!ENTITY introduction_license SYSTEM "introduction/license.xml">
+<!ENTITY introduction_techsupport SYSTEM "introduction/techsupport.xml">
+<!ENTITY introduction_maintenance SYSTEM "introduction/maintenance.xml">
+<!ENTITY introduction_systemrequirements SYSTEM "introduction/systemrequirements.xml">
+
+<!ENTITY installation_maven SYSTEM "installation/maven.xml">
+<!ENTITY installation_ant SYSTEM "installation/ant.xml">
+<!ENTITY installation_eclipseide SYSTEM "installation/eclipseide.xml">
+
+<!ENTITY commands_maven SYSTEM "commands/maven.xml">
+<!ENTITY commands_ant SYSTEM "commands/ant.xml">
+<!ENTITY commands_eclipseide SYSTEM "commands/eclipseide.xml">
+
+<!ENTITY plugins_list SYSTEM "plugins/list.xml">
+<!ENTITY plugins_structure SYSTEM "plugins/structure.xml">
+<!ENTITY plugins_creatingplugin SYSTEM "plugins/creatingplugin.xml">
+
+<!ENTITY ctip_installation SYSTEM "ctip/installation.xml">
+<!ENTITY ctip_integration SYSTEM "ctip/integration.xml">
+<!ENTITY ctip_reporting SYSTEM "ctip/reporting.xml">
+
+<!ENTITY app_server_configurations_weblogic SYSTEM "appserverconfigurations/weblogic.xml">
+<!ENTITY app_server_configurations_jeus SYSTEM "appserverconfigurations/jeus.xml">
+<!ENTITY app_server_configurations_jboss SYSTEM "appserverconfigurations/jboss.xml">
+]
+>
+
+<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+-->
+    
+<book lang="ko">
+	<title>Anyframe</title>
+	
+	<bookinfo>
+		<copyright>
+			<year>2008-2011</year>
+			<holder>삼성SDS</holder>
+		</copyright>
+		<releaseinfo>Version 5.0.1</releaseinfo>
+
+		<productname>Anyframe</productname>
+
+		<authorgroup>
+			<corpauthor></corpauthor>
+		</authorgroup>
+
+		<mediaobject>
+			<imageobject>
+				<!-- logo 변경 -->
+				<imagedata fileref="../image/common/logo_pdf.jpg"/>
+			</imageobject>
+		</mediaobject>
+		<legalnotice>
+			<para>본 문서의 저작권은 삼성SDS에 있으며 Anyframe 오픈소스 커뮤니티 활동의 목적하에서 자유로운 이용이 가능합니다.
+			본 문서를 복제, 배포할 경우에는 저작권자를 명시하여 주시기 바라며 본 문서를 변경하실 경우에는 원문과 변경된 내용을 표시하여 주시기 바랍니다. 
+			원문과 변경된 문서에 대한 상업적 용도의 활용은 허용되지 않습니다. 본 문서에 오류가 있다고 판단될 경우 이슈로 등록해 주시면 적절한 조치를 취하도록 하겠습니다.
+			</para>
+		</legalnotice>
+	</bookinfo>
+	
+	<part id="introduction">
+		<title>Introduction</title>
+		<partintro id="introduction-intro">
+			<para>
+                Anyframe은 Spring 기반에서 다양한 best-of-breed 오픈 소스를 통합 및 확장하여 구성한 어플리케이션 프레임워크, MVC 아키텍처를 
+                준수하여 웹 어플리케이션의 프리젠테이션 레이어를 구조적으로 개발할 수 있도록 지원하는 웹 프레임워크를 제공하며 프레임워크 기반의 업무용 프로그램 개발을 
+                효과적으로 진행할 수 있도록 기술 공통 서비스, 템플릿 기반의 프로젝트 구조 및 샘플 코드, 매뉴얼 등을 제공한다.		
+                또한 Eclipse Plugin 형태의 Anyframe IDE를 제공함으로써 기존 방식보다 훨씬 쉽고 빠르게 Anyframe 기반 개발 환경을 구성할 수 있도록 Scaffolding, 코드 생성 기능 
+                등을 지원한다.
+			</para>
+		</partintro>
+		&introduction_overview;
+		&introduction_license;
+		&introduction_techsupport;
+        &introduction_maintenance;
+        &introduction_systemrequirements;
+	</part>
+	
+	<part id="installation">
+		<title>Installation</title>
+		<partintro id="installation-intro">
+			<para>
+				Anyframe은 4.6.0 이후부터 오픈 소스 기반으로 어플리케이션을 개발할 때 요구되는 다양한 오픈 소스들이 통합된 템플릿 기반의 프로젝트 구조 및 샘플 코드를 Maven/Ant를 이용하여 
+				자동으로 구성할 수 있도록 지원한다. 이로 인해, 어플리케이션 개발 초기에 프로젝트 특성에 맞는 개발 환경을 구성하는데 소요되는 시간을 대폭 줄이고, 프로젝트에 필요한 최적의 샘플을 
+				제공받을 수 있게 될 것이다.
+			</para>
+		</partintro>
+		&installation_maven;
+		&installation_ant;
+		&installation_eclipseide;
+	</part>
+	
+	<part id="commands">
+		<title>Commands</title>
+		<partintro id="commands-intro">
+			<para>
+				Command Line Interface(이하 CLI)만을 사용하여 Maven 또는 Ant 기반에서 프로젝트 생성, Plugin 설치/삭제, Domain/CRUD 소스 코드 생성, 빌드 및 실행 등의 작업을 수행할 수 있다.
+				(CLI 기반에서 Command를 직접 입력하여 실행하는 경우, 본 매뉴얼에서 정의한 필수 Command Argument를 생략하거나 Command Arguments 이외의 값을 설정하면 올바르게 동작하지 
+				않을 수 있으므로 유의하도록 한다.)
+			</para>
+		</partintro>
+		&commands_maven;
+		&commands_ant;
+		&commands_eclipseide;
+	</part>
+	
+	<part id="plugins">
+		<title>Plugins</title>
+		<partintro id="plugins-intro">
+			<para>
+				Anyframe에서는 Spring, Hibernate, CXF, Struts 등과 같은 다양한 오픈 소스들을 중심으로 참조 라이브러리와 샘플 코드를 엮어서 
+				구성된 다양한 Plugin들을 제공함으로써 사용자가 원하는 Plugin들을 적절히 선택하고 설치함으로써 해당 프로젝트에 필요한 기능들을 갖춘 샘플 
+				프로젝트를 손쉽게 구성할 수 있도록 지원한다.		
+			</para>
+		</partintro>
+		&plugins_list;
+		&plugins_structure;
+		&plugins_creatingplugin;
+	</part>
+	
+	<part id="ctip">
+		<title>Continuous Build</title>
+		<partintro id="ctip-intro">
+			<para>
+				Anyframe 기반으로 지속적인 빌드 환경을 구성할 수 있는데, 빌드 서버와 연계하여 어떻게 이 기능을 사용하는 지 살펴보자.
+				CTIP(Continuous Test and Integration Platform, 이하 CTIP)은 어플리케이션 개발 라이프 사이클 전체에 걸쳐 사용되는 
+				개발 도구와 빌드, 테스트 도구 등을 통합한 자동화된 도구이다. Anyframe에서는 이러한 CTIP 환경 구성 및 통합 방법을 제공한다.  
+			</para>
+		</partintro>
+        &ctip_installation;
+        &ctip_integration;
+        &ctip_reporting;
+	</part>
+	
+	<part id="app-server-configurations">
+		<title>App. Server Configurations</title>
+		<partintro id="app-server-configurations-intro">
+			<para>
+				본 문서에서는 Plugin 설치로 생성된 샘플 어플리케이션을 실행시키기 위한 WAS로써 Jetty, Tomcat를 채택하여 설명을 기술하고 있다. 
+				그러나 Plugin 설치로 생성된 샘플 어플리케이션은 특정 WAS에 종속되지 않으므로 
+				<emphasis role="bold">mvn clean compile war:war</emphasis>와 같은 명령어 실행을 통해 패키징한 후 
+				WebLogic, JEUS와 같은 상용 WAS에 deploy하여 실행시키는 것도 가능하다. 
+				단, 샘플 어플리케이션이 참조하는 일부 라이브러리의 버전을 해당 WAS에서 지원하지 않는 경우가 있어 이에 대한 조치사항을 언급하고자 한다.
+			</para>
+		</partintro>
+		&app_server_configurations_weblogic;
+		&app_server_configurations_jeus;
+		&app_server_configurations_jboss;
+	</part>
+
+</book>

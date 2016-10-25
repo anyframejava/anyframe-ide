@@ -1,0 +1,1833 @@
+<chapter id="commands_eclipseide">
+	<title>Eclipse IDE</title>
+	<para>
+    Using Eclipse, tasks can be done such as Anyframe-based project generation, domain class and CRUD source code generation, 
+				configuration, JDBC setting, Anyframe plugins install/uninstall and connection with Hudson. 
+				Projects are generated through Wizard, and for other jobs Anyframe IDE Editor is used. 
+	</para>
+	
+<section id="eclipseplugin_newapplication">
+  <title>New Project Creation</title>
+
+  <para>Projects can be generated using Anyframe IDE.</para>
+  <para>Anyframe IDE provides different project generation pages depending on the project build type set in Window &gt;&gt; Preferences &gt;&gt; Anyframe Tools &gt;&gt; IDE.
+		Thus, the project build type should be set first befor the project is generated. </para> 
+
+  <itemizedlist>
+    <listitem>
+      <para>[<link linkend="eclipseplugin_newapplication_sec001">Maven project generation</link>]</para>
+    </listitem>
+    
+    <listitem>
+      <para>[<link linkend="eclipseplugin_newapplication_sec002">Ant project generation</link>]</para>
+    </listitem>
+    
+    
+    <listitem>
+      <para>[<link linkend="eclipseplugin_newapplication_sec003">Project execution and configuration file (project.mf) check</link>]</para>
+    </listitem>
+
+    <listitem>
+    	<para>[<link linkend="eclipseplugin_newapplication_sec004">Tip for solving errors that can occur during project generation</link>]</para>
+    	<itemizedlist>
+    <listitem>
+      <para>[<link linkend="eclipseplugin_newapplication_sec004_sec001">Out of memory</link>]: Solution to java.lang.OutOfMemoryError during project generation</para>
+    </listitem>
+
+    <listitem>
+      <para>[<link linkend="eclipseplugin_newapplication_sec004_sec002">Project Clean &amp; JSP Validation
+      Error </link>]: Solution to the <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="../image/eclipseplugin/createapp-error.jpg" />
+          </imageobject>
+        </inlinemediaobject> sign during project generation</para>
+    </listitem>
+  </itemizedlist>
+    </listitem>
+  </itemizedlist>
+
+  <section id="eclipseplugin_newapplication_sec001">
+    <title>Maven project generation</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Select File &gt;&gt; New &gt;&gt; Other.. &gt;&gt; Anyframe &gt;&gt;
+        Project</para>
+      </listitem>
+
+      <listitem>
+        <para>Enter the following in the opened window to generate the project. 
+        When the following items are entered without any problem, Next button and Finish button will be activated, 
+        and if you click Next button, you will move to the page that constitutes DB information. </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Project Name: Project name</para>
+          </listitem>
+
+          <listitem>
+            <para>Base Location: Location to generate the project. Workspace of Eclipse is set as the default path. 
+           It can be changed to the path that you want to use. </para>
+          </listitem>
+          
+          <listitem>
+            <para>Use default template home location: When it is checked, 
+            [user account home directory]/.anyframe/templates path (e.g. C:/Documents and Settings/[user name]/.anyframe/templates) is set as the default, 
+            , and when it is not checked, the part that designates Template Home is activated. </para>
+          </listitem>
+          
+          <listitem>
+            <para>Template Home: location of template files</para>
+          </listitem>
+
+          <listitem>
+            <para>Package Name: name of the main package</para>
+          </listitem>
+          
+          <listitem><para>Group Id: group id of the project to be defined in pom.xml</para></listitem>
+          <listitem><para>Artifact Id: artifact id of the project to be defined in pom.xml</para></listitem>
+          <listitem><para>Version: version information of the project to be defined in pom.xml</para></listitem>
+          <listitem>
+            <para>Packaging: Select war or jar. In the case of war, a dynamic web project is generated as an web type project, 
+            and Anyframe Core Plugin is installed together with the sample codes. 
+				For jar, a general Java project is generated as a service type project, 
+				and only the libraries of Anyframe Core Plugin are installed, not the sample codes. </para>
+          </listitem>
+
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>The following JDBC Configuration page is displayed when you click Next button to constitute DB information. </para>
+        
+        <para>Anyframe IDE supports configuration and templates for hsqldb, oracle, mysql, db2 and sybase DB types. 
+        You can constitute the DB information using the DB that you want to use. 
+        Since when a project is generated, DB scripts on the sample table are properly executed only when the DB that you want to use is running, 
+       it is recommended to run the DB that you want to use. 
+        If you have not decided the DB that you want to use, use hsqldb, which is a sample DB provided by Anyframe.
+        Download and extract hsqldb.zip file linked below, 
+        and run the DB by executing start.cmd file. 
+        <table>
+			<title>Download List</title>
+			<tgroup cols="2">
+				<colspec colnum="1" colname="col1" colwidth="4*" />
+				<colspec colnum="2" colname="col2" colwidth="6*" />
+				<thead>
+					<row>
+						<entry align="center">Name</entry>
+						<entry align="center">Download</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry align="center">hsqldb2.zip</entry>
+						<entry align="center">
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/ide/2.0.0/reference/download/sampledb/hsqldb2.zip">Download</ulink>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+        </para>
+
+        <para>The project is generated by clicking Finish button after the DB information is constituted. </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Database Type: Provides hsqldb, oracle, mysql, db2 and sybase.</para>
+          </listitem>
+
+          <listitem>
+            <para>Database Name: Name of Database</para>
+          </listitem>
+
+          <listitem>
+            <para>User Name: Name of the DB user</para>
+          </listitem>
+
+          <listitem>
+            <para>Password: Password</para>
+          </listitem>
+
+          <listitem>
+            <para>Server: IP address of the server where DB is installed. Localhost when it is used in Local.</para>
+          </listitem>
+
+          <listitem>
+            <para>Port: -1 for hsqldb, 1521 for oracle, 3306 for mysql, 3000 for Sybase, 50000 for db2</para>
+          </listitem>
+
+          <listitem>
+            <para>Hibernate Dialect: SQL Dialect is used to provide the optimized function for DBMS when queries are executed in Hibernate, 
+            and using this Dialect property Dialect information for the relevant DB can be set. 
+            When hsqldb is selected since there are different Dialect classes for each of the DBs, 
+            the org.hibernate.dialect.HSQLDialect value is selected as the default.(Oracle, MySQL, DB2, Sybase Dialect are also provided.)</para>
+          </listitem>
+
+          <listitem>
+            <para>Driver Class Name: Value to set the driver class of DB. For hsqldb, the value is set as org.hsqldb.jdbcDriver. 
+            When Database Type is selected, the value that fits the relevant DB is set. </para>
+          </listitem>
+
+          <listitem>
+            <para>Driver Jar Path: When Anyframe IDE is installed, hsqldb driver jar file is provided for the sample DB 
+            and is set as the default. If another DB is used, it is connected to the driver jar file of the DB.</para>
+          </listitem> 
+            
+          <listitem>
+            <para>Schema: Name of Schema</para>
+          </listitem> 
+          
+          <listitem>
+            <para>Group Id: group id of jdbc driver to be defined in pom.xml</para>
+          </listitem>   
+          
+          <listitem>
+            <para>Artifact Id: artifact id of jdbc driver to be defined in pom.xml</para>
+          </listitem>   
+          
+          <listitem>
+            <para>Version: version information of jdbc driver to be defined in pom.xml</para>
+          </listitem>     
+            
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>When the generation of the project is finished, check whether the project has been properly generated and imported in Eclipse.</para>
+        <para>For Maven projects, there is pom.xml file, and M2Eclipse is imported, being activated. 
+        If M2Eclipse is activated, Maven Dependencies Libraries are added as Build Path in the project generated, 
+        and the project recognizes reference libraries.  
+       If the project does not recognize the libraries properly with a problem in M2Eclipse,  
+        Disable Dependency Management of M2Eclipse and then again Enable Dependency Management.
+		(Select Maven project &gt;&gt; Maven &gt;&gt; Disable Dependency Management or Enable Dependency Management)
+		Web type projects are generated as dynamic web projects, and Service type projects are generated as java projects.  
+        </para>
+      </listitem>         
+    </orderedlist>
+  </section>
+  
+  
+<section id="eclipseplugin_newapplication_sec002">
+    <title>Ant project generation</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Select File &gt;&gt; New &gt;&gt; Other.. &gt;&gt; Anyframe &gt;&gt;
+        Project</para>
+      </listitem>
+
+      <listitem>
+        <para>Enter the following in the open window to generate the project. 
+        If the following items are entered without any problem, Next button and Finish button are activated, 
+        and when Next is clicked, the page that constitutes DB information will appear. </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Project Name: Project name</para>
+          </listitem>
+       
+          <listitem> 
+            <para>Base Location: location where the project is generated. [root path where Anyframe is installed]/applications is set as the default.
+           It can be changed to the wanted path other than the default path. </para>
+          </listitem>
+
+          <listitem>
+            <para>Package Name: name of the main package</para>
+          </listitem>
+
+          <listitem>
+            <para>Web: Selected when a Web type project is generated.  
+				Dynamic Web project is generated and Anyframe Core Plugin is installed together with sample codes.</para>
+          </listitem>
+
+          <listitem>
+            <para>Service: Selected when a service type project is generated. A general Java project is generated, 
+            and only libraries of Anyframe Core Plugin are installed, not sample codes. </para>
+          </listitem>
+
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>If Next button is clicked on the page above to constitute DB information, 
+        the following JDBC Configuration page is presented.</para>
+        
+        <para>Anyframe IDE supports configuration and templates for hsqldb, oracle, mysql, db2 and sybase DB types. 
+       Constitute DB information using DB that you want to use. 
+        Since when a project is generated, DB scripts for the sample table are properly executed only when the DB that you want to use is running, 
+        it is recommended to run the DB that you want to use. 
+        If you have not decided the DB that you want to use, use hsqldb, which is a sample DB provided by Anyframe.
+        The sample DB is run by executing <emphasis role="bold">start.cmd file under [root path where Anyframe is installed]/ide/db/scripts/hsqldb</emphasis>.
+        </para>
+        <para>Anyframe IDE provides sample queries for various DBs.  
+        Currently, sample queries are provided for oracle (sampledb-oracle.sql), mysql (sampledb-mysql.sql), sybase (sampledb-sybase.sql) and db2 (sampledb-db2.sql).
+		To reflect these sample queries, execute the scripts of [root path where Anyframe is installed]/ide/db/scripts/[DB name]/sampledb-[DB name].sql file in the relevant DB. 
+		</para>
+
+        <para>The project is generated by clicking Finish button after DB information is constituted.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Database Type: Provides hsqldb, oracle, mysql, db2 and sybase</para>
+          </listitem>
+
+          <listitem>
+            <para>Database Name: Name of Database</para>
+          </listitem>
+
+          <listitem>
+            <para>User Name: Name of the DB user</para>
+          </listitem>
+
+          <listitem>
+            <para>Password: Password</para>
+          </listitem>
+
+          <listitem>
+            <para>Server: IP address of the server where the DB installed. localhost when it is used in Local.</para>
+          </listitem>
+
+          <listitem>
+            <para>Port: -1 for hsqldb, 1521 for oracle, 3306 for mysql, 3000 for sybase, and 50000 for DB2</para>
+          </listitem>
+
+          <listitem>
+            <para>Hibernate Dialect: SQL Dialect is used to provide optimal functions for DBMS when queries are executed in Hibernate, 
+            , and using this Dialect property, the Dialect information for the relevant DB can be set. 
+            If hsqldb has been selected because there are different Dialect classes for each DB, 
+            org.hibernate.dialect.HSQLDialect value is selected as the default. (Oracle, MySQL, DB2, Sybase Dialect are also provided.)</para>
+          </listitem>
+
+          <listitem>
+            <para>Driver Class Name: value to set the driver class of DB. 
+            For hsqldb, the value is set as org.hsqldb.jdbcDriver. When Database Type is selected, the value that fits the relevant DB is set. </para>
+          </listitem>
+
+          <listitem>
+            <para>Driver Jar Path: When Anyframe IDE is installed, hsqldb driver jar file is provided for the sample DB and is set as the default. 
+            If another DB is used, Driver jar file of the relevant DB is used. </para>
+
+          </listitem>
+          
+          <listitem>
+            <para>Schema: Name of Schema</para>
+          </listitem>
+          
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>When generation of the project is finished, check whether the project has been properly generated and imported in Eclipse. 
+        For Ant projects, there are build.xml bulid scripts. Web type projects are generated as dynamic web projects, 
+        and Service type projects are generated as java projects. 
+        </para>
+      </listitem>
+      
+    </orderedlist>
+  </section>  
+  
+  <section id="eclipseplugin_newapplication_sec003">
+    <title>Project execution and configuration file (project.mf) check</title>
+
+	<para>Execute the generated project, and check the project configuration file (project.mf) information.</para>
+	
+    <orderedlist>
+      <listitem>
+        <para>When it is a Web type project, execute the server and the project. </para>
+        <para>After selecting the project, click on the right of the mouse, and select &gt;&gt; Run As &gt;&gt; Run On Server menu.  
+        If there is not Tomcat Server (6.0 version) perviously set, register and execute it.</para>
+        <para>For web type projects, the web page that is opened when the server is started shows the list of plugins installed.  
+			The page generated through CRUD Generation function of Anyframe IDE Editor after the project is generated shows 
+			 the list of generated codes at the bottom of the "Generated CRUD Codes" item 
+			 on the right of the Plugin list. 
+        </para>
+      </listitem>
+
+      <listitem>
+      	<para>Check the property of the project property file (project.mf) created with generation of the project.  
+      	When there is information that you want to change, the property value can be modified and the sources can be generated through the modified value. 
+      	</para>
+      	<para>Various common perperty values can be changed including DB setting, referring to the items explained in the table below.  
+      	The default value of the current DB property information is set as the property value of the sample DB hsqldb. 
+      	</para>
+      </listitem>
+    </orderedlist>  
+
+      <table>
+		<title>project.mf - project information</title>
+        <tgroup cols="4">
+           	<colspec colnum="1" colname="col1" colwidth="3*"/>
+			<colspec colnum="2" colname="col2" colwidth="4*"/>
+			<colspec colnum="3" colname="col3" colwidth="1*"/>
+			<colspec colnum="4" colname="col4" colwidth="2*"/>
+           	
+             <thead>
+               <row>
+                 <entry align="center">Property Name</entry>
+
+                 <entry align="center">Description</entry>
+
+                 <entry align="center">Required</entry>
+
+                 <entry align="center">Default Value</entry>
+               </row>
+             </thead>
+
+             <tbody>
+               <row>
+                 <entry>anyframe.home</entry>
+
+                 <entry>Root folder where Anyframe is installed. Not used for Maven projects.</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">Root folder path where Anyframe is installed</entry>
+               </row>
+               <row>
+                 <entry>project.name</entry>
+
+                 <entry>Project name</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">myproject</entry>
+               </row>
+
+			   <row>
+                 <entry>project.home</entry>
+
+                 <entry>Project root folder path</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">[anyframe.home]/
+                 applications/
+                 [project name]</entry>
+               </row>
+               
+               <row>
+                 <entry>project.version</entry>
+
+                 <entry>Project version</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">1.0-SNAPSHOT</entry>
+               </row>
+               
+               <row>
+                 <entry>project.type</entry>
+
+                 <entry>Project type</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">web</entry>
+               </row>
+               
+				
+               <row>
+                 <entry>project.build</entry>
+
+                 <entry>Project build tool</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">maven</entry>
+               </row>
+               
+               <row>
+                 <entry>project.template.home</entry>
+
+                 <entry>Root folder path that has template file based on which projects and CRUD source codes are generated</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">
+	                 <para>[Local repository path]/.anyframe/templates for Maven</para>
+	                 <para>[root folder path where Anyframe is installed]/templates for Ant</para>
+                 </entry>
+               </row>
+               
+               <row>
+                 <entry>project.template</entry>
+
+                 <entry>Template type based on which projects and CRUD source codes are generated (e.g. default, miplatform, etc.)</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">default</entry>
+               </row>
+               
+                <row>
+                 <entry>project.daoframework</entry>
+
+                 <entry>Select DAO Framework(Select one among springjdbc, query, hibernate and ibatis2)</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">springjdbc</entry>
+               </row>
+               
+               <row>
+                 <entry>package.name</entry>
+
+                 <entry>Project main package name</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">Project name</entry>
+               </row>
+             
+               <row>
+                 <entry>web.context.path</entry>
+
+                 <entry>Valid only when the project build tool is Ant.  
+                 WebContext Path name used when web applications are executed using jetty</entry>
+
+                 <entry align="center">Y</entry>
+
+                 <entry align="center">Project name</entry>
+               </row>
+			</tbody>
+		</tgroup>
+	   </table>
+				
+
+	   <table>
+			<title>project.mf - DB information</title>
+            <tgroup cols="4">
+              	<colspec colnum="1" colname="col1" colwidth="3*"/>
+				<colspec colnum="2" colname="col2" colwidth="4*"/>
+				<colspec colnum="3" colname="col3" colwidth="1*"/>
+				<colspec colnum="4" colname="col4" colwidth="2*"/>
+				
+                <thead>
+                  <row>
+                    <entry align="center">Property Name</entry>
+
+                    <entry align="center">Description</entry>
+
+                    <entry align="center">Required</entry>
+
+                    <entry align="center">Default Value</entry>
+                  </row>
+                </thead>
+
+                <tbody>
+                  <row>
+                    <entry>db.type</entry>
+
+                    <entry>DB information (hsqldb, oracle, mysql, db2, sybase)</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">hsqldb</entry>
+                  </row>
+                
+                  <row>
+                    <entry>db.name</entry>
+
+                    <entry>Database name</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">sampledb</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.schema</entry>
+
+                    <entry>schema name</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">PUBLIC</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.server</entry>
+
+                    <entry>server address to access DB</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">localhost</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.port</entry>
+
+                    <entry>port to access DB</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">-1</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.driver</entry>
+
+                    <entry>Set driver class of DB</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">org.hsqldb.
+                    jdbcDriver</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.url</entry>
+
+                    <entry>Access URL to connect DB</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry
+                    align="center">jdbc:hsqldb:hsql://localhost/sampledb</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.userId</entry>
+
+                    <entry>DB user name</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">SA</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.password</entry>
+
+                    <entry>DB user password</entry>
+
+                    <entry align="center">N</entry>
+
+                    <entry align="center">N/A</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.lib</entry>
+
+                    <entry>driver jar file path to connect DB
+                    
+                    		<para>Expression of the path should be noted. 
+							If the relative path starts with '/', it is recognized as an absolute path.</para>
+                    </entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">
+                    	<para>For Maven, C:/Documents and Settings/[user name]/.m2/repository/hsqldb/hsqldb/2.0.0/hsqldb-2.0.0.jar</para>
+                    	<para>For Ant, [root path where Anyframe is installed]/ide/db/lib/hsqldb-2.0.0.jar</para>
+                    	
+                    </entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.dialect</entry>
+
+                    <entry>Hibernate Dialect class setting for each DB</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry
+                    align="center">org.hibernate.dialect.HSQLDialect</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.groupId</entry>
+
+                    <entry>jdbc driver group id information. Used only for Maven projects.</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">hsqldb</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.artifactId</entry>
+
+                    <entry>jdbc driver artifact id information. Used only for Maven projects</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">hsqldb</entry>
+                  </row>
+                  
+                  <row>
+                    <entry>db.version</entry>
+
+                    <entry>jdbc driver version information. Used only for Maven projects</entry>
+
+                    <entry align="center">Y</entry>
+
+                    <entry align="center">2.0.0</entry>
+                  </row>
+				  <row>
+					<entry>db.schema.use</entry>
+					<entry>Defines whether to use DB Schema information or not when setting User information with the property to be designated when the DB is Sybase DB.
+						Yet, it should be noted that depending on the version of Sybase, the property value can change. 
+					</entry>								
+                    <entry align="center">N</entry>
+
+                    <entry align="center">false</entry>					
+				  </row>	                  
+
+                </tbody>
+              </tgroup>
+             </table>            
+      
+  </section>  
+
+
+<section id="eclipseplugin_newapplication_sec004">
+    <title>Tips for solving errors that can occur when projects are generated</title>
+
+    <section id="eclipseplugin_newapplication_sec004_sec001">
+    	<title>Out of memory</title>
+
+    <para>If out of memory errors occur such as "java.lang.OutOfMemoryError:Java heap space" when projects are generated, take the following steps.
+   </para>
+
+    <orderedlist>
+      <listitem>
+        <para>Move to the folder where Eclipse under execution has been installed.</para>
+      </listitem>
+
+      <listitem>
+        <para>Reset it increasing the launcher.XXMaxPermSize value (e.g. 256M) in eclipse.ini file under root folder. 
+        When necessary, increase the minimum memory usage value (-Xms) and the maximum value (-Xmx).
+        The following is an example of eclipse.ini file in Eclipse versino 3.5.0 (Galileo).</para>
+
+        <programlisting><emphasis role="bold">-clean</emphasis>
+-startup
+plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar
+--launcher.library
+plugins/org.eclipse.equinox.launcher.win32.win32.x86_1.0.200.v20090519
+-product
+org.eclipse.epp.package.jee.product
+--launcher.XXMaxPermSize
+256M
+-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+128m
+-vmargs
+-Dosgi.requiredJavaVersion=1.5
+<emphasis role="bold">-Xms400m</emphasis>
+<emphasis role="bold">-Xmx512m</emphasis>
+</programlisting>
+      </listitem>
+    </orderedlist>
+</section>
+    <section id="eclipseplugin_newapplication_sec004_sec002"><title>Project Clean &amp; JSP
+    Validation Error</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>When <inlinemediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="../image/eclipseplugin/createapp-error.jpg" />
+            </imageobject>
+          </inlinemediaobject> sign is shown in the project generated as follows, the sign will disappear if the project is opened again after being cleaned or closed. 
+        </para>
+
+        <para>☞ Execute Project &gt;&gt; Clean...</para>
+
+        <para>☞ Click on the right of the mouse after selecting the project &gt;&gt; click on the right of the mouse after selecting the project after Close Project &gt;&gt; Open Project </para>
+      </listitem>
+
+      <listitem>
+        <para>If JSP Validation errors appear in Problems, they are recognized as errors in Eclipse even though they are not actually errors. 
+        In that case, the validation setting should be changed as follows. If Validation function is used in a project in Eclipse, 
+       it can take a lot of time. If it is not required, and to increase the speed, Valication can be set not to be used by selecting Disable All buttons 
+       for all Validation setting.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="../image/eclipseplugin/createapp-validation.jpg" />
+          </imageobject>
+        </mediaobject>
+
+        <para>☞ Apply after unchecking Build in Window &gt;&gt; Preferences... &gt;&gt; Validation &gt;&gt;
+        JPA Validator, JSP Syntax Validator</para>
+      </listitem>
+    </itemizedlist>
+    </section>
+    </section>
+</section>
+	
+<section id="eclipseplugin_domain">
+  <title>Domain Generation</title>
+
+  <para>Generate domain classes using Anyframe IDE.</para>
+
+  <para>Since domain classes are generated based on DB tables, generate them after checking whether JDBC is properly set, referring to [<link
+  linkend="eclipseplugin_jdbc">JDBC Configuration</link>].</para>
+
+  <orderedlist numeration="arabic" inheritnum="inherit">   
+    <listitem>
+     <para>Click on the right of the mouse after selecting the project and select 
+      &gt;&gt; <emphasis role="bold">Anyframe Tools >> Anyframe IDE</emphasis>.</para>
+  </listitem>
+   <listitem>
+   <para>Select Domain Generation Tab in Anyframe IDE Editor. 
+   When Refresh button is clicked, DB Tables that can be currently selected and source code packages are shown in the tree type. 
+  Select the table that you want to generate into the domain class, and click Generate button after selecting under which source code package the domain class will be generated.</para>
+
+      <para>For the tables in reference relations the domain classes should be generated after they are selected at the same time, through which 
+      the information on the reference relations is provided.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Select Tables: Shows the list of DB tables connected through constitution of JDBC.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select a package: Shows source code package path in the relevant project.(only src/main/java source folder)</para>
+        </listitem>
+       
+      </itemizedlist>
+<warning>
+  <title>Notes for selecting tables when the DB type is mysql</title>
+    <para>Anyframe IDE supports Domain automatic generation using API of Hibernate Tools.
+    Since only the table names in lower case letters are recognized in API of Hibernate Tools when DB is mysql, 
+   the domain class may not be generated when the domain class automatic generation function is executed by selecting the table names in upper case letters 
+   (when Ant is used as the project build tool.)
+    </para>
+</warning>
+  </listitem>
+  <listitem>
+   <para>When generation of the domain classes is finished, the message - Build Successful - is shown in the Console window. 
+   To check whether the domain classes have been properly generated, 
+   check whether they are located under the package designated when the domain classes are generated. 
+   The generated domain classes have the DB table and column information through JPA Annotation setting. 
+   For reference, if domain classes have not been generated in the relevant package even though the Build Successful message is shown, 
+   it means that the domain classes have not been properly generated. 
+   For example, when a table name has been entered that cannot be recognized by API of Hibernate Tools as in the case that the DB type is mysql, 
+  domain classes are not actually generated even though the Build Successful message is shown. 
+   
+      </para>
+		<programlisting language="java">@Entity
+@Table(name = "BOARD")
+<emphasis role="bold">//The schema property of @Table is defined  
+//when sybase DB and hibernate dao framework are used using the default template.
+//The catalog property of @Table is defined when there is the catalog information.</emphasis>
+public class Board implements Serializable {
+    private BoardId id;
+    private BoardMaster boardMaster;
+    private String boardName;
+    ...
+    @EmbeddedId
+    @AttributeOverrides({@AttributeOverride(name = "boardId",column = 
+           @Column(name = "BOARD_ID",nullable = false)
+        )
+        , @AttributeOverride(name = "boardMasterId",column = 
+           @Column(name = "BOARD_MASTER_ID",nullable = false)
+        )
+    })
+    public BoardId getId() {
+        return this.id;
+    }
+    public void setId(BoardId id) {
+        this.id = id;
+    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BOARD_MASTER_ID", nullable = false, 
+                insertable = false, updatable = false)
+    public BoardMaster getBoardMaster() {
+        return this.boardMaster;
+    }
+    public void setBoardMaster(BoardMaster boardMaster) {
+        this.boardMaster = boardMaster;
+    }
+    @Column(name = "BOARD_NAME", nullable = false, length = 150)
+    public String getBoardName() {
+        return this.boardName;
+    }
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
+    }
+}</programlisting>
+      </listitem>
+  </orderedlist>
+  
+<note>
+<title>Notes</title>
+<para>It should be noted that other functions of Anyframe IDE such as generation of projects and codes and DB change cannot be executed at the same time 
+when the functions explained above are executed 
+(when the function is executed by executing Background). </para>
+</note>
+  
+</section>
+
+<section id="eclipseplugin_crud">
+	<title>CRUD Generation</title>
+
+	<para>Generate CRUD using Anyframe IDE.</para>
+
+	<para>The functions of the generated codes can be easily checked  
+	as the basic CRUD codes are generated centering on domain classes and the test codes and the test data are automatically generated. 
+		Thus, before using the CRUD Generation function, generate the domain class based on the connected DB table using the Domain Generation function. 
+		It should be noted that errors can occur when the CRUD Generation function is executed 
+		unless domain classes are generated with the tables in reference relations selected at the same time when the Domain Generation function is executed.		
+	</para>
+
+	<orderedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>Click on the right of the mouse after selecting a project and select &gt;&gt;
+				<emphasis role="bold"> Anyframe Tools >> Anyframe IDE</emphasis>.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Select CRUD Generation Tab in Anyframe IDE Editor. If Refresh button is clicked, the list of domain classes that can be currently selected is shown.</para>
+		</listitem>
+		<listitem>
+			<para>Select the domain class to implement the CRUD function and input the contents of CRUD Project Configuration.</para>
+
+			<itemizedlist>
+				<listitem>
+					<para>CRUD Service: The name of the service which will implement the CRUD function is designated with the name that added Service to the Domain class name as the default, 
+					and it can be only searched.</para>
+				</listitem>
+
+				<listitem>
+					<para>Package: Name of the package where CRUD will be generated. Input the middle package information together 
+					to generate the codes under a specific sub-system. (e.g. sub.categories)</para>
+				</listitem>
+
+				<listitem>
+					<para>Project Name: Can only be searched.</para>
+				</listitem>
+
+				<listitem>
+					<para>Web source code generation: Check the checkbox to generate the presentation layer source codes, not only the business layer source codes. 
+						For Service type projects, this checkbox is not activated.</para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+		<listitem>
+			<para>
+				The message - Build Successful - is shown in the Console window 
+				when the CRUD source code genration is finished after the Generate button is clicked. 
+   				To check whether the CRUD source codes have been properly generated,  
+				check the business service interface, the implementation class, the DAO class, 
+				Spring configuration files, test codes and test data of the domain classes. 
+				For a Web type project, 
+				Spring MVC Controller class, Spring MVC configuration file, test codes and the JSP page are generated. 
+				For reference, if the 
+				<inlinemediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/eclipseplugin/createapp-error.jpg" />
+					</imageobject>
+				</inlinemediaobject>
+				sign is shown in the source file after CRUD is generated, it is because there is not Anyframe Test Plugin. 
+				It can be solved by downloading and installing Anyframe Test Plugin 
+				in the Installation tab in Anyframe IDE Editor. 
+				Also, if CRUD source codes have not been properly generated even though the Build Successful is shown, 
+				it can be because the compiling of the domain classes which are the targets of CRUD source codes is not proper in [Project Home]/target/classes, 
+				or there are not the folders or files required when CRUD source codes are executed. 
+				Thus, execute the build of the project or check the log of the Console window to check the required folders or files.
+				</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<emphasis role="bold">Service Interface</emphasis>
+						(src/main/java/[main package]/[-package value]/service/[Entity
+						class name]Service.java)
+					</para>
+					<programlisting language="java"><![CDATA[public interface BoardService{
+    void create(Board board) throws Exception;
+    void remove(BoardId id) throws Exception; 
+    ...           
+}]]></programlisting>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">Service Implementation Class</emphasis>
+						(src/main/java/[main package]/[-package value]/service/impl/[Entity
+						class name]ServiceImpl.java)
+					</para>
+					<programlisting language="java"><![CDATA[@Service("boardService")
+@Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
+public class BoardServiceImpl implements BoardService {
+	    
+    @Inject
+    @Named("boardDao")
+    private BoardDao boardDao;
+	
+    public void create(Board board) throws Exception{
+        this.boardDao.create(board);
+    }
+    
+    public void remove(BoardId id) throws Exception {
+        this.boardDao.remove(id);
+    }
+    ...    
+}]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">DAO Class</emphasis>
+						(src/main/java/[main package]/[-package value]/service/impl/[Entity
+						class name]Dao.java)
+					</para>
+					<programlisting language="java"><![CDATA[@Repository("boardDao")
+public class BoardDaoQueryImpl extends AbstractDAO {
+
+    @Value("#{contextProperties['pageSize'] ?: 10}")
+    int pageSize;
+    
+    @Value("#{contextProperties['pageUnit'] ?: 10}")
+    int pageUnit;
+    
+    @Inject
+    public void setQueryService(IQueryService queryService) {
+        super.setQueryService(queryService);
+    }
+	
+    /** {@inheritDoc} */
+    public void create(Board board) throws Exception {
+        super.create("Board", board);
+    }
+    /** {@inheritDoc} */
+    public void remove(BoardId id) throws Exception {
+        Board board = new Board();        
+        board.setId(id);    
+        super.remove("Board", board);
+    }
+    ...
+}]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">Mapping Query Statements</emphasis>
+						(src/main/resources/sql/query/mapping-query-[Entity class name].xml)
+					</para>
+					<programlisting language="xml"><![CDATA[<queryservice>
+  <queries>
+    <query id="createBoard">
+      <statement>
+        INSERT INTO BOARD (BOARD_ID, BOARD_DESC, BOARD_MASTER_ID, BOARD_NAME, 
+               BOARD_ORDER, BOARD_TOPICS, REG_DATE) 
+        VALUES (:vo.id.boardId, :vo.boardDesc, :vo.id.boardMasterId, :vo.boardName, 
+               :vo.boardOrder, :vo.boardTopics, :vo.regDate)
+      </statement>
+    </query>
+    ...
+  </queries>
+</queryservice>]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">MessageSource</emphasis>
+						(src/main/resources/message/message-generation.properties)
+					</para>
+					<programlisting><![CDATA[# -- Board-START
+board.id.boardId=Board Id		
+board.id.boardMasterId=Board Master Id		
+board.boardDesc=Board Desc
+board.boardName=Board Name
+board.boardOrder=Board Order
+board.boardTopics=Board Topics
+board.regDate=Reg Date
+
+# -- success messages -- 
+success.board.create=Board has been added successfully.
+success.board.update=Board has been updated successfully.
+success.board.delete=Board has been deleted successfully.
+
+# -- error messages --
+error.boardserviceimpl.create=Board data not created
+error.boardserviceimpl.create.solution=Enter correct data for mandatory field 
+or enter data according to formats means date format as yyyy-mm-dd
+error.boardserviceimpl.create.reason=Entered incorrect data for Board
+...]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">Integrated Test Case</emphasis>
+						(src/test/java/[main package]/[-package value]/service/[Entity
+						class name]ServiceTest.java)
+					</para>
+					<programlisting language="java"><![CDATA[@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/main/resources/spring/context-*.xml" })
+public class BoardServiceTest{
+
+    @Inject
+    @Named("boardDao")
+    private BoardDao boardDao;
+
+    @Test
+    @Rollback(value=true)	    
+    public void manageBoard() throws Exception {
+        // 1. create a new board
+         Board board = getBoard();
+            
+        if(boardService.get(board.getId()) != null)
+                boardService.remove(board.getId());
+
+        boardService.create(board);
+        ...
+    }
+    ...
+}]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">Controller</emphasis>
+						(src/main/java/[main package]/[-package value]/web/[Entity
+						class name]Controller.java)
+					</para>
+					<programlisting language="java"><![CDATA[@Controller
+@RequestMapping("/board.do")
+public class BoardController {
+
+    /**
+     * Resource Injection on BoardService
+     */
+    @Inject
+    @Named("boardService")
+    private BoardService boardService;
+
+    ...    
+
+    /**
+     * Display form for adding Board.
+     * @param model model containing control data
+     * @return the prepared form view
+     * @throws Exception in case of an invalid new form object
+     */ 
+    @RequestMapping(params = "method=createView")  
+    public String createView(Model model) throws Exception 
+    {        
+        model.addAttribute(new Board());
+		        
+        return "genViewBoard";        
+    }
+}]]></programlisting>
+				</listitem>
+
+
+				<listitem>
+					<para>
+						<emphasis role="bold">UI JSP file</emphasis>
+						(src/main/webapp/WEB-INF/jsp/[Entity class name]/*.jsp)
+					</para>
+					<programlisting><![CDATA[<%@ include file="/sample/common/taglibs.jsp"%>
+<html>
+<head>
+    <%@ include file="/sample/common/meta.jsp" %>
+    <title><fmt:message key="boardList.title"/></title>
+    <meta name="heading" content="<spring:message code='boardList.heading'/>"/>     
+    <link rel="stylesheet" href="<c:url value='/sample/css/admin.css'/>" 
+        type="text/css">
+	
+    <script type="text/javascript" 
+        src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+    <script language="JavaScript">
+        function fncCreateBoardView() {
+            document.location.href="<c:url value='/board.do?method=createView'/>";
+        }	
+    ...]]></programlisting>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">Unit Test Case</emphasis>
+						(src/test/java/[main package]/[-package value]/web/[Entity
+						class name]ControllerTest.java)
+					</para>
+					<programlisting language="java"><![CDATA[@RunWith(JMock.class)
+public class BoardControllerTest {
+
+    private BoardController controller;
+    private String SUCCESS_CREATEVIEW = "genViewBoard";
+    private String SUCCESS_CREATE = "redirect:/board.do?method=list";
+    private String SUCCESS_GET = "genViewBoard";
+    private String SUCCESS_UPDATE = "redirect:/board.do?method=list";
+    private String SUCCESS_LIST = "genListBoard";
+    private String SUCCESS_REMOVE = "redirect:/board.do?method=list";
+    private Mockery context = new JUnit4Mockery();
+    private BoardService mockService = null;
+	
+    @Before   
+    public void setUp() throws Exception {
+        System.setProperty("log4j.configuration", "log4j-test.xml");
+
+        this.mockService = context.mock(BoardService.class);                
+        this.controller = new BoardController();
+        this.controller.setBoardService(this.mockService);       
+    }
+    
+    public void setBoardController(BoardController controller) {
+        this.controller = controller;
+    }
+        
+    @Test
+    public void testCreateView() throws Exception{
+        String viewName = this.controller.createView(new ExtendedModelMap());
+        
+        assertEquals("returned correct view name", SUCCESS_CREATEVIEW, viewName);
+   }
+        ...]]></programlisting>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+	</orderedlist>
+	<note>
+		<title>Note 1</title>
+		<para>It should be noted the functions of Anyframe IDE such as generation of projects and codes and DB change cannot be executed at the same time 
+		when the above explained functions are executed (when the functions are executed by executing Background.). </para>
+	</note>
+	<note>
+		<title>Note 2</title>
+		<para>
+			CRUD source codes are generated based on domain classes, and the codes are generated using the compiled domain classes 
+			after the source codes of the whole project including domain classes are compiled for this.
+			Thus, when it takes a lot of time to compile them when CRUD source codes are generated 
+			because the amount of source codes in the project is large, 
+			delete the part that calls the following clean target defined in the "create-crud" target 
+			in code-generation.xml file in [Anyframe Home]/ide/cli/scripts folder. 
+			Since compile target newly compiles the whole source codes 
+			after clean target deletes all of the previously compiled source codes, 
+			it can take a lot of time when the amount of the source codes is large. 
+			When clean target is deleted to increase the speed, 
+			only the source codes changed by the compile target that executes incremental build are compiled, and accordingly it takes less time. 
+				</para>
+		<programlisting language="java"><![CDATA[<ant antfile="build.xml" dir="${project.home}" target="clean"/>]]></programlisting>
+	</note>
+	<section id="eclipse_source_note">
+			<title>Tips for solving errors during runtime after CRUD source code generation</title>
+			<para>For how to solve the problems that can occur during runtime after CRUD source codes have been properly generated, 
+			refer to [<link linkend="commands_maven_source_crud_note">Tips for solving errors during runtime after CRUD source code generation</link>].
+			 </para>
+	</section>
+</section>
+
+<section id="eclipseplugin_configuration">
+  <title>Configuration </title>
+
+  <para>To use Anyframe IDE, check Project Location and set DAO Frameworks and Template information. </para>
+
+  <para>Projects are basically set to use SpringJDBC DAO Framework, 
+  Hibernate Plugin should be installed in the Installation Tab 
+  to change the configuration of DAO Framework to Hibernate/JPA. 
+  Hibernate/JPA Framework cannot be used 
+  if Hibernate/JPA Plugin has been installed but miplatform is set as the template.</para>
+
+  <para>For Template, basically default, map and miplatform are provided, 
+  and miplatform template can be used if Mip-Query Plugin has been installed in the Installation Tab. </para>
+
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+   <para>Click on the right of the mouse after selecting the project 
+      and select &gt;&gt; <emphasis role="bold">Anyframe Tools &gt;&gt; Anyframe IDE</emphasis>. </para>
+</listitem>
+<listitem>
+  <para>Select Configuration Tab in Anyframe IDE Editor, check the project path and constitute DAO Framework and Template information. </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Project Location: The information on the location of the currently generated project is shown. </para>
+        </listitem>
+
+        <listitem>
+          <para>DAO Frameworks: One out of SpringJDBC, Query Service, Hibernate/JPA and iBatis2 can be selected, 
+         and Hibernate/JPA can be selected after Hibernate Plugin has been installed. 
+         For map and miplatform templates, only Query Service is provided. 
+         For default Template, all of the four DAO Frameworks can be used.</para>
+        </listitem>
+
+        <listitem>
+          <para>Template Selection: Section to set the source code template. The function is provided additionally that can change the template home path only for Maven projects.  
+          	<itemizedlist>
+			  <listitem>
+			  	<para>Template Home: Activated only for Maven projects, and the Template Home path can be changed.  
+			  	For Ant projects [root folder path where Anyframe is installed]/templates becomes the template home path, 
+			  	and it cannot be changed on the page.</para>
+			  </listitem>
+			  <listitem>
+			  	<para>Template Type: Shows the list of templates under Template Home path, 
+			  	and basically default and map templates are provided. 
+			  	As the default template, the source code template composed of Spring/SpringMVC, etc. is provided. 
+			  	If Mip-Query Plugin has been installed, miplatform template can also be selected. 
+			  	If miplatform template has been used, the source codes generated can properly work only when PID (Presentation Interface Developer) has been installed. 
+			  	</para>
+			  </listitem>
+			  
+			  </itemizedlist>
+        </para>
+        </listitem>
+       
+      </itemizedlist>
+
+</listitem>
+<listitem>
+  <para>After done with entering the information, be sure to click Apply button and save the Configuration information. 
+  To check whether the information has been properly reflected, move to the project path selected in Search, 
+      and check the values of project.daoframework(DAO Frameworks), project.template.home(Template Home path) 
+      and project.template(Template Type) in project.mf file. 
+     If it has been properly reflected, the value of the relevant item will be shown replaced with the entered value. 
+     For reference, project.home is the project path information. </para>
+</listitem>
+ </orderedlist>
+</section>
+
+<section id="eclipseplugin_jdbc">
+  <title>JDBC Setting</title>
+
+  <para>It sets the DB connection information to use the domain class generation function of Anyframe IDE.</para>
+  
+
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+    <para>Click on the right of the mouse after selecting the project and select 
+      &gt;&gt; <emphasis role="bold">Anyframe Tools >> Anyframe IDE</emphasis>.</para>
+</listitem>
+<listitem>
+   <para>Select JDBC Setting Tab in Anyframe IDE Editor and input JDBC connection information.</para>
+      
+      <itemizedlist>
+	      <listitem>
+	      <para>JDBC Configuration </para>
+	      <itemizedlist>
+	        <listitem>
+	          <para>Database Type: Database type. Provides hsqldb, oracle, mysql, db2 and sybase.</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Database Name: Name of Database</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>User Name: Name of the DB user</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Password: Password</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Server: IP address of the server where DB has been installed. Localhost when used in local.</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Port: -1 for hsqldb, 1521 for oracle, 3306 for mysql, 3000 for sybase and 50000 for db2</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Hibernate Dialect: SQL Dialect is used to provided the optimized function for DBMS when queries are executed in Hibernate, 
+	          , and using this Dialect property, the Dialect information for each DB can be set. 
+	          There are Dialect classes for each DB, and when hsqldb is selected, 
+	          org.hibernate.dialect.HSQLDialect is selected as the default value. (oracle, mysql, db2 and sybase
+	          Dialects are also provided.)</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Driver Class Name: Value to set the driver class of the DB. When it is hsqldb, 
+	          org.hsqldb.jdbcDriver is set as its value. 
+	          When the Database Type is selected, the value that fits the relevant DB is set.</para>
+	        </listitem>
+	
+	        <listitem>
+	          <para>Driver Jar Path: Since the hsqldb driver jar file is provided for the sample DB when Anyframe IDE installed, 
+	         it is set as the default. If another DB is used, the driver jar file of the DB is connected.</para>
+	        </listitem>
+	        
+	        <listitem>
+	          <para>Schema: Name of the DB schema</para>
+	        </listitem>
+	      </itemizedlist>
+	      </listitem>
+	      
+	      <listitem>
+	      	<para>JDBC Driver Artifact Setting: Activated only for Maven projects</para>
+	      	<itemizedlist>
+	      		<listitem>
+	      			<para>Group Id: group id of jdbc driver</para>
+	      		</listitem>	
+	      		<listitem>
+	      			<para>Artifact Id: artifact id of jdbc driver</para>
+	      		</listitem>
+	      		<listitem>
+	      			<para>Version: version of jdbc driver</para>
+	      		</listitem>
+	      	</itemizedlist>
+	      </listitem>
+      </itemizedlist>
+
+</listitem>
+<listitem>
+    <para>After done with entering the information, be sure to click Apply button and save the JDBC Configuration information.</para>
+
+      <para>If Apply button is clicked without selecting the Schema information, the message is shown to select Schema. 
+      If the rest of the JDBC Configuration information is proper except for Schema, the Schema information can be retrieved, 
+      and if Schema is selected in the list retrieved and Apply is clicked, the Configuration information is reflected.</para>
+      
+      <para>When it is tried to retrieve Schema information, but the DB is not properly connected, the message on the cause of the failure is shown.</para>
+
+      <para>To check whether the JDBC configuration information has been properly constituted and is well connected with the DB, 
+      move to the Domain Generation Tab and click Refresh button. 
+      If it is properly connected, the tables of the relevant DB will be shown.</para>
+</listitem>
+</orderedlist>
+<note>
+<title>Notes</title>
+<para>It should be noted that the functions of Anyframe IDE such as generation of projects and codes and DB change cannot be executed at the same time 
+when the functions explained above are being executed. 
+(when functions are executed by executing Background) </para>
+</note>
+</section>
+
+<section id="eclipseplugin_anyframeplugin">
+  <title>Anyframe Plugin Installation</title>
+
+  <para>It is used to Install/Uninstall the plugins provided by Anyframe in Anyframe IDE. 
+  When plugins are installed, the libraries related to the plugins are installed, 
+  and sample codes are provided for some plugins. 
+Check "Install plugins with sample" to install provided sample codes along with libraries.</para>
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+    <para>Click on the right of the mouse after selecting the project, and select &gt;&gt; <emphasis role="bold">Anyframe Tools >> Anyframe IDE</emphasis>.</para>
+</listitem>
+<listitem>
+    <para>If Installation Tab is selected in Anyframe IDE Editor, the following items are shown.</para>
+
+      <itemizedlist>
+      	<listitem>
+          <para>Update list: The function is executed that updates the Anyframe plugin list file from Remote Anyframe Repository.
+          The default update file (plugin-catalog-X.X.X.xml) is under [user account home directory]/.anyframe folder.   
+          </para>
+        </listitem>
+      
+        <listitem>
+          <para>!: The targets of Install/Uninstall are checked. Several plugins can be selected. </para>
+        </listitem>
+
+        <listitem>
+          <para>Plugin Name</para>
+        </listitem>
+
+        <listitem>
+          <para>Group Id: Group name of the Plugin Library</para>
+        </listitem>
+
+        <listitem>
+          <para>Artifact Id: Plugin Library name</para>
+        </listitem>
+        
+        <listitem>
+          <para>Latest: newest version of the Plugin </para>
+        </listitem>
+
+        <listitem>
+          <para>Installed: the version of the installed Plugin</para>
+        </listitem>
+        <listitem>
+          <para>Install plugins with sample: Check the checkbox to install the sample codes together with libraries. Not activated for Service type projects. 
+           </para>
+        </listitem>
+        
+      </itemizedlist>
+
+      
+</listitem>
+<listitem>
+  <para>Click Install or Uninstall buttons after checking the plugin to install or uninstall. 
+  Execute it with tomcat stopped. Otherwise, it runs normally but the error as in No.4 below occurs.
+  </para>
+  
+  <itemizedlist>
+  	<listitem>
+  		<para>Install: 
+			When the relevant plugin and its samples are installed together in a Web type project, 
+			the plugin sample applied can be check by executing the project. 
+			For how to execute the sample, refer to the explanation on how to execute the project in [<link linkend="eclipseplugin_newapplication_sec003">New Project Creation</link>].</para>
+  		<itemizedlist>
+  			<listitem>
+  				<para>metadata information check: The information on the plugin installed in Project folder &gt;&gt; META-INF folder &gt;&gt; plugin-installed.xml file is added.
+  				</para>
+  				<programlisting><![CDATA[<plugins>
+  <plugin name="core">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-core-pi</artifactId>
+    <version>1.0.1</version>
+    <essential>true</essential>
+    <checked>false</checked>
+  </plugin>
+</plugins>]]></programlisting>
+  			</listitem>
+  			<listitem>
+  				<para>Ant project</para>
+  				<itemizedlist>
+  					<listitem>
+  						<para>Web type: Libraries are added to the project's Web App Libraries.</para>
+  					</listitem>
+  					<listitem>
+  						<para>Service type: Libraries are added to [Project Home]/lib, and classpaths are added to .classpath.</para>
+  						<programlisting><![CDATA[...
+<classpathentry kind="lib" path="lib/anyframe-hibernate-1.0.0.jar"/> 
+<classpathentry kind="lib" path="lib/spring-orm-3.0.4.RELEASE.jar"/> 
+<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/> 
+<classpathentry kind="lib" path="lib/xstream-1.3.jar"/> 
+<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/> 
+<classpathentry kind="lib" path="lib/adapter-core-1.2.jar"/> 
+<classpathentry kind="lib" path="lib/hibernate-util-1.2.jar"/> 
+<classpathentry kind="lib" path="lib/javassist-3.8.0.GA.jar"/> 
+<classpathentry kind="lib" path="lib/jboss-serialization-1.0.1.GA.jar"/> 
+<classpathentry kind="lib" path="lib/beanlib-5.0.1beta.jar"/> 
+<classpathentry kind="lib" path="lib/beanlib-hibernate-5.0.1beta.jar"/> 
+<classpathentry kind="lib" path="lib/ehcache-2.2.0.jar"/> 
+<classpathentry kind="lib" path="lib/hibernate-3.5.3-Final.jar"/> 
+<classpathentry kind="lib" path="lib/trove-1.0.2.jar"/>]]></programlisting>
+  					</listitem>
+  				</itemizedlist>
+  			</listitem>
+  			<listitem>
+  				<para>Maven project: The library information related to the installed plugin is added to &lt;dependency&gt; of pom.xml.</para>
+  			</listitem>
+  		</itemizedlist>
+  	</listitem>
+  	
+  	<listitem>
+  		<para>Uninstall: X is marked in Installed. It can be checked in the following way.</para>
+  		<itemizedlist>
+  			<listitem>
+  				<para>metadata information check: The information on the relevant plugin is deleted in Project folder &gt;&gt; META-INF folder &gt;&gt; plugin-installed.xml file.
+  				</para>
+  			</listitem>
+  			<listitem>
+  				<para>Ant projects</para>
+  				<itemizedlist>
+  					<listitem>
+  						<para>Web type: Libraries are deleted in the Project Web App Libraries.</para>
+  					</listitem>
+  					<listitem>
+  						<para>Service type: Libraries are delected in [Project Home]/lib, and classpaths are deleted in .classpath.</para>
+  					</listitem>
+  				</itemizedlist>
+  			</listitem>
+  			<listitem>
+  				<para>Maven project: The library information related to the installed Plugin is deleted in &lt;dependency&gt; of pom.xml.</para>
+  			</listitem>
+  			<listitem>
+  				<para>Uninstalled folder is generated under the project, under which the folders for each time in the "yyyyMMddHHmmss" pattern are generated, and in this folder the files to be uninstalled remain for backup. </para>
+  			</listitem>
+  		</itemizedlist>
+  	</listitem>
+  </itemizedlist>
+  </listitem> 
+
+      
+<listitem>
+  <para>The following message is shown during Plugin Install/Uninstall 
+  when there are changes in the file recognized by tomcat while tomcat is being executed.</para>
+
+      <para>The following message is not shown when tomcat is stopped before Plugin Install/Uninstall/Update.</para>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="../image/eclipseplugin/installation-jar-lock.jpg" />
+        </imageobject>
+      </mediaobject>
+</listitem>
+</orderedlist>
+<note>
+<title>Notes</title>
+<para>It should be noted that the functions of Anyframe IDE such as generation of projects and codes and DB change cannot be executed at the same time 
+when the functions explained above are executed (when the functions are executed executing Background).  
+</para>
+</note>
+
+</section>
+
+<section id="eclipseplugin_ctip">
+  <title>CTIP</title>
+
+  <para>Used to register and execute job in Hudson, connecting Hudson in IDE.
+	To communicate with the Hudson server, configuration should be set using anyframe-ide-eclipse-hudson-X.X.X.jar file.  
+	For details on installation and configuration, refer to [<link linkend="ctip_installation">Installation</link>] and [<link linkend="ctip_integration">Build Server(Hudson) connection</link>] of Continuous Build Server.</para>
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+    <para>Click on the right of the mouse after selecting the project and select &gt;&gt; <emphasis role="bold">Anyframe Tools >> Anyframe IDE</emphasis>.</para>
+</listitem>
+<listitem>
+    <para>If CTIP Tab is selected in Anyframe IDE Editor, the following items are shown.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Hudson URL</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-url.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>URL: URL to access the Hudson server</para></listitem>
+	      	<listitem><para>Configure...: Calls the popup page to register, revise, delete the URL to access the Hudson server.</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Hudson Configuration</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-configuration.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>MAVEN_HOME: Shown when the Maven build tool is used in the project. Set with the path where Maven is installed.</para></listitem>
+	      	<listitem><para>ANT_HOME: Shown when the Ant build tool is used in the project. Set with the path where Ant is installed.</para></listitem>	      	
+	      	<listitem><para>Hudson URL in Email: URL to use for Hudson Email Notification</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+       <listitem>
+          <para>All projects</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-allpjt.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Project name: ctip job name</para></listitem>
+	      	<listitem><para>Status: The message - building - is shown when the job is being built.</para></listitem>
+	      	<listitem><para>New: Add a new job</para></listitem>
+	      	<listitem><para>Remove: Remove the job</para></listitem>
+	      	<listitem><para>Run: Execute the job</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Project Details</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-pjtdetails.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Build Type*: build executes build and generates the files to be deployed, and report executes the build function and also the function of reporting JUnit test, Emma, Jdepend and PMD.</para>
+	      	<table>
+								<title>Build Type</title>
+	
+								<tgroup cols="3">
+									<colspec colnum="1" colname="col1" colwidth="1*"/>
+									<colspec colnum="2" colname="col2" colwidth="5*"/>
+									<colspec colnum="3" colname="col3" colwidth="1*"/>
+									<thead>
+										<row>
+											<entry align="center">Type</entry>
+											<entry align="center">build</entry>
+											<entry align="center">report</entry>
+										</row>
+									</thead>
+									<tbody>
+										<row>
+											<entry>
+												Ant(target)
+											</entry>
+											<entry align="center">
+												deploy
+											</entry>
+											<entry align="center">all</entry>
+										</row>
+										<row>
+											<entry>
+												Maven(goal)
+											</entry>
+											<entry align="center">
+												package
+											</entry>
+											<entry align="center">clean site package</entry>
+										</row>
+									</tbody>
+								</tgroup>
+							</table>	      	
+	      	</listitem>
+	      	<listitem><para>Project Name*: Hudson job name</para></listitem>
+	      	<listitem><para>Custom Workspace: Designates the workspace path</para></listitem>
+	      	<listitem><para>SCM Server Type: Select among the three types of subversion, cvs and none.</para></listitem>
+	      	<listitem><para>SCM Server URL: URL of SCM server</para></listitem>
+	      	<listitem><para>Poll SCM schedule: Defines the job execution schedule</para></listitem>
+	      	<listitem><para>Build other project: Designates the name of the job executed</para></listitem>
+	      </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      
+</listitem>
+<listitem>
+  <para>Select the job to build from the list and execute the build by clicking Run button.</para>
+
+      <para>When build is executed, the Status is shown as "building". 
+     Since the build status is not under scheduling, <emphasis role="bold">check the build result by clicking Refresh button</emphasis>.</para>
+	  <para>If build is done, the image of the build result is shown when Refresh button is clicked. Success is shown in green, and failure in red. </para>
+
+      <para>For Web type projects, the plugin and samples are installed together, and the samples to which the relevant plugin is applied 
+      can be checked by executing the project. For Service type projects, only the libraries of the plugin are installed.</para>
+</listitem>
+</orderedlist>  
+<note>
+<title>Notes</title>
+<para>FAILURE occurs when a job has been generated and built for the project without a test case in the page above. 
+This is not an error, but Junit and Emma plugins show the message for recording of the test case. 
+Thus, when the test case is not used, the plugin should be set not to be used. 
+Uncheck "Publish JUnit test result report" and "Record Emma coverage report" actions in Configure of "[project name]_report" job.
+</para>
+</note> 
+
+<note>
+<title>In case of failure due to the out of memory during Job build</title>
+<para>When the following error occurs when build is executed for a registered job, additionally set MAVEN_OPTS as -Xmx1024m for the configuration parameter.</para>
+
+<itemizedlist>
+  <listitem><para>Configuration parameter setting
+  <programlisting language="xml"><![CDATA[parameter name: MAVEN_OPTS
+parameter value: -Xmx1024m]]></programlisting>  
+  </para></listitem>
+  <listitem><para>Error log shown in the console
+  <programlisting language="xml"><![CDATA[Error occurred during initialization of VM
+Could not reserve enough space for object heap
+Could not create the Java virtual machine
+...]]></programlisting> 
+  </para></listitem>
+</itemizedlist>
+</note>   
+
+</section>
+
+<section id="eclipseplugin_project">
+  <title>Project Build </title>
+
+  <para>Project build can be executed using Anyframe IDE.</para>
+
+  <para>Build can be executed since the build script file is generated together when the project is generated. 
+  If Ant is used as the build tool, the common build process steps such as compiling, test, packaging and deployment are executed when the default target is built.  
+  As for Maven projects, build, packaging and reporting can be conducted using pom.xml file.</para>
+
+  <para>Let us look at the following two cases. </para>
+
+  <itemizedlist>
+    <listitem>
+      <para>[<link linkend="eclipseplugin_project_sec002">Maven project build</link>]</para>
+    </listitem>
+    
+    <listitem>
+      <para>[<link linkend="eclipseplugin_project_sec001">Ant project build</link>]</para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="eclipseplugin_project_sec002">
+    <title>Maven project build</title>
+
+    <para>Check pom.xml in the project.</para>
+
+    <para>Since Maven is built based on pom.xml file, check what is defined in the file. 
+    For reporting, the plugins of which you want to leave the reports should be defined in <![CDATA[<reporting>]]>, 
+and in the Maven projects generated using Anyframe IDE are added the reporting plugins such as Junit Test, Emma, Jdepend and PMD. </para>
+    
+    <para>The following is part of pom.xml generated in the web type project.</para>
+    <programlisting language="xml"><![CDATA[<reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+                <forkMode>always</forkMode>
+            </configuration>
+        </plugin>
+        ...
+</reporting>]]></programlisting>
+
+    <para>After selecting pom.xml in the project, select &gt;&gt; Run As &gt;&gt; Maven Build...</para>
+    
+    <para>When <emphasis role="bold">clean package</emphasis> is executed in Goals, the build result file and the war file for a Web type project and the jar file for a Service type project are generated.  
+    When <emphasis role="bold">clean site package</emphasis> is executed, the result of reporting is generated together. 
+Build results exist in [Project Home]/target, and the report results exist in [Project Home]/target/site/.
+    </para>
+    
+    <para>If "site" goal is not properly executed when they are executed using M2Eclipse, execute the goal as above in the path where pom.xml file is through the cmd window.</para>
+
+  </section>
+  
+  <section id="eclipseplugin_project_sec001">
+    <title>Ant project build</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Check build.xml in the project</para>
+
+        <para>In the project is the automatically generated build.xml file. 
+        In the build scripts there are build targets commonly used for build execution such as compile, test and package. 
+        The common scripts that contain what was actually executed are written in [root folder path where Anyframe is installed]/ide/cli/scripts/project-build.xml file.
+       If changes are necessary for each project, the common script can be modified. 
+       Also, if specialized build details should be added to each project unit in addition to the common build contents, 
+       the relevant build target can be expanded and added. </para>
+        
+        <para>For web type projects, set and build [location where the project is generated]src/main/webapp/WEB-INF/lib folder as the class path, 
+        and for service type projects, set and build [location where the project is generated]/lib folder as the class path. </para>
+        
+        <para>The following is part of build.xml generated in the Web type project.</para>
+		<programlisting language="xml"><![CDATA[<project name="Build module" default="default" basedir=".">		
+    <property file = "./META-INF/project.mf"/>
+    <import file = "${anyframe.home}/ide/cli/scripts/project-build.xml"/>
+	
+    <target name="clean" depends = "shared:clean" />
+    <target name="init" depends = "shared:init" />
+    <target name="resources" depends = "shared:resources" />
+    <target name="compile" depends = "shared:compile" />
+    <target name="test-resources" depends = "shared:test-resources" />
+    <target name="test-compile" depends = "shared:test-compile" />
+    <target name="package" depends = "shared:package" />
+    <target name="extract" depends = "shared:extract" />
+    <target name="emma-jars" depends = "shared:emma-jars" />
+    <target name="test" depends = "shared:test" />
+    <target name="report" depends = "shared:report" />
+
+    <target name = "default" depends = "init, resources, compile, package"/>
+    <target name = "deploy" depends = "default, extract"/>
+    <target name = "all" depends = "clean, init, resources, compile, 
+               test-resources, test-compile, package, emma-jars, test, report"/>
+</project>]]></programlisting>
+      </listitem>
+
+      <listitem>
+        <para>After selecting <emphasis role="bold">build.xml</emphasis> in the project, select &gt;&gt;
+        <emphasis role="bold">Run As &gt;&gt; Ant Build</emphasis>.</para>
+        
+        <para> The default target is executed and the following build process is conducted. 
+        The project binary file, which is the final result, exists in [Project Home]/dist folder. </para>
+
+        <para><emphasis role="bold">init -&gt; resources -&gt; compile -&gt;
+        package</emphasis></para>
+      </listitem>
+
+      <listitem>
+        <para>After selecting <emphasis role="bold">build.xml</emphasis> in the project, designate only all target in the popup opened by selecting &gt;&gt;
+        <emphasis role="bold">Run As &gt;&gt; Ant Build...</emphasis>. </para> 
+        
+        <para>Execute the target that generates reporting results, not the default target. 
+        During build, the code analysis report, the test result report and the code coverage report are generated. 
+        Since report results are generated in [Project Home]/target/output folder, check them after the build is finished.</para>
+
+        <para><emphasis role="bold">clean -&gt; init -&gt; resources -&gt; compile -&gt;
+        test-resources -&gt; test-compile -&gt; package -&gt; emma-jars -&gt;
+        test -&gt; report </emphasis></para>
+      </listitem>
+    </orderedlist>
+  </section>
+</section>
+
+</chapter>

@@ -288,13 +288,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			} else {
 				if (installedPluginInfo.getVersion().equals(
 						pluginInfo.getVersion())) {
-					System.out.println(
-									"'"
-											+ pluginInfo.getName()
-											+ "' plugin can't be installed. The reason is a '"
-											+ pluginInfo.getName() + " "
-											+ pluginInfo.getVersion()
-											+ "' plugin is already installed.");
+					System.out.println("'" + pluginInfo.getName()
+							+ "' plugin can't be installed. The reason is a '"
+							+ pluginInfo.getName() + " "
+							+ pluginInfo.getVersion()
+							+ "' plugin is already installed.");
 					continue;
 				}
 				installPluginInfo.setInstalledVersion(installedPluginInfo
@@ -1498,19 +1496,20 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		try {
 			if (pluginName.equals(CommonConstants.HIBERNATE_PLUGIN)) {
 				// 1. get a transaction configuration file
-				File file = new File(targetDir,
-						CommonConstants.SRC_MAIN_RESOURCES + "spring"
-								+ CommonConstants.CONFIG_TX_FILE);
+				File file = new File(targetDir.getAbsolutePath() + CommonConstants.SRC_MAIN_RESOURCES
+						+ "spring", CommonConstants.CONFIG_TX_FILE);
+				
 				FileUtil
 						.replaceFileContent(
 								file,
-								"\"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
-								"\"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
+								"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
+								"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
+				
 				FileUtil
 						.replaceFileContent(
 								file,
-								"<property name=\"dataSource\" ref=\"dataSource\"/>",
-								"<property name=\"sessionFactory\" ref=\"sessionFactory\"/>");
+								"<property name=\"dataSource\" ref=\"dataSource\" />",
+								"<property name=\"sessionFactory\" ref=\"sessionFactory\" />");
 			}
 		} catch (Exception e) {
 			getLogger()

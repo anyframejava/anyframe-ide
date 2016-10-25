@@ -1,0 +1,487 @@
+<chapter id="plugins_list">
+	<title>Plugin list</title>
+	<para>
+		The following is the list of plugins provided by Anyframe. 
+		The plugin type item in the table of the list is to divide essential plugins and optional plugins.  
+		Essential plugins are the ones that should be installed basically to use Anyframe plugins. 
+		Optional plugins are the ones that can be selectively installed and used when necessary.  
+		Currently, datasource, logging and spring plugins are the essential plugins to run core plugin and are installed together when core plugin is installed. 
+	</para>
+	<informaltable>
+		<tgroup cols="4">
+			<colspec colnum="1" colname="col1" colwidth="1*"/>
+			<colspec colnum="2" colname="col2" colwidth="2*"/>
+			<colspec colnum="3" colname="col3" colwidth="6*"/>
+			<colspec colnum="4" colname="col4" colwidth="1*"/>
+			<thead>
+				<row>
+					<entry align="center">No</entry>
+					<entry align="center">Plugin Name</entry>
+					<entry align="center">Description</entry>
+					<entry align="center">Plugin Type</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry align="center">1</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html">core</ulink></entry>
+					<entry>
+						Provides the movie info management using the SpringMVC + Spring, and is a plugin providing the basis for for other plugin installations 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_ioc">IoC</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_aop">AOP</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_annotation">Annotation</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_springmvc_part">SpringMVC</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_spel">SpEL</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_springmvc_validation">Validation</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_transaction">Transaction</ulink>, etc.
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">2</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_datasource">datasource</ulink></entry>
+					<entry>
+						Provides Datasource related configuration file and libraries that produce Connection(javax.sql.Connection) objects to connect with Database. 
+						Required to run core plugin.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_datasource">DataSource</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">3</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_logging_part">logging</ulink></entry>
+					<entry>
+						Provides the function of managing Log systematically using Log4j. Required to run core plugin.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_logging_part">Logging</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">4</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_part">spring</ulink></entry>
+					<entry>
+						Provides Spring related libraries. Required to run core plugin.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.0.0/reference/htmlsingle/core.html#core_spring_part">Spring</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">5</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf/1.0.0/reference/htmlsingle/cxf.html">cxf</ulink></entry>
+					<entry>
+						Provides Apache CXF related libraries.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf/1.0.0/reference/htmlsingle/cxf.html#cxf_overview">Web Services</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">6</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxrs/1.0.0/reference/htmlsingle/cxf-jaxrs.html">cxf-jaxrs</ulink></entry>
+					<entry>
+						Provides Movie info management function which implemented in web service of HTTP-based REST Architecture style by using Apache CXF. 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxrs/1.0.0/reference/htmlsingle/cxf-jaxrs.html#cxf_jaxrs"> RESTful Web Services : JAX-RS Frontend</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">7</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxws/1.0.0/reference/htmlsingle/cxf-jaxws.html">cxf-jaxws</ulink></entry>
+					<entry>
+						Provides the list of Movie info and detailed search function implemented in SOAP-based web service by using Apache CXF and it is possible to check auto-created WSDL. 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxws/1.0.0/reference/htmlsingle/cxf-jaxws.html#cxf_jaxws">Web Services : JAX-WS Frontend</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">8</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cache/1.0.0/reference/htmlsingle/cache.html">cache</ulink></entry>
+					<entry>
+						Provides the movie info management using the cache service implemented in the OSCache and Anyframe.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cache/1.0.0/reference/htmlsingle/cache.html#cache_cache">Cache</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				
+				<row>
+					<entry align="center">9</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/chart/1.0.0/reference/htmlsingle/chart.html">chart</ulink></entry>
+					<entry>
+						Provides the Chart function that can be used in web pages with the Ajax method using FusionChart Free that provides the open source Chart function.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/chart/1.0.0/reference/htmlsingle/chart.html#chart_chart_part">FusionChart Free</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">10</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/excel/1.0.0/reference/htmlsingle/excel.html">excel</ulink></entry>
+					<entry>
+						Provides the function of processing the Movie list in an Excel file using Query Service and HSSF which is a sub project of Apache POI.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/excel/1.0.0/reference/htmlsingle/excel.html#excel_integration_part">Excel processing using Apache POI</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">11</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/fileupload/1.0.0/reference/htmlsingle/fileupload.html">fileupload</ulink></entry>
+					<entry>
+						Guides the basic usage of file upload developed based on Apache commons-fileupload and Spring MVC.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/fileupload/1.0.0/reference/htmlsingle/fileupload.html#fileupload_usage_part">Apache commons-fileupload and SpringMVC</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">12</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/flex-query/1.0.0/reference/htmlsingle/flex-query.html">flex-query</ulink></entry>
+					<entry>
+						Provides configuration file for integrating Adobe Flex with BlezeDS and Spring Framework, and eight frequently-used sample screens.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/flex-query/1.0.0/reference/htmlsingle/flex-query.html#flex_query">Spring BlezeDS Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">13</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/generic/1.0.0/reference/htmlsingle/generic.html">generic</ulink></entry>
+					<entry>
+						Based on Generics concept provided from Java5 onwards, it provides functions that can directly use class which implemented basic CRUD method functions or inherit to use.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/generic/1.0.0/reference/htmlsingle/generic.html#generic_generic_part">Generic</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">14</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.0.0/reference/htmlsingle/hibernate.html">hibernate</ulink></entry>
+					<entry>
+						Provides the movie info management function using Hibernate and the Dynamic Hibernate Service implementing in the Anyframe
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.0.0/reference/htmlsingle/hibernate.html#hibernate_hibernate_part">Hibernate</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.0.0/reference/htmlsingle/hibernate.html#hibernate_dynamic_part">Dynamic Hibernate</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">15</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/iam/1.0.0/reference/htmlsingle/iam.html">iam</ulink></entry>
+					<entry>
+						provides DB-based user authentication and authorization functions by using Anyframe IAM(Identity and Access Management). 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/iam/1.0.0/reference/htmlsingle/iam.html#iam_secured_resource_part">Anyframe IAM (Spring Security based)</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">16</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/ibatis2/0.0.1/reference/htmlsingle/ibatis2.html">ibatis2</ulink></entry>
+					<entry>
+						Provides the function of managing movie information using iBatis2.
+						<para>
+							[used functions] iBatis2
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">17</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/idgen/1.0.0/reference/htmlsingle/idgen.html">idgen</ulink></entry>
+					<entry>
+						Provides the function of generating unique IDs using the Anyframe ID Gen service
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/idgen/1.0.0/reference/htmlsingle/idgen.html#idgen_idgen">Id Gen service</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">18</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jasperreports/1.0.0/reference/htmlsingle/jasperreports.html">jasperreports</ulink></entry>
+					<entry>
+						Shows as a report like HTML, PDF the movie info register status by connecting Spring with JasperReports.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jasperreports/1.0.0/reference/htmlsingle/jasperreports.html#jasperreports_integration_part">JasperReports Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">19</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jdbc-support/1.0.0/reference/htmlsingle/jdbc-support.html">jdbc-support</ulink></entry>
+					<entry>
+						오픈소스 p6spy 를 확장하여 SQL Injection 보안 위험을 방어할 수 있는 기능 및 최종 실행 쿼리에 대한 로깅(재처리) 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jdbc-support/1.0.0/reference/htmlsingle/jdbc-support.html#dbcsupport_injectionandlogging_implementation">기본 구현 및 사용자 확장 구현 방안</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">20</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logging-sql/1.0.0/reference/htmlsingle/logging-sql.html">logging-sql</ulink></entry>
+					<entry>
+						Provides SQL Logging function using log4jdbc.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logging-sql/1.0.0/reference/htmlsingle/logging-sql.html#loggingsql_loggingsql_part">Log4jdbc</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">21</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mip-query/1.0.0/reference/htmlsingle/mip-query.html">mip-query</ulink></entry>
+					<entry>
+						Provides various UI samples that can be used for the movie information management function and actual system development by integrating MiPlatform, which is an X-Internet solution provided by TOBESOFT, with Anyframe. 
+						For mipsample plugin function check, the sample data adding in the DB are provided together.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mip-query/1.0.0/reference/htmlsingle/mip-query.html#mip_query_integration_part">Miplatform Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">22</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/monitoring/1.0.0/reference/htmlsingle/monitoring.html">monitoring</ulink></entry>
+					<entry>
+						By measuring and collecting the performance of sample applications in various types using Infrared, which is an open source Monitoring tool, it enables the qualitative performance analysis.  
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/monitoring/1.0.0/reference/html/index.html">Monitoring</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">23</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query/1.0.0/reference/htmlsingle/query.html">query</ulink></entry>
+					<entry>
+						Provides the function of managing movie information using Anyframe's Query service that enables DB data handling only with the input of query statements or objects.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query/1.0.0/reference/htmlsingle/query.html#query_part">Query service</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">24</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query-ria/1.0.0/reference/htmlsingle/query-ria.html">query-ria</ulink></entry>
+					<entry>
+						Provides extended libraries of Query service necessary to connect various RIA platforms with Anyframe's Query service.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">25</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/remoting/1.0.0/reference/htmlsingle/remoting.html">remoting</ulink></entry>
+					<entry>
+						Provides the movie info query function by using the HttpInvoker among Spring Remoting methods.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/remoting/1.0.0/reference/htmlsingle/remoting.html#remoting_httpinvoker">Remoting : HTTP Invoker</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">26</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/scheduling/1.0.0/reference/htmlsingle/scheduling.html">scheduling</ulink></entry>
+					<entry>
+						Provides the function for creating the monthly movie register status periodically using Quartz.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/scheduling/1.0.0/reference/htmlsingle/scheduling.html#scheduling_quartz_part">Quartz Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">27</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb/1.0.0/reference/htmlsingle/simpleweb.html">simpleweb</ulink></entry>
+					<entry>
+						Provides common configuration files and libraries necessary to use web development simplification methods provided by Anyframe.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb/1.0.0/reference/htmlsingle/simpleweb.html#simpleweb_part">Simplification of web</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">28</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-vo/1.0.0/reference/htmlsingle/simpleweb-vo.html">simpleweb-vo</ulink></entry>
+					<entry>
+						Guides web development simplifying method for developers to develop web application easier and provides Common Controller class and Tag Library. 
+						When using VO(Value Object) as Transfer object, Movie information management function is provided as sample code.  
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-vo/1.0.0/reference/htmlsingle/simpleweb-vo.html#simpleweb_vo_introduction_part">Simplification of web (vo)</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">29</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-map/1.0.0/reference/htmlsingle/simpleweb-map.html">simpleweb-map</ulink></entry>
+					<entry>
+						Guides web development simplifying method for developers to develop web application easier and provides Common Controller class and Tag Library. 
+						When using Map(java.util.Map) object as Transfer object, Movie information management function is provided as sample code. 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-map/1.0.0/reference/htmlsingle/simpleweb-map.html#simpleweb_map_introduction_part">Simplification of web (map)</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">30</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-jquery/1.0.0/reference/htmlsingle/simpleweb-jquery.html">simpleweb-jquery</ulink></entry>
+					<entry>
+						Guides web development simplifying method for developers to develop web application easier and provides Common Controller class and Tag Library. 
+						By using JSON format data, it provides Movie info management in sample code. 
+						Also provided is how to integrate with jQuery components(jqgrid, quickpager, autocomplete, jstree, ui-tab, dropdown, uploadify). 
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-jquery/1.0.0/reference/htmlsingle/simpleweb-jquery.html#simpleweb_jquery_introduction_part">Simplification of web (jquery)</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">31</entry>
+					<entry>spring-optional</entry>
+					<entry>
+						Provides Spring libraries (spring-aspects, spring-instrument, spring-instrument-tomcat, spring-jms, spring-webmvc-portlet, etc.) not installed by Anyframe Plugins, but not the sample codes and manuals.						
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">32</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.0/reference/htmlsingle/springrest.html">springrest</ulink></entry>
+					<entry>
+						Provides the movie info management function by applying the REST style for web application based on SpringMVC which is one of the properties shown newly in Spring 3.0.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.0/reference/htmlsingle/springrest.html#springrest_restsupport_part">Spring REST Supports</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">33</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/struts/1.0.0/reference/htmlsingle/struts.html">struts</ulink></entry>
+					<entry>
+						Provides the movie info management using Struts.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/struts/1.0.0/reference/htmlsingle/struts.html#struts_overview_part">Struts</ulink>
+							,  <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/struts/1.0.0/reference/htmlsingle/struts.html#struts_extensions_overview_part">Struts Extensions</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">34</entry>
+					<entry>test</entry>
+					<entry>
+						Provides the reference library needed in the test code operation.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">35</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.0/reference/htmlsingle/tiles.html#tiles_apachetiles">tiles</ulink></entry>
+					<entry>
+						Guides how to define page layout based on Tiles (Apache Tiles 2.2.1).
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.0/reference/htmlsingle/tiles.html">Tiles</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">36</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html">util-demo</ulink></entry>
+					<entry>
+						Provides demo pages to use Date, Digest, Number, String and Validation utilities included in Anyframe Core Service.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html#utildemo_dateutil">Date</ulink>
+							, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html#utildemo_digestutil">Digest</ulink>
+							, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html#utildemo_numberutil">Number</ulink>
+							, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html#utildemo_stringutil">String</ulink>
+							, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.0/reference/htmlsingle/util-demo.html#utildemo_validationutil">Validation</ulink> utilities in Anyframe Core Service
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">37</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html">util-system</ulink></entry>
+					<entry>
+						Provides Anyframe Util-System Service, which is a utility-type function for the convenience of the system that can be commonly used.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_util_system">SystemInfo</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_util_network">Network</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_util_filesystem">FileSystem</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_util_filemonitor">FileMonitor</ulink> utilities and <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_util_zip">compression/decompression</ulink> utility using Sigar 
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">38</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system-demo/1.0.0/reference/htmlsingle/util-system-demo.html">util-system-demo</ulink></entry>
+					<entry>
+						Provides the demos of Anyframe Util-System Service that can check system resources in the DashBoard UI type (using jQuery UI and FusionChart Free).
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.0/reference/htmlsingle/util-system.html#utilsystem_utilsystem_part">System</ulink> utility, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/simpleweb-jquery/1.0.0/reference/htmlsingle/simpleweb-jquery.html#simpleweb_jquery_jquery_part">jQuery</ulink>
+							, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/chart/1.0.0/reference/htmlsingle/chart.html#chart_chart_part">FusionChart Free</ulink> using Sigar
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">39</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/webflow/1.0.0/reference/htmlsingle/webflow.html">webflow</ulink></entry>
+					<entry>
+						Provides the movie info management function using the Spring Webflow.
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/webflow/1.0.0/reference/htmlsingle/webflow.html#webflow_overview_part">Spring Webflow</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<!-- 
+				<row>
+					<entry align="center">39</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/mysinglesso/1.0.0/reference/htmlsingle/webflow.html">mysinglesso</ulink></entry>
+					<entry>
+						SingleSignOn in mySingle, which is the corporate portal of Samsung Group
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/mysinglesso/1.0.0/reference/htmlsingle/webflow.html#webflow_webflow">Spring Webflow</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">40</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/webflow/4.5.2/reference/htmlsingle/webflow.html">xp-query</ulink></entry>
+					<entry>
+						<para>
+							[used functions] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/webflow/4.5.2/reference/htmlsingle/webflow.html#webflow_webflow">Spring Webflow</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				 -->
+			</tbody>
+		</tgroup>
+	</informaltable>		
+</chapter>

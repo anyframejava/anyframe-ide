@@ -998,6 +998,54 @@ public class FileUtil {
 
 		return true;
 	}
+	
+	public static boolean moveDirectory(File srcFolder, File backupDir,
+			Collection<String> excludes, Collection<String> excludeFolders) throws Exception {
+
+		if (!srcFolder.exists()) {
+			return false;
+		}
+
+		IOFileFilter excludesFilter = FileFilterUtils
+				.notFileFilter(new NameFileFilter(excludes
+						.toArray(new String[excludes.size()]), IOCase.SENSITIVE));
+		
+		IOFileFilter excludesFolderFilter = FileFilterUtils
+		.notFileFilter(new NameFileFilter(excludeFolders
+				.toArray(new String[excludeFolders.size()]), IOCase.SENSITIVE));
+		
+		File[] founds = srcFolder.listFiles((FileFilter) excludesFolderFilter);
+		
+		for (File found : founds) {
+			// find only files, not directories
+			Collection<File> files = FileUtils.listFiles(found, excludesFilter,
+					TrueFileFilter.INSTANCE);
+
+			// -- move files
+			for (File src : files) {
+				String targetPath = src.getCanonicalPath().substring(
+						new File(".").getCanonicalPath().length());
+				FileUtils.moveFile(src, new File(backupDir, targetPath));
+			}
+		}
+
+		// --- delete empty folder
+		Collection<File> files = new java.util.LinkedList<File>();
+		innerListDirectories(files, srcFolder, DirectoryFileFilter.DIRECTORY);
+
+		for (File file : files) {
+			if (file.listFiles() == null || file.listFiles().length == 0) {
+				FileUtils.deleteDirectory(file);
+			}
+		}
+
+		// -- delete current directory if empty
+		if (srcFolder.listFiles() == null || srcFolder.listFiles().length == 0) {
+			FileUtils.deleteDirectory(srcFolder);
+		}
+
+		return true;
+	}
 
 	/**
 	 * 

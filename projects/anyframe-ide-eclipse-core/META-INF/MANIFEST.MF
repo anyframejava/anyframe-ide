@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Anyframe IDE
 Bundle-SymbolicName: org.anyframe.ide.eclipse.core;singleton:=true
-Bundle-Version: 2.0.1.v20110601
+Bundle-Version: 2.0.2.v20110705
 Bundle-Activator: org.anyframe.ide.eclipse.core.AnyframeIDEPlugin
 Bundle-Vendor: SAMSUNG SDS
 Require-Bundle: org.eclipse.ui,
@@ -78,9 +78,9 @@ Bundle-ClassPath: .,
  lib/aspectjrt-1.6.8.jar,
  lib/wagon-provider-api-1.0-beta-2.jar,
  lib/wagon-http-lightweight-1.0-beta-2.jar,
- lib/anyframe-ide-command-ant-2.0.1.jar,
- lib/anyframe-ide-command-aspect-2.0.1.jar,
- lib/anyframe-ide-command-cli-2.0.1.jar,
- lib/anyframe-ide-command-common-2.0.1.jar,
- lib/anyframe-maven-plugin-2.0.1.jar
+ lib/anyframe-ide-command-ant-2.0.2.jar,
+ lib/anyframe-ide-command-aspect-2.0.2.jar,
+ lib/anyframe-ide-command-cli-2.0.2.jar,
+ lib/anyframe-ide-command-common-2.0.2.jar,
+ lib/anyframe-maven-plugin-2.0.2.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
