@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin name="mip-query">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-mip-query-pi</artifactId>
+  <version>1.0.0</version>
+  <dependent-plugins>
+    <dependent-plugin name="query-ria" version="1.0.0"/>
+  </dependent-plugins>
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+    <resource dir="src/main/resources" filtered="true" packaged="false">
+      <include name="**/*.xml"/>
+    </resource>
+  </resources>
+  <samples>true</samples>
+  <essential>false</essential>
+  <checked>false</checked>
+</plugin>

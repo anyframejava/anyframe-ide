@@ -1,0 +1,235 @@
+<chapter id="ctip_installation">
+	<title>Installation</title>
+	<para>CTIP 환경 구성을 위해 Build Server와 SCM Server(소스 코드 형상 관리 서버)를 설치하도록 한다. 
+	 현재 Build Server로 Hudson 설치를 가이드하고 있으며 SCM Server로 <ulink url="http://subversion.tigris.org/">SubVersion</ulink>, <ulink url="http://www.nongnu.org/cvs/">CVS</ulink> 등을 가이드하고 있다. 
+	 Hudson의 경우, Anyframe IDE 툴 연계를 위한 추가 설정이 필요하기 때문에 본 매뉴얼에서는 Hudson 설치 및 연계 작업에 대한 내용을 설명하고 있다. 
+	 SCM Server 설치는 선택한 제품을 추가 변경 없이 설치하면 되므로 본 매뉴얼에서 설명하고 있지 않다. 
+	</para>
+	
+	<section id="ctip_installation_download">
+		<title>Hudson 설치</title>
+		<para>
+		<ulink url="http://hudson-ci.org/">Hudson 사이트</ulink>로부터 Hudson WAR 파일을 다운로드 받은 후, 단독 실행시키거나 Servlet Container에 배포하여 구동시키도록 한다. Hudson 설치에 대한 자세한 내용은 
+		<ulink url="http://hudson-ci.org/">Hudson 사이트</ulink>를 참고하도록 한다. 
+		현재 Anyframe은 Hudson 1.358 버전에 대해서 테스트되었으며 아래 표에 나타난 Hudson Plugin들을 설치하여 구성되었다. 기본적으로 설치되는 Hudson Plugin들외 추가시킨 Hudson Plugin들도 있으므로 
+		Plugin 전체 목록을 확인해보도록 한다. 
+		각 Hudson Plugin의 버전에 따라 설치된 Hudson 서버에서 정상적으로 동작하지 않을 수도 있으므로 Hudson Plugin 버전에 유의하도록 한다.
+		만약 최신 버전의 Hudson Plugin 설치 시 정상적으로 동작하지 않는다면 <ulink url="http://hudson-ci.org/">Hudson Plugin 다운로드 사이트</ulink>에서 
+		해당 Plugin의 버전을 찾아서 따로 설치해주도록 한다.		
+		</para>		
+			<informaltable>
+			<tgroup cols="4">
+				<colspec colname="col1" colnum="1" colwidth="3*" />
+				<colspec colname="col2" colnum="2" colwidth="2*" />
+				<colspec colname="col3" colnum="3" colwidth="4*" />
+				<colspec colname="col4" colnum="4" colwidth="1*" />
+				
+          		<thead>
+					<row>
+						<entry align="center">Plugin Name</entry>
+						<entry align="center">Plugin ID</entry>
+			            <entry align="center">Description</entry>
+			            <entry align="center">Version</entry>
+					</row>
+				</thead>
+
+          		<tbody>
+            		<row>
+              			<entry vlign="center">Static Analysis Collector Plug-in</entry>
+              			<entry vlign="center">analysis-collector</entry>
+              			<entry vlign="center">This plug-in is an add-on for the plug-ins Checkstyle, Dry, FindBugs, PMD, Task Scanner, and Warnings: 
+              			the plug-in collects the different analysis results and shows the results in a combined trend graph. Additionally, the plug-in provides health reporting and build stability based on these combined results.</entry>
+              			<entry vlign="center" align="center">1.5</entry>
+            		</row>	
+            		<row>
+              			<entry>Static Analysis Utilities</entry>
+              			<entry>analysis-core</entry>
+              			<entry>This plug-in provides utilities for the static code analysis plug-ins. 
+              			Hudson understands the result files of several static code analysis tools. 
+              			For each result file a different plug-in is used for configuration and parsing. 
+              			Since these results are visualized by the same back-end, the description of this back-end is combined in this section. </entry>
+              			<entry align="center">1.8</entry>
+              			<entry/>
+            		</row>
+            		<row>
+              			<entry>Checkstyle Plug-in</entry>
+              			<entry>checkstyle</entry>
+						<entry>
+							This plugin generates the trend report for Checkstyle, an open source static code analysis program. 
+						</entry>
+              			<entry align="center">3.6</entry>
+            		</row>
+
+					<row>
+              			<entry>CVS Plugin</entry>
+              			<entry>cvs</entry>
+						<entry>
+							This bundled plugin integrates Hudson with CVS version control system. 
+						</entry>
+              			<entry align="center">1.1</entry>
+					</row>
+					
+					<row>
+              			<entry>Dashboard View</entry>
+              			<entry>dashboard-view</entry>
+						<entry>
+							This plugin contributes a new view implementation that provides a dashboard / portal-like view for your Hudson instance.
+						</entry>
+              			<entry align="center">1.5</entry>
+					</row>
+					
+					<row>
+              			<entry>Duplicate Code Scanner Plug-in</entry>
+              			<entry>dry</entry>
+						<entry>
+							This plugin generates the trend report for duplicate code checkers like CPD.
+						</entry>
+              			<entry align="center">2.6</entry>
+					</row>
+					
+					<row>
+              			<entry>Emma Plugin</entry>
+              			<entry>emma</entry>
+						<entry>
+							This plugin allows you to capture code coverage report from Emma. Hudson will generate the trend report of coverage.
+						</entry>
+              			<entry align="center">1.20</entry>
+					</row>
+					
+					<row>
+              			<entry>FindBugs Plug-in</entry>
+              			<entry>findbugs</entry>
+						<entry>
+							This plugin generates the trend report for FindBugs, an open source program which uses static analysis to look for bugs in Java code. 
+						</entry>
+              			<entry align="center">4.8</entry>
+					</row>
+					
+					<row>
+              			<entry>JDepend Plugin</entry>
+              			<entry>jdepend</entry>
+						<entry>
+							The JDepend Plugin is a plugin to generate JDepend reports for builds.
+						</entry>
+              			<entry align="center">1.2.2</entry>
+					</row>
+					
+					<row>
+              			<entry>Maven 2 Project Plugin</entry>
+              			<entry>maven-plugin</entry>
+						<entry>
+							Hudson's Maven 2 project type support. This plugin is part of the core Hudson distribution.
+						</entry>
+              			<entry align="center">1.358</entry>
+					</row>
+					
+					<row>
+              			<entry>PMD Plug-in</entry>
+              			<entry>pmd</entry>
+						<entry>
+							This plugin generates the trend report for PMD, an open source static code analysis program. 
+						</entry>
+              			<entry align="center">3.6</entry>
+					</row>
+					
+					<row>
+              			<entry>Hudson Support Subscription Notification Plugin</entry>
+              			<entry>scis-ad</entry>
+						<entry>
+							This plugin notifies the support subscription offering.
+						</entry>
+              			<entry align="center">1.2</entry>
+					</row>
+					
+					<row>
+              			<entry>SSH Slaves plugin</entry>
+              			<entry>ssh-slaves</entry>
+						<entry>
+							This plugin allows you to manage slaves running on *nix machines over SSH. It adds a new type of slave launch method. 
+						</entry>
+              			<entry align="center">0.10</entry>
+					</row>
+					<row>
+              			<entry>Subversion Plugin</entry>
+              			<entry>subversion</entry>
+						<entry>
+							This plugin adds the Subversion support (via SVNKit) to Hudson.This plugin is bundled inside hudson.war.
+						</entry>
+              			<entry align="center">1.17</entry>
+					</row>
+					<row>
+              			<entry>Visual SourceSafe Plugin</entry>
+              			<entry>vss</entry>
+						<entry>
+							This plugin integrates Hudson with Microsoft Visual SourceSafe . 
+						</entry>
+              			<entry align="center">1.7</entry>
+					</row>
+          		</tbody>
+        	</tgroup>
+      		</informaltable>		
+	</section>
+	
+	<section id="ctip_installation_anyframe">
+		<title>Anyframe IDE 파일 설치</title>
+		<para>
+		Anyframe IDE Editor에서 Hudson과 연계하여 Hudson Job에 대해 추가,수정,삭제,실행	등의 작업을 하기 위해서는 다음과 같은 추가 작업이 필요하다.
+		</para>
+			<orderedlist>
+				<listitem>
+					<para>Anyframe 포탈 사이트에서 anyframe-X.X.X.zip 을 다운받는다.</para>
+				</listitem>
+				<listitem>
+					<para>
+						압축을 풀고 anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더에 있는 플러그인 패키지
+						파일(
+						<emphasis role="bold">anyframe-ide-eclipse-hudson-X.X.X.jar
+						</emphasis>
+						)를 "
+						<emphasis role="bold">[Hudson 설치 폴더]/hudson/war/WEB-INF/lib
+						</emphasis>
+						" 로 복사한다. 
+					</para>
+					<para>anyframe-ide-eclipse-hudson-X.X.X.jar 은 IDE에서 설정한 정보를 Hudson에
+						반영하는 역할을 수행한다.</para>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">[Hudson 설치 폴더]/hudson/war/WEB-INF/web.xml
+						</emphasis>
+						파일을 열어서 아래와 같은 내용을 추가하거나,
+						anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더 내에 있는 web.xml 을
+						[Hudson 설치 폴더]/hudson/war/WEB-INF 폴더에 붙여넣는다.
+					</para>
+					<para>hudsonHome, hudsonJobDir 는 [Hudson 설치 폴더]/bin 기준으로 표현된 것으로,
+						경로가 다를 경우 수정이 필요하다.
+						hudsonHome의 경우 hudson.tasks.Ant.xml,
+						hudson.tasks.Mailer.xml,
+						hudson.tasks.Maven.xml 세개 파일에서 현재 개발 환경에 맞도록 폴더 경로를 지정한다.
+						hudsonJobDir의 경우 hudson job 이 있는 폴더경로를 지정한다.        
+	        </para>
+					<programlisting><![CDATA[<servlet>
+    <servlet-name>Hudson Gen Servlet</servlet-name>
+    <servlet-class>org.anyframe.ide.eclipse.hudson.HudsonGenServlet</servlet-class>
+    <init-param>
+        <param-name>hudsonHome</param-name>
+        <!-- 상대경로는 [Hudson 설치 폴더]/bin 기준으로 표현된 것  -->
+        <!-- Hudson을 start 하는 경로가 위의 경로가 아닌경우 param-value 조정해야 함  -->
+        <param-value>../hudson</param-value>
+    </init-param>
+    <init-param>
+        <!-- 상대경로는 [Hudson 설치 폴더]/bin 기준으로 표현된 것  -->
+        <!-- Hudson을 start 하는 경로가 위의 경로가 아닌경우 param-value 조정해야 함  -->
+        <param-name>hudsonJobDir</param-name>
+        <param-value>../hudson/jobs</param-value>
+    </init-param>
+</servlet>
+<servlet-mapping>
+    <servlet-name>Hudson Gen Servlet</servlet-name>
+    <url-pattern>/anyframe/api/*</url-pattern>
+</servlet-mapping>]]></programlisting>
+				</listitem>
+			</orderedlist>		
+	</section>	
+</chapter>

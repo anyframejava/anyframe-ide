@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="core">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-core-pi</artifactId>
+  <version>2.0.0</version>
+  <dependent-plugins>
+    <dependent-plugin name="datasource" version="1.0.0 &lt; * &lt;= 2.0.0"/>
+    <dependent-plugin name="logging" version="1.0.0 &lt; * &lt;= 2.0.0"/>
+  </dependent-plugins>
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+  </resources>  
+  <samples>true</samples>
+  <essential>true</essential>
+</plugin>

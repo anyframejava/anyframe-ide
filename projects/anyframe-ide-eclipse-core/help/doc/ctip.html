@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="generator" content="TextMate http://macromates.com/">
+<meta name="author" content="Eunjin Jang">
+<link rel="stylesheet" href="../css/style.css" type="text/css"
+	media="screen" title="Anyframe IDE Help CSS" charset="utf-8" />
+<!-- Date: 2009-01-07 -->
+
+<title>Anyframe IDE Help::CTIP</title>
+</head>
+
+<body>
+<table class="header" border="0" cellspacing="0" cellpadding="0">
+	<!-- <tr><th>Header</th></tr> -->
+	<tr>
+		<td style="text-align: left;" width="320px"><img
+			src="../images/Anyframe_doc_banner.jpg"
+			alt="Anyframe Documentation Banner" /></td>
+		<td
+			style="text-align: right; font-variant: small-caps; color: #003399; font-size: 18px; vertical-align: bottom;"><strong>Anyframe
+		IDE User Guide&nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
+	</tr>
+	<tr>
+		<td style="height: 3px; background-color: #003399;" colspan="2"></td>
+	</tr>
+</table>
+
+<table style="height: 100%" width="100%" border="0" cellspacing="0"
+	cellpadding="0">
+	<tr>
+		<td class="content">
+		<h3>CTIP</h3>
+
+		<p>IDE에서 Hudson을 연결하여 Hudson에 job을 등록하고 job을 실행하기 위해서 사용한다.<br>	 
+		Hudson 서버와 통신을 하기 위해서는 anyframe-ide-eclipse-hudson-X.X.X.jar 파일을 이용해 설정을 해야 한다.
+		설정과 관련된 자세한 사항은 <a href="install.html#install_ctip_plugin">Installation</a>을 참조한다.
+		<ol>
+			<li>프로젝트를 선택한 후 우 클릭 >> <b>Anyframe Tools</b> >> <b>Anyframe IDE</b> 메뉴를 선택한다.<br />
+			<br />
+			</li>
+			<li>Anyframe IDE Editor에서 CTIP Tab을 선택하면 다음과 같은 화면이 보인다.<br>
+			<ul>
+				<li>Hudson URL<br/>
+					<img src="../images/ctip-url.jpg"><br/>
+					<ul>
+						<li>URL: Hudson 서버에 접근하기 위한 url</li>
+						<li>Configure...: Hudson 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출<br/>
+							<img src="../images/ctip-configure.jpg"><br/>
+						</li>
+						
+					</ul>
+				</li>	
+				<li>Hudson Configuration<br/>
+					<img src="../images/ctip-configuration.jpg"><br/>
+					<ul>
+						<li>MAVEN_HOME: 프로젝트에서 Maven 빌드도구를 사용하는 경우 보여지며, Maven이 설치된 경로로 설정</li>
+						<li>ANT_HOME: 프로젝트에서 Ant 빌드도구를 사용하는 경우 보여지며, Ant가 설치된 경로로 설정</li>
+						<li>Hudson URL in Email: Hudson Email Notification 시 사용할 url</li>
+					</ul>				
+				</li>
+				<li>All projects<br/>
+					<img src="../images/ctip-allpjt.jpg"><br/>
+					<ul>
+						<li>Project name: ctip job name</li>
+						<li>Status: job 수행 상태로, job을 빌드 하는 중일 경우 building이라는 메세지가 출력됨</li>
+						<li>New : 새로운 job 추가</li>
+						<li>Remove : job 삭제</li>
+						<li>Run : job 실행</li>
+					</ul>
+				</li>
+				<li>Project Details<br/>
+					<img src="../images/ctip-pjtdetails.jpg"><br/>				
+					<ul>
+						<li>Build Type* : build는 빌드를 수행하고 배포파일 생성, report는 build 기능에 JUnit test, Emma, Jdepend, PMD등의 reporting 기능도 수행					
+										  <table border="1">
+										  	<tr>
+										  		<td>&nbsp;</td>
+										  		<td><center>build</center></td>
+										  		<td><center>report</center></td>
+										  	</tr>
+										  	<tr>
+										  		<td><center>Ant(target)</center></td>
+										  		<td>deploy</td>
+										  		<td>all</td>
+										  	</tr>
+										  	<tr>
+										  		<td><center>Maven(goal)</center></td>
+										  		<td>package</td>
+										  		<td>clean site package</td>
+										  	</tr>
+										  </table>
+						</li>
+						<li>Project Name* : Hudson job name</li>
+						<li>Custom Workspace : workspace 경로지정</li>
+						<li>SCM Server Type : subversion, cvs, none 세가지 type 중 선택</li>
+						<li>SCM Server URL : SCM 서버 url</li>
+						<li>Poll SCM schedule : job 실행 스케쥴 정의</li>
+						<li>Build other project : 해당 job 수행 후 실행한 job의 이름 지정</li>
+					</ul>
+				</li>
+			</ul><br/>
+			</li>
+			<li>빌드를 수행할 job을 목록에서 선택하고 Run 버튼을 클릭하여 빌드를 수행한다.<br/>
+			빌드가 수행되면 Status는 "building"으로 보여진다.
+			빌드 Status에 대해 scheduling이 걸려있지 않기 때문에, <b>빌드 결과는 refresh 버튼을 클릭하여 확인</b>한다.<br/>
+			빌드가 다 수행이 되면 refresh 버튼을 눌렀을때 빌드 결과에 대한 이미지가 보여진다. 성공은 파란색, 실패는 빨간색.
+			</li><br/>
+		</ol>
+		</p>
+		<br />
+		<p>
+		<b>[참고 사항]</b><br/>
+		<table border="1" cellspacing="0">
+		<tr><td>Job에 대해 Run 기능을 수행할 때 다음과 같은 메세지가 출력되고 Fail 한다면 환경변수 MAVEN_OPTS를 추가하고, 값을 -Xmx1024m으로 설정해준다.<br/>
+		Error occurred during initialization of VM<br/>
+Could not reserve enough space for object heap<br/>
+Could not create the Java virtual machine<br/>
+...<br/></td></tr>
+		</table>
+		</p>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="footer">
+		<table style="text-align: top;" width="100%" border="0"
+			cellspacing="0" cellpadding="0">
+			<!-- <tr><th>Footer</th></tr> -->
+			<tr>
+				<td class="copyright">Copyright (C) 2008-2011 Samsung SDS Co.,
+				Ltd. All rights reserved.</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

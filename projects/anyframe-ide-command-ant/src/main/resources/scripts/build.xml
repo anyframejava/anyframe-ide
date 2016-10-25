@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project name="Build module" default="default" basedir=".">	
+	
+	<property file = "./META-INF/project.mf"/>
+	<import file = "${anyframe.home}/ide/cli/scripts/project-build.xml"/>
+	
+	<target name="clean" depends = "shared:clean" />
+	<target name="init" depends = "shared:init" />
+	<target name="resources" depends = "shared:resources" />
+	<target name="compile" depends = "shared:compile" />
+	<target name="test-resources" depends = "shared:test-resources" />
+	<target name="test-compile" depends = "shared:test-compile" />
+	<target name="package" depends = "shared:package" />
+	<target name="extract" depends = "shared:extract" />
+	<target name="emma-jars" depends = "shared:emma-jars" />
+	<target name="test" depends = "shared:test" />
+	<target name="report" depends = "shared:report" />
+
+	<target name = "default" depends = "init, resources, compile, package"/>	
+	<target name = "deploy" depends = "default, extract"/>
+	<target name = "all" depends = "clean, init, resources, compile, test-resources, test-compile, package, emma-jars, test, report"/>	
+
+</project>

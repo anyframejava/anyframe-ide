@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Anyframe IDE User Guide">
+	<!-- Overview -->
+	<topic label="Overview" href="help/doc/toc_overview.html">
+		<topic label="Introduction" href="help/doc/introduction.html" />
+		<topic label="Key Features" href="help/doc/keyfeatures.html" />
+	</topic>
+	
+	<!-- Getting Started -->
+	<topic label="Getting Started" href="help/doc/toc_gettingstarted.html">
+		<topic label="Installing Anyframe IDE" href="help/doc/install.html" />
+		<topic label="Preferences" href="help/doc/preferences.html" />
+	</topic>
+
+	<!-- Using Anyframe IDE -->
+	<topic label="Using Anyframe IDE" href="help/doc/toc_anyframegen.html">
+		<!-- Creating a New Application -->
+		<topic href="help/doc/createpjt.html" label="New Project Creation">
+  </topic>
+		<!-- Creating a New Project -->
+		<!-- Generating Domains -->
+		<topic label="Domain Generation" href="help/doc/generatedomains.html" />
+		<!-- Generating CRUD -->
+		<topic label="CRUD Generation" href="help/doc/generatecrud.html" />
+		<!-- Configuring application, dao framework and template-->
+		<topic label="Configuration" href="help/doc/configuration.html" />
+		<!-- Configuring JDBC -->
+		<topic label="JDBC Setting" href="help/doc/confjdbc.html" />		
+		<!-- Installation -->
+		<topic label="Anyframe Plugin Installation" href="help/doc/installation.html" />
+		<!-- Installation -->
+		<topic label="CTIP" href="help/doc/ctip.html" />
+		<!-- Project Build -->
+		<topic label="Project Build" href="help/doc/build.html" />
+	</topic>
+	
+	<!-- Product Information -->
+	<topic label="About Anyframe IDE" href="help/doc/toc_about.html">
+		<topic label="LICENSE" href="help/doc/license.html" />
+		<topic label="NOTICE" href="help/doc/notice.html" />
+		<topic label="Credits" href="help/doc/credits.html" />
+	</topic>
+</toc>

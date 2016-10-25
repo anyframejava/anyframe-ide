@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<project name="Anyframe based Plugin Install" basedir=".">
+
+	<property file="${project.home}/META-INF/project.mf" />
+	
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-path.xml" />
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml" />
+
+	<property environment="env" />
+
+	<!-- setting ant log level -->		
+	<if><equals arg1="$${logLevel}" arg2="${logLevel}" />
+      <then><property name="logLevel" value="info"/></then></if>
+	<log level="${logLevel}" />		
+
+
+	<target name="check.args.pjtname" unless="pjtname">
+		<property name="pjtname" value="myproject" />
+	</target>
+
+	<target name="create-project" depends="check.args.pjtname">
+		<if>
+			<equals arg1="${pjttype}" arg2="web" />
+			<then>
+				<create-project pjtname="${pjtname}" pjttype="web" package="${package}" target="${target}" anyframeHome="${anyframeHome}" archetypeGroupId="${archetypeGroupId}" archetypeArtifactId="${archetypeArtifactId}" archetypeVersion="${archetypeVersion}" offline="${offline}" />
+				<replace file="${target}/${pjtname}/.classpath" token="target/classes" value="src/main/webapp/WEB-INF/classes" />
+			</then>
+			<else>
+				<create-project pjtname="${pjtname}" pjttype="service" package="${package}" target="${target}" anyframeHome="${anyframeHome}" archetypeGroupId="${archetypeGroupId}" archetypeArtifactId="${archetypeArtifactId}" archetypeVersion="${archetypeVersion}" offline="${offline}" />
+			</else>
+		</if>
+
+		<copy todir="${basedir}/${pjtname}">
+			<fileset dir="${anyframeHome}/ide/cli/scripts">
+				<include name="build.xml" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="install">
+		<install name="${name}" target="${target}" anyframeHome="${anyframeHome}" excludeSrc="${excludeSrc}" version="${version}" isCLIMode="${isCLIMode}" />
+	</target>
+
+	<target name="uninstall">
+		<uninstall name="${name}" target="${target}" excludes="${excludes}" anyframeHome="${anyframeHome}" />
+	</target>
+
+	<target name="list">
+		<list target="${target}" anyframeHome="${anyframeHome}" />
+	</target>
+	<target name="list-update">
+		<list-update target="${target}" anyframeHome="${anyframeHome}" />
+	</target>	
+	<target name="info">
+		<info name="${name}" target="${target}" anyframeHome="${anyframeHome}" />
+	</target>
+	<target name="installed">
+		<installed target="${target}" anyframeHome="${anyframeHome}" />
+	</target>
+	<target name="update-catalog">
+		
+		<update-catalog target="${target}" anyframeHome="${anyframeHome}" />
+	</target>
+
+	<!-- private targets -->
+	<target name="set.libFolder">
+		<if>
+			<equals arg1="${project.type}" arg2="service" />
+			<then>
+				<property name="libFolder" value="${target}/lib" />
+			</then>
+			<else>
+				<property name="libFolder" value="${target}/src/main/webapp/WEB-INF/lib" />
+			</else>
+		</if>
+	</target>
+</project>

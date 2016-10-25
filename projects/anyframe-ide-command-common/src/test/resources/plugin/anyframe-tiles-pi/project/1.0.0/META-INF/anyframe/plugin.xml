@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="tiles">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-tiles-pi</artifactId>
+  <version>1.0.0</version>
+  <dependent-plugins>
+    <dependent-plugin name="core" version="1.0.0 >= *"/>
+  </dependent-plugins>
+  <samples>false</samples>
+</plugin>
