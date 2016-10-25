@@ -21,11 +21,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * This is an PackageUtil class.
+ * This is a PackageUtil class.
  * 
  * @author Sooyeon Park
  */
 public class PackageUtil {
+
+	private static final String CLASS_FILE_EXTENSION = ".java";
 
 	/**
 	 * Returns a collection of all Classes inside the given package and
@@ -74,15 +76,14 @@ public class PackageUtil {
 			} else if (childFile.isDirectory()) {
 				// Recurse into this subdirectory
 				if (packageName.length() > 0)
-					getClassesRecursively(packageName + '.'
-							+ childFile.getName(), childFile, packageList);
+					getClassesRecursively(
+							packageName + '.' + childFile.getName(), childFile,
+							packageList);
 				else
 					getClassesRecursively(childFile.getName(), childFile,
 							packageList);
 			}
 		}
 	}
-
-	private static final String CLASS_FILE_EXTENSION = ".java";
 
 }

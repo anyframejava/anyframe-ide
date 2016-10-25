@@ -5,6 +5,11 @@
   	<import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml"/>	
   	<import file="${anyframeHome}/ide/cli/scripts/anyframe-macrodef.xml" />	
 			 
+	<!-- setting ant log level -->		
+	<if><equals arg1="$${logLevel}" arg2="${logLevel}" />
+      <then><property name="logLevel" value="info"/></then></if>
+	<log level="${logLevel}" />		
+		
 	<target name="create-model">							 
 		<create-model table="${table}" package="${package}" projecthome="${basedir}" target="${basedir}" baseDir="${basedir}" isCLIMode="${isCLIMode}"/>
 	</target>

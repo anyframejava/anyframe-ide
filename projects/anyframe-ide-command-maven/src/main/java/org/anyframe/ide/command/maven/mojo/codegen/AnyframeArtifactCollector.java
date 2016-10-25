@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -28,59 +28,61 @@ import org.anyframe.ide.command.common.util.PrettyPrinter;
 import de.hunsicker.jalopy.Jalopy;
 
 /**
- * This is an AnyframeArtifactCollector class.
+ * This is an AnyframeArtifactCollector class to format java file and xml file.
+ * 
  * @author Sooyeon Park
  */
 public class AnyframeArtifactCollector extends ArtifactCollector {
 
-    @Override
-    public void formatFiles() {
-        formatJava("java");
-        formatXml("xml");
-        formatXml("hbm.xml");
-        formatXml("cfg.xml");
-    }
+	@Override
+	public void formatFiles() {
+		formatJava("java");
+		formatXml("xml");
+		formatXml("hbm.xml");
+		formatXml("cfg.xml");
+	}
 
-    private void formatJava(String type){
-        List<?> list = (List<?>) files.get(type);
-        if (list != null && !list.isEmpty()) {
-            for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
-                File javaFile = (File) iter.next();
-                try {
-                    Jalopy jalopy = new Jalopy();
-                    
-                    // set encoding
-                    jalopy.setEncoding("utf-8");
-                    // specify input and output target
-                    jalopy.setInput(javaFile);
-                    jalopy.setOutput(javaFile);
+	private void formatJava(String type) {
+		List<?> list = (List<?>) files.get(type);
+		if (list != null && !list.isEmpty()) {
+			for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
+				File javaFile = (File) iter.next();
+				try {
+					Jalopy jalopy = new Jalopy();
 
-                    // format and overwrite the given
-                    // input file
-                    jalopy.format();
+					// set encoding
+					jalopy.setEncoding("utf-8");
+					// specify input and output target
+					jalopy.setInput(javaFile);
+					jalopy.setOutput(javaFile);
 
-                } catch (IOException e) {
-                    throw new ExporterException("Could not format Java file: "
-                        + javaFile, e);
-                }
-            }
-        }
-    }
+					// format and overwrite the given
+					// input file
+					jalopy.format();
 
-    private void formatXml(String type){
-        List<?> list = (List<?>) files.get(type);
-        if (list != null && !list.isEmpty()) {
-            for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
-                File xmlFile = (File) iter.next();
-                try {
-                    XMLPrettyPrinter.prettyPrintFile(PrettyPrinter
-                        .getDefaultTidy(), xmlFile, xmlFile, true);
-                } catch (IOException e) {
-                    throw new ExporterException("Could not format XML file: "
-                        + xmlFile, e);
-                }
-            }
-        }
-    }
+				} catch (IOException e) {
+					throw new ExporterException("Could not format Java file: "
+							+ javaFile, e);
+				}
+			}
+		}
+	}
+
+	private void formatXml(String type) {
+		List<?> list = (List<?>) files.get(type);
+		if (list != null && !list.isEmpty()) {
+			for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
+				File xmlFile = (File) iter.next();
+				try {
+					XMLPrettyPrinter.prettyPrintFile(
+							PrettyPrinter.getDefaultTidy(), xmlFile, xmlFile,
+							true);
+				} catch (IOException e) {
+					throw new ExporterException("Could not format XML file: "
+							+ xmlFile, e);
+				}
+			}
+		}
+	}
 
 }

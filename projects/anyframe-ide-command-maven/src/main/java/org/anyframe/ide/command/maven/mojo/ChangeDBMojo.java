@@ -31,6 +31,10 @@ public class ChangeDBMojo extends AbstractPluginMojo {
 	/** @component role="org.anyframe.ide.command.common.DefaultPluginDBChanger" */
 	PluginDBChanger pluginDBChanger;
 
+	/**
+	 * main method for executing ChangeDBMojo. This mojo is executed when you
+	 * input 'mvn anyframe:change-db'
+	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			ArchetypeGenerationRequest request = new ArchetypeGenerationRequest();
@@ -39,9 +43,10 @@ public class ChangeDBMojo extends AbstractPluginMojo {
 			pluginDBChanger
 					.change(request, baseDir.getAbsolutePath(), encoding);
 		} catch (Exception ex) {
-			getLog().error("Fail to execute DBChangeMojo.");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute DBChangeMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
-
 	}
 }

@@ -128,6 +128,8 @@ public interface PluginInstaller {
 	 *            target project folder to install a plugin
 	 * @param pluginJar
 	 *            plugin binary file
+	 * @param pomProperties
+	 *            properties of pom in current project
 	 */
 	void processDependencyLibs(ArchetypeGenerationRequest request,
 			String projectType, File targetDir, File pluginJar,
@@ -178,12 +180,16 @@ public interface PluginInstaller {
 	 * 
 	 * @param request
 	 *            information includes maven repository, db settings, etc.
-	 * @param baseDir
+	 * @param targetDir
 	 *            target project folder to install a plugin
+	 * @param pluginInfo
+	 *            plugin detail information
 	 * @param pomHandling
 	 *            whether current project is based on maven or ant
+	 * @param pomProperties
+	 *            properties of pom in current project
 	 */
 	public void processClasspath(ArchetypeGenerationRequest request,
-			File targetDir, PluginInfo pluginInfo, boolean pomHandling, Properties pomProperties)
-			throws Exception;
+			File targetDir, PluginInfo pluginInfo, boolean pomHandling,
+			Properties pomProperties) throws Exception;
 }

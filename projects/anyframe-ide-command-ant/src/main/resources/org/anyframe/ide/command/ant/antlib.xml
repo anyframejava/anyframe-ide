@@ -10,4 +10,5 @@
 	<typedef name="change-db" classname="org.anyframe.ide.command.ant.task.ChangeDBTask" />
 	<typedef name="create-model" classname="org.anyframe.ide.command.ant.task.GenerateModelTask" />
 	<typedef name="create-crud" classname="org.anyframe.ide.command.ant.task.GenerateCodeTask" />
+	<typedef name="log" classname="org.anyframe.ide.command.ant.task.LogLevelTask" />
 </antlib>

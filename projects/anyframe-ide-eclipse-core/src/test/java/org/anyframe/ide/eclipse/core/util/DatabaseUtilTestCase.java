@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 
 /**
- * This is an DatabaseUtilTestCase class.
+ * This is a DatabaseUtilTestCase class.
  * 
  * @author Changje Kim
  * @author Sooyeon Park
@@ -33,7 +33,7 @@ public class DatabaseUtilTestCase extends TestCase {
 
     public void testCheckConnection() throws Exception {
         pjtProps =
-            new PropertiesIO("./src/test/resources" + SLASH + ".metadata"
+            new PropertiesIO("./src/test/resources" + SLASH + "META-INF"
                 + SLASH + "project.mf");
 
         System.out.println(DatabaseUtil.getDbUrl(pjtProps.readValue("db.type"),

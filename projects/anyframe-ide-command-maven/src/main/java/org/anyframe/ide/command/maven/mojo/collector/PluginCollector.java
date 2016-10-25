@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -32,7 +32,8 @@ import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
 import org.apache.maven.archetype.catalog.Archetype;
 
 /**
- * This is an PluginCollector class. This class is for collecting plugins.
+ * This is a PluginCollector class. This class is for collecting plugins and
+ * archetypes.
  * 
  * @author Soyon Lim
  */
@@ -117,9 +118,11 @@ public class PluginCollector {
 	/**
 	 * get archetype version list
 	 * 
+	 * @param groupId
+	 *            groupd id of a specific archetype
 	 * @param archetypeArtifactId
 	 *            artifact id of a specific archetype
-	 * @return archetype version list
+	 * @return archetype versions
 	 */
 	public List<String> getArchetypeVersions(String groupId,
 			String archetypeArtifactId) throws Exception {

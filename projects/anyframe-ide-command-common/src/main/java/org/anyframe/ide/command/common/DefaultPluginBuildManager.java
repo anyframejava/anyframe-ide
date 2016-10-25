@@ -79,7 +79,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 			throws Exception {
 		getLogger().debug(
 				DefaultPluginBuildManager.class.getName()
-						+ " create execution start.");
+						+ " activate execution start.");
 		String pluginName = "[NO PLUGIN NAME]";
 
 		try {
@@ -101,15 +101,14 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 			FileUtil.getObjectToXML(pluginBuildInfo, new File(baseDir,
 					CommonConstants.PLUGIN_BUILD_FILE));
 
-			getLogger().info(
-					"The plugin build file for '" + pluginBuildInfo.getName()
-							+ "' plugin is created successfully.");
+			System.out.println("The plugin build file for '"
+					+ pluginBuildInfo.getName()
+					+ "' plugin is created successfully.");
 
 		} catch (Exception e) {
 			if (e instanceof CommandException)
 				throw e;
-
-			getLogger().warn(
+			throw new CommandException(
 					"Error occurred in creating a plugin build file for '"
 							+ pluginName + "' plugin. The reason is a '"
 							+ e.getMessage() + "'.");
@@ -126,7 +125,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 	public void deactivate(String baseDir) throws Exception {
 		getLogger().debug(
 				DefaultPluginBuildManager.class.getName()
-						+ " remove execution start.");
+						+ " deactivate execution start.");
 
 		try {
 			File buildFile = new File(baseDir,
@@ -134,18 +133,16 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 			if (buildFile.exists()) {
 				FileUtil.deleteFile(new File(baseDir,
 						CommonConstants.PLUGIN_BUILD_FILE));
-				getLogger()
-						.info("The plugin build file for this project is removed successfully.");
+				System.out
+						.println("The plugin build file for this project is removed successfully.");
 			} else
-				getLogger()
-						.info("The plugin build file for this project has already removed.");
+				System.out
+						.println("The plugin build file for this project has already removed.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (e instanceof CommandException)
 				throw e;
-
-			getLogger()
-					.warn("Error occurred in removing a plugin build file for this project. The reason is a '"
+			throw new CommandException(
+					"Error occurred in removing a plugin build file for this project. The reason is a '"
 							+ e.getMessage() + "'.");
 		}
 	}
@@ -255,9 +252,10 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 
 		PluginInfo pluginBuildInfo = new PluginInfo();
 		pluginBuildInfo.setName(pjtPom.getName());
-		if(StringUtils.isEmpty(pjtPom.getDescription()))
+		if (StringUtils.isEmpty(pjtPom.getDescription()))
 			pluginBuildInfo.setDescription(pjtPom.getName() + " plugin");
-		else pluginBuildInfo.setDescription(pjtPom.getDescription());
+		else
+			pluginBuildInfo.setDescription(pjtPom.getDescription());
 		pluginBuildInfo.setGroupId(pjtPom.getGroupId());
 		pluginBuildInfo.setArtifactId(pjtPom.getArtifactId());
 		pluginBuildInfo.setVersion(pjtPom.getVersion());

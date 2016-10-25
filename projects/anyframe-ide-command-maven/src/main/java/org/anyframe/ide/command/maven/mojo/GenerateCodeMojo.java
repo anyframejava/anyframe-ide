@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -67,7 +67,7 @@ import org.hibernate.tool.hbm2x.XMLPrettyPrinter;
  * 
  * @goal create-crud
  * @author Matt Raible
- * @author extended by SooYeon Park
+ * @author modified by SooYeon Park
  */
 public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	/** @component role="org.codehaus.plexus.components.interactivity.Prompter" */
@@ -180,7 +180,10 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 		componentConfigurations.add(new JPAComponentConfiguration());
 	}
 
-	// The method executing the mojo
+	/**
+	 * main method for executing GenerateCodeMojo. This mojo is executed when
+	 * you input 'mvn anyframe:create-crud [-options]'
+	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			checkInstalledPlugins(new String[] { CommonConstants.CORE_PLUGIN });
@@ -196,9 +199,13 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 			executeConfInstaller();
 			insertInitialSampleData();
 			postExecute();
+			
+			System.out.println("CRUD source codes for the given domain name are generated successfully.");
 		} catch (Exception ex) {
-			getLog().error("Fail to execute GenerateCodeMojo.");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute GenerateCodeMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 
@@ -240,7 +247,7 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 			if (this.projectType
 					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_WEB))
 				getLog().info(
-						"Scope for generation code is automatically set to 'all'. You can select a scope.");
+						"Scope for generation code is automatically set to 'all'.");
 			else if (this.projectType
 					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_SERVICE)) {
 				this.scope = PluginConstants.PROJECT_TYPE_SERVICE;
@@ -253,7 +260,7 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_SERVICE)) {
 				this.scope = PluginConstants.PROJECT_TYPE_SERVICE;
 				getLog().info(
-						"Scope for generation code is automatically set to 'service'. You cannot use scope 'all' because your project is a 'service' type.");
+						"Scope for generation code is automatically set to 'service'. You cannot use scope 'web' because your project is a 'service' type.");
 			}
 		}
 
@@ -368,7 +375,7 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 						this.dbSchema, sampleDataFile, this.projectHome);
 			} catch (Exception e) {
 				getLog().warn(
-						"Inserting sample data using DBUnit is skipped.: The reason is '"
+						"Inserting sample data using DBUnit is skipped. The reason is '"
 								+ e.getMessage() + "'.");
 			}
 		}
@@ -407,7 +414,8 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 				return componentConfiguration;
 			}
 		}
-		throw new MojoExecutionException("Could not get ConfigurationTask.");
+		throw new MojoExecutionException(
+				"Could not get Component Configuration.");
 	}
 
 	private void setMavenProject() {

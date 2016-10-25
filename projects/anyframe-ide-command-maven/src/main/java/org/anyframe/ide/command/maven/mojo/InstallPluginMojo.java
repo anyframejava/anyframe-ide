@@ -114,8 +114,10 @@ public class InstallPluginMojo extends AbstractPluginMojo {
 					inspectionHome, isCLIMode);
 
 		} catch (Exception ex) {
-			getLog().error("Fail to execute InstallPluginMojo.");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute InstallPluginMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

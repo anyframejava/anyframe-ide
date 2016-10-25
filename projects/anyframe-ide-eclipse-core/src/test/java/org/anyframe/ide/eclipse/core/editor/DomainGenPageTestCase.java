@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 
 /**
- * This is an DomainGenPageTestCase class.
+ * This is a DomainGenPageTestCase class.
  * 
  * @author Changje Kim
  * @author Sooyeon Park
@@ -41,7 +41,7 @@ public class DomainGenPageTestCase extends TestCase {
 
     public void testDomainGenPage() throws Exception {
         pjtProps =
-            new PropertiesIO("./src/test/resources" + SLASH + ".metadata"
+            new PropertiesIO("./src/test/resources" + SLASH + "META-INF"
                 + SLASH + "project.mf");
 
         // make source package

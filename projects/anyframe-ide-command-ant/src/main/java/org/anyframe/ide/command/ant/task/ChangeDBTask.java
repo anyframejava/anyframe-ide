@@ -51,7 +51,7 @@ public class ChangeDBTask extends AbstractPluginTask {
 			pluginDBChanger.change(getRequest(), this.projectHome,
 					getEncoding());
 		} catch (Exception e) {
-			log("[error] Fail to execute ChangeDBTask", e, Project.MSG_ERR);
+			log("Fail to execute ChangeDBTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());
 		}
 	}

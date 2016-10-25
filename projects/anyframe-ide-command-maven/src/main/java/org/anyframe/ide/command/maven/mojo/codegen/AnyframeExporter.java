@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -33,10 +33,10 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.Annotations;
 
 /**
- * This is an AnyframeExporter class.
+ * This is an AnyframeExporter class to generate codes based on templates.
  * 
  * @author Matt Raible
- * @author extended by SooYeon Park
+ * @author modified by SooYeon Park
  */
 public class AnyframeExporter extends AppFuseExporter {
 
@@ -70,12 +70,14 @@ public class AnyframeExporter extends AppFuseExporter {
 			templates = (java.util.List<AnyframeTemplateData>) xstream
 					.fromXML(templateConfigFile);
 		} catch (Exception e) {
-			log.error("Getting template.config file is skipped. The reason is '" + e.getMessage() + "'.");
+			log.error("Getting template.config file is skipped. The reason is '"
+					+ e.getMessage() + "'.");
 		} finally {
 			try {
 				templateConfigFile.close();
 			} catch (IOException e) {
-				log.error("Getting template.config file is skipped. The reason is '" + e.getMessage() + "'.");
+				log.error("Getting template.config file is skipped. The reason is '"
+						+ e.getMessage() + "'.");
 			}
 		}
 
@@ -185,10 +187,9 @@ public class AnyframeExporter extends AppFuseExporter {
 					String filename = resolveFilename(element);
 					if (filename.endsWith(".java")
 							&& filename.indexOf('$') >= 0) {
-						log
-								.warn("Filename for "
-										+ getClassNameForFile(element)
-										+ " contains a $. Innerclass generation is not supported.");
+						log.warn("Filename for "
+								+ getClassNameForFile(element)
+								+ " contains a $. Innerclass generation is not supported.");
 					}
 
 					producer.produce(additionalContext, getTemplateName(),

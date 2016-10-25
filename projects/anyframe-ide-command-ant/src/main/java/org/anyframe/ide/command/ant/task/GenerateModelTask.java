@@ -86,7 +86,7 @@ public class GenerateModelTask extends AbstractPluginTask {
 
 			modelGen.execute();
 		} catch (Exception e) {
-			log("[error] Fail to execute GenerateModelTask", e, Project.MSG_ERR);
+			log("Fail to execute GenerateModelTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());
 		}
 	}

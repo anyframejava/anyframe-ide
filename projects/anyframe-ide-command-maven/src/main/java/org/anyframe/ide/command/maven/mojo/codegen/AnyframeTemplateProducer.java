@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -32,7 +32,9 @@ import org.hibernate.tool.hbm2x.TemplateHelper;
 import org.hibernate.tool.hbm2x.TemplateProducer;
 
 /**
- * This is an AnyframeTemplateProducer class.
+ * This is an AnyframeTemplateProducer class to generate codes based on
+ * templates.
+ * 
  * @author Sooyeon Park
  */
 public class AnyframeTemplateProducer extends TemplateProducer {
@@ -75,7 +77,10 @@ public class AnyframeTemplateProducer extends TemplateProducer {
 					fileWriter.flush();
 					fileWriter.close();
 				} catch (IOException e) {
-					log.warn("'" + destination + "' file stream destroying is skipped. The reason is '" + e.getMessage() + "'.");
+					log.warn("'"
+							+ destination
+							+ "' file stream destroying is skipped. The reason is '"
+							+ e.getMessage() + "'.");
 				}
 			}
 		}
@@ -104,8 +109,8 @@ public class AnyframeTemplateProducer extends TemplateProducer {
 		Iterator iterator = context.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry element = (Map.Entry) iterator.next();
-			templateHelper.removeFromContext((String) element.getKey(), element
-					.getValue());
+			templateHelper.removeFromContext((String) element.getKey(),
+					element.getValue());
 		}
 	}
 
@@ -113,8 +118,8 @@ public class AnyframeTemplateProducer extends TemplateProducer {
 		Iterator iterator = context.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry element = (Map.Entry) iterator.next();
-			templateHelper.putInContext((String) element.getKey(), element
-					.getValue());
+			templateHelper.putInContext((String) element.getKey(),
+					element.getValue());
 		}
 	}
 }

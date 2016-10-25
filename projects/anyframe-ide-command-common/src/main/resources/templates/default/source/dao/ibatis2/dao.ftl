@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import org.anyframe.pagination.Page;
@@ -29,7 +30,7 @@ import ${field.value.type.returnedClass.name};
  *
  */
 @Repository("${pojoNameLower}Dao")
-public class ${pojo.shortName}Dao {
+public class ${pojo.shortName}Dao extends SqlMapClientDaoSupport {
   
   	@Value("${r"#{contextProperties['pageSize'] ?: 10}"}")
 	int pageSize;
@@ -38,30 +39,32 @@ public class ${pojo.shortName}Dao {
 	int pageUnit;
 		
 	@Inject
-	protected SqlMapClient sqlMap = null;
-	
-	public void create(${pojo.shortName} ${pojoNameLower}) throws Exception {
-		sqlMap.insert("insert${pojo.shortName}", ${pojoNameLower});
+	public void setSuperSqlMapClient(SqlMapClient sqlMapClient) {
+		super.setSqlMapClient(sqlMapClient);
 	}
 	
-	public void update(${pojo.shortName} ${pojoNameLower}) throws Exception {
-		sqlMap.update("update${pojo.shortName}", ${pojoNameLower});
+	public void create(${pojo.shortName} ${pojoNameLower}) {
+		getSqlMapClientTemplate().insert("insert${pojo.shortName}", ${pojoNameLower});
 	}
 	
-	public void remove(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) throws Exception {
-		sqlMap.delete("delete${pojo.shortName}", ${pojo.identifierProperty.name});
+	public void update(${pojo.shortName} ${pojoNameLower}) {
+		getSqlMapClientTemplate().update("update${pojo.shortName}", ${pojoNameLower});
 	}
 	
-	public ${pojo.shortName} get(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) throws Exception {
-		return (${pojo.shortName}) sqlMap.queryForObject("get${pojo.shortName}", ${pojo.identifierProperty.name});
+	public void remove(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) {
+		getSqlMapClientTemplate().delete("delete${pojo.shortName}", ${pojo.identifierProperty.name});
+	}
+	
+	public ${pojo.shortName} get(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) {
+		return (${pojo.shortName}) getSqlMapClientTemplate().queryForObject("get${pojo.shortName}", ${pojo.identifierProperty.name});
 	}
 
 	@SuppressWarnings("unchecked")
-	public Page getPagingList(SearchVO searchVO) throws Exception  {
+	public Page getPagingList(SearchVO searchVO) {
       int pageIndex = searchVO.getPageIndex();		
 	 
-	  List<${pojo.shortName}> list=sqlMap.queryForList("get${pojo.shortName}List", pageSize*(pageIndex-1), pageSize);
-	  int rowCount= (Integer)sqlMap.queryForObject("get${pojo.shortName}ListCnt");
+	  List<${pojo.shortName}> list=getSqlMapClientTemplate().queryForList("get${pojo.shortName}List", pageSize*(pageIndex-1), pageSize);
+	  int rowCount= (Integer)getSqlMapClientTemplate().queryForObject("get${pojo.shortName}ListCnt");
 	  
 	  return new Page(list, pageIndex, rowCount, pageUnit, pageSize);
   }	

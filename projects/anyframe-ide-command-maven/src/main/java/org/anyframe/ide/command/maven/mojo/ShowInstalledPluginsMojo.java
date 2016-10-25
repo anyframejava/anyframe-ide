@@ -46,8 +46,10 @@ public class ShowInstalledPluginsMojo extends AbstractPluginMojo {
 			pluginInfoManager.showInstalledPlugins(request, this.baseDir
 					.getAbsolutePath());
 		} catch (Exception ex) {
-			getLog().error("Fail to execute ShowInstalledPluginsMojo");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute ShowInstalledPluginsMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

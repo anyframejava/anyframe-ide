@@ -79,7 +79,7 @@ public class PluginCollector {
 	 *            group id of a specific archetype
 	 * @param archetypeArtifactId
 	 *            artifact id of a specific archetype
-	 * @return archetype version list
+	 * @return archetype versions
 	 */
 	public List<String> getArchetypeVersions(String groupId,
 			String archetypeArtifactId) throws Exception {

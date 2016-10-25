@@ -21,8 +21,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-
-
 /**
  * This is an HelpMojo class. This mojo is for showing how to use anyframe
  * custom mojos based on Maven
@@ -51,19 +49,23 @@ public class HelpMojo extends AbstractMojo {
 				System.out.println(Messages.MAVEN_HELP);
 			} else {
 
-				if (Messages.MAVEN_HELP_MESSAGES_BY_COMMAND.containsKey(command)) {
+				if (Messages.MAVEN_HELP_MESSAGES_BY_COMMAND
+						.containsKey(command)) {
 					String commandMessage = Messages.MAVEN_HELP_MESSAGES_BY_COMMAND
 							.get(command);
 
 					System.out.println(commandMessage);
 				} else {
-					System.out.println("No description found for name: " + command);
+					System.out.println("No description found for name: "
+							+ command);
 				}
 			}
 
 		} catch (Exception ex) {
-			getLog().error("Fail to execute HelpMojo");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute HelpMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

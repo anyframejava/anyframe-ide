@@ -32,8 +32,6 @@ import org.apache.maven.artifact.ant.AntResolutionListener;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.LoggerManager;
 import org.codehaus.plexus.util.IOUtil;
 
 /**
@@ -106,25 +104,29 @@ public abstract class AbstractPluginTask extends Task {
 		}
 	}
 
+	/**
+	 * initialize a plugin container
+	 * 
+	 * @param isOffline
+	 *            whether offline mode is
+	 */
 	public void initialize(boolean isOffline) throws Exception {
 		if (this.pluginContainer == null) {
 			this.pluginContainer = new PluginContainer(this.anyframeHome,
 					getTarget(), isOffline);
-
-			// LoggerManager loggerManager = (LoggerManager) pluginContainer.lookup( LoggerManager.ROLE );
-			// loggerManager.setThreshold( Logger.LEVEL_ERROR );
 		}
 
 		listeners = Collections.singletonList(new AntResolutionListener(
 				getProject(), false));
-
-		// lookupComponents();
 	}
 
 	/*********************************************************************/
 	/************ manage PlexusContainer, lookup PlexusContainer **********/
 	/*********************************************************************/
 
+	/**
+	 * get ant project information
+	 */
 	public Project getProject() {
 		Project project = super.getProject();
 		if (project == null) {
@@ -140,12 +142,18 @@ public abstract class AbstractPluginTask extends Task {
 	/************ common methods ******************************************/
 	/*********************************************************************/
 
-	public void copyPomFile(ZipFile pluginJar, String fileName)
+	/**
+	 * copy pom.xml file to temporary folder
+	 * 
+	 * @param pluginZip
+	 *            zip file includes plugin binary file
+	 */
+	public void copyPomFile(ZipFile pluginZip, String fileName)
 			throws Exception {
 		InputStream inputStream = null;
 		try {
-			ZipEntry input = pluginJar.getEntry(fileName);
-			inputStream = pluginJar.getInputStream(input);
+			ZipEntry input = pluginZip.getEntry(fileName);
+			inputStream = pluginZip.getInputStream(input);
 
 			File temporaryDir = new File(getTarget()
 					+ CommonConstants.fileSeparator + "temp");
@@ -157,6 +165,15 @@ public abstract class AbstractPluginTask extends Task {
 		}
 	}
 
+	/**
+	 * check value of a specified property
+	 * 
+	 * @param property
+	 *            task property
+	 * @param value
+	 *            value of task property
+	 * @return true if value is empty or equals to ${property}
+	 */
 	protected boolean isEmpty(String property, String value) {
 		if (value == null || value.equals("")
 				|| value.equals("${" + property + "}"))
@@ -224,7 +241,8 @@ public abstract class AbstractPluginTask extends Task {
 	// for test case (set pluginCatalogFile location)
 	public void setPluginCatalogLog(String catalogFile) {
 		if (this.pluginContainer == null) {
-			this.pluginContainer = new PluginContainer(this.anyframeHome, getTarget(), false);
+			this.pluginContainer = new PluginContainer(this.anyframeHome,
+					getTarget(), false);
 		}
 	}
 

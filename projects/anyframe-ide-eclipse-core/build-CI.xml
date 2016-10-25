@@ -13,7 +13,7 @@
 	
 	<!-- Plug-in Information -->
 	<property name="bundle.id" value="org.anyframe.ide.eclipse.core" />
-	<property name="bundle.version" value="2.0.0.v20110405" />
+	<property name="bundle.version" value="2.0.1" />
 	<property name="bundle.about" location="${basedir}/about" />
 	<property name="bundle.src" location="${basedir}/src/main/java" />
 	<property name="bundle.src.resources" location="${basedir}/src/main/resources" />

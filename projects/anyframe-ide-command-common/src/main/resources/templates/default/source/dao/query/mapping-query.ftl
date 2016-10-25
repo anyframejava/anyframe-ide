@@ -18,8 +18,10 @@
 <#assign columnFieldManyToOneKeyList = columnFieldManyToOneMap.keyList() />
 <#assign fieldManyToOneKeyList = columnFieldManyToOneMap.valueList() />
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN" "http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.2.dtd">
-<queryservice>
+<queryservice xmlns="http://www.anyframejava.org/schema/query/mapping" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.anyframejava.org/schema/query/mapping http://www.anyframejava.org/schema/query/mapping/anyframe-query-mapping-1.0.xsd ">
+
   <queries>
 	<query id="create${pojo.shortName}">
 		<statement>

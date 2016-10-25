@@ -10,10 +10,10 @@
   <classpathentry kind="var" path="M2_REPO/ant/ant-launcher/1.8.1/ant-launcher-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-nodeps/1.8.1/ant-nodeps-1.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/antlr/antlr/2.7.7/antlr-2.7.7.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.0.RC1/anyframe-ide-command-aspect-2.0.0.RC1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.0.0.RC1/anyframe-ide-command-cli-2.0.0.RC1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.0.0.RC1/anyframe-ide-command-common-2.0.0.RC1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.0.0.RC1/anyframe-maven-plugin-2.0.0.RC1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.0.1/anyframe-ide-command-aspect-2.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.0.1/anyframe-ide-command-cli-2.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.0.1/anyframe-ide-command-common-2.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.0.1/anyframe-maven-plugin-2.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/appfuse-maven-plugin/2.1.0-M1/appfuse-maven-plugin-2.1.0-M1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/archetype/archetype-common/2.0-alpha-4/archetype-common-2.0-alpha-4.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm/3.3/asm-3.3.jar"/>
@@ -99,12 +99,7 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/velocity/velocity-dep/1.6.2/velocity-dep-1.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/velocity/velocity-tools/2.0/velocity-tools-2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-file/1.0-beta-2/wagon-file-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-http-lightweight/1.0-beta-2/wagon-http-lightweight-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-http-shared/1.0-beta-2/wagon-http-shared-1.0-beta-2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-ssh/1.0-beta-2/wagon-ssh-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-ssh-common/1.0-beta-2/wagon-ssh-common-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-ssh-external/1.0-beta-2/wagon-ssh-external-1.0-beta-2.jar"/>
   <classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/2.4.1/xml-apis-2.4.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/xpp3/xpp3_min/1.1.3.4.0/xpp3_min-1.1.3.4.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.3/xstream-1.3.jar"/>

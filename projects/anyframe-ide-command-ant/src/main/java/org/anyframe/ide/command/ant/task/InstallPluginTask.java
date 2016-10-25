@@ -41,7 +41,7 @@ public class InstallPluginTask extends AbstractPluginTask {
 	private String file = "";
 
 	/** check command line interface mode */
-	private String isCLIMode = "true";
+	private String isCLIMode = "false";
 
 	/**
 	 * main method for executing InstallPluginTask this task is executed when
@@ -79,6 +79,10 @@ public class InstallPluginTask extends AbstractPluginTask {
 			File pluginJar = null;
 			if (!isEmpty("file", this.file)) {
 				pluginJar = new File(this.file);
+			}
+
+			if (isEmpty("isCLIMode", this.isCLIMode)) {
+				this.isCLIMode = "true";
 			}
 
 			pluginInstaller.install(getRequest(), getTarget(), getName(),

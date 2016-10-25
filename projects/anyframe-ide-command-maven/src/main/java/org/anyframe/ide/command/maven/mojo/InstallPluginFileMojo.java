@@ -100,12 +100,14 @@ public class InstallPluginFileMojo extends AbstractPluginMojo {
 					.getObjectFromXML(pluginBuildXML);
 
 			// 6. update a plugin catalog file in local repository
-			pluginCatalogManager.updatePluginCatalog(request, pluginInfo.isEssential(),
-					pluginInfo);
+			pluginCatalogManager.updatePluginCatalog(request, pluginInfo
+					.isEssential(), pluginInfo);
 
 		} catch (Exception ex) {
-			getLog().error("Fail to execute InstallPluginFileMojo.");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute InstallPluginFileMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

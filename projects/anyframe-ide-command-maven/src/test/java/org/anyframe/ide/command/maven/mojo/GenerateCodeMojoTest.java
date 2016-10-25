@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -21,7 +21,7 @@ import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.project.MavenProject;
 
 /**
- * This is an AnyframeCodeGeneratorTestCase class.
+ * This is a GenerateCodeMojoTest class.
  * 
  * @author Sooyeon Park
  */
@@ -49,8 +49,10 @@ public class GenerateCodeMojoTest extends AbstractMojoTest {
 		GenerateCodeMojo codeGenerator = new GenerateCodeMojo();
 
 		codeGenerator.setPluginInfoManager(super.pluginInfoManager);
-		codeGenerator.setBaseDir(new File("./src/test/resources/project/sample"));
-		codeGenerator.setProjectHome(new File("./src/test/resources/project/sample").getAbsolutePath());
+		codeGenerator
+				.setBaseDir(new File("./src/test/resources/project/sample"));
+		codeGenerator.setProjectHome(new File(
+				"./src/test/resources/project/sample").getAbsolutePath());
 		codeGenerator.setEntity("Forums");
 		codeGenerator.setMavenProject(new MavenProject());
 		codeGenerator.setScope("all");
@@ -81,13 +83,13 @@ public class GenerateCodeMojoTest extends AbstractMojoTest {
 	private void assertGeneration() throws Exception {
 		String serviceFile = destinationDirectory
 				+ "/src/main/java/com/sds/service/service/ForumsService.java";
-		assertTrue("Fail to generate service file.", new File(serviceFile)
-				.exists());
+		assertTrue("Fail to generate service file.",
+				new File(serviceFile).exists());
 
 		String mappingFile = destinationDirectory
 				+ "/src/main/resources/sql/mapping-query-forums.xml";
-		assertTrue("Fail to generate mapping xml file.", new File(mappingFile)
-				.exists());
+		assertTrue("Fail to generate mapping xml file.",
+				new File(mappingFile).exists());
 
 		String jspFile = destinationDirectory
 				+ "/src/main/webapp/WEB-INF/jsp/generation/forums/form.jsp";

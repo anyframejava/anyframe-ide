@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ${package}.service.${pojo.shortName}MiPService;
 
-import org.anyframe.mip.query.dao.MiPDao;
+import org.anyframe.mip.query.service.impl.MiPDao;
 import org.anyframe.mip.query.service.impl.MiPServiceImpl;
 import org.anyframe.mip.query.impl.MiPQueryServiceImpl;
 

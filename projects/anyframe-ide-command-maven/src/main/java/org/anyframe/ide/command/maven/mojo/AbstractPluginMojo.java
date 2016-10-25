@@ -27,6 +27,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.settings.Server;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.ReflectionUtils;
 
 /**
@@ -106,6 +108,22 @@ public abstract class AbstractPluginMojo extends AbstractMojo {
 	 */
 	protected String encoding;
 
+	/**
+	 * The current user system settings for use in Maven.
+	 * 
+	 * @parameter default-value="${settings}"
+	 * @required
+	 * @readonly
+	 */
+	protected Settings settings;
+
+	/**
+	 * set local/remote repositories into requst
+	 * 
+	 * @param request
+	 *            information includes maven repository, db settings, etc.
+	 */
+	@SuppressWarnings("unchecked")
 	public void setRepository(ArchetypeGenerationRequest request)
 			throws MojoExecutionException, MojoFailureException {
 
@@ -115,6 +133,12 @@ public abstract class AbstractPluginMojo extends AbstractMojo {
 		request.setArchetypeRepository(archetypeRepository);
 		request.setRemoteArtifactRepositories(remoteArtifactRepositories);
 
+		List<Server> servers = settings.getServers();
+
+		for (Server server : servers) {
+			request.addMirror(server);
+		}
+
 		getLog().debug(
 				"Local repository is set to '" + localRepository.getBasedir()
 						+ "'.");
@@ -123,6 +147,16 @@ public abstract class AbstractPluginMojo extends AbstractMojo {
 						+ remoteArtifactRepositories.size() + "'.");
 	}
 
+	/**
+	 * set values of mojo variables
+	 * 
+	 * @param mojo
+	 *            mojo object
+	 * @param variableName
+	 *            variable
+	 * @param value
+	 *            variable value to be set
+	 */
 	public void setMojoVariable(Mojo mojo, String variableName, Object value)
 			throws Exception {
 		Field field = ReflectionUtils.getFieldByNameIncludingSuperclasses(

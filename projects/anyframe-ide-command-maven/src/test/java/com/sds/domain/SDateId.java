@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -21,104 +21,105 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * This is an SDateId class.
+ * This is a SDateId class.
+ * 
  * @author Sooyeon Park
  */
 @Embeddable
 public class SDateId implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private Long sId1;
-    private Long sId2;
-    private Long tId1;
-    private Long tId2;
+	private static final long serialVersionUID = 1L;
+	private Long sId1;
+	private Long sId2;
+	private Long tId1;
+	private Long tId2;
 
-    @Column(name = "S_ID1", nullable = false)
-    public Long getSId1() {
-        return this.sId1;
-    }
+	@Column(name = "S_ID1", nullable = false)
+	public Long getSId1() {
+		return this.sId1;
+	}
 
-    public void setSId1(Long sId1) {
-        this.sId1 = sId1;
-    }
+	public void setSId1(Long sId1) {
+		this.sId1 = sId1;
+	}
 
-    @Column(name = "S_ID2", nullable = false)
-    public Long getSId2() {
-        return this.sId2;
-    }
+	@Column(name = "S_ID2", nullable = false)
+	public Long getSId2() {
+		return this.sId2;
+	}
 
-    public void setSId2(Long sId2) {
-        this.sId2 = sId2;
-    }
+	public void setSId2(Long sId2) {
+		this.sId2 = sId2;
+	}
 
-    @Column(name = "T_ID1", nullable = false)
-    public Long getTId1() {
-        return this.tId1;
-    }
+	@Column(name = "T_ID1", nullable = false)
+	public Long getTId1() {
+		return this.tId1;
+	}
 
-    public void setTId1(Long tId1) {
-        this.tId1 = tId1;
-    }
+	public void setTId1(Long tId1) {
+		this.tId1 = tId1;
+	}
 
-    @Column(name = "T_ID2", nullable = false)
-    public Long getTId2() {
-        return this.tId2;
-    }
+	@Column(name = "T_ID2", nullable = false)
+	public Long getTId2() {
+		return this.tId2;
+	}
 
-    public void setTId2(Long tId2) {
-        this.tId2 = tId2;
-    }
+	public void setTId2(Long tId2) {
+		this.tId2 = tId2;
+	}
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-        if ((o == null) || (getClass() != o.getClass())) {
-            return false;
-        }
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
 
-        SDateId pojo = (SDateId) o;
+		SDateId pojo = (SDateId) o;
 
-        if ((sId1 != null) ? (!sId1.equals(pojo.sId1)) : (pojo.sId1 != null)) {
-            return false;
-        }
+		if ((sId1 != null) ? (!sId1.equals(pojo.sId1)) : (pojo.sId1 != null)) {
+			return false;
+		}
 
-        if ((sId2 != null) ? (!sId2.equals(pojo.sId2)) : (pojo.sId2 != null)) {
-            return false;
-        }
+		if ((sId2 != null) ? (!sId2.equals(pojo.sId2)) : (pojo.sId2 != null)) {
+			return false;
+		}
 
-        if ((tId1 != null) ? (!tId1.equals(pojo.tId1)) : (pojo.tId1 != null)) {
-            return false;
-        }
+		if ((tId1 != null) ? (!tId1.equals(pojo.tId1)) : (pojo.tId1 != null)) {
+			return false;
+		}
 
-        if ((tId2 != null) ? (!tId2.equals(pojo.tId2)) : (pojo.tId2 != null)) {
-            return false;
-        }
+		if ((tId2 != null) ? (!tId2.equals(pojo.tId2)) : (pojo.tId2 != null)) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public int hashCode() {
-        int result = 0;
-        result = (31 * result) + ((sId1 != null) ? sId1.hashCode() : 0);
-        result = ((sId2 != null) ? sId2.hashCode() : 0);
-        result = (31 * result) + ((tId1 != null) ? tId1.hashCode() : 0);
-        result = (31 * result) + ((tId2 != null) ? tId2.hashCode() : 0);
+	public int hashCode() {
+		int result = 0;
+		result = (31 * result) + ((sId1 != null) ? sId1.hashCode() : 0);
+		result = ((sId2 != null) ? sId2.hashCode() : 0);
+		result = (31 * result) + ((tId1 != null) ? tId1.hashCode() : 0);
+		result = (31 * result) + ((tId2 != null) ? tId2.hashCode() : 0);
 
-        return result;
-    }
+		return result;
+	}
 
-    public String toString() {
-        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+	public String toString() {
+		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
 
-        sb.append(" [");
-        sb.append("sId1").append("='").append(getSId1()).append("', ");
-        sb.append("sId2").append("='").append(getSId2()).append("', ");
-        sb.append("tId1").append("='").append(getTId1()).append("', ");
-        sb.append("tId2").append("='").append(getTId2()).append("'");
-        sb.append("]");
+		sb.append(" [");
+		sb.append("sId1").append("='").append(getSId1()).append("', ");
+		sb.append("sId2").append("='").append(getSId2()).append("', ");
+		sb.append("tId1").append("='").append(getTId1()).append("', ");
+		sb.append("tId2").append("='").append(getTId2()).append("'");
+		sb.append("]");
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 }

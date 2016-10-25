@@ -8,6 +8,12 @@
 
 	<property environment="env" />
 
+	<!-- setting ant log level -->		
+	<if><equals arg1="$${logLevel}" arg2="${logLevel}" />
+      <then><property name="logLevel" value="info"/></then></if>
+	<log level="${logLevel}" />		
+
+
 	<target name="check.args.pjtname" unless="pjtname">
 		<property name="pjtname" value="myproject" />
 	</target>
@@ -33,7 +39,7 @@
 	</target>
 
 	<target name="install">
-		<install name="${name}" target="${target}" anyframeHome="${anyframeHome}" excludeSrc="${excludeSrc}" isCLIMode="${isCLIMode}" />
+		<install name="${name}" target="${target}" anyframeHome="${anyframeHome}" excludeSrc="${excludeSrc}" version="${version}" isCLIMode="${isCLIMode}" />
 	</target>
 
 	<target name="uninstall">
@@ -53,6 +59,7 @@
 		<installed target="${target}" anyframeHome="${anyframeHome}" />
 	</target>
 	<target name="update-catalog">
+		
 		<update-catalog target="${target}" anyframeHome="${anyframeHome}" />
 	</target>
 

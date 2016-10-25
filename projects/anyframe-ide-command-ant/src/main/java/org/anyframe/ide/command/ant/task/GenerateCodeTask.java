@@ -91,7 +91,7 @@ public class GenerateCodeTask extends AbstractPluginTask {
 
 			codeGenerator.execute();
 		} catch (Exception e) {
-			log("[error] Fail to execute GenerateCodeTask", e, Project.MSG_ERR);
+			log("Fail to execute GenerateCodeTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());
 		}
 	}

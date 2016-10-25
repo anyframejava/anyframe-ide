@@ -79,8 +79,7 @@ public class AnyframeBackgroundResourceRefresher extends
                 || command
                     .equals(CommandUtil.CMD_CHANGE_DB + " after creation")) {
                 postProcess = new DBConfigChangePostProcess(vo);
-            } else if (command.equals(CommandUtil.CMD_INSTALL)
-                || command.equals(CommandUtil.CMD_UPDATE_CATALOG)) {
+            } else if (command.equals(CommandUtil.CMD_INSTALL)) {
                 postProcess = new PluginInstallPostProcess(vo);
             } else if (command.equals(CommandUtil.CMD_UNINSTALL)) {
                 postProcess = new PluginUninstallPostProcess(vo);

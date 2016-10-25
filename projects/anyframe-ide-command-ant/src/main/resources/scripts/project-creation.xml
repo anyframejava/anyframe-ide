@@ -5,6 +5,11 @@
 	<import file="${anyframeHome}/ide/cli/scripts/anyframe-path.xml"/>	
     <import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml"/>	
   
+	<!-- setting ant log level -->		
+	<if><equals arg1="$${logLevel}" arg2="${logLevel}" />
+      <then><property name="logLevel" value="info"/></then></if>
+	<log level="${logLevel}" />		
+
 	<!-- default target -->
 	<target name="create-project">			
 	    <if><equals arg1="$${pjttype}" arg2="${pjttype}" />

@@ -61,6 +61,7 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -75,6 +76,8 @@ import org.maven.ide.eclipse.project.ResolverConfiguration;
 
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.eclipse.core.AnyframeIDEPlugin;
+import org.anyframe.ide.eclipse.core.preferences.IdePreferencesPage;
 
 /**
  * This is an EclipseProjectUtil class.
@@ -321,6 +324,20 @@ public class ProjectUtil {
             workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,
                 "org.eclipse.ant.ui.AntClasspathProvider");
+//            // set log level
+//            IPreferenceStore store =
+//                AnyframeIDEPlugin.getDefault().getPreferenceStore();
+//            String logLevel = store.getString(IdePreferencesPage.LOG_LEVEL);
+//            String logOption = "-q";
+//            if (logLevel.equals(CommonConstants.LOG_LEVEL_INFO))
+//                logOption = "";
+//            else if (logLevel.equals(CommonConstants.LOG_LEVEL_DEBUG))
+//                logOption = "-debug";
+//            workingCopy.setAttribute(
+//                IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, logOption);
+//            workingCopy.setAttribute(
+//                IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+//                logOption);
 
             // set default for common settings
             CommonTab tab = new CommonTab();
@@ -342,7 +359,6 @@ public class ProjectUtil {
                 properties);
             workingCopy.setAttribute(
                 IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS, target);
-
             return workingCopy.doSave();
         } catch (Exception e) {
             ExceptionUtil.showException(MessageFormat.format(

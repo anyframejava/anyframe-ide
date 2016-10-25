@@ -46,8 +46,10 @@ public class ShowPluginsMojo extends AbstractPluginMojo {
 			pluginCatalogManager.showPlugins(request);
 
 		} catch (Exception ex) {
-			getLog().error("Fail to execute ShowPluginsMojo");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute ShowPluginsMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

@@ -66,6 +66,7 @@ public class IdePreferencesPage extends PreferencePage implements
     public static final String OFFLINE_MODE = "offlineMode";
     public static final String BASIC_ARCHETYPE = "BASIC_ARCHETYPE";
     public static final String SERVICE_ARCHETYPE = "SERVICE_ARCHETYPE";
+    public static final String LOG_LEVEL = "COMMAND_LOG_LEVEL";
 
     IPreferenceStore store;
     Button antBuildTypeRadio;
@@ -73,16 +74,20 @@ public class IdePreferencesPage extends PreferencePage implements
     Group buildTypeGroup;
     Group homeGroup;
     Group archetypeGroup;
+    Group logLevelGroup;
 
     Label homeLabel;
     Text homeText;
     Button offlineCheck;
 
     Label basicArchetypeLabel;
-    private Combo basicArchetypeVersionCombo;
+    Combo basicArchetypeVersionCombo;
 
     Label serviceArchetypeLabel;
-    private Combo serviceArchetypeVersionCombo;
+    Combo serviceArchetypeVersionCombo;
+
+    Label logLevelLabel;
+    Combo logLevelCombo;
 
     public IdePreferencesPage() {
         store = AnyframeIDEPlugin.getDefault().getPreferenceStore();
@@ -98,6 +103,7 @@ public class IdePreferencesPage extends PreferencePage implements
         createProjectBuildGroup(preferenceWindow);
         createHomeGroup(preferenceWindow);
         createArchetypeGroup(preferenceWindow);
+        createLogLevelGroup(preferenceWindow);
 
         initialize();
 
@@ -129,6 +135,9 @@ public class IdePreferencesPage extends PreferencePage implements
 
                 if (offlineCheck != null)
                     offlineCheck.setVisible(false);
+
+                basicArchetypeVersionCombo.removeAll();
+                serviceArchetypeVersionCombo.removeAll();
             }
         });
 
@@ -151,6 +160,9 @@ public class IdePreferencesPage extends PreferencePage implements
                     offlineCheck.setVisible(true);
                     offlineCheck.setSelection(store.getBoolean(OFFLINE_MODE));
                 }
+
+                basicArchetypeVersionCombo.removeAll();
+                serviceArchetypeVersionCombo.removeAll();
             }
         });
     }
@@ -216,6 +228,29 @@ public class IdePreferencesPage extends PreferencePage implements
         });
     }
 
+    private void createLogLevelGroup(Composite parent) {
+        logLevelGroup = new Group(parent, SWT.NONE);
+        logLevelGroup.setLayout(new GridLayout(2, false));
+        logLevelGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        logLevelLabel = new Label(logLevelGroup, SWT.NONE);
+
+        logLevelCombo =
+            new Combo(logLevelGroup, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 4;
+        logLevelCombo.setLayoutData(data);
+        logLevelCombo.add(CommonConstants.LOG_LEVEL_ERROR, 0);
+        logLevelCombo.add(CommonConstants.LOG_LEVEL_INFO, 1);
+        logLevelCombo.add(CommonConstants.LOG_LEVEL_DEBUG, 2);
+
+        String logLevel = store.getString(LOG_LEVEL);
+        if (StringUtils.isEmpty(logLevel))
+            logLevelCombo.select(1);
+        else
+            logLevelCombo.setText(logLevel);
+    }
+
     private void setArchetypeVersionCombo(String archetypeId) {
         if (antBuildTypeRadio.getSelection())
             setVersionText(archetypeId, ANT_BUILD_TYPE.toLowerCase(),
@@ -248,6 +283,7 @@ public class IdePreferencesPage extends PreferencePage implements
             homeLabel.setText(MessageUtil
                 .getMessage("ide.preferences.anyframehome.label"));
             homeText.setText(store.getString(ANYFRAME_HOME));
+
         } else {
             antBuildTypeRadio.setSelection(false);
             mavenBuildTypeRadio.setSelection(true);
@@ -259,7 +295,13 @@ public class IdePreferencesPage extends PreferencePage implements
 
             if (offlineCheck != null)
                 offlineCheck.setVisible(false);
+
         }
+
+        logLevelGroup.setText(MessageUtil
+            .getMessage("ide.preferences.loglevel.title"));
+        logLevelLabel.setText(MessageUtil
+            .getMessage("ide.preferences.loglevel.label"));
 
         archetypeGroup.setText(MessageUtil
             .getMessage("ide.preferences.archetype.title"));
@@ -384,8 +426,6 @@ public class IdePreferencesPage extends PreferencePage implements
             store.setValue(BUILD_TYPE, ANT_BUILD_TYPE);
             store.setValue(ANYFRAME_HOME, getHomeLocation());
             store.setValue(OFFLINE_MODE, this.offlineCheck.getSelection());
-            store.setValue(BASIC_ARCHETYPE, getBasicArchetypeVersion());
-            store.setValue(SERVICE_ARCHETYPE, getServiceArchetypeVersion());
         } else {
             if (getHomeLocation() == null || getHomeLocation().length() == 0) {
                 if (!DialogUtil
@@ -434,16 +474,21 @@ public class IdePreferencesPage extends PreferencePage implements
             }
             store.setValue(BUILD_TYPE, MAVEN_BUILD_TYPE);
             store.setValue(MAVEN_HOME, getHomeLocation());
-            store.setValue(BASIC_ARCHETYPE, getBasicArchetypeVersion());
-            store.setValue(SERVICE_ARCHETYPE, getServiceArchetypeVersion());
-
         }
+
+        store.setValue(BASIC_ARCHETYPE, getBasicArchetypeVersion());
+        store.setValue(SERVICE_ARCHETYPE, getServiceArchetypeVersion());
+        store.setValue(LOG_LEVEL, getLogLevel());
 
         return super.performOk();
     }
 
     public String getHomeLocation() {
         return homeText.getText();
+    }
+
+    public String getLogLevel() {
+        return this.logLevelCombo.getText();
     }
 
     public String getBasicArchetypeVersion() {

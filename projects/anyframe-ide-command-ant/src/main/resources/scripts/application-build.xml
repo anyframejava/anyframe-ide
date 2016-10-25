@@ -61,6 +61,7 @@
     		<copy todir="${basedir}/dist/${web.context.path}" overwrite="true">
     			<fileset dir="${project.home}/src/main/webapp">
     				<include name="**/*.*" />
+    				<include name="**/*" />
     			</fileset>
     		</copy>
     		<if><equals arg1="$${deploy}" arg2="${deploy}" />

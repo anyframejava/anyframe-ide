@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -20,15 +20,16 @@ import java.io.File;
 import org.hibernate.tool.hbm2x.TemplateHelper;
 
 /**
- * This is an AnyframeTemplateHelper class.
+ * This is an AnyframeTemplateHelper class to set default encoding and output
+ * encoding.
  * 
  * @author SooYeon Park
  */
 public class AnyframeTemplateHelper extends TemplateHelper {
 
-    public void init(File outputDirectory, String[] templatePaths) {
-        super.init(outputDirectory, templatePaths);
-        freeMarkerEngine.setDefaultEncoding("UTF-8");
-        freeMarkerEngine.setOutputEncoding("UTF-8");        
-    }	
+	public void init(File outputDirectory, String[] templatePaths) {
+		super.init(outputDirectory, templatePaths);
+		freeMarkerEngine.setDefaultEncoding("UTF-8");
+		freeMarkerEngine.setOutputEncoding("UTF-8");
+	}
 }

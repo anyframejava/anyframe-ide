@@ -31,7 +31,6 @@ import java.util.zip.ZipFile;
 
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
-import org.anyframe.ide.command.common.plugin.versioning.VersionComparator;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
@@ -39,6 +38,7 @@ import org.apache.maven.archetype.common.ArchetypeArtifactManager;
 import org.apache.maven.archetype.common.ArchetypeRegistryManager;
 import org.apache.maven.archetype.exception.UnknownArchetype;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -125,13 +125,17 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 	 * @return plugin detail information without versions
 	 */
 	public PluginInfo getPluginInfo(File pluginJar) throws Exception {
+
 		InputStream pluginInputStream = getPluginResource("META-INF/anyframe/"
 				+ CommonConstants.PLUGIN_FILE, pluginJar);
+		try {
+			PluginInfo pluginInfo = (PluginInfo) FileUtil
+					.getObjectFromXML(pluginInputStream);
 
-		PluginInfo pluginInfo = (PluginInfo) FileUtil
-				.getObjectFromXML(pluginInputStream);
-
-		return pluginInfo;
+			return pluginInfo;
+		} finally {
+			IOUtil.close(pluginInputStream);
+		}
 	}
 
 	/**
@@ -152,23 +156,21 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		if (pluginInfo != null) {
 			StringBuffer buffer = new StringBuffer();
 
-			buffer.append(getFormattedString("Name", pluginSummary.getName())
-					+ "\n");
-			buffer.append(getFormattedString("Description", pluginSummary
-					.getDescription())
+			buffer.append(getFormattedString("Name", pluginSummary.getName(),
+					false)
 					+ "\n");
 			buffer.append(getFormattedString("GroupId", pluginSummary
-					.getGroupId())
+					.getGroupId(), false)
 					+ "\n");
 			buffer.append(getFormattedString("ArtifactId", pluginSummary
-					.getArtifactId())
+					.getArtifactId(), false)
 					+ "\n");
 			buffer.append(getFormattedString("Latest Version", pluginSummary
-					.getLatestVersion())
+					.getLatestVersion(), false)
 					+ "\n");
 			if (pluginInfo.getInterceptor() != null) {
 				buffer.append(getFormattedString("Interceptor", pluginInfo
-						.getInterceptor().getClassName().trim())
+						.getInterceptor().getClassName().trim(), false)
 						+ "\n");
 			}
 
@@ -178,7 +180,8 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				sampleStr = "Not Included";
 			}
 
-			buffer.append(getFormattedString("Samples", sampleStr) + "\n");
+			buffer.append(getFormattedString("Samples", sampleStr, false)
+					+ "\n");
 
 			if (pluginSummary.getVersions().size() > 0) {
 				String releases = "";
@@ -187,7 +190,7 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				}
 
 				buffer.append(getFormattedString("Releases", releases
-						.substring(0, releases.length() - 1))
+						.substring(0, releases.length() - 1), false)
 						+ "\n");
 			}
 
@@ -208,8 +211,30 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				}
 
 				buffer.append(getFormattedString("Dependencies", dependencies
-						.substring(0, dependencies.length() - 1))
+						.substring(0, dependencies.length() - 1), false)
 						+ "\n");
+			}
+
+			String description = pluginSummary.getDescription().trim();
+			int descriptionLength = description.length();
+
+			for (int i = 0; i < descriptionLength; i = i + 58) {
+				String remains = description.substring(i);
+
+				int idx = i + 58;
+				if (remains.length() < 58) {
+					idx = i + remains.length();
+				}
+
+				if (i == 0) {
+					buffer.append(getFormattedString("Description", description
+							.substring(i, idx), false)
+							+ "\n");
+				} else {
+					buffer.append(getFormattedString("", description.substring(
+							i, idx), true)
+							+ "\n");
+				}
 			}
 
 			System.out.println(buffer.toString());
@@ -217,7 +242,6 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 			System.out.println("There is no information about '" + pluginName
 					+ "'. Please check a plugin name.");
 		}
-
 	}
 
 	/**
@@ -229,11 +253,17 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 	 *            value to be printed
 	 * @return formatted value
 	 */
-	private String getFormattedString(String label, String value) {
+	private String getFormattedString(String label, String value,
+			boolean remains) {
 		StringBuilder builder = new StringBuilder();
 		Formatter pluginInfoFormatter = new Formatter(builder);
-		pluginInfoFormatter.format(CommonConstants.PLUGININFO_DETAIL, label,
-				value);
+		if (!remains) {
+			pluginInfoFormatter.format(CommonConstants.PLUGININFO_DETAIL,
+					label, value);
+		} else {
+			pluginInfoFormatter.format(
+					CommonConstants.PLUGININFO_DETAIL_REMAINS, label, value);
+		}
 		return pluginInfoFormatter.toString();
 	}
 
@@ -257,12 +287,6 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 			String pluginName = dependency.getName();
 			String versionRange = dependency.getVersion();
 
-			// PluginInfo pluginSummary =
-			// pluginCatalogManager.getPlugin(request,
-			// pluginName);
-			// String latestVersion = VersionComparator.getLatest(versionRange,
-			// pluginSummary.getVersions());
-			// dependentPlugins.put(pluginName, latestVersion);
 			dependentPlugins.put(pluginName, versionRange);
 		}
 
@@ -286,38 +310,43 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		Map<String, String> dependenedPlugins = new HashMap<String, String>();
 
 		String pluginName = pluginInfo.getName();
+		InputStream installedPluginInputStream = null;
 
 		Map<String, PluginInfo> installedPlugins = getInstalledPlugins(baseDir);
-
 		Iterator<String> keyItr = installedPlugins.keySet().iterator();
-		// TODO: iterator vs. values() list difference -
-		// installedPlugins.values(); collection가지고 for문 돌리기와 비교
-		while (keyItr.hasNext()) {
-			String installedPluginName = keyItr.next();
-			PluginInfo installedPluginInfo = installedPlugins
-					.get(installedPluginName);
 
-			File installedPluginJar = getPluginFile(request,
-					installedPluginInfo.getGroupId(), installedPluginInfo
-							.getArtifactId(), installedPluginInfo.getVersion());
-			InputStream installedPluginInputStream = getPluginResource(
-					"META-INF/anyframe/" + CommonConstants.PLUGIN_FILE,
-					installedPluginJar);
+		try {
+			while (keyItr.hasNext()) {
+				String installedPluginName = keyItr.next();
+				PluginInfo installedPluginInfo = installedPlugins
+						.get(installedPluginName);
 
-			installedPluginInfo = (PluginInfo) FileUtil
-					.getObjectFromXML(installedPluginInputStream);
-			List<DependentPlugin> dependencies = installedPluginInfo
-					.getDependentPlugins();
+				File installedPluginJar = getPluginFile(request,
+						installedPluginInfo.getGroupId(), installedPluginInfo
+								.getArtifactId(), installedPluginInfo
+								.getVersion());
+				installedPluginInputStream = getPluginResource(
+						"META-INF/anyframe/" + CommonConstants.PLUGIN_FILE,
+						installedPluginJar);
 
-			if (dependencies != null) {
-				for (DependentPlugin dependency : dependencies) {
-					if (dependency.getName().equals(pluginName)) {
-						dependenedPlugins.put(installedPluginInfo.getName(),
-								installedPluginInfo.getVersion());
-						break;
+				installedPluginInfo = (PluginInfo) FileUtil
+						.getObjectFromXML(installedPluginInputStream);
+				List<DependentPlugin> dependencies = installedPluginInfo
+						.getDependentPlugins();
+
+				if (dependencies != null) {
+					for (DependentPlugin dependency : dependencies) {
+						if (dependency.getName().equals(pluginName)) {
+							dependenedPlugins.put(
+									installedPluginInfo.getName(),
+									installedPluginInfo.getVersion());
+							break;
+						}
 					}
 				}
 			}
+		} finally {
+			IOUtil.close(installedPluginInputStream);
 		}
 
 		return dependenedPlugins;
@@ -373,31 +402,35 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		if (installedEssentialPlugins.size() == 0) {
 			return false;
 		}
+		InputStream dependentPluginInputStream = null;
 
 		Iterator<String> essentialPluginItr = installedEssentialPlugins
 				.keySet().iterator();
+		try {
+			while (essentialPluginItr.hasNext()) {
+				String essentialPluginName = essentialPluginItr.next();
 
-		while (essentialPluginItr.hasNext()) {
-			String essentialPluginName = essentialPluginItr.next();
+				if (allDependentPluginJars.containsKey(essentialPluginName)) {
+					String essentialPluginVersion = installedEssentialPlugins
+							.get(essentialPluginName).getVersion();
 
-			if (allDependentPluginJars.containsKey(essentialPluginName)) {
-				String essentialPluginVersion = installedEssentialPlugins.get(
-						essentialPluginName).getVersion();
+					File dependentPluginJar = allDependentPluginJars
+							.get(essentialPluginName);
+					dependentPluginInputStream = getPluginResource(
+							"META-INF/anyframe/" + CommonConstants.PLUGIN_FILE,
+							dependentPluginJar);
 
-				File dependentPluginJar = allDependentPluginJars
-						.get(essentialPluginName);
-				InputStream dependentPluginInputStream = getPluginResource(
-						"META-INF/anyframe/" + CommonConstants.PLUGIN_FILE,
-						dependentPluginJar);
+					PluginInfo dependentPluginInfo = (PluginInfo) FileUtil
+							.getObjectFromXML(dependentPluginInputStream);
 
-				PluginInfo dependentPluginInfo = (PluginInfo) FileUtil
-						.getObjectFromXML(dependentPluginInputStream);
-
-				if (!dependentPluginInfo.getVersion().equals(
-						essentialPluginVersion)) {
-					return false;
+					if (!dependentPluginInfo.getVersion().equals(
+							essentialPluginVersion)) {
+						return false;
+					}
 				}
 			}
+		} finally {
+			IOUtil.close(dependentPluginInputStream);
 		}
 
 		return true;
@@ -586,17 +619,17 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				CommonConstants.fileSeparator, "/");
 
 		// 1. read a plugin jar file
-		ZipFile pluginZipFile = archetypeArtifactManager
+		ZipFile pluginZip = archetypeArtifactManager
 				.getArchetypeZipFile(pluginJar);
 
 		// 2. get a resource entry
-		ZipEntry zipEntry = pluginZipFile.getEntry(resourceName);
+		ZipEntry zipEntry = pluginZip.getEntry(resourceName);
 
 		if (zipEntry == null) {
 			return null;
 		}
 
-		return pluginZipFile.getInputStream(zipEntry);
+		return pluginZip.getInputStream(zipEntry);
 	}
 
 	/**
@@ -629,8 +662,8 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				return buffer.toString();
 
 			} finally {
-				inputStream.close();
-				bufferedReader.close();
+				IOUtil.close(inputStream);
+				IOUtil.close(bufferedReader);
 			}
 		}
 		return null;
@@ -722,20 +755,17 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		if (installedPlugins.size() > 0) {
 			StringBuffer buffer = new StringBuffer();
 
-			buffer.append("Installed plugins are listed below: \n");
-			buffer
-					.append("---------------------------------------------------------------- \n");
 			Formatter formatter = new Formatter();
 
-			formatter.format(CommonConstants.PLUGININFO_NAME_VERSION_LATEST,
-					"name", "version", "latest version");
+			formatter.format(
+					CommonConstants.PLUGININFO_NAME_VERSION_LATEST_TITLE,
+					"<name>", "<current>", "<latest>");
 			buffer.append(formatter.toString() + "\n");
-			buffer
-					.append("---------------------------------------------------------------- \n");
 
 			Collection<PluginInfo> installedPluginValues = installedPlugins
 					.values();
 
+			int i = 0;
 			for (PluginInfo installedPluginInfo : installedPluginValues) {
 				StringBuilder builder = new StringBuilder();
 				Formatter pluginInfoFormatter = new Formatter(builder);
@@ -750,15 +780,16 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				}
 
 				String pluginName = installedPluginInfo.getName();
-				if (pluginName.length() > 17) {
-					pluginName = pluginName.substring(0, 16) + "...";
-				}
 
 				pluginInfoFormatter.format(
 						CommonConstants.PLUGININFO_NAME_VERSION_LATEST,
 						pluginName, installedPluginInfo.getVersion(),
 						installedPluginInfo.getLatestVersion());
-				buffer.append(pluginInfoFormatter.toString() + "\n");
+				buffer.append(pluginInfoFormatter.toString());
+
+				if (i++ != installedPluginValues.size() - 1) {
+					buffer.append("\n");
+				}
 			}
 
 			System.out.println(buffer.toString());
@@ -805,18 +836,15 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		if (updatablePlugins.size() > 0) {
 			StringBuffer buffer = new StringBuffer();
 
-			buffer.append("Updatable plugins are listed below: \n");
-			buffer
-					.append("---------------------------------------------------------------- \n");
 			Formatter formatter = new Formatter();
 
-			formatter.format(CommonConstants.PLUGININFO_NAME_VERSION_LATEST,
-					"name", "version", "latest version");
+			formatter.format(
+					CommonConstants.PLUGININFO_NAME_VERSION_LATEST_TITLE,
+					"<name>", "<current>", "<latest>");
 			buffer.append(formatter.toString() + "\n");
-			buffer
-					.append("---------------------------------------------------------------- \n");
 
-			for (PluginInfo updatablePluginInfo : updatablePlugins) {
+			for (int i = 0; i < updatablePlugins.size(); i++) {
+				PluginInfo updatablePluginInfo = updatablePlugins.get(i);
 				StringBuilder builder = new StringBuilder();
 				Formatter pluginInfoFormatter = new Formatter(builder);
 
@@ -830,15 +858,16 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 				}
 
 				String pluginName = updatablePluginInfo.getName();
-				if (pluginName.length() > 17) {
-					pluginName = pluginName.substring(0, 16) + "...";
-				}
 
 				pluginInfoFormatter.format(
 						CommonConstants.PLUGININFO_NAME_VERSION_LATEST,
 						pluginName, updatablePluginInfo.getVersion(),
 						updatablePluginInfo.getLatestVersion());
-				buffer.append(pluginInfoFormatter.toString() + "\n");
+				buffer.append(pluginInfoFormatter.toString());
+
+				if (i != updatablePlugins.size() - 1) {
+					buffer.append("\n");
+				}
 			}
 
 			System.out.println(buffer.toString());
@@ -864,27 +893,31 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 			Map<String, File> installedPluginJars,
 			List<DependentPlugin> dependentPlugins,
 			Map<String, File> installedAllDependentPluginJars) throws Exception {
-		for (DependentPlugin dependentPlugin : dependentPlugins) {
-			String dependentPluginName = dependentPlugin.getName();
+		InputStream inputStream = null;
+		try {
+			for (DependentPlugin dependentPlugin : dependentPlugins) {
+				String dependentPluginName = dependentPlugin.getName();
 
-			if (installedPluginJars.containsKey(dependentPluginName)) {
-				File installedPluginJar = installedPluginJars
-						.get(dependentPluginName);
+				if (installedPluginJars.containsKey(dependentPluginName)) {
+					File installedPluginJar = installedPluginJars
+							.get(dependentPluginName);
 
-				installedAllDependentPluginJars.put(dependentPluginName,
-						installedPluginJar);
+					installedAllDependentPluginJars.put(dependentPluginName,
+							installedPluginJar);
 
-				InputStream inputStream = getPluginResource(
-						"META-INF/anyframe/" + CommonConstants.PLUGIN_FILE,
-						installedPluginJar);
+					inputStream = getPluginResource("META-INF/anyframe/"
+							+ CommonConstants.PLUGIN_FILE, installedPluginJar);
 
-				PluginInfo installedDependentPluginInfo = (PluginInfo) FileUtil
-						.getObjectFromXML(inputStream);
+					PluginInfo installedDependentPluginInfo = (PluginInfo) FileUtil
+							.getObjectFromXML(inputStream);
 
-				getAllDependentPluginJars(installedPluginJars,
-						installedDependentPluginInfo.getDependentPlugins(),
-						installedAllDependentPluginJars);
+					getAllDependentPluginJars(installedPluginJars,
+							installedDependentPluginInfo.getDependentPlugins(),
+							installedAllDependentPluginJars);
+				}
 			}
+		} finally {
+			IOUtil.close(inputStream);
 		}
 	}
 

@@ -59,6 +59,13 @@ public class ShowPluginsTask extends AbstractPluginTask {
 	}
 
 	// for anyframegen
+	/**
+	 * get all plugin information with installation information
+	 * 
+	 * @param baseDir
+	 *            target project folder
+	 * @return all plugins with installation information
+	 */
 	public Map<String, PluginInfo> getPlugins(String baseDir) throws Exception {
 		initialize();
 		lookupComponents();

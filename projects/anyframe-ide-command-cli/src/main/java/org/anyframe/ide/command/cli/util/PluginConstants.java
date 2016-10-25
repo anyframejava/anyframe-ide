@@ -23,7 +23,7 @@ package org.anyframe.ide.command.cli.util;
 public interface PluginConstants {
 
 	// 1. plugin name
-	String FOUNDATION_PLUGIN = "foundation";
+	String CORE_PLUGIN = "core";
 
 	String PROJECT_NAME = "project.name";
 	String PACKAGE_NAME = "package.name";

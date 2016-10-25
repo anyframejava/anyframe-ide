@@ -32,7 +32,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.settings.Server;
-import org.apache.maven.settings.Settings;
 
 /**
  * This is an DeployPluginFileMojo class. This mojo is for deploy plugin binary
@@ -69,15 +68,14 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 	 *            default-value="anyframe-repository"
 	 */
 	private String repositoryId;
-
+	
 	/**
-	 * The current user system settings for use in Maven.
+	 * define whether version of target plugin is latest. If this paramter value
+	 * is 'true', then change value of latest in plugin-catalog-xxx.xml
 	 * 
-	 * @parameter default-value="${settings}"
-	 * @required
-	 * @readonly
+	 * @parameter expression="${isLatest}" default-value="true"
 	 */
-	private Settings settings;
+	private boolean isLatest;	
 
 	/**
 	 * main method for executing DeployPluginFileMojo. This mojo is executed
@@ -168,7 +166,7 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 			PluginInfo pluginInfo = (PluginInfo) FileUtil
 					.getObjectFromXML(pluginBuildXML);
 
-			Server server = this.settings.getServer(repositoryId);
+			Server server = super.settings.getServer(repositoryId);
 			if (server == null) {
 				throw new CommandException(
 						"You need define authentication profile about "
@@ -178,10 +176,12 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 			// 6. update plugin catalig file in remote repository
 			pluginCatalogManager.updatePluginCatalog(request, baseDir, url,
 					server.getUsername(), server.getPassword(), pluginInfo
-							.isEssential(), pluginInfo);
+							.isEssential(), isLatest, pluginInfo);
 		} catch (Exception ex) {
-			getLog().error("Fail to execute DeployPluginFileMojo.");
-			throw new MojoFailureException(ex.getMessage());
+			getLog().error(
+					"Fail to execute DeployPluginFileMojo. The reason is '"
+							+ ex.getMessage() + "'.");
+			throw new MojoFailureException(null);
 		}
 	}
 }

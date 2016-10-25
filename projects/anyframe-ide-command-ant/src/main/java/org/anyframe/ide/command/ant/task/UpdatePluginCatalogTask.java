@@ -35,6 +35,8 @@ public class UpdatePluginCatalogTask extends AbstractPluginTask {
 	public void doExecute() throws BuildException {
 		try {
 			remotePluginCatalogDataSource.readPluginCatalog(getRequest());
+			
+			System.out.println("Plugin catalog files were updated successfully.");
 		} catch (Exception e) {
 			log("Fail to execute UpdatePluginCatalogTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());

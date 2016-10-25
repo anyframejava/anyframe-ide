@@ -32,7 +32,7 @@ import org.hibernate.tool.hbm2x.XMLPrettyPrinter;
 import org.anyframe.ide.command.common.util.PrettyPrinter;
 
 /**
- * This is an FileUtil class.
+ * This is a FileUtil class.
  * 
  * @author Sooyeon Park
  */

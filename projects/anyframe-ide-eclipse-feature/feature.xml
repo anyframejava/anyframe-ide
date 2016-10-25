@@ -2,7 +2,7 @@
 <feature
       id="org.anyframe.ide.eclipse.core"
       label="Anyframe IDE"
-      version="2.0.0.v20110405"
+      version="2.0.1.v20110601"
       provider-name="SAMSUNG SDS"
       plugin="org.anyframe.common.eclipse.core">
 
@@ -265,21 +265,20 @@ each open source software information page.
       <import plugin="org.eclipse.core.filesystem"/>
       <import plugin="org.apache.commons.collections"/>
       <import plugin="org.apache.commons.lang"/>
-      <import feature="org.anyframe.common.eclipse.core" version="4.0.0"/>
    </requires>
 
    <plugin
          id="org.anyframe.ide.eclipse.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20110405"
+         version="2.0.1.v20110601"
          unpack="false"/>
 
    <plugin
-         id="org.anyframe.querymanager.eclipse.core"
+         id="org.anyframe.common.eclipse.core"
          download-size="0"
          install-size="0"
-         version="2.1.8"
+         version="4.0.1"
          unpack="false"/>
 
 </feature>

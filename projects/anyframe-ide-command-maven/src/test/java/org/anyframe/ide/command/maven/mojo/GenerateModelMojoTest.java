@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -21,7 +21,7 @@ import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.project.MavenProject;
 
 /**
- * This is an AnyframeModelGeneratorTestCase class.
+ * This is a GenerateModelMojoTest class.
  * 
  * @author Sooyeon Park
  */

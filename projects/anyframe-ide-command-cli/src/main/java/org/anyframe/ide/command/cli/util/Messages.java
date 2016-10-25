@@ -63,11 +63,11 @@ public class Messages implements Serializable {
 
 	public static final String WRONG_DIR_PATH = "\nYou used wrong argument value. You should use directory path.\n";
 
-	public static final String WELCOME = "\nWelcome to Anyframe IDE 2.0.0 - http://anyframejava.org\n"
+	public static final String WELCOME = "\nWelcome to Anyframe IDE 2.0.1 - http://anyframejava.org\n"
 			+ "Licensed under Apache Standard License 2.0\n"
 			+ "ANYFRAME_HOME is set to: ";
 
-	public static final String ANT_HELP = "\nUsage (optionals marked with *): anyframe [command] [options]*\n\n"
+	public static final String ANT_HELP = "Usage (optionals marked with *): anyframe [command] [options]*\n\n"
 			+ "Available Commands (type 'anyframe -help -command [command]' for more information) \n"
 			+ "anyframe create-project \n"
 			+ "anyframe install [PLUGIN_NAME] \n"

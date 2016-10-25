@@ -15,16 +15,27 @@
  */
 package org.anyframe.ide.command.common.plugin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is an PluginInfo class. This class is a information for plugin.
+ * This is an PluginInfo class. This object is converted from plugin resource
+ * META-INF/anyframe/plugin.xml or plugin-build.xml using XStream. This object
+ * is related to <plugin> in plugin.xml or plugin-build.xml
+ * 
+ * <pre>
+ * Example:
+ * <plugin name="core">
+ *    ...
+ * </plugin>
+ * </pre>
  * 
  * @author SoYon Lim
  */
-public class PluginInfo {
+public class PluginInfo implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	// 1. basic information
 	private String name;
 	private String description;
@@ -47,7 +58,6 @@ public class PluginInfo {
 	// 3. additional information for eclipse plugin ui
 	private String checked;
 	private String installed;
-	private String customed;
 
 	public PluginInfo() {
 
@@ -187,17 +197,6 @@ public class PluginInfo {
 
 	public void setInstalled(String installed) {
 		this.installed = installed;
-	}
-
-	public boolean isCustomed() {
-		if (customed == null || customed.equals("")) {
-			return false;
-		}
-		return new Boolean(customed).booleanValue();
-	}
-
-	public void setCustomed(String customed) {
-		this.customed = customed;
 	}
 
 	public String toString() {

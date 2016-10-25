@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2008 the original author or authors.
+ * Copyright 2008-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.anyframe.ide.command.maven.mojo.PlacePluginDependenciesMojo;
+import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.util.StringUtils;
-
-import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.CommonConstants;
 
 /**
  * TestCase Name : PlacePluginDependenciesMojoTest <br>
@@ -93,13 +92,16 @@ public class PlacePluginDependenciesMojoTest extends AbstractMojoTest {
 				"remoteArtifactRepositories", remoteArtifactRepositories);
 		setVariableValueToObject(placePluginDependenciesMojo, "project",
 				project);
-		
+		setVariableValueToObject(placePluginDependenciesMojo, "settings",
+				new Settings());
+
 		// 3. execute mojo
 		placePluginDependenciesMojo.execute();
 
 		// 4. assert
-		File libDir = new File(new File("./src/test/resources/project/sample").getAbsolutePath()
-				+ "/src/main/webapp/WEB-INF/lib");
+		File libDir = new File(
+				new File("./src/test/resources/project/sample")
+						.getAbsolutePath() + "/src/main/webapp/WEB-INF/lib");
 		List jarFiles = FileUtil.findFiles(libDir.getAbsolutePath(),
 				new String[] { "jar" }, false);
 		assertEquals("Fail to place plugin dependencies.", 2, jarFiles.size());

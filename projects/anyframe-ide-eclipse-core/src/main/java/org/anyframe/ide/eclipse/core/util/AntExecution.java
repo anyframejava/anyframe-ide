@@ -47,8 +47,7 @@ public class AntExecution {
             postProcess = new CodeGenPostProcess(vo);
         } else if (command.equals(CommandUtil.CMD_CHANGE_DB)) {
             postProcess = new DBConfigChangePostProcess(vo);
-        } else if (command.equals(CommandUtil.CMD_INSTALL)
-            || command.equals(CommandUtil.CMD_UPDATE_CATALOG)) {
+        } else if (command.equals(CommandUtil.CMD_INSTALL)) {
             postProcess = new PluginInstallPostProcess(vo);
         } else if (command.equals(CommandUtil.CMD_UNINSTALL)) {
             postProcess = new PluginUninstallPostProcess(vo);

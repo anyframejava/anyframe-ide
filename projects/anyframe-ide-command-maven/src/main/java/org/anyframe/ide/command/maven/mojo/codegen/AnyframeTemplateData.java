@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2009 the original author or authors.   
+ * Copyright 2008-2011 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -18,54 +18,56 @@ package org.anyframe.ide.command.maven.mojo.codegen;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
- * This is an AnyframeTemplateData class.
+ * This is an AnyframeTemplateData class which is a Value Object to express
+ * template.config file.
+ * 
  * @author Sooyeon Park
  */
 
 @XStreamAlias("template")
 public class AnyframeTemplateData {
 
-    private String type = "";
-    private String generic = "";
-    private String ftl = "";
-    private String src = "";
-    private String mergeSrc = "";
-    private String mergeKey = "";
-    private boolean share = false;
-    private String dao = "";
-    private String framework = "";
+	private String type = "";
+	private String generic = "";
+	private String ftl = "";
+	private String src = "";
+	private String mergeSrc = "";
+	private String mergeKey = "";
+	private boolean share = false;
+	private String dao = "";
+	private String framework = "";
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getGeneric() {
-        return generic;
-    }
+	public String getGeneric() {
+		return generic;
+	}
 
-    public void setGeneric(String generic) {
-        this.generic = generic;
-    }
+	public void setGeneric(String generic) {
+		this.generic = generic;
+	}
 
-    public String getFtl() {
-        return ftl;
-    }
+	public String getFtl() {
+		return ftl;
+	}
 
-    public void setFtl(String ftl) {
-        this.ftl = ftl;
-    }
+	public void setFtl(String ftl) {
+		this.ftl = ftl;
+	}
 
-    public String getSrc() {
-        return src;
-    }
+	public String getSrc() {
+		return src;
+	}
 
-    public void setSrc(String src) {
-        this.src = src;
-    }
+	public void setSrc(String src) {
+		this.src = src;
+	}
 
 	public String getMergeSrc() {
 		return mergeSrc;
@@ -84,27 +86,27 @@ public class AnyframeTemplateData {
 	}
 
 	public boolean isShare() {
-        return share;
-    }
+		return share;
+	}
 
-    public void setShare(boolean share) {
-        this.share = share;
-    }
+	public void setShare(boolean share) {
+		this.share = share;
+	}
 
-    public String getDao() {
-        return dao;
-    }
+	public String getDao() {
+		return dao;
+	}
 
-    public void setDao(String dao) {
-        this.dao = dao;
-    }
+	public void setDao(String dao) {
+		this.dao = dao;
+	}
 
-    public String getFramework() {
-        return framework;
-    }
+	public String getFramework() {
+		return framework;
+	}
 
-    public void setFramework(String framework) {
-        this.framework = framework;
-    }
+	public void setFramework(String framework) {
+		this.framework = framework;
+	}
 
 }

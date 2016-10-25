@@ -24,7 +24,7 @@ import org.anyframe.ide.command.common.DefaultPluginInfoManager;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 
 /**
- * This is an PluginInfoListTestCase class.
+ * This is a PluginInfoListTestCase class.
  * @author Changje Kim
  * @author Sooyeon Park
  */
