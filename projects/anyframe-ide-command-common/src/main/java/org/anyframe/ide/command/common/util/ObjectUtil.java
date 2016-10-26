@@ -16,6 +16,8 @@
 package org.anyframe.ide.command.common.util;
 
 import java.io.File;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 
 /**
@@ -24,6 +26,26 @@ import java.lang.reflect.Method;
  * @author SoYon Lim
  */
 public class ObjectUtil {
+	/**
+	 * 
+	 * @author Philip Isenhour
+	 * @see http://javatechniques.com/blog/faster-deep-copies-of-java-objects/
+	 */
+	public static Object copy(Object orig) throws Exception {
+		// Write the object out to a byte array
+		FastByteArrayOutputStream fstOutputStream = new FastByteArrayOutputStream();
+		ObjectOutputStream objOutputStream = new ObjectOutputStream(
+				fstOutputStream);
+		objOutputStream.writeObject(orig);
+		objOutputStream.flush();
+		objOutputStream.close();
+
+		// Retrieve an input stream from the byte array and read
+		// a copy of the object back in.
+		ObjectInputStream inputStream = new ObjectInputStream(fstOutputStream
+				.getInputStream());
+		return inputStream.readObject();
+	}
 
 	public static Class loadClass(ClassLoader pluginInterceptorLoader,
 			File pluginJarFile, String interceptorlClass) throws Exception {

@@ -1,0 +1,337 @@
+<chapter id="installation_maven">
+	<title>Maven</title>
+	
+	<para>
+		본 장에서는 해당 프로젝트에서 빌드 도구로써 Maven을 채택한 경우 
+		CLI를 이용하여 Anyframe 기반의 개발 환경을 쉽게 구성하는 방법에 대해 설명하고자 한다.
+		Maven을 기반으로 개발 환경을 구성하려면 다음과 같은 순서로 작업을 진행한다.
+	</para>
+	
+	<itemizedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para><link linkend="installation_maven_configuration">Maven 설치 및 환경 설정</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_generate_archetype">프로젝트 구조 생성</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_install_plugin">Plugin 설치</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_run">어플리케이션 실행</link></para>
+		</listitem>
+	</itemizedlist>
+	
+	<section id="installation_maven_configuration">
+		<title>Maven 설치 및 환경 설정</title>
+		<para>
+			여기서는 빌드 도구로 Maven을 사용할 경우, 본격적인 Anyframe 기반의 개발 환경 구성 전에 선행되어야 하는 작업들에 대해 설명하고자 한다.
+		</para>
+		<para>
+			<ulink url="http://maven.apache.org/">Maven(http://maven.apache.org/)</ulink>
+			은 POM(Project Object Model) 정보를 기반으로 대상 프로젝에 대한 빌드, 리포팅, 문서화 등을 지원하는 오픈소스 툴이다. 먼저 Maven을 설치한 후, Anyframe 설치를 위한 환경 설정 방법에 대해
+			알아보도록 하자.
+		</para>
+		<orderedlist numeration="arabic" inheritnum="inherit">
+			<listitem>
+				<para>
+					Anyframe 설치 대상 PC에 Maven이 설치되어 있지 않은 경우, Maven을 설치하도록 한다. (본 문서에서는 Maven Ver.2.2.1을 기반으로 설치
+					작업을 진행할 것이다.) <ulink url="http://maven.apache.org/">Maven 사이트</ulink> 로부터 Maven(apache-maven-2.2.1-bin.xxx)을 다운로드받은 후,
+					원하는 위치에 압축을 해제한다.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					설치된 Maven을 기반으로 Anyframe 설치 작업을 진행할 때, Anyframe Repository(http://dev.anyframejava.org/maven/repo)로부터
+					참조 라이브러리를 다운로드할 수 있도록 하기 위해 [MAVEN 설치 폴더]/conf/settings.xml 파일을 열고 다음과 같이 속성을 추가로 정의해준다.
+					(settings.xml 파일 다운로드를 원할 경우 <link linkend="installation_maven_settings_resources">여기</link>를 참조한다.)
+				</para>
+				<programlisting language="xml"><![CDATA[<profiles>
+    <profile>
+        <id>myprofile</id>
+        <repositories> 
+            <repository>
+                <id>anyframe-repository</id>
+                <url>http://dev.anyframejava.org/maven/repo</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>	
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>anyframe-plugin</id> 
+                <name>repository for Anyframe</name>       
+                <url>http://dev.anyframejava.org/maven/repo</url>           
+            </pluginRepository>
+            <pluginRepository>
+                <id>central</id> 
+                <name>Internal Mirror of Central Plugins Repository</name>       
+                <url>http://www.ibiblio.org/maven2/plugins</url>           
+            </pluginRepository>
+            <pluginRepository>
+                <id>remote</id> 
+                <name>Internal Mirror of Central Plugins Repository</name>       
+                <url>http://repo1.maven.org/maven2</url>           
+            </pluginRepository>    
+        </pluginRepositories>  
+    </profile>
+</profiles>
+중략...
+<activeProfiles>
+    <activeProfile>myprofile</activeProfile>
+</activeProfiles>]]></programlisting>
+			</listitem>
+			<listitem>
+				<para>
+					작업 대상 PC에서 MAVEN을 인식할 수 있도록 하기 위해서
+					<emphasis role="bold">시스템 변수로 MAVEN_HOME을 추가하고, [MAVEN 설치 폴더]를 값으로 지정</emphasis>해준다.
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/setting_maven_home.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+				
+				<para>
+					또한 시스템 변수
+					<emphasis role="bold">PATH에 다음과 같이 '%MAVEN_HOME%/bin'</emphasis>
+					을 추가한다.
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/setting_system_path.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					설치 및 환경 설정 작업이 완료되었다면 Maven이 성공적으로 설치되었는지 확인해 보도록 하자.
+					Command 창을 띄우고
+					<emphasis role="bold">mvn -version</emphasis>
+					과 같이 명령어를 입력하여 다음과 같은 정보가
+					에러없이 표시되는지 확인한다.
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/check_maven_version.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					이제 Maven 기반에서 Command Line Interface를 활용하여 Anyframe 기반 개발 환경 구성이
+					가능해졌다.
+				</para>
+			</listitem>
+		</orderedlist>
+	</section>
+	
+	<section id="installation_maven_generate_archetype">
+		<title>프로젝트 구조 생성</title>
+		<para>
+			Anyframe 기반의 개발 환경 구성을 위해서, 먼저 프로젝트의 기본 구조를 생성해보자.
+			Command 입력창을 열고 다음과 같이 Maven Command를 입력하여 anyframe-basic-archetype을 설치한다.
+			(Anyframe Archetype에 대한 자세한 내용은 본 매뉴얼의 <link linkend="commands_maven_generate_archetype">Archetype</link> 설명을 참고하도록 한다.) 
+		</para>
+		<programlisting language="java"><![CDATA[mvn archetype:generate 
+	    -DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>
+	    
+	    <para>
+			위와 같이 명령어를 입력하면 Command 창에 archetypeCatalog 속성값으로 정의된 http://dev.anyframejava.org/maven/repo/archetype-catalog.xml 
+			파일 내에 정의된 Maven Archetype 목록이 제시될 것이다. 제시된 Maven Archetype 목록 중 최신 anyframe-basic-archetype에 해당하는 번호('1')를 선택한다.
+			등록된 anyframe-basic-archetype의 버전이 여러개일 경우 버전을 선택할 수 있도록 버전 목록이 제시된다. 여기서는 최신 버전인 5.2.0을 선택할 것이다.
+		<programlisting language="java"><![CDATA[Choose archetype:
+1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-basic-archetype (anyframe basic archetype (latest stable 5.2.0))
+2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-service-archetype (anyframe service archetype (latest stable 2.2.0))
+3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.archetype:anyframe-basic-archetype (-)
+Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): : 1]]></programlisting>
+		</para>
+		
+		<para>				
+			샘플 프로젝트 생성을 위해 다음과 같이 각 인자에 대한 값을 입력한다.
+			<programlisting language="java"><![CDATA[Define value for property 'groupId': : myapp
+Define value for property 'artifactId': : myproject
+Define value for property 'version': 1.0-SNAPSHOT: 1.0.0
+Define value for property 'package': myapp: anyframe
+Confirm properties configuration:
+groupId: myapp
+artifactId: myproject
+version: 1.0.0
+package: anyframe
+Y: y]]></programlisting>
+		</para>
+		<para>
+			입력한 속성값을 기반으로 'myproject'라는 이름의 샘플 프로젝트가 생성될 것이다. 다음 그림은 anyframe-basic-archetype 설치를 통해 구성된 샘플 프로젝트의 기본 모습이다.
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/myproject_structure.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		
+		<para>
+			이제 생성한 프로젝트 디렉토리로 이동하여 계속해서 Anyframe에서 제공하는 다양한 Plugin을 설치할 수 있다.
+			<programlisting language="java"><![CDATA[cd myproject]]></programlisting>
+		</para>
+	</section>
+	
+	<section id="installation_maven_install_plugin">
+		<title>Plugin 설치</title>
+		<para>
+			Anyframe 4.6.0 이후부터는 다양한 오픈 소스들이 통합된 템플릿 기반의 샘플 코드, 참조 라이브러리 집합을 plugin이라 칭하며, 다양한 유형의 plugin을 제공한다.
+		</para>
+		
+		<para>
+			여기서는 Anyframe의 다른 plugin이 동작하는 데 기본적으로 필요한 plugin인 core plugin을 설치해보자.
+		</para>
+		<para>
+			Command 창을 띄우고 앞서 설치한 [샘플 프로젝트 설치 폴더]/db/hsqldb 폴더로 이동하여 start.cmd (or start.sh) 파일을 더블클릭함으로써 샘플용으로 제공되는 
+			hsqldb를 시작시킨다. 해당 Plugin 실행을 위해 DB 데이터 추가가 필요한 경우 선택한 Plugin 설치시 DB 데이터 추가 작업도 함께 이루어지므로 DB를 시작시켜 놓아야 한다. 
+			만일 선택한 Plugin 설치시 DB가 시작되지 않았다면 Plugin 설치 이후 제공되는 DB 스크립트 파일([샘플 프로젝트 설치 폴더]/db/scripts/{plugin명-insert-data-db명}.sql)을 
+			직접 실행시키면 된다. 또한 샘플용으로 제공되는 hsqldb가 아닌 다른 DB 기반에서 Plugin을 설치하고자 하는 경우에는 
+			<link linkend="commands_maven_db">DB 변경</link>을 참고하도록 한다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/start_hsqldb.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<para>
+			Command 창을 띄우고 샘플 프로젝트 설치 폴더로 이동하여 다음과 같이 명령어를 입력한다.
+			(Plugin 설치와 관련된 자세한 내용은 Maven 기반 <link linkend="commands_maven_install">install</link> command를 참조한다.)
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=core]]></programlisting>
+		<para>
+			core plugin의 동작을 위해서는 datasource, logging, spring plugin이 필요하므로 아래와 같이 출력될 것이다. 계속 설치를 진행하고자 하는 경우 'y'를 입력한다.
+		</para>
+		<programlisting language="java"><![CDATA[Resolving plugin dependencies ...
+Dependencies Resolved.
+------------------------------------------------------------------------------
+ <action>  <name>	<version>
+ Install   datasource	1.0.1
+ Install   spring	1.0.1
+ Install   core	1.0.4
+ Install   logging	1.0.1
+------------------------------------------------------------------------------
+Is this OK? (y, n):]]></programlisting>
+		
+		<para>
+			다음과 같은 명령어를 입력하면 샘플 프로젝트를 대상으로 설치된 Plugin 목록을 확인할 수 있을 것이다.
+			<programlisting language="java"><![CDATA[mvn anyframe:installed]]></programlisting>
+			<programlisting language="java"><![CDATA[<name>		<current>	<latest>
+ core		1.0.4	1.0.4
+ datasource	1.0.1	1.0.1
+ spring		1.0.1	1.0.1
+ logging		1.0.1	1.0.1]]></programlisting>
+		</para>
+		<para>
+			core plugin과 동일한 방법으로 다른 Plugin들을 추가로 설치할 수 있다.
+			설치할 수 있는 Plugin 목록을 조회하려면 다음과 같은 명령어를 사용한다.
+			<programlisting language="java"><![CDATA[mvn anyframe:list]]></programlisting>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/show_plugin_list.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<important>
+			<title>기존 Maven 사용자 유의 사항</title>
+			<para>
+				Anyframe에서는 Maven 기반에서 Anyframe 관련 라이브러리 다운로드시에 
+				참조 관계에 놓인 모든 Anyframe 및 3rd-party 라이브러리들이 한꺼번에 다운로드되는 현상을 막기 위해 
+				각 라이브러리들 간의 참조 관계를 끊은 상태로 Anyframe Repository에 배포하고 있다. 
+				때문에 기존 Maven 사용자들은 Local Repository에 이미 존재하는 3rd-party 라이브러리가 가진 참조 관계에 문제가 
+				생겨 Anyframe 설치시에 오류가 발생할 수 있다. 따라서 설치에 문제가 있는 경우에는 Local Repository를 삭제한 후 재설치해 볼 것을 권장한다.
+			</para>
+		</important>
+	</section>
+		
+	<section id="installation_maven_run">
+		<title>어플리케이션 실행</title>
+		<para>
+			특정 Plugin 설치 후 구성된 샘플 어플리케이션이 정상적으로 동작하는지 쉽게 확인할 수 있도록
+			Anyframe에서는 Jetty 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
+		</para>
+		<para>
+			Command 창을 띄운 후, 샘플 프로젝트 설치 폴더 위치로 이동하여 다음과 같이 Maven 명령어를 입력하면 Jetty 기반에서 
+			샘플 어플리케이션을 시작시킬 수 있다.
+		</para>
+		<programlisting language="java"><![CDATA[mvn clean jetty:run]]></programlisting>
+	
+		<para>
+			Jetty가 정상적으로 실행되면 'Started Jetty Server'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
+		</para>		
+	
+		<para>
+			WAS가 정상적으로 시작되었으면 웹브라우저를 열고, 주소창에 http://localhost:8080/myproject (http://localhost:8080/${샘플 프로젝트 이름})와 같이 
+			입력하여 샘플 어플리케이션이 정상적으로 실행되는지 확인해본다. 
+			다음은 core plugin만 설치된 경우 샘플 어플리케이션의 초기 화면이다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_initial.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<para>
+			화면에서 Core 링크를 클릭하면 영화 정보를 관리할 수 있는 페이지로 이동한다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_core_initial.jpg"
+						align="center" />
+				</imageobject>					
+			</mediaobject>	
+		</para>	
+	</section>
+	
+	<section id="installation_maven_settings_resources">
+		<title>Resources</title>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>다운로드</para>
+					<para>
+						다음은 앞서 언급한 Maven의 settings.xml 파일이다. settings.xml 파일을 다운로드받은
+						후, [MAVEN 설치 폴더]/conf 내에 복사한다.
+					</para>
+					<table>
+						<title>Download List</title>
+						<tgroup cols="2">
+							<colspec colnum="1" colname="col1" colwidth="4*" />
+							<colspec colnum="2" colname="col2" colwidth="6*" />
+							<thead>
+								<row>
+									<entry align="center">Name</entry>
+									<entry align="center">Download</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry align="center">settings.xml</entry>
+									<entry align="center">
+										<ulink
+											url="http://dev.anyframejava.org/docs/anyframe/ide/2.0.0/reference/download/installation/settings.xml">Download</ulink>
+									</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+
+</chapter>

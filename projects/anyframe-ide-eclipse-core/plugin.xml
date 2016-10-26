@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+	<!--project / editor menu-->
+	<extension point="org.eclipse.ui.editors">
+		<editor
+        class="org.anyframe.ide.eclipse.core.editor.CodeGenEditor"
+        extensions="config"
+        icon="images/icon_anyframegen.gif"
+        id="org.anyframe.ide.eclipse.core.configurationEditor"
+        name="Anyframe IDE Editor"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution adaptable="true"
+			id="org.anyframe.ide.eclipse.core.Contribution1"
+			objectClass="org.eclipse.core.resources.IProject">
+			<action
+				class="org.anyframe.ide.eclipse.core.action.EditorPopupMenuAction"
+				enablesFor="1" icon="images/icon_anyframegen.gif"
+				id="org.anyframe.ide.eclipse.core.editor.ConfigurationEditorPopupMenuAction"
+				label="Anyframe IDE" menubarPath="anyframe/anyframeGroupSeparator">
+			</action>
+		</objectContribution>
+	</extension>
+
+	<extension point="org.eclipse.ui.decorators">
+		<decorator adaptable="true"
+			class="org.anyframe.ide.eclipse.core.action.EditorPopupMenuDecorator"
+			id="org.anyframe.ide.eclipse.core.action.EditorPopupMenuDecorator"
+			label="Anyframe IDE Decorator" lightweight="true" state="true">
+			<enablement>
+				<objectClass
+					name="org.eclipse.core.resources.IResource" />
+			</enablement>
+		</decorator>
+	</extension>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<category id="org.anyframe.ide.eclipse.core.category1" name="Anyframe">
+		</category>
+		<wizard category="org.anyframe.common.eclipse.core.wizards.anyframe"
+			class="org.anyframe.ide.eclipse.core.wizards.NewApplicationWizard"
+			id="org.anyframe.ide.eclipse.core.wizard1" name="Project"
+			icon="images/icon_project.gif" project="true">
+		</wizard>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.anyframe.common.eclipse.core.preferences.anyframe"
+			class="org.anyframe.ide.eclipse.core.preferences.IdePreferencesPage"
+			id="org.anyframe.common.eclipse.core.preferences.anyframe"
+			name="IDE">
+		</page>
+	</extension>
+
+	
+	<extension point="org.eclipse.help.toc">		
+		<toc
+			file="help/tocanyframegen.xml" primary="true">
+		</toc>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            id="org.anyframe.ide.eclipse.core.Maven2LaunchConfigurationType"
+            delegate="org.anyframe.ide.eclipse.core.command.maven.AnyframeMavenLaunchDelegate"
+            name="Maven Build"
+            modes="run" public="true"/>
+   </extension>
+</plugin>

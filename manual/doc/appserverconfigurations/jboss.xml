@@ -1,0 +1,73 @@
+<chapter id="app_server_configurations_jboss">
+	<title>JBoss</title>
+	<para>
+		Anyframe의 plugin이 설치된 샘플 어플리케이션을 JBoss에 deploy할 경우 주의해야 할 설정에 대해서 알아보자.
+	</para>
+	<section id="app_server_configurations_jboss_core">
+		<title>core plugin 사용 시</title>
+		<itemizedlist>
+			<listitem>
+				<para>
+					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리 중복으로 인한 오류 해결을 위해 
+					다음과 같이 일부 라이브러리를 제거한다.
+				</para>
+				<itemizedlist>
+					<listitem>
+						 <para>WEB-INF/lib 폴더내에 hibernate-validator-4.1.0.Final.jar 파일을 제거한다.</para>
+					</listitem>		
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>
+					7.1 Final : JBoss AS7에서는 별도 설정이 불필요하다.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section id="app_server_configurations_jboss_cxf">
+		<title>cxf plugin 사용 시</title>
+		<itemizedlist>
+			<listitem>
+				<para>
+					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리 중복으로 인한 오류 해결을 위해 
+					다음과 같이 설정을 추가한다.
+				</para>
+				<itemizedlist>
+					<listitem>
+						 <para>WEB-INF 폴더에 jboss-scanning.xml 파일 추가</para>
+						 <programlisting language="xml"><![CDATA[<scanning xmlns="urn:jboss:scanning:1.0" />]]></programlisting>
+					</listitem>		
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>
+					7.1 Final : JBoss AS7에서는 별도 설정이 불필요하다.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section id="app_server_configurations_jboss_cxfjaxws">
+		<title>cxf-jaxws plugin 사용 시</title>
+		<itemizedlist>
+			<listitem>
+				<para>
+					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리 중복으로 인한 오류 해결을 위해 
+					다음과 같이 일부 라이브러리를 제거한다.
+				</para>
+				<itemizedlist>
+					<listitem>
+						 <para>WEB-INF/lib 폴더내에 xmlbeans-2.5.0.jar 파일을 제거한다.</para>
+					</listitem>		
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>
+					7.1 Final : JBoss AS7에서는 별도 설정이 불필요하다.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			* JBoss 6.1.Final에서는 Hibernate Plugin은 테스트 되지 않았다.
+		</para>
+	</section>
+</chapter>

@@ -1,0 +1,10 @@
+<plugins>
+  <plugin>
+    <checked>false</checked>
+    <name>core</name>
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-core-pi</artifactId>
+    <version>1.0.0</version>
+    <latestVersion>1.0.0</latestVersion>
+  </plugin>
+</plugins>

@@ -156,8 +156,7 @@ public class DeployFileMojo extends AbstractPluginMojo {
 			// 3. check an artifact to deploy
 			if (targetFileName == null || "".equals(targetFileName)) {
 				targetFileName = project.getArtifactId() + "-"
-						+ project.getVersion() + "."
-						+ (isAssemblyProject ? ".jar" : project.getPackaging());
+						+ project.getVersion() + ".jar";
 			}
 
 			File file = new File(baseDir + CommonConstants.fileSeparator

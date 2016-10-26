@@ -1,0 +1,157 @@
+<chapter id="ctip_integration">
+	<title>Build Server 연계</title>
+	<para>
+	Anyframe IDE Editor에서 CTIP 서버(Hudson,Jenkins)을 연결하여 CTIP 서버에 job을 등록하고 job을 실행할 수 있는 연계 기능을 제공하는데, 이 기능은 Anyframe IDE CLI를 통해서는 제공되지 않으며 
+	Eclipse Plugin을 통해서 제공되는 기능이다. Anyframe IDE Eclipse Plugin을 통해 연계 작업을 수행하는 방법을 살펴보자. 
+	</para>
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+    <para>프로젝트를 선택한 후
+      우 클릭 &gt;&gt; <emphasis role="bold">Anyframe Tools &gt;&gt; Anyframe IDE</emphasis> 을
+      선택한다.</para>
+</listitem>
+<listitem>
+    <para>Anyframe IDE Editor에서 CTIP Tab을 선택하면 다음과 같은 항목이
+      보인다.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>CTIP URL</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-url.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>URL: CTIP 서버에 접근하기 위한 url</para></listitem>
+	      	<listitem><para>Configure...: CTIP 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>CTIP Configuration</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-configuration.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>MAVEN_HOME: 프로젝트에서 Maven 빌드도구를 사용하는 경우 보여지며, Maven이 설치된 경로로 설정이 되어야 한다.</para></listitem>
+	      	<listitem><para>ANT_HOME: 프로젝트에서 Ant 빌드도구를 사용하는 경우 보여지며,  Ant가 설치된 경로로 설정이 되어야 한다.</para></listitem>	      	
+	      	<listitem><para>CTIP URL in Email: Email Notification 시 사용할 url</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+       <listitem>
+          <para>All projects</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-allpjt.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Project name: ctip job name</para></listitem>
+	      	<listitem><para>Status: job 수행 상태로, job을 빌드 하는 중일 경우 building라는 메세지가 출력됨</para></listitem>
+	      	<listitem><para>New : 새로운 job 추가</para></listitem>
+	      	<listitem><para>Remove : job 삭제</para></listitem>
+	      	<listitem><para>Run : job 실행</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Project Details</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-pjtdetails.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Build Type* : build는 빌드를 수행하고 배포파일 생성, report는 build 기능에 JUnit test, Emma, Jdepend, PMD등의 reporting 기능도 수행</para>
+	      	<table>
+								<title>Build Type</title>
+	
+								<tgroup cols="3">
+									<colspec colnum="1" colname="col1" colwidth="1*"/>
+									<colspec colnum="2" colname="col2" colwidth="5*"/>
+									<colspec colnum="3" colname="col3" colwidth="1*"/>
+									<thead>
+										<row>
+											<entry align="center">Type</entry>
+											<entry align="center">build</entry>
+											<entry align="center">report</entry>
+										</row>
+									</thead>
+									<tbody>
+										<row>
+											<entry>
+												Ant(target)
+											</entry>
+											<entry align="center">
+												deploy
+											</entry>
+											<entry align="center">all</entry>
+										</row>
+										<row>
+											<entry>
+												Maven(goal)
+											</entry>
+											<entry align="center">
+												package
+											</entry>
+											<entry align="center">clean site package</entry>
+										</row>
+									</tbody>
+								</tgroup>
+							</table>	      	
+	      	</listitem>
+	      	<listitem><para>Project Name* : Hudson job name</para></listitem>
+	      	<listitem><para>Custom Workspace : workspace 경로지정</para></listitem>
+	      	<listitem><para>SCM Server Type : subversion, cvs, none 세가지 type 중 선택</para></listitem>
+	      	<listitem><para>SCM Server URL : SCM 서버 url</para></listitem>
+	      	<listitem><para>Poll SCM schedule : job 실행 스케쥴 정의</para></listitem>
+	      	<listitem><para>Build other project : 해당 job 수행 후 실행한 job의 이름 지정</para></listitem>
+	      </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      
+</listitem>
+<listitem>
+  <para>빌드를 수행할 job을 목록에서 선택하고 Run 버튼을 클릭하여 빌드를 수행한다.</para>
+
+      <para>빌드가 수행되면 Status는 "building"로 보여진다. 
+      빌드 Status에 대해 scheduling이 걸려있지 않기 때문에, <emphasis role="bold">빌드 결과는 refresh 버튼을 클릭하여 확인</emphasis>한다.</para>
+	  <para>빌드가 다 수행이 되면 refresh 버튼을 눌렀을때 빌드 결과에 대한 이미지가 보여진다. 성공은 파란색, 실패는 빨간색으로 나타난다.  </para>
+
+      <para>Web 타입 프로젝트의 경우 해당 Plugin과 샘플이 함께 설치되며, 해당 Plugin 적용된 샘플은
+      프로젝트를 실행시켜봄으로써 확인할 수 있다. Service 타입 프로젝트의 경우 해당 Plugin의 라이브러리만 설치된다.</para>
+</listitem>
+</orderedlist>  
+<note>
+<title>참고</title>
+<para>위 화면을 통해서 test case 가 없는 프로젝트에 대해서 job을 생성한 후 빌드했을 때,
+FAILURE가 발생한다. 이는 에러는 아니지만 test case에 대해 recording을 하기 위해,
+Junit, Emma Plugin이 출력하는 메세지이므로 test case를 사용하지 않을 경우 해당 Plugin을 사용하지 않도록 설정해주어야 한다.
+"[프로젝트명]_report" job의 configure에서 "Publish JUnit test result report", "Record Emma coverage report"
+action을 uncheck 한다.
+</para>
+</note> 
+
+<note>
+<title>Job 빌드 시 메모리 부족으로 Fail 한 경우</title>
+<para>등록한 job에 대해 빌드 수행시 다음과 같은 에러가 발생 할 경우 환경변수에 MAVEN_OPTS를 -Xmx1024m으로 추가 설정해준다.</para>
+
+<itemizedlist>
+  <listitem><para>환경변수 설정
+  <programlisting language="xml"><![CDATA[변수이름 : MAVEN_OPTS
+변수 값 : -Xmx1024m]]></programlisting>  
+  </para></listitem>
+  <listitem><para>콘솔에 출력된 에러로그
+  <programlisting language="xml"><![CDATA[Error occurred during initialization of VM
+Could not reserve enough space for object heap
+Could not create the Java virtual machine
+...]]></programlisting> 
+  </para></listitem>
+</itemizedlist>
+</note>   
+</chapter>

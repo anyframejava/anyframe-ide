@@ -245,7 +245,7 @@
 
 		<!-- 3.CheckStyle Report  -->
 		<taskdef resource="checkstyletask.properties" classpathref="anyframe.reportpath" />
-		<checkstyle config="${basedir}/.settings/anyframe/inspection/checkstyle/anyframe_checks.xml" failOnViolation="false">
+		<checkstyle config="${anyframe.home}/ide/inspection/checkstyle/anyframe_checks.xml" failOnViolation="false">
 			<fileset dir="${basedir}/src/main/java" includes="**/*.java" />
 			<formatter type="xml" toFile="${artifactsDir}/code-analysis/xml/checkstyle-report.xml" />
 			<classpath>
@@ -253,7 +253,7 @@
 				<fileset dir="${anyframe.repo}" includes="**/*.jar" excludes="**/${project.name}-${project.version}.jar" />
 			</classpath>
 		</checkstyle>
-		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="checkstyle-report.xml" style="${basedir}/.settings/anyframe/inspection/checkstyle/xslt/checkstyle-simple.xsl" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="checkstyle-report.xml" style="${anyframe.home}/ide/inspection/checkstyle/xslt/checkstyle-simple.xsl" />
 
 		<!-- 4.Architecture Review with JDepend Report -->
 		<jdepend format="xml" outputfile="${artifactsDir}/code-analysis/xml/jdepend-report.xml" classpathref="anyframe.reportpath">
@@ -268,8 +268,8 @@
 				<pathelement location="${basedir}/${bin.dir}" />
 			</classespath>
 		</jdepend>
-		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" extension=".dot" style="${basedir}/.settings/anyframe/inspection/jdepend/xslt/jdepend2dot.xsl" />
-		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" style="${basedir}/.settings/anyframe/inspection/jdepend/xslt/jdepend.xsl" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" extension=".dot" style="${anyframe.home}/ide/inspection/jdepend/xslt/jdepend2dot.xsl" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" style="${anyframe.home}/ide/inspection/jdepend/xslt/jdepend.xsl" />
 
 		<!-- 5.Code Duplication Detection Report -->
 		<taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="anyframe.reportpath" />
@@ -278,10 +278,10 @@
 				<include name="**/*.java" />
 			</fileset>
 		</cpd>
-		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="duplicated-code-report.xml" style="${basedir}/.settings/anyframe/inspection/pmd/xslt/cpdhtml.xslt" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="duplicated-code-report.xml" style="${anyframe.home}/ide/inspection/pmd/xslt/cpdhtml.xslt" />
 
 		<!-- 6. pmd -->
-		<property name="pmd.root" value="${basedir}/.settings/anyframe/inspection/pmd" />
+		<property name="pmd.root" value="${anyframe.home}/ide/inspection/pmd" />
 		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="anyframe.reportpath" />
 
 		<pmd shortFilenames="false" rulesetfiles="${pmd.root}/ruleset/pmd-ruleset-v3-3.2.3over.xml">

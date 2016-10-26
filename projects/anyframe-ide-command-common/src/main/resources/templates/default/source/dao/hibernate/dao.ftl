@@ -70,8 +70,8 @@ public class ${pojo.shortName}Dao extends HibernateDaoSupport {
 	public Page getPagingList(SearchVO searchVO) throws Exception {
         int pageIndex = searchVO.getPageIndex();
 
-        String searchCondition = StringUtil.nullToString(searchVO.getSearchCondition());
-        String searchKeyword = StringUtil.nullToString(searchVO.getSearchKeyword());
+        String searchCondition = StringUtil.null2str(searchVO.getSearchCondition());
+        String searchKeyword = StringUtil.null2str(searchVO.getSearchKeyword());
         String isNumeric = NumberUtil.isNumber(searchKeyword) ? "true" : "false";
         
         Object[] args = new Object[4];		            

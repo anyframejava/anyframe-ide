@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <logRotator>
+    <daysToKeep>-1</daysToKeep>
+    <numToKeep>5</numToKeep>
+    <artifactDaysToKeep>-1</artifactDaysToKeep>
+    <artifactNumToKeep>-1</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+#if (${scmType} == "subversion")
+  <scm class="hudson.scm.SubversionSCM">
+    <locations>
+      <hudson.scm.SubversionSCM_-ModuleLocation>
+        <remote>${scmUrl}</remote>
+      </hudson.scm.SubversionSCM_-ModuleLocation>
+    </locations>
+    <useUpdate>true</useUpdate>
+    <doRevert>false</doRevert>
+    <excludedRegions></excludedRegions>
+    <includedRegions></includedRegions>
+    <excludedUsers></excludedUsers>
+    <excludedRevprop></excludedRevprop>
+    <excludedCommitMessages></excludedCommitMessages>
+  </scm>
+#elseif (${scmType} == "cvs")
+  <scm class="hudson.scm.CVSSCM">
+    <cvsroot>${scmUrl}</cvsroot>
+    <module></module>
+    <canUseUpdate>true</canUseUpdate>
+    <flatten>true</flatten>
+    <isTag>false</isTag>
+    <excludedRegions></excludedRegions>
+  </scm>
+#else
+  <scm class="hudson.scm.NullSCM"/>
+#end  
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers class="vector">
+    <hudson.triggers.SCMTrigger>
+      <spec>${triggerSchedule}</spec>
+    </hudson.triggers.SCMTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+#if (${projectBuild} == "maven")
+  <builders>
+    <hudson.tasks.Maven>
+      <targets>clean site package</targets>
+      <mavenName>ANYFRAME_MAVEN</mavenName>
+      <usePrivateRepository>false</usePrivateRepository>
+    </hudson.tasks.Maven>
+  </builders>
+  <publishers>
+    <hudson.plugins.dry.DryPublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[DRY] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/target/cpd.xml</pattern>
+      <highThreshold>50</highThreshold>
+      <normalThreshold>25</normalThreshold>
+    </hudson.plugins.dry.DryPublisher>
+    <hudson.plugins.pmd.PmdPublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[PMD] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/target/pmd.xml</pattern>
+    </hudson.plugins.pmd.PmdPublisher>
+    <hudson.tasks.junit.JUnitResultArchiver>
+      <testResults>**/target/surefire-reports/*.xml</testResults>
+      <testDataPublishers/>
+    </hudson.tasks.junit.JUnitResultArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>${childProject}</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+    <hudson.plugins.emma.EmmaPublisher>
+      <includes>**/target/site/emma/coverage.xml</includes>
+      <healthReports>
+        <minClass>5</minClass>
+        <maxClass>10</maxClass>
+        <minMethod>5</minMethod>
+        <maxMethod>10</maxMethod>
+        <minBlock>5</minBlock>
+        <maxBlock>10</maxBlock>
+        <minLine>5</minLine>
+        <maxLine>10</maxLine>
+      </healthReports>
+    </hudson.plugins.emma.EmmaPublisher>
+    <hudson.plugins.checkstyle.CheckStylePublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[CHECKSTYLE] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/checkstyle-result.xml</pattern>
+    </hudson.plugins.checkstyle.CheckStylePublisher>
+  </publishers>
+#else
+  <builders>
+    <hudson.tasks.Ant>
+      <targets>all</targets>
+      <antName>ANYFRAME_ANT</antName>
+    </hudson.tasks.Ant>
+  </builders>    
+  <publishers>
+    <hudson.plugins.checkstyle.CheckStylePublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[CHECKSTYLE] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/checkstyle-report.xml</pattern>
+    </hudson.plugins.checkstyle.CheckStylePublisher>
+    <hudson.plugins.dry.DryPublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[DRY] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/duplicated-code-report.xml</pattern>
+      <highThreshold>50</highThreshold>
+      <normalThreshold>25</normalThreshold>
+    </hudson.plugins.dry.DryPublisher>
+    <hudson.plugins.pmd.PmdPublisher>
+      <threshold></threshold>
+      <newThreshold></newThreshold>
+      <failureThreshold></failureThreshold>
+      <newFailureThreshold></newFailureThreshold>
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <pluginName>[PMD] </pluginName>
+      <thresholdLimit>low</thresholdLimit>
+      <defaultEncoding></defaultEncoding>
+      <useDeltaValues>false</useDeltaValues>
+      <canRunOnFailed>false</canRunOnFailed>
+      <pattern>**/pmd-report.xml</pattern>
+    </hudson.plugins.pmd.PmdPublisher>
+    <hudson.tasks.junit.JUnitResultArchiver>
+      <testResults>**/target/output/test-results/xml/*.xml</testResults>
+      <testDataPublishers/>
+    </hudson.tasks.junit.JUnitResultArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>${childProject}</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+    <hudson.plugins.emma.EmmaPublisher>
+      <includes>**/coverage*.xml</includes>
+      <healthReports>
+        <minClass>5</minClass>
+        <maxClass>10</maxClass>
+        <minMethod>5</minMethod>
+        <maxMethod>10</maxMethod>
+        <minBlock>5</minBlock>
+        <maxBlock>10</maxBlock>
+        <minLine>5</minLine>
+        <maxLine>10</maxLine>
+      </healthReports>
+    </hudson.plugins.emma.EmmaPublisher>
+  </publishers>
+#end  
+  <buildWrappers/>
+  <customWorkspace>${customWorkspace}</customWorkspace>
+</project>

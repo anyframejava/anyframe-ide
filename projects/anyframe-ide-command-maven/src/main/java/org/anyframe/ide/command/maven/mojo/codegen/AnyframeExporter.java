@@ -111,7 +111,7 @@ public class AnyframeExporter extends AppFuseExporter {
 		for (AnyframeTemplateData template : templates) {
 
 			if (template.getType().equals("service")) {
-				if (template.getDao() == null || template.getDao().length() == 0) {
+				if (template.getDao() == null) {
 					configureExporter(template.getFtl(), template.getSrc(),
 							template.isShare()).start();
 				}
@@ -240,11 +240,7 @@ public class AnyframeExporter extends AppFuseExporter {
 		exporter.getProperties().put("testconfigxml", testConfigXml);
 
 		if (usePreviousData) {
-			if(this.dbdata != null){
-				exporter.getProperties().put("dbdata", this.dbdata);
-			}
-			else
-				log.warn("dbdata is null. You should check the template file order of template.config file.");
+			exporter.getProperties().put("dbdata", this.dbdata);
 		} else {
 			AnyframeDBData dbdata = new AnyframeDBData(getCfg2JavaTool(),
 					getCfg2HbmTool(), exporter);

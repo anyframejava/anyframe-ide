@@ -153,14 +153,12 @@ public interface CommonConstants {
 	String SRC_MAIN_WEBAPP_SAMPLE = SRC_MAIN_WEBAPP + "sample" + fileSeparator;
 
 	String DB_SCRIPTS = fileSeparator + "db" + fileSeparator + "scripts";
-	String DB_RESOURCES = PLUGIN_RESOURCES + "/db/resources/";
+	String DB_RESOURCES = PLUGIN_RESOURCES + fileSeparator + "db"
+			+ fileSeparator + "resources" + fileSeparator;
 	
 	String PLUGIN_ASPECT_PACKAGE = "common" + fileSeparator + "aspect" + fileSeparator;
 	String ORIGIN_PLUGIN_ASPECT_PACKAGE = "org"+ fileSeparator 
 			+ "anyframe" + fileSeparator + "plugin" + fileSeparator+ PLUGIN_ASPECT_PACKAGE;
-	
-	String TEMPLATE_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "templates";
-	String INSPECTION_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "inspection";
 
 	// 9. others
 	String EXT_JAR = "jar";

@@ -203,10 +203,10 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			List<Exclude> excludeResources = resource.getExcludes();
 			List<String> excludes = new ArrayList<String>();
 			List<String> replaces = new ArrayList<String>();
-
+			
 			for (Exclude exclude : excludeResources) {
 				excludes.add(exclude.getName());
-				if (exclude.isMerged()) {
+				if(exclude.isMerged()){
 					replaces.add(exclude.getName());
 				}
 			}
@@ -214,29 +214,27 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			List<String> templates = FileUtil.findFiles(fileNames, baseDir
 					+ CommonConstants.fileSeparator + resource.getDir(),
 					includes, excludes);
-
+			
 			// 2.3 make directory for copying plugin resource
 			getOutput(baseDir, targetDir, resource.getDir(), "",
 					resource.isPackaged(), packageName).mkdirs();
 			getLogger().debug("Copying resource " + resource);
-
+			
 			// 2.4 merge template and copy files to output directory
 			processTemplate(baseDir, targetDir, resource.getDir(),
 					pluginInfo.getName(), packageName, projectName,
 					resource.isPackaged(), resource.isFiltered(), templates);
-
+			
 			// 2.5 merge file
-			if (replaces.size() > 0) {
-
-				List<String> replaceFiles = FileUtil.findFiles(
-						fileNames,
-						baseDir + CommonConstants.fileSeparator
-								+ resource.getDir(), replaces, null);
-
+			if(replaces.size() > 0){
+				
+				List<String> replaceFiles = FileUtil.findFiles(fileNames, baseDir
+						+ CommonConstants.fileSeparator + resource.getDir(),
+						replaces, null);
+				
 				processReplace(baseDir, targetDir, resource.getDir(),
 						pluginInfo.getName(), packageName, projectName,
-						resource.isPackaged(), resource.isFiltered(),
-						replaceFiles);
+						resource.isPackaged(), resource.isFiltered(), replaceFiles);
 				getLogger().debug("Merged " + replaces.size() + " files");
 			}
 		}
@@ -277,6 +275,7 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			}
 		}
 	}
+	
 
 	/**
 	 * merge a plugin resource and copy a merged file to target folder
@@ -312,10 +311,10 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 				CommonConstants.fileSeparator);
 		resourceDir = StringUtils.replace(resourceDir, "\\",
 				CommonConstants.fileSeparator);
-
+		
 		while (templateItr.hasNext()) {
 			String template = templateItr.next();
-
+			
 			template = StringUtils.replaceOnce(template, baseDir
 					+ CommonConstants.fileSeparator + resourceDir, "");
 			File output = getOutput(baseDir, targetDir, resourceDir, template,
@@ -330,9 +329,9 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			if (filtered)
 				mergeTemplate(output, packageName, projectName);
 		}
-
+		
 	}
-
+	
 	private void processReplace(String baseDir, File targetDir,
 			String resourceDir, String pluginName, String packageName,
 			String projectName, boolean packaged, boolean filtered,
@@ -343,32 +342,32 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 				CommonConstants.fileSeparator);
 		resourceDir = StringUtils.replace(resourceDir, "\\",
 				CommonConstants.fileSeparator);
-
-		if (replaceFiles.size() > 0) {
+		
+		if(replaceFiles.size() > 0){
 			Iterator<String> replaceItr = replaceFiles.iterator();
-			while (replaceItr.hasNext()) {
-
+			while (replaceItr.hasNext()){
+				
 				String replaceFileName = replaceItr.next();
-
-				replaceFileName = StringUtils.replaceOnce(replaceFileName,
-						baseDir + CommonConstants.fileSeparator + resourceDir,
-						"");
-				File output = getOutput(baseDir, targetDir, resourceDir,
-						replaceFileName, packaged, packageName);
-
+				
+				replaceFileName = StringUtils.replaceOnce(replaceFileName, baseDir
+						+ CommonConstants.fileSeparator + resourceDir, "");
+				File output = getOutput(baseDir, targetDir, resourceDir, replaceFileName,
+						packaged, packageName);
+				
 				output.getParentFile().mkdirs();
-
+				
 				copyFile(baseDir + CommonConstants.fileSeparator + resourceDir,
 						replaceFileName, output);
-
+				
 				writeFileForReplaceRegion(pluginName, output);
-
+				
 				if (filtered)
 					mergeTemplate(output, packageName, projectName);
 			}
 		}
-
+		
 	}
+	
 
 	/**
 	 * write a file which has the contents between plugin name start tag and end
@@ -385,14 +384,15 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			throws Exception, FileNotFoundException {
 		// 1. find plugin name start, end tags
 		Map<String, String> tokenMap = new HashMap<String, String>();
-
-		if (output.getName().endsWith("." + CommonConstants.EXT_JAVA)) {
-			tokenMap = FileUtil.findReplaceRegionOfClass(new FileInputStream(
-					output), pluginName);
-		} else {
-			tokenMap = FileUtil.findReplaceRegion(new FileInputStream(output),
-					pluginName);
-
+		
+		if(output.getName().endsWith("." + CommonConstants.EXT_JAVA)){
+			tokenMap = FileUtil.findReplaceRegionOfClass(
+					new FileInputStream(output), pluginName);
+		}
+		else{
+			tokenMap = FileUtil.findReplaceRegion(
+					new FileInputStream(output), pluginName);
+			
 		}
 		// 2. get contents between start tag and end tag
 		if (tokenMap.size() == 1) {
@@ -402,6 +402,7 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		} else if (tokenMap.size() == 0)
 			FileUtil.deleteFile(output);
 	}
+
 
 	/**
 	 * generate plugin.xml file using PluginInfo object which is from
@@ -561,35 +562,33 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		// plugin-build.xml
 		List<Dependency> samplePjtDependencies = samplePjtPom.getDependencies();
 		Map<String, Dependency> samplePjtDependenciesMap = this.pluginPomManager
-				.convertDependencyList(samplePjtDependencies);
-
-		if (!pluginInfo.getName().equals(CommonConstants.CORE_PLUGIN)) {
+			.convertDependencyList(samplePjtDependencies);
+		
+		if(!pluginInfo.getName().equals(CommonConstants.CORE_PLUGIN)){
 			List<Dependency> dependentPluginDependencies = new ArrayList<Dependency>();
 
 			// get all dependent plugin dependencies
 			Iterator<String> keyItr = dependentPluginJars.keySet().iterator();
 			while (keyItr.hasNext()) {
-				dependentPluginDependencies
-						.addAll(this.pluginPomManager
-								.getDependencies(dependentPluginJars.get(keyItr
-										.next())));
+				dependentPluginDependencies.addAll(this.pluginPomManager
+						.getDependencies(dependentPluginJars.get(keyItr.next())));
 			}
 
-			// plugin dependencies = samplePjtDependencies -
-			// dependentPluginDependencies
+			// plugin dependencies = samplePjtDependencies - dependentPluginDependencies
 			Map<String, Dependency> dependentPluginDependenciesMap = this.pluginPomManager
 					.convertDependencyList(dependentPluginDependencies);
-
+			
 			Iterator<String> itr = dependentPluginDependenciesMap.keySet()
 					.iterator();
 			while (itr.hasNext()) {
 				String key = itr.next();
-				if (samplePjtDependenciesMap.containsKey(key)) {
+				if (samplePjtDependenciesMap.containsKey(key)){
 					samplePjtDependenciesMap.remove(key);
 				}
-
+					
 			}
 		}
+		
 
 		// extract interceptor's dependencies with 'interceptor' scope
 		if (pluginInfo.getInterceptor() != null) {
@@ -617,8 +616,8 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			pluginResourcesPom.setProperties(samplePjtPom.getProperties());
 		}
 
-		List<Dependency> list = pluginResourcesPom.getDependencies();
-
+		List<Dependency> list  = pluginResourcesPom.getDependencies();
+	
 		// write new pom.xml
 		File newpomXml = new File(baseDir + CommonConstants.fileSeparator
 				+ pluginResourcesDir, Constants.ARCHETYPE_POM);
@@ -855,22 +854,24 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 
 		// 3. in case of java files, replace sharp character
 		if (fileName.endsWith("." + CommonConstants.EXT_JAVA)) {
-			// replaceMap.put("#{", "${" + CommonConstants.VELOCITY_SHARP_BRACE
-			// + "}");
-			// replaceMap.put("#", "${" + CommonConstants.VELOCITY_SHARP + "}");
-
+			replaceMap.put("#{", "${" + CommonConstants.VELOCITY_SHARP_BRACE
+					+ "}");
+			replaceMap.put("#", "${" + CommonConstants.VELOCITY_SHARP + "}");
+			
 			String keyword = CommonConstants.VELOCITY_SUPPORT;
-			Map<String, String> tokenMap = FileUtil.findReplaceRegionOfClass(
+			Map<String, String> tokenMap = FileUtil.findReplaceRegion(
 					new FileInputStream(output), keyword);
 			Iterator<String> itr = tokenMap.keySet().iterator();
-
+			
+			
 			while (itr.hasNext()) {
 				String token = itr.next();
 
 				String value = tokenMap.get(token);
 				String replaceValue = replaceEscapeChar(value);
 
-				String startToken = "//" + keyword + "-" + token + "-START";
+				String startToken = "//" + keyword + "-" + token
+						+ "-START";
 				String endToken = "//" + keyword + "-" + token + "-END";
 
 				FileUtil.replaceFileContent(output, startToken, endToken,
@@ -878,7 +879,7 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 								+ replaceValue + "\")${" + token + "}",
 						isPretty);
 			}
-
+			
 		}
 
 		// 4. replace file content
@@ -977,7 +978,7 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			final File output) throws Exception {
 		File testFile = new File(resourceDir, template);
 		FileUtil.copyFile(testFile, output);
-
+		
 	}
 
 }

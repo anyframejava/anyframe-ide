@@ -2,7 +2,7 @@
   <description>Maven is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project&apos;s build, reporting and documentation from a central piece of information.</description>
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>anyframe-maven-plugin</artifactId>
-  <version>4.5.1</version>
+  <version>4.5.1-SNAPSHOT</version>
   <goalPrefix>anyframe</goalPrefix>
   <isolatedRealm>false</isolatedRealm>
   <inheritedByDefault>true</inheritedByDefault>
@@ -1185,15 +1185,15 @@ dependent libraries of a current pom file</description>
     </dependency>
     <dependency>
       <groupId>anyframe</groupId>
-      <artifactId>anyframe-ide-command-cli</artifactId>
+      <artifactId>anyframe.command.cli</artifactId>
       <type>jar</type>
-      <version>2.2.1</version>
+      <version>4.5.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.anyframe</groupId>
       <artifactId>anyframe-ide-command-common</artifactId>
       <type>jar</type>
-      <version>2.2.1</version>
+      <version>4.5.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>ant</groupId>

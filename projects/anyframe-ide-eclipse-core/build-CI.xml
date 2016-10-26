@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================
+     Nov 17, 2009 10:45:03 AM
+
+     ANT BUILD PROJECT: org.anyframe.ide.eclipse.core
+     performs nightly build with Anyframe CTIP environment.
+     
+     AUTHOR: Park, Sooyeon (sooyeon.park@samsung.com)
+     TARGET PRODUCT: AnyframeIDE
+     ====================================================================== -->
+
+<project name="anyframe.ide.eclipse.core" default="make.bundle.dist" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	
+	<!-- Plug-in Information -->
+	<property name="bundle.id" value="org.anyframe.ide.eclipse.core" />
+	<property name="bundle.version" value="2.2.1.RC1" />
+	<property name="bundle.about" location="${basedir}/about" />
+	<property name="bundle.src" location="${basedir}/src/main/java" />
+	<property name="bundle.src.resources" location="${basedir}/src/main/resources" />
+	<property name="bundle.doc" location="${basedir}/help" />
+	<property name="bundle.lib" location="${basedir}/lib" />
+	<property name="bundle.build" location="${basedir}/build" />
+	<property name="bundle.dist" location="${basedir}/dist" />
+	<property name="bundle.dist.jar" location="${basedir}/dist/anyframe/eclipse/plugins" />
+	<property name="bundle.dist.approot" location="${basedir}/dist/anyframe" />
+	
+	<!-- Eclipse Information -->
+	<property name="eclipse.home" location="${eclipse.root}" />
+	<property name="eclipse.lib" location="${eclipse.home}/plugins" />
+	
+	<!-- Pattern Set Information -->
+	<patternset id="lib.pattern">
+		<include name="**/*.jar" />
+		<exclude name="**/.svn" />
+		<exclude name="**/.svn/*" />
+	</patternset>
+	<patternset id="html.pattern">
+		<include name="**/*.html" />
+		<include name="**/*.htm" />
+		<exclude name="**/.svn" />
+		<exclude name="**/.svn/*" />
+	</patternset>
+	
+	<!-- Initialize -->
+	<target name="init.build.process" description="Initialize the build process.">
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Cleaning up and initializing the existing resources.</echo>
+		<echo>************************************************************</echo>
+		<echo />
+		<tstamp />
+		<delete dir="${bundle.dist}" />
+		<delete dir="${bundle.build}" />
+		<mkdir dir="${bundle.build}" />
+		<mkdir dir="${bundle.dist}" />
+		<mkdir dir="${bundle.dist.jar}" />
+		<mkdir dir="${basedir}/target" />
+		<!-- ${bundle.dist.jar} substitutes for ${bundle.dist}+subfolders
+		<mkdir dir="${bundle.dist}/anyframe" />
+		<mkdir dir="${bundle.dist}/anyframe/eclipse" />
+		<mkdir dir="${bundle.dist}/anyframe/eclipse/plugins" />
+		-->
+	</target>
+	
+	<!-- Compile -->
+	<target name="compile.bundle.resources" depends="init.build.process" description="Compile bundle resources.">
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Compiling bundle java codes.</echo>
+		<echo>************************************************************</echo>
+		<echo />
+		<javac srcdir="${bundle.src}" destdir="${bundle.build}" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath>
+				<fileset dir="${eclipse.lib}" />
+				<fileset dir="${bundle.lib}" />
+			</classpath>
+		</javac>
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Compiling bundle resources.</echo>
+		<echo>************************************************************</echo>
+		<echo />		
+		<copy todir="${bundle.build}">
+  			<fileset dir="${bundle.src.resources}">
+  				<exclude name="**/.svn/*.*" />
+  			</fileset>
+ 		</copy>  
+</target>
+	
+	<!-- Check package structure and Add additional package structure -->
+	<target name="check.bundle.structure" depends="compile.bundle.resources">
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Checking bundle package structure.</echo>
+		<echo>************************************************************</echo>
+		<echo />
+		<available file="${basedir}/lib" type="dir" property="lib.available" />
+		<antcall target="create.lib" />
+		<available file="${basedir}/xsds" type="dir" property="xsds.available" />
+		<antcall target="create.xsds" />
+		<available file="${basedir}/dtds" type="dir" property="dtds.available" />
+		<antcall target="create.dtds" />
+		<available file="${basedir}/icons" type="dir" property="icons.available" />
+		<antcall target="create.icons" />
+		<available file="${basedir}/template" type="dir" property="template.available" />
+		<antcall target="create.template" />
+		<available file="${basedir}/help" type="dir" property="doc.available" />
+		<antcall target="create.doc" />
+	</target>
+	
+	<target name="create.lib" if="lib.available" description="Create a lib directory and copy its contents if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding lib.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/lib" /> -->
+		<copy todir="${bundle.build}/lib">
+			<fileset dir="${bundle.lib}">
+				<patternset refid="lib.pattern" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="create.xsds" if="xsds.available" description="Create a xsds directory and copy its contents if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding XSD.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/xsds" /> -->
+		<copy todir="${bundle.build}/xsds">
+			<fileset dir="${basedir}/xsds" includes="*.xsd" />
+		</copy>
+	</target>
+	
+	<target name="create.dtds" if="dtds.available" description="Create a dtds directory and copy its contents if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding DTD.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/dtds" /> -->
+		<copy todir="${bundle.build}/dtds">
+			<fileset dir="${basedir}/dtds" includes="*.dtd" />
+		</copy>
+	</target>
+	
+	<target name="create.icons" if="icons.available" description="Create an icons directory and copy its contents if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding icons.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/icons" /> -->
+		<copy todir="${bundle.build}/icons">
+			<fileset dir="${basedir}/icons" />
+		</copy>
+	</target>
+	
+	<target name="create.template" if="template.available" description="Create a template directory if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding template.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/template" /> -->
+		<copy todir="${bundle.build}/template">
+			<fileset dir="${basedir}/template" />
+		</copy>
+	</target>
+	
+	<target name="create.doc" if="doc.available" description="Create a doc directory if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding doc.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<!-- <mkdir dir="${bundle.build}/doc" /> -->
+		<copy todir="${bundle.build}/help">
+			<fileset dir="${basedir}/help" />
+		</copy>
+	</target>
+	
+	<!-- Target: Make a jar -->
+	<target name="make.bundle.jar" depends="compile.bundle.resources,check.bundle.structure" description="Make jar archive file(s) for executables.">
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Making jar archive file(s) for executables.</echo>
+		<echo>************************************************************</echo>
+		<echo />
+		<copy todir="${bundle.build}">
+			<fileset dir="${basedir}">
+				<include name="plugin.xml"/>
+				<include name="help/tocanyframegen.xml"/>
+			</fileset>
+		</copy>
+		<jar jarfile="${bundle.dist}/anyframe/eclipse/plugins/${bundle.id}_${bundle.version}.jar" basedir="${bundle.build}" manifest="${basedir}/META-INF/MANIFEST.MF" />
+	</target>
+	
+	<!-- Target: Make a dist -->
+	<target name="make.bundle.dist" depends="make.bundle.jar" description="Make a zip archive file for distribution.">
+		<echo>************************************************************</echo>
+		<echo>TARGET DESCRIPTION:</echo>
+		<echo>Making a zip archive file for distribution.</echo>
+		<echo>************************************************************</echo>
+		<echo />
+		<available file="${basedir}/about" type="dir" property="about.available" />
+		<antcall target="create.notes" />
+		<zip destfile="${bundle.dist}/${bundle.id}_${bundle.version}.${DSTAMP}${TSTAMP}.zip" basedir="${bundle.dist}" />		
+		<delete dir="${bundle.dist.approot}" />
+		<unzip src="${bundle.dist}/${bundle.id}_${bundle.version}.${DSTAMP}${TSTAMP}.zip" dest="${bundle.dist}"/>
+		<!-- deploy jar file to remote repository -->
+		<artifact:pom id="eclipse.plugin.pom" file="pom.xml" />
+		<artifact:install-provider artifactId="wagon-webdav" version="1.0-beta-2"/>
+		<artifact:deploy file="${bundle.dist}/anyframe/eclipse/plugins/${bundle.id}_${bundle.version}.jar">
+		  <remoteRepository url="file:/E:/Repo/maven/repo">
+		  	<authentication username="${env.MAVEN_REPO_USERID}" password="${env.MAVEN_REPO_PASSWORD}"/>
+		  </remoteRepository>
+		  <pom refid="eclipse.plugin.pom"/>
+		</artifact:deploy>
+	</target>
+	<target name="create.notes" if="about.available" description="Add information files onto the distributable files if required.">
+		<echo>------------------------------------------------------------</echo>
+		<echo>Adding license/notice and release notes.</echo>
+		<echo>------------------------------------------------------------</echo>
+		<echo />
+		<copy todir="${bundle.dist.approot}">
+			<fileset dir="${bundle.about}" includes="*.html" />
+			<fileset dir="${bundle.about}" includes="*.txt" />
+		</copy>
+	</target>
+</project>

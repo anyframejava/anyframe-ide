@@ -17,7 +17,6 @@ package org.anyframe.ide.command.common;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -57,7 +56,6 @@ import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -874,7 +872,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 				ZipEntry zipEntry = zipFile.getEntry(template);
 				InputStream inputStream = zipFile.getInputStream(zipEntry);
-				
+
 				template = StringUtils.replaceOnce(template,
 						resourceFolderName, "");
 
@@ -882,7 +880,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				outputFile.getParentFile().mkdirs();
 				OutputStreamWriter converter = null;
 				try {
-					IOUtil.copy(inputStream, new FileOutputStream(outputFile));
+					converter = new OutputStreamWriter(new FileOutputStream(
+							outputFile));
+					IOUtil.copy(inputStream, converter, "UTF-8");
 				} finally {
 					IOUtil.close(inputStream);
 					IOUtil.close(converter);
@@ -968,16 +968,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			// 4. add a installed plugin name to welcome file
 			processWelcomeFile(targetDir, pluginInfo.getName(),
 					pluginInfo.getVersion(), pluginJar, encoding);
-			
-			// 5. change db information of context.properties file.
-			if(pluginInfo.getName().equals(CommonConstants.CORE_PLUGIN)){
-				processDBProperties(pio, targetDir);
-				processDBLibs(pio, pio.readValue(CommonConstants.PROJECT_BUILD_TYPE), pio.readValue(CommonConstants.DB_TYPE), baseDir);
-			}
 
 			// 5. replace plugin resources by db type
-			// processDBResource((String) context.get("dbType"), targetDir,
-			// pluginInfo.getName(), pluginJar, fileNames);
+			processDBResource((String) context.get("dbType"), targetDir,
+					pluginInfo.getName(), pluginJar, fileNames);
 
 			// 6. create custom table, insert data to DB
 			processInitialData(pio, targetDir, pluginInfo.getName(), pluginZip,
@@ -997,332 +991,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				pluginInfo.getName(), excludeSrc);
 	}
 
-	/**
-	 * change context.properties file
-	 * 
-	 * @param pio
-	 *            properties includes db information
-	 * @param baseDir
-	 *            current project folder
-	 */
-	private void processDBProperties(PropertiesIO pio, File targetDir)
-			throws Exception {
-		getLogger().debug(
-				"Call processDBProperties() of DefaultPluginDBChanger");
-
-		File dbPropertiesFile = null;
-		try {
-			dbPropertiesFile = new File(targetDir,
-					CommonConstants.SRC_MAIN_RESOURCES
-							+ CommonConstants.CONTEXT_PROPERTIES);
-
-			if (!dbPropertiesFile.exists()) {
-				getLogger()
-						.warn("'"
-								+ dbPropertiesFile.getAbsolutePath()
-								+ "' is not found. Please check a location of your project.");
-
-				return;
-			}
-
-			PropertiesIO contextPio = new PropertiesIO(targetDir
-					+ CommonConstants.SRC_MAIN_RESOURCES
-					+ CommonConstants.CONTEXT_PROPERTIES);
-
-			contextPio.setProperty(CommonConstants.APP_DB_DRIVER_CLASS,
-					pio.readValue(CommonConstants.DB_DRIVER_CLASS));
-			contextPio.setProperty(CommonConstants.APP_DB_URL,
-					pio.readValue(CommonConstants.DB_URL));
-			contextPio.setProperty(CommonConstants.APP_DB_USERNAME,
-					pio.readValue(CommonConstants.DB_USERNAME));
-			contextPio.setProperty(CommonConstants.APP_DB_PASSWORD,
-					pio.readValue(CommonConstants.DB_PASSWORD));
-
-			contextPio.write();
-		} catch (Exception e) {
-			getLogger().warn(
-					"Replacing db properties in "
-							+ dbPropertiesFile.getAbsolutePath()
-							+ " is skipped. The reason is a '" + e.getMessage()
-							+ "'.");
-		}
-	}
-	
-	/**
-	 * change .classpath file and process library. if current project is based
-	 * on maven, change pom.xml file. if current project is based on ant, copy
-	 * library to specific target
-	 * 
-	 * @param pio
-	 *            properties includes db information
-	 * @param buildType
-	 *            build type of project ('maven' or 'ant')
-	 * @param dbType
-	 *            db type (hsqldb, oracle, sybase, ...)
-	 * @param baseDir
-	 *            current project folder
-	 */
-	private void processDBLibs(PropertiesIO pio, String buildType,
-			String dbType, String baseDir) throws Exception {
-		// 1. maven --> pom.xml, .classpath (maven)
-		if (buildType
-				.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-			String groupId = pio.readValue(CommonConstants.DB_GROUPID);
-			String artifactId = pio.readValue(CommonConstants.DB_ARTIFACTID);
-			String version = pio.readValue(CommonConstants.DB_VERSION);
-			processPom(baseDir, groupId, artifactId, version);
-
-			return;
-		}
-		// 2. ant --> .classpath, copy
-		String driverPath = pio.readValue(CommonConstants.DB_DRIVER_PATH);
-		copyDBLibs(pio, baseDir, driverPath);
-
-		String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
-		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			changeClasspath(pio, baseDir, dbType,
-					getDBDriverPath(baseDir, driverPath));
-		}
-	}
-	
-
-	/**
-	 * change pom.xml file
-	 * 
-	 * @param baseDir
-	 *            current project folder
-	 * @param groupId
-	 *            groupId of db library
-	 * @param artifactId
-	 *            artifactId of db library
-	 * @param version
-	 *            version of db library
-	 */
-	@SuppressWarnings("unchecked")
-	private void processPom(String baseDir, String groupId, String artifactId,
-			String version) throws Exception {
-		// 1. get pom file
-		File pomFile = new File(baseDir, Constants.ARCHETYPE_POM);
-
-		// 2. add dependencies of pom file
-		if (pomFile.exists()) {
-			try {
-				Model model = pluginPomManager.readPom(pomFile);
-
-				// 2.1 process dependencies
-				List<Dependency> dependencies = model.getDependencies();
-
-				boolean isDefined = false;
-				for (int i = 0; i < dependencies.size(); i++) {
-					Dependency dependency = dependencies.get(i);
-					if (dependency.getGroupId().equals(groupId)
-							&& dependency.getArtifactId().equals(artifactId)
-							&& dependency.getVersion().equals(version)) {
-						isDefined = true;
-						break;
-					}
-				}
-
-				Dependency dependency = new Dependency();
-				dependency.setGroupId(groupId);
-				dependency.setArtifactId(artifactId);
-				dependency.setVersion(version);
-
-				if (!isDefined) {
-					model.addDependency(dependency);
-				}
-
-				// 2.2 process build-plugin dependencies
-				Map<String, Plugin> buildPluginMap = model.getBuild()
-						.getPluginsAsMap();
-
-				String anyframePlugin = "org.codehaus.mojo:anyframe-maven-plugin";
-
-				if (buildPluginMap.containsKey(anyframePlugin)) {
-					Plugin plugin = buildPluginMap.get(anyframePlugin);
-
-					List<Dependency> pluginDependencies = new ArrayList<Dependency>();
-					pluginDependencies.add(dependency);
-					plugin.setDependencies(pluginDependencies);
-				}
-
-				pluginPomManager.writePom(model, pomFile, pomFile);
-			} catch (Exception e) {
-				getLogger().warn(
-						"Processing a pom.xml of current project is skipped. The reason is a '"
-								+ e.getMessage() + "'.");
-			}
-		}
-	}
-
-	/**
-	 * copy db library to specific folder ('web' type project ->
-	 * baseDir/src/main/webapp/WEB-INF/lib, 'service' type project ->
-	 * baseDir/lib)
-	 * 
-	 * @param pio
-	 *            properties includes db information
-	 * @param baseDir
-	 *            current project folder
-	 * @param driverPath
-	 *            path includes db library
-	 */
-	private void copyDBLibs(PropertiesIO pio, String baseDir, String driverPath)
-			throws Exception {
-		driverPath = driverPath.trim();
-
-		File dbLibFile = new File(driverPath);
-		if (!dbLibFile.exists()) {
-			dbLibFile = new File(baseDir, driverPath);
-		}
-
-		if (!dbLibFile.exists()) {
-			return;
-		}
-
-		String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
-
-		// 1. if project.type is web, then copy jdbc jar into WEB-INF/lib folder
-		if (projectType.equals(CommonConstants.PROJECT_TYPE_WEB)) {
-			String projectName = pio.readValue(CommonConstants.PROJECT_NAME);
-			if (projectName != null && projectName.trim().length() > 0) {
-				try {
-					String inDestinationDirectory = baseDir
-							+ CommonConstants.SRC_MAIN_WEBAPP_LIB;
-					FileUtil.copyJars(
-							pio.readValue(CommonConstants.DB_DRIVER_PATH),
-							inDestinationDirectory, false);
-				} catch (Exception e) {
-					getLogger()
-							.warn("Copying jdbc jar file into /src/main/webapp/WEB-INF/lib is skipped. The reason is jdbc jar file is not found in "
-									+ driverPath + ".");
-				}
-			}
-			// 2. if project.type is service, then copy jdbc jar into [project
-			// home]/lib folder
-		} else if (projectType.equals(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			try {
-				String inDestinationDirectory = baseDir
-						+ CommonConstants.fileSeparator + "lib";
-				FileUtil.copyJars(
-						pio.readValue(CommonConstants.DB_DRIVER_PATH),
-						inDestinationDirectory, false);
-			} catch (Exception e) {
-				// ignore Exception
-				getLogger()
-						.warn("Copying jdbc jar file into /lib is skipped. The reason is jdbc jar file is not found in "
-								+ driverPath + ".");
-			}
-		}
-	}
-
-	/**
-	 * make classpath information (in case of 'service' type project)
-	 * 
-	 * @param baseDir
-	 *            current project folder
-	 * @param driverPath
-	 *            path includes db library
-	 * @return db library path
-	 */
-	private String getDBDriverPath(String baseDir, String driverPath)
-			throws Exception {
-		int idx = driverPath.lastIndexOf("/");
-		if (idx == -1) {
-			idx = driverPath.lastIndexOf("\\");
-		}
-
-		String fileName = "";
-		if (idx != -1) {
-			fileName = driverPath.substring(idx + 1);
-			return baseDir + "/" + "lib" + "/" + fileName;
-		}
-
-		return baseDir + "/" + "lib" + "/" + driverPath;
-	}
-	
-	/**
-	 * change .classpath file
-	 * 
-	 * @param pio
-	 *            properties includes db information
-	 * @param baseDir
-	 *            current project folder
-	 * @param dbType
-	 *            db type (hsqldb, oracle, sybase, ...)
-	 * @param dbDriverPath
-	 *            path includes db library
-	 */
-	private void changeClasspath(PropertiesIO pio, String baseDir,
-			String dbType, String dbDriverPath) throws Exception {
-		try {
-			// 1. find .classpath file
-			File classpathFile = new File(baseDir, ".classpath");
-
-			// 2. remove previous driver jar path
-			FileUtil.removeFileContent(classpathFile, "Driver jar path", "",
-					true);
-
-			if (dbType.equalsIgnoreCase("hsqldb")) {
-				// 3. add current driver jar path
-				String replaceString = "<!--Driver jar path-START-->\n"
-						+ "<!--Driver jar path-END-->";
-				FileUtil.addFileContent(classpathFile,
-						"<!--Driver jar path here-->",
-						"<!--Driver jar path here-->\n" + replaceString, true);
-
-				return;
-			}
-
-			int idx = dbDriverPath.lastIndexOf("/");
-			if (idx == -1) {
-				idx = dbDriverPath.lastIndexOf("\\");
-			}
-
-			String dbLibFileName = dbDriverPath.substring(idx + 1);
-
-			// 3. add current driver jar path
-			String replaceString = "<!--Driver jar path-START-->\n"
-					+ "<classpathentry kind=\"lib\" path=\"lib/"
-					+ dbLibFileName + "\"/>\n" + "<!--Driver jar path-END-->";
-			FileUtil.addFileContent(classpathFile,
-					"<!--Driver jar path here-->",
-					"<!--Driver jar path here-->\n" + replaceString, true);
-		} catch (Exception e) {
-			// ignore Exception
-			catchMsg(e, "Replacing driver jar path", "/.classpath",
-					"<!--Driver jar path here-->", baseDir);
-		}
-		
-	}
-	
-	/**
-	 * logging warning message
-	 * 
-	 * @param e
-	 *            exception
-	 * @param exceptionMsg
-	 *            exception message
-	 * @param fileName
-	 *            file name which have problem
-	 * @param tokenName
-	 * @param path
-	 */
-	public void catchMsg(Exception e, String exceptionMsg, String fileName,
-			String tokenName, String path) {
-		if (e instanceof FileNotFoundException)
-			getLogger().warn(
-					exceptionMsg + " in " + fileName
-							+ " is skipped. The reason is " + fileName
-							+ " is not found in " + path + ".");
-		else
-			getLogger()
-					.warn(exceptionMsg + " in " + fileName
-							+ " is skipped. The reason is " + tokenName
-							+ " token is not found in " + path + fileName + ".");
-
-	}
-	
 	/**
 	 * in case of installing using maven, merge a new pom file of plugin with
 	 * current pom file
@@ -1727,8 +1395,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 *            target project folder to install a plugin
 	 * @param pluginInfo
 	 *            plugin detail information
-	 * @param pluginJar
-	 *            plugin binary file
 	 * @param pluginZip
 	 *            zip file includes plugin binary file
 	 * @param fileNames
@@ -1784,9 +1450,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			getLogger().debug("Copying resources " + pluginResource);
 
 			// 4. copy files to output directory
-			processTemplate(context, pluginInfo.getName(), targetDir,
-					pluginJar, pluginZip, pluginResource.getDir(),
-					(String) context.get("package"),
+			processTemplate(context, targetDir, pluginZip,
+					pluginResource.getDir(), (String) context.get("package"),
 					pluginResource.isPackaged(), pluginResource.isFiltered(),
 					templates, encoding);
 
@@ -1816,12 +1481,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 * 
 	 * @param context
 	 *            velocity context
-	 * @param pluginName
-	 *            a target plugin name to install
 	 * @param targetDir
 	 *            target project folder to install a plugin
-	 * @param pluginJar
-	 *            plugin binary file
 	 * @param pluginZip
 	 *            zip file includes plugin binary file
 	 * @param resourceDir
@@ -1837,11 +1498,10 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 * @param encoding
 	 *            file encoding style
 	 */
-	private void processTemplate(Context context, String pluginName,
-			File targetDir, File pluginJar, ZipFile pluginZip,
-			String resourceDir, String packageName, boolean packaged,
-			boolean filtered, List<String> templates, String encoding)
-			throws Exception {
+	private void processTemplate(Context context, File targetDir,
+			ZipFile pluginZip, String resourceDir, String packageName,
+			boolean packaged, boolean filtered, List<String> templates,
+			String encoding) throws Exception {
 		Iterator<String> templateItr = templates.iterator();
 
 		while (templateItr.hasNext()) {
@@ -1851,26 +1511,12 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				continue;
 			}
 
-			// 1. merge template
 			File output = getOutput(context, targetDir, resourceDir, template,
 					packaged, packageName);
 			output.getParentFile().mkdirs();
 			copyFile(pluginZip, template, output);
 			if (filtered) {
 				mergeTemplate(context, template, output, encoding);
-			}
-
-			// 2. replace current configuration file based on db template in
-			// plugin
-			String templateName = StringUtils.replaceOnce(template,
-					CommonConstants.PLUGIN_RESOURCES, "");
-
-			String dbResourceName = CommonConstants.DB_RESOURCES
-					+ (String) context.get("dbType") + templateName;
-
-			ZipEntry zipEntry = pluginZip.getEntry(dbResourceName);
-			if (zipEntry != null) {
-				replaceDBResource(pluginName, pluginJar, output, dbResourceName);
 			}
 		}
 	}
@@ -1983,15 +1629,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 											+ "-messagesource-START-->\n"
 											+ contents + "\n<!--" + pluginName
 											+ "-messagesource-END-->", true);
-						} else if(pluginName.equals(CommonConstants.CORE_PLUGIN)
-								&& targetFile.getName().endsWith(CommonConstants.WEB_XML_FILE)){
-							FileUtil.addFileContent(targetFile,
-									"<!--Add new configuration here-->",
-									"<!--" + pluginName + "-configuration-START-->\n"
-											+ contents + "\n<!--" + pluginName
-											+ "-configuration-END-->\n" 
-											+"<!--Add new configuration here-->", true);
-						}else {
+						} else {
 							FileUtil.addFileContent(targetFile,
 									"<!--Add new configuration here-->",
 									"<!--Add new configuration here-->\n<!--"
@@ -2150,6 +1788,41 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	}
 
 	/**
+	 * replace current configuration file based on db template in plugin
+	 * 
+	 * @param dbType
+	 *            db type of a current project
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginName
+	 *            a target plugin name to install
+	 * @param pluginJar
+	 *            plugin binary file
+	 * @param fileNames
+	 *            resources in plugin jar file
+	 */
+	private void processDBResource(String dbType, File targetDir,
+			String pluginName, File pluginJar, List<String> fileNames)
+			throws Exception {
+		getLogger().debug("Call processDBResource() of DefaultPluginInstaller");
+		if (!dbType.equals("hsqldb")) {
+			String path = CommonConstants.DB_RESOURCES
+					+ CommonConstants.fileSeparator + dbType;
+			List<String> dbResources = FileUtil.findFiles(fileNames, path,
+					"**", null);
+
+			for (int i = 0; i < dbResources.size(); i++) {
+				String dbResourceTemplate = (String) dbResources.get(i);
+
+				File dbResource = new File(targetDir,
+						dbResourceTemplate.substring(path.length()));
+				replaceDBResource(pluginName, pluginJar, dbResource,
+						dbResourceTemplate);
+			}
+		}
+	}
+
+	/**
 	 * create custom table, insert data to DB
 	 * 
 	 * @param pio
@@ -2277,63 +1950,46 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 */
 	private void replaceDBResource(String pluginName, File pluginJar,
 			File dbResource, String dbResourceTemplate) throws Exception {
-		// 1. find map includes replace string
-		InputStream inputStream = pluginInfoManager.getPluginResource(
-				dbResourceTemplate, pluginJar);
+		if (dbResource.exists()) {
+			// 1. find map includes replace string
+			InputStream inputStream = pluginInfoManager.getPluginResource(
+					dbResourceTemplate, pluginJar);
 
-		Map<String, String> replaceStringMap = null;
-		Map<String, String> tokenMap = null;
-		if (dbResource.getName().endsWith(CommonConstants.EXT_JAVA)) {
-			replaceStringMap = FileUtil.findReplaceRegionOfClass(inputStream,
-					pluginName);
-			// 2. find token to be replaced
-			tokenMap = FileUtil.findReplaceRegionOfClass(new FileInputStream(
-					dbResource), pluginName);
-		}
-
-		if (dbResource.getName().endsWith(CommonConstants.EXT_XML)) {
-			replaceStringMap = FileUtil.findReplaceRegion(inputStream,
-					pluginName);
+			Map<String, String> replaceStringMap = FileUtil.findReplaceRegion(
+					inputStream, pluginName);
 
 			// 2. find token to be replaced
-			tokenMap = FileUtil.findReplaceRegion(new FileInputStream(
-					dbResource), pluginName);
-		}
+			Map<String, String> tokenMap = FileUtil.findReplaceRegion(
+					new FileInputStream(dbResource), pluginName);
 
-		getLogger().debug("token size : " + tokenMap.size());
-		getLogger().debug("replaceString size : " + replaceStringMap.size());
+			getLogger().debug("token size : " + tokenMap.size());
+			getLogger()
+					.debug("replaceString size : " + replaceStringMap.size());
 
-		// 3. replace
-		if (tokenMap.size() > 0) {
-			Set<String> commentKeySet = tokenMap.keySet();
-			Iterator<String> commentKeyItr = commentKeySet.iterator();
+			// 3. replace
+			if (tokenMap.size() > 0) {
+				Set<String> commentKeySet = tokenMap.keySet();
+				Iterator<String> commentKeyItr = commentKeySet.iterator();
 
-			while (commentKeyItr.hasNext()) {
-				String commentKey = commentKeyItr.next();
-				getLogger().debug("commentKey : " + commentKey);
+				while (commentKeyItr.hasNext()) {
+					String commentKey = commentKeyItr.next();
+					getLogger().debug("commentKey : " + commentKey);
 
-				if (replaceStringMap.containsKey(commentKey)) {
-					String startToken = "<!--" + pluginName + "-" + commentKey
-							+ "-START-->";
-					String endToken = "<!--" + pluginName + "-" + commentKey
-							+ "-END-->";
+					if (replaceStringMap.containsKey(commentKey)) {
+						String startToken = "<!--" + pluginName + "-"
+								+ commentKey + "-START-->";
+						String endToken = "<!--" + pluginName + "-"
+								+ commentKey + "-END-->";
 
-					if (dbResource.getName().endsWith(CommonConstants.EXT_JAVA)) {
-						startToken = "//" + pluginName + "-" + commentKey
-								+ "-START";
-						endToken = "//" + pluginName + "-" + commentKey
-								+ "-END";
+						String value = startToken + "\n"
+								+ replaceStringMap.get(commentKey) + "\n"
+								+ endToken;
+						FileUtil.replaceFileContent(dbResource, startToken,
+								endToken, startToken + endToken, value, false);
 					}
-
-					String value = startToken + "\n"
-							+ replaceStringMap.get(commentKey) + "\n"
-							+ endToken;
-					FileUtil.replaceFileContent(dbResource, startToken,
-							endToken, startToken + endToken, value, false);
 				}
 			}
 		}
-		// }
 	}
 
 	/**
@@ -2709,8 +2365,8 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		context.put("esc", new EscapeTool());
 
 		// 2.1 put common properties into velocity context
-		// context.put(CommonConstants.VELOCITY_SHARP, "#");
-		// context.put(CommonConstants.VELOCITY_SHARP_BRACE, "#{");
+		context.put(CommonConstants.VELOCITY_SHARP, "#");
+		context.put(CommonConstants.VELOCITY_SHARP_BRACE, "#{");
 
 		context.put("pomHandling", new Boolean(pomHandling));
 		context.put("excludeSrc", new Boolean(excludeSrc));

@@ -18,10 +18,6 @@ package org.anyframe.ide.command.maven.mojo.codegen;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -31,7 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.appfuse.mojo.HibernateExporterMojo;
-import org.appfuse.mojo.exporter.Component;
 import org.appfuse.tool.AppFuseExporter;
 import org.appfuse.tool.ArtifactInstaller;
 import org.codehaus.plexus.components.interactivity.Prompter;
@@ -252,35 +247,6 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 		return exporter;
 	}
 
-    /**
-     * Returns the parsed goal to the exporter.
-     *
-     * @return Component
-     * @noinspection ForLoopReplaceableByForEach
-     */
-    @SuppressWarnings("unchecked")
-	protected Component getComponent() {    	
-    	Map<String, Component> defaultComponents = (Map<String, Component>)getPrivateField(HibernateExporterMojo.class, "defaultComponents", this);
-    	List<Component> components = (List<Component>)getPrivateField(HibernateExporterMojo.class, "components", this);
-    	
-        Component defaultGoal = defaultComponents.get("jdk15");
-        if (!components.isEmpty()) {
-            for (Iterator<Component> it = components.iterator(); it.hasNext();) {
-                Component component = it.next();
-                if (getName().equals(component.getName())) {
-                    if (component.getImplementation() == null) {
-                        component.setImplementation(defaultGoal.getImplementation());
-                    }
-                    if (component.getOutputDirectory() == null) {
-                        component.setOutputDirectory(defaultGoal.getOutputDirectory());
-                    }
-                    return component;
-                }
-            }
-        }
-        return defaultGoal;
-    }
-    
 	/**
 	 * Executes the plugin in an isolated classloader.
 	 * 
@@ -434,19 +400,5 @@ public class AnyframeGeneratorMojo extends HibernateExporterMojo {
 				}
 			}
 		}
-	}
-	
-	private Object getPrivateField(Class<?> clazz, String field, Object object) {
-		Object result = null;
-		try {
-			Field prompterField = clazz.getDeclaredField(field);
-			prompterField.setAccessible(true);
-			return prompterField.get(object);
-		} catch (Exception e) {
-			getLog().warn(
-					"Setting the exporter components  is skipped.: The reason is a '"
-							+ e.getMessage() + "'.");
-		}
-		return result;
 	}
 }
