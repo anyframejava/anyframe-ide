@@ -1,0 +1,784 @@
+<chapter id="plugins_creatingplugin">
+	<title>신규 Plugin 개발</title>
+	<para>
+	앞서 설명했던 Anyframe Plugin 구조에 맞춰서 Plugin 개발자가 수동으로 개발하는 것은 쉬운 일이 아니다. 
+	Anyframe Plugin 개발 방법을 지원하기 위한 Maven 명령어를 제공하고 있으므로 이를 이용하여 개발하는 방법에 대해서 살펴보도록 하자.
+	</para>
+	
+	<section id="plugins_creatingplugin_createpjt">
+		<title>신규 Plugin 프로젝트 생성</title>
+		<para>개발하고자 하는 신규 Plugin을 위한 프로젝트를 Anyframe IDE에 제공하는 Maven 명령어를 이용하여 생성하도록 한다.</para>
+		<programlisting language="xml"><![CDATA[mvn archetype:generate -DarchetypeCatalog="file://(사용자 홈 디렉토리)\.m2\archetype-catalog.xml"]]></programlisting>			
+		<para>
+			신규 Anyframe Plugin을 만들어내기 위한 샘플 프로젝트를 생성해내는데 이때 샘플 프로젝트가 웹 타입 프로젝트인 경우 archetype으로 
+			anyframe basic archetype을 선택하도록 한다. 
+			신규 Anyframe Plugin에 해당하는 groupId, artifactId, version, package 정보를 입력한다. 
+		</para>
+		<para>
+			예를 들어, anyframe-query-pi라는 이름으로 신규 Anyframe Plugin 프로젝트를 생성해낸다면 다음과 같이 값을 입력할 수 있다. 
+			version의 경우 디폴트 값이 1.0-SNAPSHOT으로 주어지고, package의 경우 디폴트 값이 groupId와 동일한 값으로 주어진다. 
+		<programlisting language="xml"><![CDATA[Define value for property 'groupId': : org.anyframe.plugin 
+Define value for property 'artifactId': : anyframe-query-pi
+Define value for property 'version': 1.0-SNAPSHOT: x.x.x
+Define value for property 'package': org.anyframe.plugin:]]></programlisting>					
+		</para>		
+	</section>
+	
+	<section id="plugins_creatingplugin_dbrunning">
+		<title>샘플 DB 구동</title>
+		<para>
+			앞서 생성한 프로젝트에서 db/hsqldb 폴더 하위의 start.cmd (or start.sh) 파일을 실행시켜서 기본 샘플 DB인 
+			HSQL DB를 구동시키도록 한다. 기본 샘플 DB 기반으로 신규 Anyframe Plugin을 구현한 후 
+			추가적으로 지원되는 DB 별로 Plugin 샘플 코드 구현을 진행해나가도록 한다. 
+			DB 별 Plugin 샘플 코드 작성 방법은 하단의 <emphasis role="bold">신규 Plugin 샘플 코드 추가</emphasis> 내용을 참고하도록 한다. 
+			만약 신규 Plugin이 샘플 코드 없이 라이브러리만 제공하도록 구성한다면 샘플 DB 구동 작업은 불필요하다. 
+		</para>
+	</section>	
+	
+	<section id="plugins_creatingplugin_dependentplugin">
+		<title>참조 Plugin 설치</title>
+		<para>
+			신규 Plugin이 참조해야 하는 기존 Plugin들이 있다면 install 명령어를 이용하여 설치하도록 한다. 
+			만약 참조할 Plugin이 없다면, 디폴트로 Anyframe Core Plugin을 설치하도록 한다. 
+			참조 Plugin을 설치하게 되면, 참조 Plugin이 제공하는 라이브러리와 샘플 코드를 기반으로 하여 신규 Plugin의 샘플 코드를 
+			추가 구현할 수 있다. 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=core]]></programlisting>		
+	</section>	
+	
+	<section id="plugins_creatingplugin_addnewlibraries">
+		<title>신규 Plugin 라이브러리 추가</title>
+		<para>
+			신규 Plugin에서 필요로 하는 라이브러리를 앞서 생성한 Plugin 프로젝트 루트 폴더 하위의 pom.xml 파일에 추가하도록 한다.	 
+			&lt;dependencies> 태그 내에 작성하는데, START/END 주석을 이용하여 신규 Plugin 라이브러리임을 표시해주도록 한다. 
+		</para>
+<programlisting language="xml"><![CDATA[<dependencies>
+<!-- query plugin dependencies START -->
+<dependency>
+    <groupId>org.anyframe</groupId>
+    <artifactId>anyframe-query</artifactId>
+    <version>1.0.0</version> 
+</dependency>   
+<dependency>
+	<groupId>org.apache.velocity</groupId>
+	<artifactId>velocity-dep</artifactId>
+	<version>1.6.2</version>
+</dependency> 
+<dependency>
+    <groupId>avalon</groupId>
+    <artifactId>avalon-framework</artifactId>
+    <version>4.0</version>
+</dependency>
+중략... 
+<!-- query plugin dependencies END -->]]></programlisting>			
+			<note>
+				<title>참고</title>
+				<para>
+					- Eclipse Project로 import하여 신규 Plugin 개발 작업을 계속 진행해나가도록 한다. 
+				</para>
+				<para>
+					- Plugin 프로젝트 루트 폴더 하위의 pom.xml 파일에서 properties 태그 내 inspection.dir 항목 내용을 
+					아래와 같이 변경하도록 한다. Plugin 개발자 로컬 환경의 사용자 홈 폴더가 작성되어 있으므로 이를 ${user.home}으로 변경하도록 한다.
+					<programlisting language="xml"><![CDATA[<properties>
+    <inspection.dir>${user.home}/.anyframe/inspection</inspection.dir>
+    중략...]]></programlisting>	
+				</para>
+			</note>	
+	</section>		
+	
+	<section id="plugins_creatingplugin_addnewcode">
+		<title>신규 Plugin 샘플 코드 추가</title>
+		<para>신규 Plugin을 통해 설치되는 라이브러리와 함께 샘플 코드로 제공하려고 하는 리소스(Java, XML, ... 등)를 
+				Anyframe Plugin의 폴더/파일 명명 규칙에 맞추어 작성하도록 한다. (<link linkend="plugins_structure">Plugin 구조</link> 참고)
+		</para>
+			<para>
+				Plugin 프로젝트 하위에 존재하는 폴더 별로 구분하여 샘플 코드 추가 작성하는 방법에 대해서 살펴보도록 하자. 여기에 나열된 폴더 이외에 
+				Plugin 개발자가 다른 폴더를 추가해넣을 수도 있다. (추후 Plugin 빌드 파일 생성 후 Plugin Resource로 새로 생성된 폴더를 인식할 수 있도록 
+				설정해주면 된다.) 
+			</para>
+			<orderedlist numeration="lowerroman">
+				<listitem>
+					<para>
+					src/main/java
+					</para>
+					<para>
+						대표 패키지 하위에 반드시 Plugin 명이 존재하고 그 하위로 자유롭게 패키지를 구성하여 샘플 자바 코드를 작성할 수 있다. 
+						예를 들어 Plugin 내 도메인 클래스들의 경우 domain 패키지명 하위로, 서비스 인터페이스 클래스는 service 패키지명 하위로, 
+						서비스 구현 클래스 및 DAO 클래스는 service.impl 패키지명 하위로, 프리젠테이션 레이어 개발 관련 클래스는 web 패키지명 하위로,
+						위치시킬 수 있다. 
+					</para>
+				</listitem>	
+				<listitem>
+					<para>
+					src/main/resources
+					</para>
+					<para>
+					Spring, SpringMVC 기반의 어플리케이션 실행을 위한 속성 정의 파일과 메시지 파일, 쿼리문을 정의하고
+					있는 매핑 XML 파일들을 추가할 수 있다.
+					Spring 속성 정의 파일은 spring 폴더 하위에 위치시키고 context-{plugin name}-xxx.xml으로 작성한다.
+					SpringMVC 속성 정의 파일명은 {plugin name}-servlet.xml으로 정의해야 한다. 
+					이 외, 리소스 파일이 필요한 경우에는 Plugin명과 동일한 이름의 폴더를 생성하여 관리하도록 한다.
+					</para>
+					<para>
+					해당 Plugin이 DB 유형에 따라 변경되어야 하는 리소스를 포함하고 있는 경우에 파일 내에 &lt;!--{plugin name}-{unique id}-START-->,
+					&lt;!--{plugin name}-{unique id}-END--> 주석 태그를 이용하여 표시하도록 한다. 아래 예시와 같이 Query Plugin의 
+					src/main/resoures/spring/context-query.xml 파일 내에 DB 유형 별 변경되는 설정 정보 별로 START/END 태그를 이용하여 표시해둘 수 있다. 
+					</para>
+					<programlisting language="xml"><![CDATA[<bean name="queryService" class="org.anyframe.query.impl.QueryServiceImpl">
+	<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	<property name="pagingSQLGenerator" ref="pagingSQLGenerator"/>
+	<property name="sqlRepository" ref="sqlLoader"/>
+	<!--query-propertyLobHandler-START-->
+	<property name="lobHandler" ref="lobHandler"/>
+	<!--query-propertyLobHandler-END-->				
+</bean>
+
+<!--query-generator-START-->
+<bean id="pagingSQLGenerator" class="org.anyframe.query.impl.jdbc.generator.HSQLPagingSQLGenerator"/>
+<!--query-generator-END-->
+
+<!--query-lobHandler-START-->
+<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true">
+	<property name="wrapAsLob" value="true"/>
+</bean>		
+<!--query-lobHandler-END-->
+중략...]]></programlisting>						
+					<para>
+					XML 파일 중 dynamic sql 작성 시 Velocity-Support 구문을 이용할 수 있는데 이는 
+					아래 예시와 같이 XML 파일 내 Velocity 구문을 그대로 유지해야 하는 경우 해당 부분 앞뒤로 주석 태그를 설정하여 
+					표시해두도록 한다. 
+					&lt;!--Velocity-Support-{unique id}-START-->,
+					&lt;!--Velocity-Support-{unique id}-END--> 
+					</para>
+					<programlisting language="xml"><![CDATA[<query id="findJqueryMovieList" isDynamic="true">
+  <statement>
+  <!--simpleweb-jquery-findJqueryMovieList-START-->
+     SELECT movie.movie_id, movie.title, ...
+     FROM JQUERY_MOVIE movie, JQUERY_GENRE genre
+	<!--Velocity-Support-findJqueryMovieList-START-->
+	#if($vo.sidx &amp;&amp; !$vo.sidx.equals(""))ORDER BY
+	  #if($vo.sidx == "genre.name")
+		genre.name
+	  #elseif($vo.sidx == "title")
+		movie.title
+	  #end
+	#end
+	<!--Velocity-Support-findJqueryMovieList-END-->
+중략...]]></programlisting>	
+				</listitem>	
+				<listitem>
+					<para>
+					src/test/java
+					</para>
+					<para>
+						대표 패키지 하위에 반드시 Plugin 명이 존재하고 그 하위로 자유롭게 패키지를 구성하여 Plugin 샘플 코드에 대한 
+						테스트 케이스 자바 코드를 작성할 수 있다. 
+					</para>
+				</listitem>	
+				<listitem>
+					<para>
+					src/test/resources
+					</para>
+					<para>
+						테스트 케이스 수행 시 필요한 리소스 파일이 존재하는 경우 이 폴더에 추가하는데 이때에는 src/main/resources 폴더에 파일 추가하는 규칙과 동일함으로 유의하도록 한다. 
+					</para>
+				</listitem>		
+				<listitem>
+					<para>
+					src/main/webapp
+					</para>
+					<para>
+						Plugin 샘플 코드를 위한 JSP 파일은 WEB-INF/jsp 하위에 Plugin 명과 동일한 이름의 폴더를 생성하여 관리하도록 한다.
+						css, image 등 기타 파일들을 Plugin 샘플 코드를 위해서 배포해야 하는 경우에도 Plugin 명과 동일한 이름의 폴더를 webapp 폴더 하위에 추가로 생성하여 관리한다.
+					</para>
+					<para>
+					Plugin 설치 시 Plugin 목록 화면에 메뉴 항목을 추가하기 위해서 anyframe.jsp 파일 내 메뉴 상단하단에 아래와 같이 &lt;!--{plugin name}-menu-START-->,
+					&lt;!--{plugin name}-menu-END--> 태그를 설정하도록 한다.
+					web.xml 파일에도 마찬가지로 Plugin 설치 시 추가되어야 하는 내용이 있으면 START/END 태그를 이용하여 설정한다. 
+					</para>
+				<programlisting language="java"><![CDATA[<!--query-menu-START-->
+  <a href="${ctx}/queryMovieFinder.do?method=list"><font size="2">- Query 1.0.0</font></a><br/>
+<!--query-menu-END-->]]></programlisting>					
+				</listitem>																
+				<listitem>
+					<para>db/scripts</para>
+					<para>
+						해당 Plugin 실행을 위해 별도로 DB 데이터가 추가되어야 하는 경우에는 db/scripts 폴더 하위에
+						{plugin name}-insert-data-{db.name}.sql, {plugin name}-delete-data-{db.name}.sql 파일을
+						정의하고 필요한 DDL, DML을 정의해 두면 해당 Plugin 설치/삭제시에 anyframe-maven-plugin에 의해 실행될 
+						것이다.
+					</para>
+				</listitem>		
+				<listitem>
+					<para>db/resources</para>
+					<para>
+						해당 Plugin이 DB 유형에 따라 변경되어야 하는 리소스를 포함하고 있는 경우에 활용한다. 예를 들어, QueryService의 경우 DB의 종류에 따라 
+						사용할 PagingSQLGenerator 구현체가 달라지므로 Query Plugin을 설치할 때 DB 종류에 따라 QueryService 속성 정의가 달라져야 한다.
+						이를 위해 db/resources 폴더 하위에 DB 명을 폴더명으로 두고 그 폴더 하위에 해당 리소스의 위치를 그대로 정의하고 변경되어야 하는 파일을 정의해둘 수 있다.
+						상세한 내용은 <link linkend="plugins_structure">Plugin 구조</link> 내용 중 db/resources를 참고하도록 한다. 
+						(ex. db/resources/oracle/src/main/resources/spring/context-query.xml)							
+					</para>
+				</listitem>																			
+			</orderedlist>		
+			<para>
+				Plugin 샘플 코드를 추가 구현한 뒤 CLI 혹은 Eclipse 상에서 정상 동작하는지 테스트해보도록 한다.
+				웹 타입 프로젝트의 경우 jetty:run 명령어를 이용하여 테스트할 수 있고, 서비스 타입 프로젝트의 경우 test 명령어를 이용하여 테스트해볼 수 있다. 				
+				<programlisting language="java"><![CDATA[mvn clean jetty:run
+mvn clean test]]></programlisting>
+			</para>						
+	</section>		
+	
+	<section id="plugins_creatingplugin_addplugininterceptor">
+		<title>신규 Plugin Interceptor 추가</title>
+			<para>
+				해당 Plugin 설치/삭제시 anyframe-maven-plugin을 통해 수행되는 기본 작업 외에 별도로 처리해야 하는 작업이 
+				필요한 경우에는 Interceptor 클래스 구현을 통해 처리할 수 있다. Interceptor 클래스는 Plugin 프로젝트 하위의
+				src/main/java 하위에 위치시키고 다음과 같이 구현할 수 있다.
+			</para>
+<programlisting language="java"><![CDATA[public class CustomPluginInterceptor {
+    // 설치 전 별도 작업이 필요한 경우
+    public void preInstall(String baseDir, File pluginJarFile) throws Exception {
+        System.out.println("#### call preInstall ####");
+    }
+    
+    // 설치 후 별도 작업이 필요한 경우
+    public void postInstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call postInstall ####");
+    }
+
+    // 삭제 전 별도 작업이 필요한 경우
+    public void preUninstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call preUninstall ####");
+    }
+    
+    // 삭제 후 별도 작업이 필요한 경우
+    public void postUninstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call postUninstall ####"); 
+    }
+}]]></programlisting>					
+			<para>
+				다음은 Query Plugin의 Interceptor 클래스의 일부로써 Query Plugin이 삭제된 이후 해당 프로젝트의 META-INF/project.mf 파일 내의
+				"project.daoframework" 속성의 값을 "springjdbc"로 변경시키는 로직을 포함하고 있음을 알 수 있다. 
+				(Interceptor 클래스 구현/실행을 위해 필요한 라이브러리는 Plugin 프로젝트 내의 pom.xml 파일과 
+				Plugin 빌드 파일(plugin-build.xml)의 interceptor dependencies 태그 내에 함께 정의해주도록 함에 유의하도록 한다.)
+			</para>	
+<programlisting language="java">public class QueryPluginInterceptor {
+	public void postUninstall(String baseDir, File pluginJarFile)
+			throws Exception {
+      File metadataFile = new File(new File(baseDir)
+	                  + CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+      PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
+
+      if (pio.readValue(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_QUERY)) {
+        pio.setProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE,CommonConstants.DAO_SPRINGJDBC);
+        pio.write();
+      }
+중략...</programlisting>
+<note>
+			<title>참조 라이브러리 제거</title>
+			<para>
+				 프로젝트에 Plugin 설치시 pom.xml에 정의 dependency를 기준으로 참조 라이브러리가 추가되게 된다. 
+				 이 때, 기존 프로젝트에서 Plugin 설치와 동시에 제거하고 싶은 라이브러리가 있다면(ex>플러그인 설치로 인해 생기는 라이브러리 충돌 문제)
+				 "remove-pom.xml"을 Plugin 프로젝트 바로 하위에 작성한다. remove-pom.xml에 작성된 depedency를 가지고
+				 기존의 프로젝트에서 참조하던 라이브러리와의 관계가 삭제될 수 있다. 이 때, 작성 형식은 pom.xml과 같다. 
+			</para>
+<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-logback-pi</artifactId>
+    <packaging>war</packaging>
+    <version>1.0.1</version>
+    <name>logback</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+   </dependencies>
+</project>]]></programlisting>
+	</note>
+	</section>	
+	
+	<section id="plugins_creatingplugin_activate_plugin">
+		<title>Plugin 빌드 파일 자동 생성 및 수정</title>
+			<para>
+				신규 Plugin 프로젝트 루트 폴더 하위에 Plugin 빌드 파일을 생성하는데 이때 activate-plugin 명령어를 이용하여
+				디폴트 설정 값을 가진 빌드 파일을 생성해내도록 한다.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:activate-plugin]]></programlisting>
+			<para>
+				프로젝트 루트 폴더 하위에 생성된 plugin-build.xml 파일을 열어서 신규 Plugin 내용에 맞게 변경해야 하는 항목들을 수정하도록 한다.
+				Plugin 빌드 파일을 이용하여 Plugin 패키징을 수행하게 되므로, Plugin에 대한 상세 정보를 작성하도록 한다. 
+				다음은 각 태그 별 작성해야 하는 설정 정보들이다.
+			</para>
+			<informaltable>
+			<tgroup cols="5">
+				<colspec colname="col1" colnum="1" colwidth="3*" />
+				<colspec colname="col2" colnum="2" colwidth="1*" />
+				<colspec colname="col3" colnum="3" colwidth="4*" />
+				<colspec colname="col4" colnum="4" colwidth="1*" />
+				<colspec colname="col5" colnum="5" colwidth="1*" />
+
+          		<thead>
+					<row>
+						<entry align="center">Tag Name</entry>
+			            <entry align="center">Attrubute Name</entry>
+			            <entry align="center">Description</entry>
+			            <entry align="center">Required</entry>
+			            <entry align="center">Child Tag</entry>
+					</row>
+				</thead>
+
+          		<tbody>
+            		<row>
+              			<entry vlign="center">plugin</entry>
+              			<entry vlign="center">name</entry>
+              			<entry vlign="center">Plugin 명을 작성한다. 최초 빌드 파일 생성 시에 pom.xml 파일 내 name 태그 값으로 작성된 명이 설정된다.</entry>
+              			<entry vlign="center" align="center">Y</entry>
+              			<entry>groupId,artifactId,version,dependent-plugins,build,resources,interceptor,essential,samples,checked</entry>
+            		</row>	
+            		<row>
+              			<entry/>
+              			<entry>description</entry>
+              			<entry>Plugin 설명 정보이다. 최초 빌드 파일 생성 시에 pom.xml 파일 내 description 태그 값으로 작성된 설명이 설정된다. (만약 값이 존재하지 않으면 Plugin 명 + " plugin"으로 설정됨)</entry>
+              			<entry align="center">Y</entry>
+              			<entry/>
+            		</row>
+            		<row>
+              			<entry>groupId</entry>
+              			<entry />
+						<entry>
+							Plugin의 groupId (of Maven) 정보이다. 최초 빌드 파일 생성 시에 pom.xml 파일 내 groupId 태그 값으로 작성된 값이 설정된다.
+						</entry>
+              			<entry align="center">Y</entry>
+              			<entry />
+            		</row>
+
+					<row>
+						<entry>artifactId</entry>
+						<entry />
+						<entry>
+							Plugin의 artifactId (of Maven) 정보이다. 최초 빌드 파일 생성 시에 pom.xml 파일 내 artifactId 태그 값으로 작성된 값이 설정된다. 
+						</entry>					
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+
+					<row>
+						<entry>version</entry>
+						<entry/>
+						<entry>Plugin의 version (of Maven) 정보이다. 최초 빌드 파일 생성 시에 pom.xml 파일 내 version 태그 값으로 작성된 값이 설정된다.</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+
+					<row>
+						<entry>dependent-plugins</entry>
+						<entry/>
+						<entry>
+							Plugin이 참조하는 타 Plugin들에 대한 정보를 설정한다.
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>dependent-plugin</entry>
+					</row>
+
+					<row>
+						<entry>dependent-plugin</entry>
+						<entry>name</entry>
+						<entry>
+							참조 Plugin 명을 설정한다. 최초 빌드 파일 생성 시에 META-INF/plugin-installed.xml 파일에 추가된 Plugin 명이 설정된다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+					<row>
+						<entry/>
+						<entry>version</entry>
+						<entry>
+							참조 Plugin의 호환되는 버전 범위(&lt;,&lt;=,>,>= 등 사용 가능)를 표시한다.
+							 최초 빌드 파일 생성 시에 META-INF/plugin-installed.xml 파일에 추가된 Plugin 버전 정보가 설정된다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>					
+					<row>
+						<entry>resources</entry>
+						<entry />
+						<entry>
+							Plugin 패키징, 설치 수행 시 필요한 정보를 작성한다. Plugin 패키징, 설치 대상이 되는 Plugin 프로젝트 하위 폴더 목록 정보이다.
+						</entry>
+						<entry align="center">N</entry>
+						<entry>resource</entry>
+					</row>	
+					<row>
+						<entry>resource</entry>
+						<entry>dir</entry>
+						<entry>
+							Plugin 프로젝트 하위 폴더 명으로 Plugin 패키징, 설치 시 포함시킬 폴더 경로를 작성한다. 
+							최초 빌드 파일 생성 시에 다음과 같은 5가지 폴더와 2가지 파일에 대해서 dir 또는 파일 정보가 설정된다. 그리고 filtered, packaged, include 항목에 대한 기본 값이 제공된다.
+							(src/main/java, src/main/resources, src/test/java, src/test/resources, src/main/webapp/WEB-INF/jsp, src/main/webapp/anyframe.jsp, src/main/webapp/WEB-INF/web.xml) 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>include, exclude</entry>
+					</row>		
+					<row>
+						<entry/>
+						<entry>filtered</entry>
+						<entry>
+							Plugin 샘플 소스 코드 내용 중 추후 Plugin 설치 시 Velocity Engine에 의해 해석되어 변경되어야 하는 부분 존재 여부를 표시한다. 
+							filtered 속성값이 true인 경우 Plugin 설치 시 Plugin 샘플 코드 내용 중 ${package}가 대표 패키지 명으로, ${artifactId}가 프로젝트 명 등으로  
+							변경되어 Plugin 설치가 진행될 것이다. 반면 filtered 속성값이 false인 경우, 정의된 모든 부분에 대한 변경없이 Plugin 설치가 진행될 것이다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry/>
+						<entry>packaged</entry>
+						<entry>
+							Plugin 샘플 소스 코드 내용 중 추후 Plugin 설치 시 자바 코드의 패키지 정보가 존재하는 경우 패키지 폴더를 만들어지도록 해야 하는 부분 존재 여부를 표시한다.
+							packaged 속성값이 true인 경우 Plugin 설치 시 대표 패키지 명에 해당하는 폴더 생성될 것이다. 
+							반면 packaged 속성값이 false인 경우, 폴더 구성 변경없이 Plugin 설치가 진행될 것이다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry>include</entry>
+						<entry>name</entry>
+						<entry>
+							dir 폴더 내 파일들 중에서 포함시키고자 하는 파일 명을 작성한다. Ant-style regular expressions인 *, **/와 같은 기호를 이용하여 작성할 수 있다. (ex. **/*.java, **/*.*)
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>																						
+					<row>
+						<entry>exclude</entry>
+						<entry>name</entry>
+						<entry>
+							dir 폴더 내 파일들 중에서 포함시키지 않을 파일 명을 작성한다. Ant-style regular expressions인 *, **/와 같은 기호를 이용하여 작성할 수 있다. (ex. **/*.xml, **/*.jsp, **/query/**/*.*)
+							단, 기존 생성되어 있는 프로젝트 특정 파일에 merge 대상이 되는 contents를 포함하고 있는 파일일 경우 exclude 속성을 주고 하위 속성인 merged 속성에 "true"라고 정의한다.
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>merged</entry>
+					</row>													
+					<row>
+						<entry>interceptor</entry>
+						<entry />
+						<entry>
+							해당 Plugin 설치/삭제시 별도로 처리해야 하는 작업이 	필요한 경우에는 Interceptor 클래스를 구현한 후 설정해주도록 한다.
+						</entry>
+						<entry align="center">N</entry>
+						<entry>class, dependencies</entry>
+					</row>
+					<row>
+						<entry>class</entry>
+						<entry />
+						<entry>
+							Plugin Interceptor 클래스 명을 전체 패키지 명과 함께 설정한다. Plugin 패키징 시 Interceptor 클래스와 동일한 패키지 명 하위에 존재하는 클래스와 리소스 파일들이 함께 패키징에 포함된다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry>dependencies</entry>
+						<entry />
+						<entry>
+							Plugin Interceptor 클래스 컴파일 및 런타임 시 필요로 하는 참조 라이브러리들을 정의한다. 
+						</entry>
+						<entry align="center">N</entry>
+						<entry>dependency</entry>
+					</row>
+					<row>
+						<entry>dependency</entry>
+						<entry />
+						<entry>
+							Plugin Interceptor에서 필요로 하는 참조 라이브러리들을 Maven pom.xml 파일에 정의하는 dependency 태그 형태와 동일하게 정의한다.
+							즉 groupId, artifactId, version을 작성한다. 여기서 Plugin 샘플 코드들은 필요로 하지 않고, Interceptor 클래스에서만 사용되는 참조 라이브러리의 경우 
+							scope을 반드시 interceptor로 지정하여 설정하도록 한다.(ex. <![CDATA[<scope>interceptor</scope>]]>)
+						</entry>
+						<entry align="center">N</entry>
+						<entry/>
+					</row>																	
+					<row>
+						<entry>essential</entry>
+						<entry />
+						<entry>
+							Plugin이 필수 설치 Plugin에 해당하는지 여부를 표시한다. essential Plugin으로 생성하기 위해서는 값을 true로 설정한다. 
+							최초 빌드 파일 생성 시 false로 설정된다.  
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+					<row>
+						<entry>samples</entry>
+						<entry />
+						<entry>
+							Plugin이 샘플 소스 코드를 가지고 있는지 여부를 표시한다. 최초 빌드 파일 생성 시 true로 설정된다. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>					
+					<row>
+						<entry>checked</entry>
+						<entry />
+						<entry>
+							Anyframe Java IDE를 통해 제공되는 툴 중 Eclipse Plugin에서 사용하는 설정으로 최초 빌드 파일 생성 시에 자동 생성되는 값을 그대로 사용해도 무방하다.
+							Plugin 개발자가 수정할 필요가 없는 항목이다. 
+						</entry>
+						<entry align="center">N</entry>
+						<entry />
+					</row>
+          		</tbody>
+        	</tgroup>
+      		</informaltable>	
+      		<para>
+      		다음은 Query Plugin을 위한 plugin-build.xml 파일 내용 중 일부이다.
+      		</para>		
+      		<programlisting language="xml"><![CDATA[<plugin name="query" description="Query Plugin consists of sample code that provides...">
+	<groupId>org.anyframe.plugin</groupId>
+	<artifactId>anyframe-query-pi</artifactId>
+	<version>x.x.x</version>
+	<dependent-plugins>
+		<dependent-plugin name="core" version="2.0.0&gt;*" />
+	</dependent-plugins>
+	<resources>
+		<resource dir="src/main/java" filtered="true" packaged="true">
+			<include name="**/query/**/*.java" />
+		</resource>
+		<resource dir="src/main/resources" filtered="true" packaged="false">
+			<include name="**/query/**/*.xml" />
+		</resource>
+		<resource dir="src/test/java" filtered="true" packaged="true">
+			<include name="**/query/**/*.java" />
+		</resource>
+		<resource dir="src/test/resources" filtered="true" packaged="false">
+			<include name="**/query/**/*.xml" />
+		</resource>
+		<resource dir="src/main/webapp/WEB-INF/jsp" filtered="false"
+			packaged="false">
+			<include name="**/query/**/*.jsp" />
+		</resource>
+		<resource dir="src/main/webapp" filtered="false" packaged="false">
+		    <exclude name="**/anyframe.jsp" merged="true"/>
+		    <exclude name="**/web.xml" merged="true"/>
+		 </resource>
+	</resources>
+	<samples>true</samples>
+	<interceptor>
+		<class>org.anyframe.plugin.interceptor.QueryPluginInterceptor
+		</class>
+		<dependencies>
+			<dependency>
+				<groupId>org.anyframe</groupId>
+				<artifactId>anyframe-ide-command-common</artifactId>
+				<version>2.0.0</version>
+				<scope>interceptor</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.1</version>
+			</dependency>				
+		</dependencies>
+	</interceptor>
+	<essential>false</essential>
+	<checked>false</checked>
+</plugin>]]></programlisting>	
+	</section>	
+	
+	<section id="plugins_creatingplugin_package_plugin">
+		<title>Plugin 패키징 수행</title>
+		<para>
+			수정된 Plugin 빌드 파일을 기반으로 Plugin 패키징 작업을 수행할 수 있다. 
+			package-plugin 명령어를 사용하여 패키징 작업을 진행하도록 한다. 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:package-plugin]]></programlisting>
+		<para>
+			Plugin 패키징이 완료되면 target 폴더 하위에 JAR 파일 형태로 Plugin 파일(파일 명은 {artifactId}-{version}.jar)이 생성되게 된다. 
+			이 JAR 파일 내 구성은 /target/temp 폴더 하위의 파일들을 통해 확인해보도록 한다.
+			생성된 폴더 구조 및 파일 내용은 <link linkend="plugins_structure">Plugin 구조</link>를 참고하여 확인하도록 한다.
+			폴더나 파일이 정상적으로 패키징 되지 않았다면 Plugin 빌드 파일(plugin-build.xml) 설정 내용을 확인하여 수정한 후,
+			패키징을 재수행시켜보도록 한다.  
+		</para>
+	</section>	
+	
+	<section id="plugins_creatingplugin_deploy_plugin">
+		<title>Plugin 배포 및 확인</title>
+		<para>
+			신규 Plugin을 다른 사람들과 공유하기 위해서 deploy-pluginfile 명령어를 실행시켜서 원격 Repository에 배포하도록 한다.
+			Anyframe에서 사용하는 원격 Repository(http://dev.anyframejava.org/maven/repo)에 배포하는 경우가 아니라면 원하는 원격 Repository에 대한 repositoryId와 url 정보를 
+			명령어 실행 시 파라미터로 입력해주어야 한다.
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:deploy-pluginfile -DrepositoryId=anyframe-repository -Durl=http://dev.anyframejava.org/maven/repo]]></programlisting>
+		<para>
+			로컬 Repository에 배포되어 있는 Plugin 파일을 지우고 update-catalog 명령어를 실행시켜서 원격 Repository로부터 배포된 Plugin catalog 파일을 내려받도록 한다. 
+			list 명령어를 실행시켜서 신규 Plugin이 설치 가능한 Plugin 목록에 추가되었는지 확인해 보도록 하자. 정상적으로 추가된 경우에는 
+			Anyframe에서 제공하는 다른 Plugin과 동일하게 설치/삭제가 가능하므로 테스트해보도록 한다.
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:update-catalog
+mvn anyframe:list]]></programlisting>
+		<note>
+			<title>참고</title>
+			<para>
+				신규 Plugin을 Maven Remote Repository에 배포 시 사용자 인증이 필요한 경우, settings.xml 파일 내의
+				Server 정보에 해당 Repository 접근 사용자 정보가 추가되어 있어야 한다.
+			</para>
+<programlisting language="xml"><![CDATA[<servers>
+<server>
+      <id>remote-repository</id>
+      <username>samplename</username>
+      <password>samplepassword</password>
+    </server>        
+중략...]]></programlisting>
+	</note>
+	</section>	
+
+	<section id="plugins_creatingplugin_example_plugin">
+		<title>간단한 신규 Board Plugin 개발 샘플</title>
+	<para>
+		Board에 대한 CRUD 샘플 코드를 제공하는 Board Plugin을 간단하게 개발해보도록 한다. Plugin 개발에 대한 상세한 내용은 위 내용들을 참고하도록 한다. 
+	</para>		
+	<orderedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>Board Plugin 프로젝트 생성</para>
+			<programlisting language="xml"><![CDATA[mvn archetype:generate -DarchetypeCatalog="file://(사용자 홈 디렉토리)\.m2\archetype-catalog.xml"]]></programlisting>			
+			<para>
+				Board Plugin을 만들어내기 위한 프로젝트를 생성해내는데 이때 웹 타입 프로젝트로 만들 것이기 때문에 archetype으로 
+				anyframe basic archetype를 선택한다. 
+				Board Plugin에 해당하는 groupId, artifactId, version, package 정보를 입력한다. 
+			</para>
+			<para>
+				board라는 이름으로 신규 Anyframe Plugin 프로젝트를 생성해낸다면 다음과 같이 값을 입력할 수 있다. 
+				version의 경우 디폴트 값이 1.0-SNAPSHOT으로 주어지고, package의 경우 디폴트 값이 groupId와 동일한 값으로 주어진다. 
+			<programlisting language="xml"><![CDATA[Define value for property 'groupId': : sample.plugin 
+Define value for property 'artifactId': : board
+Define value for property 'version': 1.0-SNAPSHOT: 
+Define value for property 'package': sample.plugin:]]></programlisting>					
+			</para>
+		</listitem>	
+		<listitem>
+			<para>HSQL DB 구동</para>
+			<para>
+				board 프로젝트에서 db/hsqldb 폴더 하위의 start.cmd (or start.sh) 파일을 실행시켜서 기본 샘플 DB인 
+				HSQL DB를 구동시키도록 한다. 
+			</para>
+		</listitem>
+		<listitem>
+			<para>Simpleweb-jQuery, Test Plugin 설치</para>
+			<para>
+				board 프로젝트로 폴더 이동 후, Board Plugin이 참조해야 하는 Plugin들을 install 명령어를 이용하여 설치하도록 한다. 
+				설치할 Plugin 목록이 나오고 Is this OK? (y,n) 질문이 나오는 경우 y를 입력하도록 한다. 
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=simpleweb-jquery,test]]></programlisting>
+		</listitem>		
+		<listitem>
+			<para>Board Plugin 샘플 코드 추가</para>
+			<para>
+				Board Plugin을 통해 설치되는 라이브러리와 함께 샘플 코드로 제공하려고 하는 리소스(Java, XML, ... 등)를 
+				Anyframe Plugin의 폴더/파일 명명 규칙에 맞추어 작성하도록 한다.
+			</para>
+			<para>
+				이때 Anyframe IDE의 소스 코드 생성 기능을 이용하여 Board에 대한 CRUD 소스 코드를 생성해보자. 샘플 DB 테이블로 제공되는
+				BOARD와 BOARD_MASTER에 대한 도메인 클래스를 먼저 생성한 후, 이중 Board 도메인 클래스 기반의 CRUD 소스 코드를 생성한다.
+  
+<programlisting language="java"><![CDATA[mvn anyframe:create-model -Dtable=BOARD,BOARD_MASTER -Dpackage=sample.plugin.board.domain
+mvn anyframe:create-crud -Dentity=sample.plugin.board.domain.Board -Dpackage=sample.plugin.board
+]]></programlisting>				
+			</para>		
+		</listitem>		
+	
+		<listitem>
+			<para>Board Plugin 빌드 파일 자동 생성 및 수정</para>
+			<para>
+				activate-plugin 명령어를 이용하여 Board Plugin을 위한 빌드 파일을 생성해내도록 한다.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:activate-plugin]]></programlisting>
+			<para>
+				프로젝트 루트 폴더 하위에 생성된 plugin-build.xml 파일을 열어서 Board Plugin 내용에 맞게 변경해야 하는 항목들을 수정하도록 한다.
+      			다음은 Board Plugin을 위한 plugin-build.xml 파일 내용으로 아래 굵게 표시된 부분이 디폴트로 파일이 생성된 이후에 변경한 항목들이다.
+      		</para>		
+      		<programlisting language="xml"><![CDATA[<plugin name="board" description="board plugin">
+  <groupId>sample.plugin</groupId>
+  <artifactId>board</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <dependent-plugins>
+    <dependent-plugin name="core" version="1.0.0"/>
+    <dependent-plugin name="simpleweb" version="1.0.0"/>
+    <dependent-plugin name="test" version="1.0.0"/>
+중략...
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+    <resource dir="src/main/resources" filtered="true" packaged="false">
+      <include name="**/*.xml"/>
+      ]]><emphasis role="bold"><![CDATA[<include name="**/*.properties"/>]]></emphasis><![CDATA[
+    </resource>
+중략...
+  </resources>
+  <build>
+    <filesets>
+      <fileset dir="src/main/java" filtered="true" packaged="true">
+        <include name="**/sample/plugin/board/**/*.java"/>
+      </fileset>
+      <fileset dir="src/main/resources" filtered="true" packaged="false">
+        <include name="**/*board*.xml"/>
+        ]]><emphasis role="bold"><![CDATA[<include name="**/message-generation.properties"/>]]></emphasis><![CDATA[
+      </fileset>
+중략...
+</plugin>]]></programlisting>	
+		</listitem>			
+		<listitem>
+			<para>Board Plugin 메뉴 추가</para>
+			<para>
+				프로젝트 하위의 /src/main/webapp 폴더 내에 있는 anyframe.jsp 페이지를 열어서 Board Plugin에 대한 메뉴를 추가하도록 한다.
+				다음은 anyframe.jsp 페이지 내용 중 일부로 아래 굵게 표시된 부분이 변경한 항목들이다. 
+				&gt;!--Add new crud generation menu here--&lt; 주석 부분에 생성된 Board 메뉴를 상단 
+				&gt;!--Add new menu here--&lt; 주석 부분으로 이동 시키도록 한다. 이때 Plugin 메뉴임을 나타내도록 Board-menu-START/END 태그로 작성함에 유의하도록 한다.
+<programlisting language="java"><![CDATA[<!--Add new menu here-->
+]]><emphasis role="bold"><![CDATA[<!--Board-menu-START-->]]></emphasis><![CDATA[
+  <a href="${ctx}/board.do?method=list"><font size="2">- ]]><emphasis role="bold">Board 1.0-SNAPSHOT</emphasis><![CDATA[</font></a><br/>
+]]><emphasis role="bold"><![CDATA[<!--Board-menu-END-->]]></emphasis><![CDATA[
+중략...
+<td class="underline" valign="top">
+<!--Add new crud generation menu here-->
+</td>]]></programlisting>				
+			</para>
+		</listitem>		
+		<listitem>
+			<para>Board Plugin 패키징 수행</para>
+			<para>
+				수정된 Plugin 빌드 파일을 기반으로 package-plugin 명령어를 사용하여 패키징 작업을 진행하도록 한다. 
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:package-plugin]]></programlisting>
+			<para>
+				프로젝트의 /target/temp 폴더 하위 파일들을 보고 정상적으로 Plugin 구조에 맞게 패키징 되었는지 확인해보도록 한다. 
+			</para>
+		</listitem>		
+		<listitem>
+			<para>Board Plugin 배포 및 확인</para>
+			<para>
+				Board Plugin을 다른 사람들과 공유하기 위해서 deploy-pluginfile 명령어를 실행시켜서 원격 Repository에 배포하도록 한다.
+				Anyframe에서 사용하는 원격 Repository(http://dev.anyframejava.org/maven/repo)에 배포하는 경우가 아니라면 원하는 원격 Repository에 대한 repositoryId와 url 정보를 
+				명령어 실행 시 파라미터로 입력해주어야 한다.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:deploy-pluginfile -DrepositoryId=anyframe-repository -Durl=http://dev.anyframejava.org/maven/repo]]></programlisting>
+			<para>
+				update-catalog 명령어를 실행시켜서 원격 Repository로부터 배포된 Plugin catalog 파일을 내려받도록 한다. 
+				list 명령어를 실행시켜서 Board Plugin이 설치 가능한 Plugin 목록에 추가되었는지 확인해 보도록 하자. 정상적으로 추가된 경우에는 
+				Anyframe에서 제공하는 다른 Plugin과 동일하게 설치/삭제가 가능하므로 다른 샘플 프로젝트를 생성한 후 테스트해보도록 한다.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:update-catalog
+mvn anyframe:list
+mvn anyframe:install -Dname=board
+]]></programlisting>
+		</listitem>			
+	</orderedlist>
+	</section>
+</chapter>

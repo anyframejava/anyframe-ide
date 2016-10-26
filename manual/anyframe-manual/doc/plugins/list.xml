@@ -1,0 +1,452 @@
+<chapter id="plugins_list">
+	<title>Plugin 목록</title>
+	<para>
+		다음은 Anyframe에서 제공하는 Plugin 목록이다. 목록 표 내용 중 Plugin Type 항목은 해당 Plugin이 essential한 Plugin인지 Optional한 Plugin인지에 대한 
+		구분을 위한 항목으로 
+		essential의 경우 Anyframe Plugin 사용 시 기본적으로 설치되어야 하는 Plugin임을 나타내는 타입이다.
+		optional의 경우 필요한 경우에 선택적으로 설치해서 사용할 수 있는 Plugin임을 나타내는 타입이다. 
+		현재 datasource, logging, spring plugin은 core plugin이 동작하는데 필요한 필수 plugin으로 core plugin 설치 시 함께 설치되고 있다.
+	</para>
+	<informaltable>
+		<tgroup cols="4">
+			<colspec colnum="1" colname="col1" colwidth="1*"/>
+			<colspec colnum="2" colname="col2" colwidth="2*"/>
+			<colspec colnum="3" colname="col3" colwidth="6*"/>
+			<colspec colnum="4" colname="col4" colwidth="1*"/>
+			<thead>
+				<row>
+					<entry align="center">No</entry>
+					<entry align="center">Plugin Name</entry>
+					<entry align="center">Description</entry>
+					<entry align="center">Plugin Type</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry align="center">1</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html">core</ulink></entry>
+					<entry>
+						다른 Plugin 설치를 위한 기반을 제공하는 Plugin이며, SpringMVC + Spring을 이용한 
+						영화 정보 관리 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_ioc">IoC</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_aop">AOP</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_annotation">Annotation</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_springmvc_part">SpringMVC</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_spel">SpEL</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_springmvc_validation">Validation</ulink>, 
+							<ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_transaction">Transaction</ulink> 등
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">2</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_datasource">datasource</ulink></entry>
+					<entry>
+						Database에 연결하기 위한 Connection(javax.sql.Connection) 객체를 생성하는 Datasource 관련 설정 파일과 라이브러리를 제공한다. 
+						core plugin이 동작하는데 필요한 필수 plugin이다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_datasource">DataSource</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">3</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_logging_part">logging</ulink></entry>
+					<entry>
+						Log4j를 이용하여 Log를 체계적으로 관리할 수 있는 기능을 제공한다. core plugin이 동작하는데 필요한 필수 plugin이다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_logging_part">Logging</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">4</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_part">spring</ulink></entry>
+					<entry>
+						Spring 관련 라이브러리를 제공한다. core plugin이 동작하는데 필요한 필수 plugin이다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/essential/core/1.5.2/reference/htmlsingle/core.html#core_spring_part">Spring</ulink>
+						</para>
+					</entry>
+					<entry>essential</entry>
+				</row>
+				<row>
+					<entry align="center">5</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/async-support/1.0.0/reference/htmlsingle/async-support.html">async-support</ulink></entry>
+					<entry>
+						 Servlet 3에 새롭게 추가된 비동기적인 처리의 특징과 사용법을 설명하고 그에 기반해 Spring에서 추가된 비동기적인 처리에 대한 활용 방법을 가이드하기 위한 plugin이다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/async-support/1.0.0/reference/htmlsingle/async-support.html">Async Support</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">6</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/board/1.0.0/reference/htmlsingle/board.html">board</ulink></entry>
+					<entry>
+						 GUI 기반의 게시판 생성 기능을 제공하는 코드와 이를 활용하는데 필요한 참조 라이브러리들을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/board/1.0.0/reference/htmlsingle/board.html">Board</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">7</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cache/1.0.6/reference/htmlsingle/cache.html">cache</ulink></entry>
+					<entry>
+						 Terracotta의 Ehcache를 간편하게 사용하는 방법을 가이드하기 위한 영화 정보 관리 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cache/1.0.6/reference/htmlsingle/cache.html#cache_cache">Cache</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">8</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/chart/1.0.4/reference/htmlsingle/chart.html">chart</ulink></entry>
+					<entry>
+						오픈 소스 Chart 기능을 제공하는 FusionChart Free를 활용하여 Ajax 기법으로 웹 페이지 내에서 사용할 수 있는 Chart 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/chart/1.0.4/reference/htmlsingle/chart.html#chart_chart_part">FusionChart Free</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">9</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf/1.0.5/reference/htmlsingle/cxf.html">cxf</ulink></entry>
+					<entry>
+						Apache CXF관련 라이브러리를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf/1.0.5/reference/htmlsingle/cxf.html#cxf_overview">Web Services</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">10</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxrs/1.0.5/reference/htmlsingle/cxf-jaxrs.html">cxf-jaxrs</ulink></entry>
+					<entry>
+						Apache CXF를 활용하여 HTTP 기반의 REST 아키텍처 스타일의 웹 서비스로 구현한 영화 정보 관리 기능을 제공한다. 
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxrs/1.0.5/reference/htmlsingle/cxf-jaxrs.html#cxf_jaxrs"> RESTful Web Services : JAX-RS Frontend</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">11</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxws/1.0.5/reference/htmlsingle/cxf-jaxws.html">cxf-jaxws</ulink></entry>
+					<entry>
+						Apache CXF를 활용하여 SOAP 기반의 웹 서비스로 구현한 영화 정보 목록 및 상세 조회 기능을 제공하고 있으며 자동 생성된 WSDL을 확인할 수 있다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/cxf-jaxws/1.0.5/reference/htmlsingle/cxf-jaxws.html#cxf_jaxws">Web Services : JAX-WS Frontend</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">12</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/excel/1.0.5/reference/htmlsingle/excel.html">excel</ulink></entry>
+					<entry>
+						Apache POI의 서브 프로젝트인 HSSF와 Query Service를 이용하여 Movie목록을 Excel파일로 처리하는 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/excel/1.0.5/reference/htmlsingle/excel.html#excel_integration_part">Apache POI를 이용한 Excel 처리</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">13</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/fileupload/1.1.1/reference/htmlsingle/fileupload.html">fileupload</ulink></entry>
+					<entry>
+						Apache commons-fileupload와 Spring MVC를 기반으로 개발된 파일업로드의 기본 활용 방법을 가이드한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/fileupload/1.1.1/reference/htmlsingle/fileupload.html#fileupload_usage_part">Apache commons-fileupload와 SpringMVC</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">14</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/flex-query/1.5.1/reference/htmlsingle/flex-query.html">flex-query</ulink></entry>
+					<entry>
+						Adobe Flex와 BlezeDS, Spring Framework의 연계를 위한 설정 파일과 프로젝트에서 사용빈도가 높은 샘플 화면 8가지를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/flex-query/1.5.1/reference/htmlsingle/flex-query.html#flex_query">Spring BlezeDS Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">15</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/generic/1.5.1/reference/htmlsingle/generic.html">generic</ulink></entry>
+					<entry>
+						Java5부터 지원하는 Generics 개념을 기반으로 기본 CRUD 메소드 기능이 모두 구현된 클래스를 직접 이용하거나 상속받아서 사용할 수 있는 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/generic/1.5.1/reference/htmlsingle/generic.html#generic_generic_part">Generic</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">16</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.5.2/reference/htmlsingle/hibernate.html">hibernate</ulink></entry>
+					<entry>
+						Hibernate와 Anyframe에서 구현한 Dynamic Hibernate Service를 이용한 영화 정보 관리 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.5.2/reference/htmlsingle/hibernate.html#hibernate_hibernate_part">Hibernate</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/hibernate/1.5.2/reference/htmlsingle/hibernate.html#hibernate_dynamic_part">Dynamic Hibernate</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">17</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/i18n/1.0.4/reference/htmlsingle/i18n.html">I18N</ulink></entry>
+					<entry>
+						다수의 DataSource를 활용하여 다국어 처리를 지원한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/i18n/1.0.4/reference/htmlsingle/i18n.html">I18N</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">18</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/ibatis2/0.0.7/reference/htmlsingle/ibatis2.html">ibatis2</ulink></entry>
+					<entry>
+						iBATIS2를 활용한 영화 정보 관리 기능을 제공한다.
+						<para>
+							[참조] iBATIS2
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">19</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/idgen/1.5.1/reference/htmlsingle/idgen.html">idgen</ulink></entry>
+					<entry>
+						Anyframe ID Gen 서비스를 사용하여 유일한 ID를 생성하는 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/idgen/1.5.1/reference/htmlsingle/idgen.html#idgen_idgen">Id Gen 서비스</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">20</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jdbc-support/1.0.4/reference/htmlsingle/jdbc-support.html">jdbc-support</ulink></entry>
+					<entry>
+						오픈소스 p6spy 를 확장하여 SQL Injection 보안 위험을 방어할 수 있는 기능 및 최종 실행 쿼리에 대한 로깅(재처리) 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jdbc-support/1.0.4/reference/htmlsingle/jdbc-support.html#dbcsupport_injectionandlogging_implementation">기본 구현 및 사용자 확장 구현 방안</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">21</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/jquery/1.0.6/reference/htmlsingle/jquery.html">jquery</ulink></entry>
+					<entry>
+						jQuery Plugin은 AJAX를 활용한 Spring MVC 기반의 웹 어플리케이션 개발 사례를 제공할 목적으로 만들어졌다. jQuery Plugin은 JSON 형태의 데이터를 이용한 공통 Controller 클래스 및  jQuery Javascript 프레임워크 및 
+  이를 바탕으로 개발된 오픈소스 UI Component를 활용하여 작성된 샘플 코드와 이를 활용하는데 필요한 참조 라이브러리들로 구성되어 있으며, Plugin 샘플 코드에 활용된 jQuery UI 컴포넌트들로는 jqgrid, quickpager, jstree, jquery-ui(button, dialog, tab, autocomplete), uploadify, superfish 등이 있다.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">22</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logback/1.0.2/reference/htmlsingle/logback.html">logback</ulink></entry>
+					<entry>
+						 Logback framework와 Anyframe간의 연계방법을 가이드 하기 위한 샘플코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logback/1.0.2/reference/htmlsingle/logback.html#logback_integration_part">Logback Integration</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">23</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logging-sql/1.0.4/reference/htmlsingle/logging-sql.html">logging-sql</ulink></entry>
+					<entry>
+						log4jdbc를 이용한 SQL Logging 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logging-sql/1.0.4/reference/htmlsingle/logging-sql.html#loggingsql_loggingsql_part">Log4jdbc</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">24</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logmanager/1.0.4/reference/htmlsingle/logmanager.html">logmanager</ulink></entry>
+					<entry>
+						 Anyframe Log Manager와 연동하기 위한 Legacy Application으로써 샘플 코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/logmanager/1.0.4/reference/htmlsingle/logmanager.html#logmanager_logmanager_part">Log Manager</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">25</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mip-query/1.5.1/reference/htmlsingle/mip-query.html">mip-query</ulink></entry>
+					<entry>
+						TOBESOFT에서 제공하는 X-Internet 솔루션인 MiPlatform을 Anyframe과 연계하여 영화 정보 관리 기능 및 실제 시스템 개발 시 활용할 수 있는 다양한
+						UI Sample을 제공한다. mipsample plugin 기능 확인을 위해 DB에 추가되어야 할 샘플 데이터가 함께 제공된다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mip-query/1.5.1/reference/htmlsingle/mip-query.html#mip_query_integration_part">Miplatform Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">26</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mybatis/1.0.2/reference/htmlsingle/mybatis.html">mybatis</ulink></entry>
+					<entry>
+						MyBatis와 Anyframe과 연계를 가이드하기위한 샘플코드를 제공한다.  
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/mybatis/1.0.2/reference/htmlsingle/mybatis.html#mybatis_part">MyBatis</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">27</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/oscache/1.5.1/reference/htmlsingle/oscache.html">oscache</ulink></entry>
+					<entry>
+						opensymphony의 OSCache를 간편하게 활용할 수 있도록 하기 위해 제공되는 OSCache Service의 기본 활용 방법을 가이드하기 위한 샘플 코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/oscache/1.5.1/reference/htmlsingle/oscache.html#oscache_cache_part">Cache</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">28</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query/1.5.2/reference/htmlsingle/query.html">query</ulink></entry>
+					<entry>
+						쿼리문이나 객체의 입력만으로 DB 데이터 조작을 가능하게 하는 Anyframe의 Query 서비스를 활용하여 영화 정보를 관리하는 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query/1.5.2/reference/htmlsingle/query.html#query_part">Query 서비스</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">29</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/query-ria/1.5.1/reference/htmlsingle/query-ria.html">query-ria</ulink></entry>
+					<entry>
+						다양한 RIA 플랫폼과 Anyframe의 Query 서비스를 연계하는데 필요한 Query서비스의 확장 라이브러리들을 제공한다.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">30</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/remoting/1.0.5/reference/htmlsingle/remoting.html">remoting</ulink></entry>
+					<entry>
+						Spring Remoting 기법 중 HttpInvoker를 활용하여 영화 정보 조회 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/remoting/1.0.5/reference/htmlsingle/remoting.html#remoting_httpinvoker">Remoting : HTTP Invoker</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">31</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/routingdatasource/1.0.4/reference/htmlsingle/routingdatasource.html">routingdatasource</ulink></entry>
+					<entry>
+						AbstractRoutingDataSource를 활용하여 다중으로 정의된 DB를 동적으로 변경하여 접근하는 방법을 가이드 한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/routingdatasource/1.0.4/reference/htmlsingle/routingdatasource.html#routingdatasource_routingdatasource_part">RoutingDataSource</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">32</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/scheduling/1.5.1/reference/htmlsingle/scheduling.html">scheduling</ulink></entry>
+					<entry>
+						Quartz의 작업 추가, 수정, 삭제 등을 간편하게 활용할 수 있도록 하기 위해 제공되는 Scheduling 서비스의 기본 활용 방법과 샘플 코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/scheduling/1.5.1/reference/htmlsingle/scheduling.html#scheduling_quartz_part">Quartz Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">33</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.4/reference/htmlsingle/springrest.html">springrest</ulink></entry>
+					<entry>
+						Spring 3.0에서 새롭게 선보인 특징 중 하나로써 SpringMVC 기반의 웹어플리케이션에 대해 REST 스타일을 적용하여 영화 정보 관리 기능을 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/springrest/1.0.4/reference/htmlsingle/springrest.html#springrest_restsupport_part">Spring REST Supports</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">34</entry>
+					<entry>test</entry>
+					<entry>
+						테스트 코드 실행에 필요한 참조 라이브러리만을 제공한다.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">35</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.4/reference/htmlsingle/tiles.html#tiles_apachetiles">tiles</ulink></entry>
+					<entry>
+						Tiles(Apache Tiles 2.2.1) 기반의 화면 레이아웃 정의 방법을 가이드한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/tiles/1.0.4/reference/htmlsingle/tiles.html">Tiles</ulink>
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">36</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util/1.0.4/reference/htmlsingle/util.html">util</ulink></entry>
+					<entry>
+						Util plugin은 Anyframe core 서비스에 포함되어 있는 Date, Digest, Number, String, Validation, ThreadLocal 유틸 활용을 위한 샘플 화면을 가지고 있는 샘플 코드로 구성되어 있다.
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">37</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.5.1/reference/htmlsingle/util-system.html">util-system</ulink></entry>
+					<entry>
+						공통적으로 활용 가능한 유틸리티성 시스템 편의 기능인 Anyframe Util-System 서비스를 제공한다.
+						<para>
+							[참조] Sigar를 활용한 <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.5.1/reference/htmlsingle/util-system.html#utilsystem_util_system">SystemInfo</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.2/reference/htmlsingle/util-system.html#utilsystem_util_network">Network</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.2/reference/htmlsingle/util-system.html#utilsystem_util_filesystem">FileSystem</ulink>, <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.2/reference/htmlsingle/util-system.html#utilsystem_util_filemonitor">FileMonitor</ulink> 유틸리티 및 <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-system/1.0.2/reference/htmlsingle/util-system.html#utilsystem_util_zip">압축/해제</ulink> 유틸리티
+						</para>
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">38</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/xp-query/1.5.2/reference/htmlsingle/xp-query.html">xp-query</ulink></entry>
+					<entry>
+						Anyframe과 XPLATFORM 연계에서 XP QueryService 사용을 위한 가이드와 샘플 코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/xp-query/1.5.2/reference/htmlsingle/xp-query.html#xp_query_integration_part">XPLATFORM Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+				<row>
+					<entry align="center">39</entry>
+					<entry><ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/xplatform/1.5.1/reference/htmlsingle/xplatform.html">xplatform</ulink></entry>
+					<entry>
+						Anyframe과 XPLATFORM 연계를 위한 가이드와 샘플 코드를 제공한다.
+						<para>
+							[참조] <ulink url="http://dev.anyframejava.org/docs/anyframe/plugin/optional/xplatform/1.5.1/reference/htmlsingle/xplatform.html#xplatform_integration_part">XPLATFORM Integration</ulink>
+						</para>							
+					</entry>
+					<entry>optional</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>		
+</chapter>
