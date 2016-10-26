@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.anyframe.ide.command.common.plugin.versioning.VersionComparator;
+import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.archetype.common.DefaultPomManager;
@@ -228,10 +229,10 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 *            plugin jar file to be removed
 	 */
 	@SuppressWarnings("unchecked")
-	public void removePomDependencies(File currentPom, File removePluginJar)
+	public void removePomSpecificDependencies(File currentPom, File removePom)
 			throws Exception {
 		// 1. read pom dependencies to be removed
-		Model removeModel = getPluginPom(removePluginJar);
+		Model removeModel = readPom(removePom);
 		List<Dependency> dependencies = removeModel.getDependencies();
 
 		// 2. write a pom file
@@ -361,6 +362,26 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 		return readPom(stream);
 
 	}
+	
+	/**
+	 * get a pom information about a specified plugin
+	 * 
+	 * @param pluginJar
+	 *            plugin jar file
+	 * @return pom information
+	 */
+	public Model getPluginRemovePom(File pluginJar) throws Exception {
+		// 1. return a pom information about a specified plugin
+		
+		InputStream stream = pluginInfoManager.getPluginResource(
+				"plugin-resources/" + CommonConstants.ARCHETYPE_REMOVE_POM, pluginJar);
+		if (stream == null)
+			stream = pluginInfoManager.getPluginResource("archetype-resources/"
+					+ CommonConstants.ARCHETYPE_REMOVE_POM, pluginJar);
+
+		return readPom(stream);
+
+	}
 
 	/**
 	 * read a pom file
@@ -413,7 +434,6 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 				.iterator();
 		while (generatedDependencyIds.hasNext()) {
 			String generatedDependencyId = generatedDependencyIds.next();
-
 			// 3. check dependencies
 			if (!currentDependenciesByIds.containsKey(generatedDependencyId)) {
 				// 3.1 if current pom doesn't include new dependency

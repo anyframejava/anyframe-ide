@@ -1,0 +1,17 @@
+<chapter id="app_server_configurations_websphere">
+	<title>WebSphere</title>
+	<para>
+		Anyframe의 plugin이 설치된 샘플 어플리케이션을 WebSphere에 deploy할 경우 주의해야 할 설정에 대해서 알아보자.
+	</para>
+	<section id="app_server_configurations_websphere_cxf">
+		<title>cxf plugin 사용 시</title>
+		<para>
+			Apache CXF는 JDK 1.5 이상을 지원하므로 WebSphere 서버의 경우, WebSphere 6.0(JDK 1.5) 이상의 버전의 서버가 대상이 된다.
+			WebSphere 서버에 대한 설명 및 다운로드는 <ulink url="http://www-01.ibm.com/software/websphere/">이곳</ulink>을 참고하도록 한다.
+		</para>
+     	<para>
+			WebSphere에서 웹 어플리케이션과 WebSphere의 상위 클래스 로더에 존재하는 라이브러리 중복으로 인한 오류 해결을 위해 
+			 <ulink url="http://www.ibm.com/developerworks/websphere/library/techarticles/1001_thaker/1001_thaker.html">이곳</ulink>을 참고하도록 한다.
+     	</para>
+    </section>
+</chapter>

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -197,12 +197,19 @@ public class ArtifactInstaller {
 					"mapping-ibatis2.xml",
 					getSingleFilePath(docDefault,
 							"dao/ibatis2/mapping-ibatis2.ftl"));
+			singleFilePath.put(
+					"mapper-mybatis.xml",
+					getSingleFilePath(docDefault,
+							"dao/mybatis/mapper-mybatis.ftl"));
+
 			singleFilePath
 					.put("mapping-query-miplatform.xml",
 							getSingleFilePath(docDefault,
 									"dao/query/mapping-query.ftl"));
 			singleFilePath.put("grid_list.xml",
 					getSingleFilePath(docDefault, "web/mip-grid-list.ftl"));
+			singleFilePath.put("xp_grid_list.xml",
+					getSingleFilePath(docDefault, "web/xp-grid-list.ftl"));
 
 		} catch (Exception e) {
 			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '"
@@ -226,6 +233,15 @@ public class ArtifactInstaller {
 					"mip-query-generation-servlet.xml",
 					getSingleFilePath(docDefault,
 							"web/spring/controller-beans.ftl"));
+			singleFilePathForMerge.put(
+					"xp-query-generation-servlet.xml",
+					getSingleFilePath(docDefault,
+							"web/spring/controller-beans.ftl"));
+
+			singleFilePathForMerge.put(
+					"mybatis-generation-config.xml",
+					getSingleFilePath(docDefault,
+							"dao/mybatis/mybatis-config.ftl"));
 
 		} catch (Exception e) {
 			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '"
@@ -246,17 +262,26 @@ public class ArtifactInstaller {
 			mergeFilePath.put("tilesviews.xml",
 					getMergeFilePath(docDefault, "web/tiles-menu.ftl"));
 
+			mergeFilePath.put(
+					"mybatis-generation-config.xml",
+					getMergeFilePath(docDefault,
+							"dao/mybatis/mybatis-config.ftl"));
+
 		} catch (Exception e) {
 			log.error("Target Configuration file path handling for merging is skipped in loadMergeFilePath(). The reason is '"
 					+ e.getMessage() + "'.");
 		}
 
 		try {
-			Document docMiplatform = reader.build(new File(templateHome + "/"
+			Document docDefault = reader.build(new File(templateHome + "/"
 					+ templateType + "/source/" + "template.config"));
 			mergeFilePath.put(
 					"mip-query-generation-servlet.xml",
-					getMergeFilePath(docMiplatform,
+					getMergeFilePath(docDefault,
+							"web/spring/controller-beans.ftl"));
+			mergeFilePath.put(
+					"xp-query-generation-servlet.xml",
+					getMergeFilePath(docDefault,
 							"web/spring/controller-beans.ftl"));
 
 		} catch (Exception e) {
@@ -336,9 +361,14 @@ public class ArtifactInstaller {
 		// dao.framework
 		installQueryFiles();
 
-		// only installs if Query is configured as
+		// only installs if iBatis2 is configured as
 		// dao.framework
 		installIBatis2Files();
+
+		// only installs if MyBatis is configured as
+		// dao.framework
+		// TODO
+		installMyBatisFiles();
 
 		// only add if hibernate is configured as
 		// dao.framework
@@ -392,7 +422,9 @@ public class ArtifactInstaller {
 			log.info("Installing Spring views and configuring...");
 			installSpringControllerBeanDefinitions();
 			installSpringViews();
-			installMiPlatformViews();
+
+			installMipViews();
+			installXpViews();
 		}
 
 		log.info("Installing menu...");
@@ -622,8 +654,9 @@ public class ArtifactInstaller {
 						true);
 
 				String replaceString = "<!--" + this.pojoName + "-START-->\n"
-						+ "<sqlMap resource=\"sql/ibatis2/mapping-ibatis2-" + this.pojoNameLower
-						+ ".xml\"/>\n" + "<!--" + this.pojoName + "-END-->";
+						+ "<sqlMap resource=\"sql/ibatis2/mapping-ibatis2-"
+						+ this.pojoNameLower + ".xml\"/>\n" + "<!--"
+						+ this.pojoName + "-END-->";
 				FileUtil.addFileContent(existingFile,
 						"<!--Add new file name here-->",
 						"<!--Add new file name here-->\n" + replaceString, true);
@@ -640,12 +673,72 @@ public class ArtifactInstaller {
 		}
 	}
 
+	// TODO
+	private void installMyBatisFiles() {
+		if (project.getProperties()
+				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
+				.equals(CommonConstants.DAO_MYBATIS)) {
+			log.info("Installing MyBatis xml...");
+			// 1. create pojo.xml file for mybatis
+			executeLoadFileTask("src/main/resources/sql/mybatis/" + pojoName
+					+ ".xml", "query.mapping.sql");
+
+			File mappingMyBatisSqlDir = new File(this.domainPjtDirectory
+					+ "/src/main/resources/sql/mybatis");
+
+			try {
+				if (!mappingMyBatisSqlDir.exists()) {
+					mappingMyBatisSqlDir.mkdirs();
+				}
+
+				AntUtil.executeCopyTask(
+						antProject,
+						sourceDirectory + "/"
+								+ singleFilePath.get("mapper-mybatis.xml"),
+						this.domainPjtDirectory + "/"
+								+ singleFilePath.get("mapper-mybatis.xml"));
+			} catch (Exception e) {
+				// ignore Exception
+				log.warn("Generating "
+						+ singleFilePath.get("mapper-mybatis.xml")
+						+ " is skipped. The reason is '" + e.getMessage()
+						+ "'.");
+			}
+
+			// 2. if identifierProperty is Component, add typeAlias tag to
+			// mybatis-config.xml.
+			try {
+				executeLoadFileTask(
+						singleFilePathForMerge
+								.get("mybatis-generation-config.xml"),
+						"mybatis.config");
+				File existingFileForConfig = new File(this.destinationDirectory
+						+ mergeFilePath.get("mybatis-generation-config.xml"));
+
+				parseXMLFile(existingFileForConfig, pojoName,
+						"<!--Add new alias here-->", "mybatis.config");
+			} catch (Exception e) {
+				e.printStackTrace();
+				// ignore exception
+				if (e instanceof FileNotFoundException)
+					log.warn("The process of adding new alias in mybatis-config.xml is skipped.\n"
+							+ "       Reason: mybatis-config.xml is not found in /src/main/resources/sql/mybatis/.");
+				else
+					log.warn("The process of adding new alias in mybatis-config.xml is skipped.\n"
+							+ "       Reason: <!--Add new alias here--> token is not found in /src/main/resources/sql/mybatis/mybatis-config.xml.");
+			}
+
+		}
+	}
+
 	private void installSpringControllerBeanDefinitions() {
+		String projectType = "";
 
 		try {
 			if (project.getProperties()
 					.getProperty(CommonConstants.TEMPLATE_TYPE)
 					.startsWith("miplatform")) {
+				projectType = "mip";
 
 				executeLoadWebFileTask(
 						singleFilePathForMerge
@@ -660,15 +753,42 @@ public class ArtifactInstaller {
 				parseXMLFile(generatedFile, pojoName,
 						"<!--Add additional controller beans here-->",
 						"dispatcher.servlet");
+
+			} else if (project.getProperties()
+					.getProperty(CommonConstants.TEMPLATE_TYPE)
+					.startsWith("xplatform")) {
+
+				projectType = "xp";
+				executeLoadWebFileTask(
+						singleFilePathForMerge
+								.get("xp-query-generation-servlet.xml"),
+						"dispatcher.servlet");
+
+				String controllerFilePath = this.webDestinationDirectory
+						+ mergeFilePath.get("xp-query-generation-servlet.xml");
+
+				File generatedFile = new File(controllerFilePath);
+
+				parseXMLFile(generatedFile, pojoName,
+						"<!--Add additional controller beans here-->",
+						"dispatcher.servlet");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			// ignore exception
 			if (e instanceof FileNotFoundException)
-				log.warn("The process of adding additional controller bean in mip-query-generation-servlet.xml is skipped.\n"
-						+ "       Reason: mip-query-generation-servlet.xml is not found in /src/main/resources/spring/.");
+				log.warn("The process of adding additional controller bean in "
+						+ projectType
+						+ "-query-generation-servlet.xml is skipped.\n"
+						+ "       Reason: "
+						+ projectType
+						+ "-query-generation-servlet.xml is not found in /src/main/resources/spring/.");
 			else
-				log.warn("The process of adding additional controller bean in mip-query-generation-servlet.xml is skipped.\n"
-						+ "       Reason: <!--Add additional controller beans here--> token is not found in /src/main/resources/spring/mip-query-generation-servlet.xml");
+				log.warn("The process of adding additional controller bean in "
+						+ projectType
+						+ "-query-generation-servlet.xml is skipped.\n"
+						+ "       Reason: <!--Add additional controller beans here--> token is not found in /src/main/resources/spring/"
+						+ projectType + "-query-generation-servlet.xml");
 		}
 	}
 
@@ -692,9 +812,11 @@ public class ArtifactInstaller {
 		}
 	}
 
-	private void installMiPlatformViews() {
-		if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE)
-				.startsWith("miplatform")) {
+	private void installMipViews() {
+		String templateType = project.getProperties().getProperty(
+				CommonConstants.TEMPLATE_TYPE);
+
+		if (templateType.startsWith("miplatform")) {
 			try {
 				AntUtil.executeCopyTask(
 						antProject,
@@ -739,6 +861,56 @@ public class ArtifactInstaller {
 				else
 					log.warn("The process of adding new miplatform service group in mip_query_sdi.xml is skipped.\n"
 							+ "       Reason: <!--new miplatform service group xml here--> token is not found in /src/main/webapp/mip-query/extends/mip_query_sdi.xml.");
+			}
+		}
+	}
+
+	private void installXpViews() {
+		String templateType = project.getProperties().getProperty(
+				CommonConstants.TEMPLATE_TYPE);
+
+		if (templateType.startsWith("xplatform")) {
+			try {
+				AntUtil.executeCopyTask(
+						antProject,
+						this.sourceDirectory + "/"
+								+ singleFilePath.get("xp_grid_list.xml"),
+						this.webDestinationDirectory + "/"
+								+ singleFilePath.get("xp_grid_list.xml"));
+			} catch (Exception e) {
+				// ignore Exception
+				log.warn("Generating " + singleFilePath.get("xp_grid_list.xml")
+						+ " is skipped. The reason is '" + e.getMessage()
+						+ "'.");
+
+			}
+
+			File generatedFile = new File(this.webDestinationDirectory
+					+ "/src/main/webapp/xp-query/extends/default_typedef.xml");
+
+			try {
+				String replaceString = "<!--XPlatform " + this.pojoNameLower
+						+ "Service-START-->\n" + "<Service prefixid=\""
+						+ this.pojoNameLower + "\" type=\"form\" url=\"./"
+						+ this.pojoNameLower
+						+ "/\" version=\"0\" communicationversion=\"0\"/>\n"
+						+ "<!--XPlatform " + this.pojoNameLower
+						+ "Service-END-->";
+
+				FileUtil.replaceStringXMLFilePretty(generatedFile, "Xplatform "
+						+ this.pojoNameLower + "Service",
+						"<!--new xplatform service group xml here-->",
+						"<!--new xplatform service group xml here-->"
+								+ replaceString);
+
+			} catch (Exception e) {
+				// ignore exception
+				if (e instanceof FileNotFoundException)
+					log.warn("The process of adding new xplatform service group in default_typedef.xml is skipped.\n"
+							+ "       Reason: default_typedef.xml is not found in /src/main/webapp/xp-query/extends/.");
+				else
+					log.warn("The process of adding new xplatform service group in default_typedef.xml is skipped.\n"
+							+ "       Reason: <!--new xplatform service group xml here--> token is not found in /src/main/webapp/xp-query/extends/default_typedef.xml.");
 			}
 		}
 	}
@@ -907,5 +1079,4 @@ public class ArtifactInstaller {
 	public void setGenericCore(boolean genericCore) {
 		this.genericCore = genericCore;
 	}
-
 }

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -63,7 +63,7 @@ public class Messages implements Serializable {
 
 	public static final String WRONG_DIR_PATH = "\nYou used wrong argument value. You should use directory path.\n";
 
-	public static final String WELCOME = "\nWelcome to Anyframe IDE 2.1.0 - http://anyframejava.org\n"
+	public static final String WELCOME = "\nWelcome to Anyframe IDE 2.2.0 - http://anyframejava.org\n"
 			+ "Licensed under Apache Standard License 2.0\n"
 			+ "ANYFRAME_HOME is set to: ";
 

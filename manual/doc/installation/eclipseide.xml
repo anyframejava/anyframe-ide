@@ -48,18 +48,13 @@
 						<para>[Available Software] 화면: Plugin Tree 중 Anyframe IDE을 선택하고
 							하단의 Next 버튼을 클릭한다.</para>
 						<para>
-							최신 버전인 Anyframe Tools 2.1.0의 Anyframe IDE임을 유의한다.
+							최신 버전인 Anyframe Tools 2.2.0의 Anyframe IDE임을 유의한다.
 						</para>
-					</listitem>
-					<listitem>
-						<para>[Install Details] 화면: Anyframe IDE하위로 Anyframe Common
-							plugin이 보이게 된다. Anyframe IDE 사용 시 Anyframe Common이 필요하므로 참조관계에 의해
-							함께 설치된다. 확인 후 Next 버튼을 클릭한다.</para>
 					</listitem>
 					<listitem>
 						<para>[Review Licenses] 화면: 좌측의 Plugin을 선택하면 우측에 License text가
 							나온다.
-							Anyframe Common과 Anyframe IDE에 대해서 우측 하단의 "I accept the terms
+							Anyframe IDE에 대해서 우측 하단의 "I accept the terms
 							of the
 							license agreements" 구문에 동의하고 Finish 버튼을 클릭한다.
 			       </para>

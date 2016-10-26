@@ -1,7 +1,7 @@
 <chapter id="ctip_integration">
-	<title>Build Server(Hudson) 연계</title>
+	<title>Build Server 연계</title>
 	<para>
-	Anyframe IDE Editor에서 Hudson을 연결하여 Hudson에 job을 등록하고 job을 실행할 수 있는 연계 기능을 제공하는데, 이 기능은 Anyframe IDE CLI를 통해서는 제공되지 않으며 
+	Anyframe IDE Editor에서 CTIP 서버(Hudson,Jenkins)을 연결하여 CTIP 서버에 job을 등록하고 job을 실행할 수 있는 연계 기능을 제공하는데, 이 기능은 Anyframe IDE CLI를 통해서는 제공되지 않으며 
 	Eclipse Plugin을 통해서 제공되는 기능이다. Anyframe IDE Eclipse Plugin을 통해 연계 작업을 수행하는 방법을 살펴보자. 
 	</para>
 <orderedlist numeration="arabic" inheritnum="inherit">
@@ -16,31 +16,29 @@
 
       <itemizedlist>
         <listitem>
-          <para>Hudson URL</para>
+          <para>CTIP URL</para>
           <mediaobject>
 	        <imageobject>
 	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-url.jpg" />
 	        </imageobject>
 	      </mediaobject>
 	      <itemizedlist>
-	      	<listitem><para>URL: Hudson 서버에 접근하기 위한 url</para></listitem>
-	      	<listitem><para>Configure...: Hudson 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출</para></listitem>
+	      	<listitem><para>URL: CTIP 서버에 접근하기 위한 url</para></listitem>
+	      	<listitem><para>Configure...: CTIP 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출</para></listitem>
 	      </itemizedlist>
         </listitem>
 
         <listitem>
-          <para>Hudson Configuration</para>
+          <para>CTIP Configuration</para>
           <mediaobject>
 	        <imageobject>
 	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-configuration.jpg" />
 	        </imageobject>
 	      </mediaobject>
 	      <itemizedlist>
-	      	<listitem><para>MAVEN_HOME: 프로젝트에서 Maven 빌드도구를 사용하는 경우 보여지며, Maven이 설치된 경로로 설정이 되어야 한다. 
-	      	만약 정상적으로 설정되어 있지 않다면 Hudson 서버의 Managed Hudson 메뉴 &gt;&gt; Configure System &gt;&gt; Maven 항목 내용을 수정한다. </para></listitem>
-	      	<listitem><para>ANT_HOME: 프로젝트에서 Ant 빌드도구를 사용하는 경우 보여지며,  Ant가 설치된 경로로 설정이 되어야 한다. 
-	      	만약 정상적으로 설정되어 있지 않다면 Hudson 서버의 Managed Hudson 메뉴 &gt;&gt; Configure System &gt;&gt; Ant 항목 내용을 수정한다.</para></listitem>	      	
-	      	<listitem><para>Hudson URL in Email: Hudson Email Notification 시 사용할 url</para></listitem>
+	      	<listitem><para>MAVEN_HOME: 프로젝트에서 Maven 빌드도구를 사용하는 경우 보여지며, Maven이 설치된 경로로 설정이 되어야 한다.</para></listitem>
+	      	<listitem><para>ANT_HOME: 프로젝트에서 Ant 빌드도구를 사용하는 경우 보여지며,  Ant가 설치된 경로로 설정이 되어야 한다.</para></listitem>	      	
+	      	<listitem><para>CTIP URL in Email: Email Notification 시 사용할 url</para></listitem>
 	      </itemizedlist>
         </listitem>
 

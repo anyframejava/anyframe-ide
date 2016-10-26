@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,10 @@ public interface CommonConstants {
 	String SPRINGREST_PLUGIN = "springrest";
 	String SIMPLEWEB_PLUGIN = "simpleweb";
 	String FLEX_QUERY_PLUGIN = "flex-query";
+//	mybatis add(2012.02.13) by junghwan.hong
+	String MYBATIS_PLUGIN = "mybatis";
+	String XP_QUERY_PLUGIN = "xp-query";
+	String LOGBACK_PLUGIN = "logback";
 
 	// 3. plugin resources
 	String PLUGIN_RESOURCES = "plugin-resources";
@@ -59,7 +63,12 @@ public interface CommonConstants {
 	String TILES_XML_FILE = "tiles-views.xml";
 	String WEB_XML_FILE = "web.xml";
 	String WELCOME_FILE = "anyframe.jsp";
-
+	String CONFIG_MESSAGE_FILE = "context-message.xml";
+	String LOG4J_FILE = "log4j.xml";
+	String LOGGING_ASPECT_CLASS = "LoggingAspect.java";
+	
+	String ARCHETYPE_REMOVE_POM = "remove-pom.xml";
+	
 	// 4. print patterns
 	String PLUGININFO_DETAIL = " %-15s : %-60s";
 	String PLUGININFO_DETAIL_REMAINS = " %-15s   %-60s";
@@ -125,6 +134,7 @@ public interface CommonConstants {
 			+ fileSeparator + "java" + fileSeparator;
 	String SRC_MAIN_RESOURCES = fileSeparator + "src" + fileSeparator + "main"
 			+ fileSeparator + "resources" + fileSeparator;
+	String SRC_MAIN_RESOURCES_SPRING = SRC_MAIN_RESOURCES + "spring" +fileSeparator;
 	String SRC_TEST_JAVA = fileSeparator + "src" + fileSeparator + "test"
 			+ fileSeparator + "java" + fileSeparator;
 	String SRC_TEST_RESOURCES = fileSeparator + "src" + fileSeparator + "test"
@@ -144,6 +154,10 @@ public interface CommonConstants {
 	String DB_SCRIPTS = fileSeparator + "db" + fileSeparator + "scripts";
 	String DB_RESOURCES = PLUGIN_RESOURCES + fileSeparator + "db"
 			+ fileSeparator + "resources" + fileSeparator;
+	
+	String PLUGIN_ASPECT_PACKAGE = "common" + fileSeparator + "aspect" + fileSeparator;
+	String ORIGIN_PLUGIN_ASPECT_PACKAGE = "org"+ fileSeparator 
+			+ "anyframe" + fileSeparator + "plugin" + fileSeparator+ PLUGIN_ASPECT_PACKAGE;
 
 	// 9. others
 	String EXT_JAR = "jar";
@@ -161,6 +175,9 @@ public interface CommonConstants {
 	String TEMPLATE_CONFIG_FILE = "template.config";
 
 	String DAO_IBATIS2 = IBATIS2_PLUGIN;
+//	mybatis add(2012.02.13) by junghwan.hong
+	String DAO_MYBATIS = MYBATIS_PLUGIN;
+	
 	String DAO_QUERY = QUERY_PLUGIN;
 	String DAO_HIBERNATE = HIBERNATE_PLUGIN;
 	String DAO_SPRINGJDBC = "springjdbc";

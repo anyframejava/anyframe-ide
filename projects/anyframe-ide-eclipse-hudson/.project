@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-  <name>anyframe.ide.eclipse.hudson</name>
+  <name>anyframe-ide-eclipse-hudson</name>
   <comment>Anyframe ide customized hudson API servlet. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects/>
   <buildSpec>

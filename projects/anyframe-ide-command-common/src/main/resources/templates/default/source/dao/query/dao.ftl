@@ -12,7 +12,7 @@ import org.anyframe.pagination.Page;
 import org.anyframe.datatype.SearchVO;
 import org.anyframe.util.NumberUtil;
 import org.anyframe.util.StringUtil;
-import org.anyframe.query.dao.AbstractDao;
+import org.anyframe.query.dao.QueryServiceDaoSupport;
 import org.anyframe.query.QueryService;
 
 import ${pojo.packageName}.${pojo.shortName};
@@ -31,7 +31,7 @@ import ${field.value.type.returnedClass.name};
  *
  */
 @Repository("${pojoNameLower}Dao")
-public class ${pojo.shortName}Dao extends AbstractDao {
+public class ${pojo.shortName}Dao extends QueryServiceDaoSupport {
   
   	@Value("${r"#{contextProperties['pageSize'] ?: 10}"}")
 	int pageSize;
@@ -45,24 +45,24 @@ public class ${pojo.shortName}Dao extends AbstractDao {
 	}
 	
 	public void create(${pojo.shortName} ${pojoNameLower}) throws Exception {
-		super.create("${pojo.shortName}", ${pojoNameLower});
+		super.create("create${pojo.shortName}", ${pojoNameLower});
 	}
 	
 	public void remove(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) throws Exception {
 		${pojo.shortName} ${pojoNameLower} = new ${pojo.shortName}();        
     	${pojoNameLower}.set${pojo.getPropertyName(pojo.identifierProperty)}(${pojo.identifierProperty.name});    
-		super.remove("${pojo.shortName}", ${pojoNameLower});
+		super.remove("remove${pojo.shortName}", ${pojoNameLower});
 	}
 
 	public void update(${pojo.shortName} ${pojoNameLower}) throws Exception {
-		super.update("${pojo.shortName}", ${pojoNameLower});
+		super.update("update${pojo.shortName}", ${pojoNameLower});
 	}
 
 	public ${pojo.shortName} get(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) throws Exception {
 		${pojo.shortName} ${pojoNameLower} = new ${pojo.shortName}();		
 		${pojoNameLower}.set${pojo.getPropertyName(pojo.identifierProperty)}(${pojo.identifierProperty.name});
 				
-		return (${pojo.shortName}) super.findByPk("${pojo.shortName}", ${pojoNameLower});
+		return (${pojo.shortName}) super.findByPk("find${pojo.shortName}ByPk", ${pojoNameLower});
 	}
 	
 	public Page getPagingList(SearchVO searchVO) throws Exception {
@@ -78,6 +78,6 @@ public class ${pojo.shortName}Dao extends AbstractDao {
         args[2] = "keywordNum=" + searchKeyword + "";
         args[3] = "isNumeric=" + isNumeric;
 
-        return super.findListWithPaging("${pojo.shortName}", args, pageIndex, pageSize, pageUnit);
+        return super.findListWithPaging("find${pojo.shortName}List", args, pageIndex, pageSize, pageUnit);
 	}    
 }

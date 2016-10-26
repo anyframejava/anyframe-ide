@@ -30,9 +30,9 @@
   <artifactId>anyframe-core-pi</artifactId>
   <version>x.x.x</version>
   <dependent-plugins>
-    <dependent-plugin name="datasource" version="1.0.0-SNAPSHOT&lt;=*"/>
-    <dependent-plugin name="logging" version="1.0.0-SNAPSHOT&lt;=*"/>
-    <dependent-plugin name="spring" version="1.0.0-SNAPSHOT&lt;=*"/>
+    <dependent-plugin name="datasource" version="1.0.1&lt;=*"/>
+    <dependent-plugin name="logging" version="1.0.1&lt;=*"/>
+    <dependent-plugin name="spring" version="1.0.1&lt;=*"/>
   </dependent-plugins>
   <resources>
     <resource dir="src/main/java" filtered="true" packaged="true">

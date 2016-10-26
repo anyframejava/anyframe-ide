@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2009 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.appfuse.tool.DataHelper;
 import org.hibernate.mapping.Column;
 
@@ -37,7 +35,6 @@ import org.hibernate.mapping.Column;
  * @author modified by SooYeon Park
  */
 public class AnyframeDataHelper extends DataHelper {
-	private static Log log = LogFactory.getLog(AnyframeDataHelper.class);
 	private static String datePattern = "yyyy-MM-dd";
 
 	private static final List<String> PRIMITIVES = new ArrayList<String>();

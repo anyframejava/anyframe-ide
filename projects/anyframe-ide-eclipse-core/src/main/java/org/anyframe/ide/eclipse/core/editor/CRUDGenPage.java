@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -58,6 +58,7 @@ public class CRUDGenPage implements Page {
     private Button buttonBuild;
     private Button buttonRefresh;
     private Button webProjectCheck;
+    private Button insertSampleDataCheck;
 
     private List domainObjectList;
     private Text serviceNameText;
@@ -192,13 +193,22 @@ public class CRUDGenPage implements Page {
         webProjectCheck = new Button(container, SWT.CHECK);
         webProjectCheck.setText(MessageUtil
             .getMessage("editor.crud.genwebsource"));
-        webProjectCheck.setLayoutData("growx, span 3");
+        webProjectCheck.setLayoutData("growx, span 3, wrap");
 
         // check Web Type
         if (webProjectName == null || webProjectName.length() == 0)
             webProjectCheck.setSelection(false);
         else
             webProjectCheck.setSelection(true);
+        
+        // Sample Data
+        insertSampleDataCheck = new Button(container, SWT.CHECK);
+        insertSampleDataCheck.setText(MessageUtil
+            .getMessage("editor.crud.insertsampledata"));
+        insertSampleDataCheck.setLayoutData("growx, span 3");
+
+        // check whether input sample data to database
+        insertSampleDataCheck.setSelection(true);
     }
 
     private void createCommandButton(ScrolledForm form, Composite parent) {
@@ -333,7 +343,7 @@ public class CRUDGenPage implements Page {
                 ConfigPage configPage =
                     (ConfigPage) ideEditor.getMapPages().get(new Integer(2));
                 if (!configPage.useHibernate() && !configPage.useQueryService()
-                    && !configPage.useIBatis2() && !configPage.useSpringJdbc()) {
+                    && !configPage.useIBatis2() && !configPage.useMyBatis() && !configPage.useSpringJdbc()) {
                     DialogUtil.openMessageDialog(MessageUtil
                         .getMessage("ide.message.title"), MessageUtil
                         .getMessage("editor.dialog.crud.daoframework"),
@@ -392,7 +402,7 @@ public class CRUDGenPage implements Page {
                             basePackage + "." + packageNameText.getText();
                     commandExecution.createCRUD(domainClassName, basePackage,
                         servicePjtNameText.getText(),
-                        webProjectCheck.getSelection(), ideEditor
+                        webProjectCheck.getSelection(), insertSampleDataCheck.getSelection(), ideEditor
                             .getCurrentProject().getLocation().toOSString());
                 } catch (Exception e) {
                     DialogUtil.openMessageDialog(MessageUtil

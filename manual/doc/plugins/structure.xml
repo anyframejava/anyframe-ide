@@ -130,7 +130,7 @@ public interface MovieService {
 						<entry>
 							해당 Plugin 설치로 인해 추가될 기능이 기본 DB 데이터 이외의 데이터를 필요로 하는 경우를 위해 실행될 DB 스크립트를 포함한다. 
 							현재 Plugin들 별로 필요한 DB 유형 별 스크립트를 제공하고 있다. HSQL DB를 위한 스크립트를 기본으로 제공하며
-							Oracle, MySQL, DB2, Sybase DB 스크립트를 추가 제공하고 있다.
+							Oracle, MySQL, DB2, Sybase, MSSQL DB 스크립트를 추가 제공하고 있다.
 						</entry>
 					</row>
 					<row>

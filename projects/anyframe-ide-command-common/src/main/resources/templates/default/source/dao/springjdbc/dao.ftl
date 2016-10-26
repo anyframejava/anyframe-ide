@@ -39,7 +39,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import ${pojo.packageName}.${pojo.shortName};
@@ -73,7 +73,7 @@ import ${field.value.type.returnedClass.name};
  *
  */
 @Repository("${pojoNameLower}Dao")
-public class ${pojo.shortName}Dao extends SimpleJdbcDaoSupport {
+public class ${pojo.shortName}Dao extends JdbcDaoSupport {
   
   	@Value("${r"#{contextProperties['pageSize'] ?: 10}"}")
 	int pageSize;
@@ -90,14 +90,14 @@ public class ${pojo.shortName}Dao extends SimpleJdbcDaoSupport {
 		String sql = "INSERT INTO ${tableName} (<#list columnList as columnName>${columnName}<#if columnName_has_next>, </#if></#list>) "
 			         + "VALUES (<#list fieldList as fieldName>?<#if fieldName_has_next>, </#if></#list>)";
 				
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] {<#list fieldList as fieldName><#assign getterMethodName = dbdata.getGetterMethodName(fieldName) />${pojoNameLower}.${getterMethodName}<#if fieldName_has_next>, </#if></#list>});		
 	}
 	
 	public void remove(${pojo.getJavaTypeName(pojo.identifierProperty, jdk5)} ${pojo.identifierProperty.name}) throws Exception {
 		String sql = "DELETE FROM ${tableName} WHERE <#list columnOnlyIdList as columnName>${columnName} = ?<#if columnName_has_next> AND </#if></#list>";
-		this.getSimpleJdbcTemplate().update(sql, new Object[]  { 
+		this.getJdbcTemplate().update(sql, new Object[]  { 
 		<#if isComponentKey>
 				 	<#list columnOnlyIdList as columnName><#assign getterMethodName = dbdata.getIdGetterMethodName(columnFieldOnlyIdMap.get(columnName)) />
 					${pojo.identifierProperty.name}.${getterMethodName}<#if columnName_has_next>, </#if></#list> });					 	
@@ -108,7 +108,7 @@ public class ${pojo.shortName}Dao extends SimpleJdbcDaoSupport {
 	
 	public void update(${pojo.shortName} ${pojoNameLower}) throws Exception {
 		String sql = "UPDATE ${tableName} SET <#list columnWOIdList as columnName>${columnName} = ?<#if columnName_has_next>, </#if></#list><#if !c2j.isComponent(pojo.identifierProperty) && columnWOIdList?has_content && columnFieldManyToOneKeyList?has_content>,</#if><#if !c2j.isComponent(pojo.identifierProperty)><#list columnFieldManyToOneKeyList as columnManyToOneName>${columnManyToOneName} = ?<#if columnManyToOneName_has_next>,</#if></#list></#if>" +" WHERE <#list columnOnlyIdList as columnName>${columnName} = ?<#if columnName_has_next> AND </#if></#list>";
-		this.getSimpleJdbcTemplate().update(
+		this.getJdbcTemplate().update(
 				sql,
 				new Object[] { 
 				<#list columnWOIdList as columnName><#assign getterMethodName = dbdata.getGetterMethodName(columnFieldWithoutIdMap.get(columnName)) />${pojoNameLower}.${getterMethodName}<#if columnName_has_next>, 
@@ -123,7 +123,7 @@ public class ${pojo.shortName}Dao extends SimpleJdbcDaoSupport {
 		String sql = "SELECT <#list columnList as columnName>${columnName}<#if columnName_has_next>, </#if></#list> "
 		              + "FROM ${tableName} WHERE <#list columnOnlyIdList as columnName>${columnName} = ?<#if columnName_has_next> AND </#if></#list>";
 		
-		return this.getSimpleJdbcTemplate().queryForObject(sql,
+		return this.getJdbcTemplate().queryForObject(sql,
 				new BeanPropertyRowMapper<${pojo.shortName}>(${pojo.shortName}.class) {
 					public ${pojo.shortName} mapRow(ResultSet rs, int i)
 							throws SQLException {

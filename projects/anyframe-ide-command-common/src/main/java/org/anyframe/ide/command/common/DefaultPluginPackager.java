@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -305,7 +305,6 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			// 1. copy template to output file
 			copyFile(baseDir + CommonConstants.fileSeparator + filesetDir,
 					template, output);
-
 			// 2. check common templates
 			if (isCommonTemplate(pluginName, output))
 				writeFileForReplaceRegion(pluginName, output);
@@ -330,9 +329,17 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 	private void writeFileForReplaceRegion(String pluginName, File output)
 			throws Exception, FileNotFoundException {
 		// 1. find plugin name start, end tags
-		Map<String, String> tokenMap = FileUtil.findReplaceRegion(
-				new FileInputStream(output), pluginName);
-
+		Map<String, String> tokenMap = new HashMap<String, String>();
+		
+		if(output.getName().endsWith("." + CommonConstants.EXT_JAVA)){
+			tokenMap = FileUtil.findReplaceRegionOfClass(
+					new FileInputStream(output), pluginName);
+		}
+		else{
+			tokenMap = FileUtil.findReplaceRegion(
+					new FileInputStream(output), pluginName);
+			
+		}
 		// 2. get contents between start tag and end tag
 		if (tokenMap.size() == 1) {
 			// write file only with the contents
@@ -360,18 +367,24 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 		if (pluginName.equals(CommonConstants.CORE_PLUGIN)) {
 			files.add(CommonConstants.SRC_MAIN_WEBAPP_WEBINF
 					+ CommonConstants.WEB_XML_FILE);
-		} else if (pluginName.equals(CommonConstants.TILES_PLUGIN)) {
-			files.add(CommonConstants.SRC_MAIN_WEBAPP_WEBINF
-					+ CommonConstants.WEB_XML_FILE);
-			files.add(CommonConstants.SRC_MAIN_WEBAPP
-					+ CommonConstants.WELCOME_FILE);
 		} else {
 			files.add(CommonConstants.SRC_MAIN_WEBAPP_WEBINF
-					+ CommonConstants.TILES_XML_FILE);
-			files.add(CommonConstants.SRC_MAIN_WEBAPP_WEBINF
 					+ CommonConstants.WEB_XML_FILE);
 			files.add(CommonConstants.SRC_MAIN_WEBAPP
 					+ CommonConstants.WELCOME_FILE);
+			files.add(CommonConstants.SRC_MAIN_RESOURCES_SPRING
+					+ CommonConstants.CONFIG_MESSAGE_FILE);
+			files.add(CommonConstants.SRC_MAIN_RESOURCES_SPRING
+					+ CommonConstants.CONFIG_TX_FILE);
+			files.add(CommonConstants.SRC_MAIN_RESOURCES
+					+ CommonConstants.LOG4J_FILE);
+			files.add(CommonConstants.SRC_MAIN_JAVA 
+					+ CommonConstants.PLUGIN_ASPECT_PACKAGE
+					+ CommonConstants.LOGGING_ASPECT_CLASS);
+			
+			if(!pluginName.equals(CommonConstants.TILES_PLUGIN))
+				files.add(CommonConstants.SRC_MAIN_WEBAPP_WEBINF
+						+ CommonConstants.TILES_XML_FILE);
 		}
 		Iterator<String> itr = files.iterator();
 		while (itr.hasNext()) {
@@ -833,6 +846,29 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 			replaceMap.put("#{", "${" + CommonConstants.VELOCITY_SHARP_BRACE
 					+ "}");
 			replaceMap.put("#", "${" + CommonConstants.VELOCITY_SHARP + "}");
+			
+			String keyword = CommonConstants.VELOCITY_SUPPORT;
+			Map<String, String> tokenMap = FileUtil.findReplaceRegion(
+					new FileInputStream(output), keyword);
+			Iterator<String> itr = tokenMap.keySet().iterator();
+			
+			
+			while (itr.hasNext()) {
+				String token = itr.next();
+
+				String value = tokenMap.get(token);
+				String replaceValue = replaceEscapeChar(value);
+
+				String startToken = "//" + keyword + "-" + token
+						+ "-START";
+				String endToken = "//" + keyword + "-" + token + "-END";
+
+				FileUtil.replaceFileContent(output, startToken, endToken,
+						startToken + endToken, "#set($" + token + "=\""
+								+ replaceValue + "\")${" + token + "}",
+						isPretty);
+			}
+			
 		}
 
 		// 4. replace file content
@@ -929,7 +965,10 @@ public class DefaultPluginPackager extends AbstractLogEnabled implements
 	 */
 	private void copyFile(final String filesetDir, final String template,
 			final File output) throws Exception {
-		FileUtil.copyFile(new File(filesetDir, template), output);
+		File testFile = new File(filesetDir, template);
+		
+		FileUtil.copyFile(testFile, output);
+		
 	}
 
 }

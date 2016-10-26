@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -15,7 +15,10 @@
  */
 package org.anyframe.ide.command.maven.mojo.codegen;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,8 +26,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.appfuse.tool.DataHelper;
 import org.hibernate.annotations.common.reflection.XClass;
 import org.hibernate.annotations.common.reflection.XProperty;
@@ -39,6 +40,8 @@ import org.hibernate.tool.hbm2x.Cfg2JavaTool;
 import org.hibernate.tool.hbm2x.GenericExporter;
 import org.hibernate.tool.hbm2x.pojo.POJOClass;
 import org.hibernate.util.ReflectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is an AnyframeDBData class to access pojo data(field and column
@@ -48,7 +51,7 @@ import org.hibernate.util.ReflectHelper;
  */
 public class AnyframeDBData {
 
-	private static Log log = LogFactory.getLog(AnyframeDBData.class);
+	private static Logger log = LoggerFactory.getLogger(AnyframeDBData.class);
 
 	private Cfg2JavaTool c2j;
 	private Cfg2HbmTool c2h;
@@ -428,7 +431,7 @@ public class AnyframeDBData {
 			// Field(OneToMany)에 대해서는 데이터를 생성하지 않는다.
 			if (getColumn(field) == null)
 				continue;
-
+			
 			if (c2h.isManyToOne(field)
 					&& !field.equals(pojo.getIdentifierProperty())) {
 				if (field.getValue() instanceof ManyToOne) {
@@ -458,7 +461,7 @@ public class AnyframeDBData {
 							String propertyName = field.getName()
 									+ "."
 									+ pojoclass.getIdentifierProperty()
-											.getName();
+										.getName();
 							columnFieldMap.put(c.getName(), propertyName);
 						}
 
@@ -484,6 +487,114 @@ public class AnyframeDBData {
 
 		return columnFieldMap;
 	}
+	
+	// get all column and field information (Only Mybatis)
+	public ListOrderedMap getColumnFieldMapMybatis(POJOClass pojo) {
+		ListOrderedMap columnFieldMap = new ListOrderedMap();
+
+		Class clazz = pojo.getClass();
+		Iterator<?> pojoItr = pojo.getAllPropertiesIterator();
+
+		while (pojoItr.hasNext()) {
+			Property field = (Property) pojoItr.next();
+			// ** 컬럼정보가 존재하지 않는 Set Type
+			// Field(OneToMany)에 대해서는 데이터를 생성하지 않는다.
+			Column col = getColumn(field);
+			if (col == null)
+				continue;
+			
+			if (c2h.isManyToOne(field)
+					&& !field.equals(pojo.getIdentifierProperty())) {
+				if (field.getValue() instanceof ManyToOne) {
+					ManyToOne manytoone = (ManyToOne) field.getValue();
+					Iterator<?> itr = manytoone.getColumnIterator();
+					while (itr.hasNext()) {
+						Column c = ((Column) itr.next());
+						PersistentClass pc = exporter.getConfiguration()
+								.getClassMapping(field.getType().getName());
+						POJOClass pojoclass = c2j.getPOJOClass(pc);
+
+						if (pojoclass.getIdentifierProperty().getValue() instanceof Component) {
+							Component keyComponent = (Component) pojoclass
+									.getIdentifierProperty().getValue();
+							Iterator<?> keyitr = keyComponent
+									.getPropertyIterator();
+
+							while (keyitr.hasNext()) {
+								Property p = ((Property) keyitr.next());
+								Column column = getColumn(p);
+								String propertyName = field.getName() + "."
+										+ p.getName();
+								propertyName += ", jdbcType=" + getMybatisJdbcType(column);
+								columnFieldMap.put(column.getName(),
+										propertyName);
+							}
+						} else {
+							String propertyName = field.getName()
+									+ "."
+									+ pojoclass.getIdentifierProperty()
+										.getName();
+							propertyName += ", jdbcType=" + getMybatisJdbcType(c);
+							columnFieldMap.put(c.getName(), propertyName);
+						}
+
+					}
+				}
+			} else {
+				String propertyName = field.getName();
+				propertyName += ", jdbcType=" + getMybatisJdbcType(col);
+				columnFieldMap.put(getColumn(field).getName(), propertyName);
+			}
+		}
+
+		// set composite key id field
+		if (pojo.getIdentifierProperty().getValue() instanceof Component) {
+			Component keyComponent = (Component) pojo.getIdentifierProperty()
+					.getValue();
+			Iterator<?> itr = keyComponent.getPropertyIterator();
+			while (itr.hasNext()) {
+				Property p = ((Property) itr.next());
+				Column column = getColumn(p);
+				String propertyName = pojo.getIdentifierProperty().getName()
+						+ "." + p.getName();
+				propertyName += ", jdbcType=" + getMybatisJdbcType(column);
+				columnFieldMap.put(column.getName(), propertyName);
+			}
+		}
+
+		return columnFieldMap;
+	}
+
+	private String getMybatisJdbcType(Column column) {
+		String className = column.getValue().getType().getReturnedClass().getName();
+		if(className.equals(String.class.getName())){
+			return "VARCHAR";
+		}  else if(className.equals(Boolean.class.getName())){
+			return "BOOLEAN";
+		}else if(className.equals(Integer.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Long.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Short.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Float.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Byte.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Double.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(BigDecimal.class.getName())){
+			return "NUMERIC";
+		} else if(className.equals(Byte[].class.getName())){
+			return "BLOB";
+		} else if(className.equals(Date.class.getName())){
+			return "DATE";
+		} else if(className.equals(Timestamp.class.getName())){
+			return "TIMESTAMP";
+		}else{
+			return "OTHER";
+		}
+	}
 
 	public ListOrderedMap getColumnFieldWithoutIdMap(POJOClass pojo) {
 		ListOrderedMap columnFieldMap = new ListOrderedMap();
@@ -499,6 +610,28 @@ public class AnyframeDBData {
 				continue;
 
 			columnFieldMap.put(getColumn(field).getName(), field.getName());
+		}
+
+		return columnFieldMap;
+	}
+	
+	// (Only Mybatis)
+	public ListOrderedMap getColumnFieldWithoutIdMapMybatis(POJOClass pojo) {
+		ListOrderedMap columnFieldMap = new ListOrderedMap();
+
+		Iterator<?> pojoItr = pojo.getAllPropertiesIterator();
+
+		while (pojoItr.hasNext()) {
+			Property field = (Property) pojoItr.next();
+			Column col = getColumn(field);
+			// ** 컬럼정보가 존재하지 않는 Set Type
+			// Field(OneToMany)에 대해서는 데이터를 생성하지 않는다.
+			if (col == null || c2h.isManyToOne(field)
+					|| field.equals(pojo.getIdentifierProperty()))
+				continue;
+			
+			String propertyName = field.getName() + ", jdbcType=" + getMybatisJdbcType(col);
+			columnFieldMap.put(col.getName(), propertyName);
 		}
 
 		return columnFieldMap;

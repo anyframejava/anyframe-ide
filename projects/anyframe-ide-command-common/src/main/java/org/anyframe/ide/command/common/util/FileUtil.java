@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -552,7 +552,8 @@ public class FileUtil {
 		antProject.init();
 
 		AntUtil.executeReplaceTask(antProject, file, token, value);
-
+		
+		
 		if (isPretty) {
 			XMLPrettyPrinter.prettyPrintFile(PrettyPrinter.getDefaultTidy(),
 					file, file, true);
@@ -566,9 +567,14 @@ public class FileUtil {
 
 		Project antProject = new Project();
 		antProject.init();
-
-		AntUtil.executeReplaceRegExpTask(antProject, file, "<!--" + token
+		if(file.getName().endsWith("." + CommonConstants.EXT_JAVA)){
+			AntUtil.executeReplaceRegExpTask(antProject, file, "//" + token
+					+ "-START", "//" + token + "-END", value);
+		}
+		else{
+			AntUtil.executeReplaceRegExpTask(antProject, file, "<!--" + token
 				+ "-START-->", "<!--" + token + "-END-->", value);
+		}
 
 		if (isPretty) {
 			XMLPrettyPrinter.prettyPrintFile(PrettyPrinter.getDefaultTidy(),
@@ -605,7 +611,6 @@ public class FileUtil {
 			String value, boolean isPretty) throws Exception {
 		Project antProject = new Project();
 		antProject.init();
-
 		AntUtil.executeReplaceTask(antProject, file, token, value);
 
 		if (isPretty)
@@ -799,7 +804,48 @@ public class FileUtil {
 			reader.close();
 		}
 	}
+	public static Map<String, String> findReplaceRegionOfClass(
+			InputStream inputStream, String pluginName) throws Exception {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				inputStream));
+		try {
+			Pattern startPattern = Pattern
+					.compile("(?i)(?u)(?s)\\A(?:(?://" + pluginName
+							+ "\\-)).*(?s).*(?:(?:\\-START))\\z");
+			Pattern endPattern = Pattern
+					.compile("(?i)(?u)(?s)\\A(?:(?://" + pluginName
+							+ "\\-)).*(?s).*(?:(?:\\-END))\\z");
+			
+			String aLine = null;
 
+			HashMap<String, String> map = new HashMap<String, String>();
+			while ((aLine = reader.readLine()) != null) {
+				String trimmedLine = aLine.trim();
+				Matcher matcher = startPattern.matcher(trimmedLine);
+				if (matcher.find()) {
+					int length = trimmedLine.length();
+
+					String key = trimmedLine.substring(
+							2 + pluginName.length() + 1, length - 6);
+					StringBuffer value = new StringBuffer();
+					while ((aLine = reader.readLine()) != null) {
+						trimmedLine = aLine.trim();
+						matcher = endPattern.matcher(trimmedLine);
+						if (matcher.find()) {
+							map.put(key, value.toString());
+							break;
+						}
+						value.append(aLine + "\n");
+					}
+				}
+			}
+
+			return map;
+		} finally {
+			inputStream.close();
+			reader.close();
+		}
+	}
 	// from GEN
 	/**
 	 * This method will copy files from the source directory to the destination
@@ -918,14 +964,14 @@ public class FileUtil {
 
 	}
 
-	public static void moveFile(File srcFile, File backupDir) throws Exception {
+	public static void moveFile(String baseDir, File srcFile, File backupDir) throws Exception {
 		String targetPath = srcFile.getCanonicalPath().substring(
-				new File(".").getCanonicalPath().length());
+				new File(baseDir).getCanonicalPath().length());
 		FileUtils.moveFile(srcFile, new File(backupDir, targetPath));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean moveFile(File srcFolder, File backupDir,
+	public static boolean moveFile(File srcFolder, String baseDir, File backupDir,
 			List<String> includePatterns, Collection<String> excludeFiles,
 			boolean recursive) throws Exception {
 
@@ -953,14 +999,15 @@ public class FileUtil {
 		// -- move files
 		for (File src : files) {
 			String targetPath = src.getCanonicalPath().substring(
-					new File(".").getCanonicalPath().length());
+					new File(baseDir).getCanonicalPath().length());
+			
 			FileUtils.moveFile(src, new File(backupDir, targetPath));
 		}
 
 		return true;
 	}
 
-	public static boolean moveDirectory(File srcFolder, File backupDir,
+	public static boolean moveDirectory(String baseDir, File srcFolder, File backupDir,
 			Collection<String> excludes) throws Exception {
 
 		if (!srcFolder.exists()) {
@@ -977,7 +1024,7 @@ public class FileUtil {
 		// -- move files
 		for (File src : files) {
 			String targetPath = src.getCanonicalPath().substring(
-					new File(".").getCanonicalPath().length());
+					new File(baseDir).getCanonicalPath().length());
 			FileUtils.moveFile(src, new File(backupDir, targetPath));
 		}
 
@@ -999,9 +1046,9 @@ public class FileUtil {
 		return true;
 	}
 	
-	public static boolean moveDirectory(File srcFolder, File backupDir,
+	public static boolean moveDirectory(String baseDir, File srcFolder, File backupDir,
 			Collection<String> excludes, Collection<String> excludeFolders) throws Exception {
-
+		
 		if (!srcFolder.exists()) {
 			return false;
 		}
@@ -1014,19 +1061,15 @@ public class FileUtil {
 		.notFileFilter(new NameFileFilter(excludeFolders
 				.toArray(new String[excludeFolders.size()]), IOCase.SENSITIVE));
 		
-		File[] founds = srcFolder.listFiles((FileFilter) excludesFolderFilter);
-		
-		for (File found : founds) {
-			// find only files, not directories
-			Collection<File> files = FileUtils.listFiles(found, excludesFilter,
-					TrueFileFilter.INSTANCE);
+			
+		Collection<File> srcFiles = FileUtils.listFiles(srcFolder, excludesFilter,
+				TrueFileFilter.INSTANCE);
 
-			// -- move files
-			for (File src : files) {
-				String targetPath = src.getCanonicalPath().substring(
-						new File(".").getCanonicalPath().length());
-				FileUtils.moveFile(src, new File(backupDir, targetPath));
-			}
+		// -- move files
+		for (File src : srcFiles) {
+			String targetPath = src.getCanonicalPath().substring(
+					new File(baseDir).getCanonicalPath().length());
+			FileUtils.moveFile(src, new File(backupDir, targetPath));
 		}
 
 		// --- delete empty folder
@@ -1056,7 +1099,7 @@ public class FileUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean moveDirectory(File srcFolder, File backupDir,
+	public static boolean moveDirectory(String baseDir, File srcFolder, File backupDir,
 			String pluginName, Collection<String> excludes) throws Exception {
 
 		if (!srcFolder.exists()) {
@@ -1080,7 +1123,7 @@ public class FileUtil {
 
 			if (excludeFiles == null || excludeFiles.length == 0) {
 				String targetPath = src.getCanonicalPath().substring(
-						new File(".").getCanonicalPath().length());
+						new File(baseDir).getCanonicalPath().length());
 				FileUtils.moveFile(src, new File(backupDir, targetPath));
 			}
 		}
@@ -1132,36 +1175,4 @@ public class FileUtil {
 
 		}
 	}
-
-	// public static Collection<File> listFiles(
-	// File directory, IOFileFilter fileFilter, IOFileFilter dirFilter) {
-	//		
-	// if (!directory.isDirectory()) {
-	// throw new IllegalArgumentException(
-	// "Parameter 'directory' is not a directory");
-	// }
-	// if (fileFilter == null) {
-	// throw new NullPointerException("Parameter 'fileFilter' is null");
-	// }
-	//
-	// //Setup effective file filter
-	// IOFileFilter effFileFilter = FileFilterUtils.and(fileFilter,
-	// FileFilterUtils.notFileFilter(DirectoryFileFilter.INSTANCE));
-	//
-	// //Setup effective directory filter
-	// IOFileFilter effDirFilter;
-	// if (dirFilter == null) {
-	// effDirFilter = FalseFileFilter.INSTANCE;
-	// } else {
-	// effDirFilter = FileFilterUtils.and(dirFilter,
-	// DirectoryFileFilter.INSTANCE);
-	// }
-	//
-	// //Find files
-	// Collection<File> files = new java.util.LinkedList<File>();
-	// innerList(files, directory,
-	// FileFilterUtils.or(effFileFilter, effDirFilter));
-	// return files;
-	// }
-
 }

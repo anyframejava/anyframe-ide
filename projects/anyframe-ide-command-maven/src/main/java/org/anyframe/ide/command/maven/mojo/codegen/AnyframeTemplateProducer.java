@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.tool.hbm2x.ArtifactCollector;
 import org.hibernate.tool.hbm2x.ExporterException;
 import org.hibernate.tool.hbm2x.TemplateHelper;
 import org.hibernate.tool.hbm2x.TemplateProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is an AnyframeTemplateProducer class to generate codes based on
@@ -38,8 +38,8 @@ import org.hibernate.tool.hbm2x.TemplateProducer;
  * @author Sooyeon Park
  */
 public class AnyframeTemplateProducer extends TemplateProducer {
-	private static final Log log = LogFactory
-			.getLog(AnyframeTemplateProducer.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(AnyframeTemplateProducer.class);
 	private final TemplateHelper th;
 	private ArtifactCollector ac;
 

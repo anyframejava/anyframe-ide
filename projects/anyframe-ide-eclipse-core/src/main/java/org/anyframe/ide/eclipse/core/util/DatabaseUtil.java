@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -58,6 +58,8 @@ public class DatabaseUtil {
         "jdbc:sybase:Tds:<server>:<port>?ServiceName=<database_name>";
     private static final String DB_DB2_URL =
         "jdbc:db2://<server>:<port>/<database_name>";
+    private static final String DB_MSSQL_URL = 
+        "jdbc:sqlserver://<server>:<port>;DatabaseName=<database_name>";
 
     public static final String DB_CON_CHK_KEY = "DB_CON_CHK";
     public static final String DB_CON_MSG_KEY = "DB_CON_MSG";
@@ -173,6 +175,8 @@ public class DatabaseUtil {
             dbUrl = DB_SYBASE_URL;
         else if (dbType.equals("db2"))
             dbUrl = DB_DB2_URL;
+        else if (dbType.equals("mssql"))
+            dbUrl = DB_MSSQL_URL;
 
         dbUrl = dbUrl.replace("<server>", dbServer);
         dbUrl = dbUrl.replace("<port>", dbPort);

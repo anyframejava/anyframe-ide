@@ -136,7 +136,7 @@
 								<note>
 									<title>참고</title>
 									<para>
-										현재 Anyframe에서 제공하는 Plugin들은 기본인 HsqlDB외에 Oracle, Sybase, MySQL, DB2를 위한 리소스를 추가로 제공하고 있다.
+										현재 Anyframe에서 제공하는 Plugin들은 기본인 HsqlDB외에 Oracle, Sybase, MySQL, DB2, mssql를 위한 리소스를 추가로 제공하고 있다.
 									</para>
 								</note>
 							</entry>
@@ -580,7 +580,7 @@
 		<para>
 			앞서 언급한 바와 같이 Plugin 설치를 통해 생성된 샘플 프로젝트는 기본적으로 hsqldb를 기반으로 동작하도록 구성되어 있다. 그런데 만약 샘플 프로젝트의 실행 DB를 변경하고자 원한다면 
 			다음과 같은 작업을 수행해야 한다.
-			(현재 샘플을 제공하고 있는 Anyframe 플러그인은 hsqldb, oracle, sysbase, db2, mysql DB에 대해서만 동작하도록 지원하고 있다.)		
+			(현재 샘플을 제공하고 있는 Anyframe 플러그인은 hsqldb, oracle, sysbase, db2, mysql, mssql DB에 대해서만 동작하도록 지원하고 있다.)		
 		</para>
 		<orderedlist numeration="arabic" inheritnum="inherit">
 			<listitem>
@@ -877,7 +877,7 @@ public class BoardServiceImpl implements BoardService {
 					<listitem>
 						<para>DAO 클래스 (src/main/java/{대표패키지}/{package}/service/impl/{Entity 클래스명}Dao.java)</para>
 					<programlisting language="java">@Repository("boardDao")
-public class BoardDaoQueryImpl extends SimpleJdbcDaoSupport {
+public class BoardDaoQueryImpl extends JdbcDaoSupport {
 
     @Value("#{contextProperties['pageSize'] ?: 10}")
     int pageSize;
@@ -893,7 +893,7 @@ public class BoardDaoQueryImpl extends SimpleJdbcDaoSupport {
     public void create(Board board) throws Exception {
         String sql = "INSERT INTO BOARD (BOARD_ID, BOARD_DESC, BOARD_MASTER_ID, BOARD_NAME, BOARD_ORDER, BOARD_TOPICS, REG_DATE) "
                               + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        this.getSimpleJdbcTemplate().update(
+        this.getJdbcTemplate().update(
                                     sql,
                                     new Object[] {board.getId().getBoardId(), board.getBoardDesc(), board.getId().getBoardMasterId(), 
                                     board.getBoardName(), board.getBoardOrder(), board.getBoardTopics(), board.getRegDate()});
@@ -901,7 +901,7 @@ public class BoardDaoQueryImpl extends SimpleJdbcDaoSupport {
         
     public void remove(BoardId id) throws Exception {
         String sql = "DELETE FROM BOARD WHERE BOARD_ID = ? AND BOARD_MASTER_ID = ?";
-        this.getSimpleJdbcTemplate().update(sql, new Object[] {id.getBoardId(), id.getBoardMasterId()});
+        this.getJdbcTemplate().update(sql, new Object[] {id.getBoardId(), id.getBoardMasterId()});
     }
     ...
 }</programlisting>
@@ -959,7 +959,7 @@ public class BoardServiceTest{
 					<title>참고 1</title>
 					<para>
 						META-INF/project.mf 에서 project.daoframework 값을 변경하지 않았을 경우 기본 DAO Framework은 springjdbc로 설정되어 
-						있다. (위에서 보여준 DAO 구현 클래스는 springjdbc로 설정되어 있는 경우의 모습이다.) 설정할 수 있는 DAO Framework로는 springjdbc, query, hibernate, ibatis2 가 있다.
+						있다. (위에서 보여준 DAO 구현 클래스는 springjdbc로 설정되어 있는 경우의 모습이다.) 설정할 수 있는 DAO Framework로는 springjdbc, query, hibernate, ibatis2, mybatis 가 있다.
 					</para>
 					<para>
 						META-INF/project.mf 에서 project.daoframework 값을 "hibernate"으로 설정하여 DAO Framework으로 Hibernate을 채택한 경우,

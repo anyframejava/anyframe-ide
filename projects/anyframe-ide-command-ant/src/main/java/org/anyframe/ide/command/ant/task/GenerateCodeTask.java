@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -49,6 +49,8 @@ public class GenerateCodeTask extends AbstractPluginTask {
 	private String scope = "all";
 	/** check command line interface mode */
 	private String isCLIMode = "false";
+	/** input sample data to database */
+	private String insertSampleData = "true";
 
 	/**
 	 * main method for executing GenerateCodeTask this task is executed when you
@@ -88,13 +90,16 @@ public class GenerateCodeTask extends AbstractPluginTask {
 			}
 			codeGenerator
 					.setCLIMode(new Boolean(this.isCLIMode).booleanValue());
-
+			
+			codeGenerator.setInsertSampleData(new Boolean(this.insertSampleData).booleanValue());
+			
 			codeGenerator.execute();
 		} catch (Exception e) {
 			log("Fail to execute GenerateCodeTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());
 		}
 	}
+
 
 	/**
 	 * look up essential components.
@@ -201,4 +206,13 @@ public class GenerateCodeTask extends AbstractPluginTask {
 	public void setIsCLIMode(String isCLIMode) {
 		this.isCLIMode = isCLIMode;
 	}
+	
+	/**
+	 * input sample data to database
+	 * @param insertSampleData
+	 */
+	public void setInsertSampleData(String insertSampleData) {
+		this.insertSampleData = insertSampleData;
+	}
+	
 }

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -24,8 +24,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.appfuse.mojo.HibernateExporterMojo;
@@ -34,6 +32,8 @@ import org.appfuse.tool.ArtifactInstaller;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.hibernate.tool.hbm2x.Exporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -52,7 +52,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author modified by SooYeon Park
  */
 public class AnyframeGeneratorMojo extends HibernateExporterMojo {
-	private static Log log = LogFactory.getLog(AnyframeGeneratorMojo.class);
+	private static Logger log = LoggerFactory.getLogger(AnyframeGeneratorMojo.class);
 
 	boolean generateCoreOnly;
 	boolean generateWebOnly;

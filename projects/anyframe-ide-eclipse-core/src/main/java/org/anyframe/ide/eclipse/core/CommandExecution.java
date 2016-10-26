@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -89,7 +89,7 @@ public class CommandExecution {
     }
 
     public void createCRUD(String domainClassName, String srcPackage,
-            String serviceProjectName, boolean createWebProject,
+            String serviceProjectName, boolean createWebProject, boolean insertSampleData,
             String projectLocation) {
 
         // 1. get application location
@@ -116,6 +116,9 @@ public class CommandExecution {
         String scope = CommonConstants.PROJECT_TYPE_SERVICE;
         if (createWebProject)
             scope = "all";
+        String sampleData = "false";
+        if (insertSampleData)
+            sampleData = "true";
 
         // 2. make arguments
         CreateCRUDVO vo = new CreateCRUDVO();
@@ -127,6 +130,7 @@ public class CommandExecution {
         vo.setProjectHome(pjtHomeLocation);
         vo.setAnyframeHome(anyframeHomeLocation);
         vo.setBasedir(pjtHomeLocation);
+        vo.setInsertSampleData(sampleData);
 
         // 3. run ant/maven
         AbstractCommandFactory factory = new CommandFactory(projectBuildType);

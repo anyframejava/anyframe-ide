@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,7 +28,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +49,7 @@ import org.anyframe.ide.command.common.util.DBUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.anyframe.ide.command.common.util.ObjectUtil;
 import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.ArchetypeArtifactManager;
 import org.apache.maven.archetype.common.Constants;
@@ -202,13 +203,14 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				pluginNames = pluginName.split(",");
 			}
 
-			Map<String, TargetPluginInfo> visitedPlugins = new HashMap<String, TargetPluginInfo>();
+			Map<String, TargetPluginInfo> visitedPlugins = new ListOrderedMap();
 
 			analyzePluginDependencies(request, baseDir, pluginNames,
 					pluginVersion, pluginJar, pluginInfoFromJar, visitedPlugins);
 
 			if (visitedPlugins.size() > 0) {
 				System.out.println("Dependencies Resolved.");
+				
 				installPlugin(request, context, pio, baseDir, visitedPlugins,
 						pluginJar, pluginInfoFromJar, encoding, pomHandling,
 						isCLIMode);
@@ -253,7 +255,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		System.out.println("Resolving plugin dependencies ...");
 		for (String installPluginName : pluginNames) {
 			installPluginName = installPluginName.trim();
-
 			// 5.2.2 get a specific plugin information
 			PluginInfo pluginInfo;
 
@@ -367,7 +368,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 								springPlugin.getVersion());
 			}
 		}
-
+		
 		Properties springProperties = new Properties();
 		if (springPluginJar != null) {
 			Model model = pluginPomManager.getPluginPom(springPluginJar);
@@ -384,12 +385,16 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 				pluginInfoFromJar, encoding, pomHandling, springProperties);
 		visitedPlugins.remove(CommonConstants.TILES_PLUGIN);
 
-		Collection<TargetPluginInfo> targetPlugins = visitedPlugins.values();
-		for (TargetPluginInfo targetPluginInfo : targetPlugins) {
+		List<TargetPluginInfo> targetPlugins = (List<TargetPluginInfo>)visitedPlugins.values();
+		
+		
+		for (int i = targetPlugins.size()-1; i>=0; i--) {
+			TargetPluginInfo targetPluginInfo = targetPlugins.get(i);
 			installPlugin(request, context, pio, baseDir, targetPluginInfo
 					.getPluginInfo().getName(), visitedPlugins, pluginJar,
 					pluginInfoFromJar, encoding, pomHandling, springProperties);
 		}
+		
 	}
 
 	/**
@@ -918,6 +923,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			Properties pomProperties) throws Exception {
 		getLogger().debug("Call process() of DefaultPluginInstaller");
 		// 1. get all file names from archetypeFile
+		
 		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
 
 		File targetDir = new File(baseDir);
@@ -929,11 +935,14 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		if (pomHandling) {
 			// 2.1 process pom file
 			processPom(targetDir, pluginZip, fileNames);
+			removeProcessPom(targetDir, pluginZip, fileNames);
+			
 		} else {
 			// 2.2 copy dependent libraries to target folder
 			String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
 			processDependencyLibs(request, projectType, targetDir, pluginJar,
 					pomProperties);
+			removeDependencyLibs(projectType, targetDir, pluginZip, pluginJar);
 		}
 
 		if (!pomHandling
@@ -957,11 +966,11 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 					fileNames, encoding);
 
 			// 4. process web.xml of current project
-			processWebXMLFile(context, targetDir, pluginInfo.getName(),
+			processWebXMLFile(context, targetDir, fileNames, pluginInfo.getName(),
 					pluginJar, encoding);
 
 			// 5. process transaction configuration file of current project
-			processTransactionFile(targetDir, pluginInfo.getName());
+			processTransactionFile(targetDir, pluginInfo.getName(), pluginJar, encoding);
 
 			// 6. add a hyperlink to welcome file
 			processWelcomeFile(targetDir, pluginInfo.getName(),
@@ -977,9 +986,19 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			// 9. create custom table, insert data to DB
 			processInitialData(pio, targetDir, pluginInfo.getName(), pluginZip,
 					fileNames, encoding);
+			
+			// 10. add loggers or appenders to log4j.xml 
+			processLog4jXMLFile(targetDir, pluginInfo.getName(), pluginJar, encoding);
+			
+			// 11. add message resources to context-message.xml
+			processMessageFile(targetDir, pluginInfo.getName(), pluginJar, encoding);
+			
+			// 12. add pointcut to LoggingAspect.java
+			processLoggingAspectClass(targetDir, pluginInfo.getName(), pio.readValue(CommonConstants.PACKAGE_NAME), pluginJar, encoding);
+			
 		}
 
-		// 10. add installation information to plugin-installed.xml file,
+		// 13. add installation information to plugin-installed.xml file,
 		// plugin-build.xml file
 		updateInstallationInfo(request, targetDir, pluginInfo,
 				pluginInfo.getName(), excludeSrc);
@@ -1004,7 +1023,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		List<String> pomFiles = FileUtil.findFiles(fileNames,
 				CommonConstants.PLUGIN_RESOURCES, "**\\"
 						+ Constants.ARCHETYPE_POM, null);
-
 		// 2. merge dependencies of pom file with current dependencies
 		if (pomFiles.size() > 0) {
 			try {
@@ -1015,7 +1033,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 
 				pluginPomManager.mergePom(new File(targetDir,
 						Constants.ARCHETYPE_POM), temporaryPomFile);
-
+				
 				FileUtil.deleteFile(temporaryPomFile);
 			} catch (Exception e) {
 				getLogger().warn(
@@ -1028,7 +1046,48 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 							+ pluginZip.getName() + " doesn't exist.");
 		}
 	}
+	
+	/**
+	 * in case of installing using maven, merge a new pom file of plugin with
+	 * current pom file
+	 * 
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginZip
+	 *            zip file includes plugin binary file
+	 * @param fileNames
+	 *            resources in plugin jar file
+	 */
+	private void removeProcessPom(File targetDir, ZipFile pluginZip,
+			List<String> fileNames) throws Exception {
+		getLogger().debug("Call removeProcessPom() of DefaultPluginInstaller");
 
+		// 1. extract pom file from plugin jar file
+		List<String> pomFiles = FileUtil.findFiles(fileNames,
+				CommonConstants.PLUGIN_RESOURCES, "**\\"
+						+ CommonConstants.ARCHETYPE_REMOVE_POM, null);
+		// 2. merge dependencies of pom file with current dependencies
+		if (pomFiles.size() > 0) {
+			try {
+				File temporaryPomFile = new File(targetDir, "remove-pom.xml");
+				temporaryPomFile.getParentFile().mkdirs();
+				copyFile(pluginZip, (String) pomFiles.get(0), temporaryPomFile);
+				pluginPomManager.removePomSpecificDependencies(new File(targetDir,
+						Constants.ARCHETYPE_POM), temporaryPomFile);
+				FileUtil.deleteFile(temporaryPomFile);
+			} catch (Exception e) {
+				getLogger().debug(
+						"Processing a remove-pom.xml of current project is skipped. The reason is a '"
+								+ e.getMessage() + "'.");
+			}
+		} else {
+			getLogger()
+					.debug("Removing current pom file with that of plugin is skipped. The reason is a remove-pom.xml in "
+							+ pluginZip.getName() + " doesn't exist.");
+		}
+	}
+
+	
 	/**
 	 * copy dependent libraries of plugin to target folder
 	 * 
@@ -1158,6 +1217,76 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 							+ " is skipped. The reason is a '" + e.getMessage()
 							+ "'.");
 		}
+	}
+	
+	/**
+	 * copy dependent libraries of plugin to target folder
+	 * 
+	 * @param projectType
+	 *            generated project's style ('web' or 'service')
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginJar
+	 *            plugin binary file
+	 */
+	public void removeDependencyLibs(String projectType, File targetDir, 
+			ZipFile pluginZip, File pluginJar) throws Exception{
+		getLogger().debug(
+				"Call removeDependencyLibs() of DefaultPluginInstaller");
+		
+		// 1. remove generated libraries
+		File destination = null;
+		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
+			destination = new File(targetDir, "lib");
+		} else if (projectType
+				.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_WEB)) {
+			destination = new File(targetDir, CommonConstants.SRC_MAIN_WEBAPP_LIB);
+		}
+
+		if (!destination.exists()) {
+			return;
+		}
+
+		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
+		
+		List<String> pomFiles = FileUtil.findFiles(fileNames,
+				CommonConstants.PLUGIN_RESOURCES, "**\\"
+						+ CommonConstants.ARCHETYPE_REMOVE_POM, null);
+		// 2. merge dependencies of pom file with current dependencies
+		if (pomFiles.size() > 0) {
+			try {
+				
+				File temporaryPomFile = new File(targetDir, "remove-pom.tmp");
+				temporaryPomFile.getParentFile().mkdirs();
+				InputStream is = pluginInfoManager.getPluginResource(pomFiles.get(0), pluginJar);
+				IOUtil.copy(is, new FileOutputStream(temporaryPomFile));
+				
+				Model removeModel = pluginPomManager.readPom(temporaryPomFile);
+				
+				List<Dependency> dependencies = removeModel.getDependencies();
+				List<String> removeFileNames = new ArrayList<String>();
+				
+				for (Dependency dependency : dependencies) {
+					removeFileNames.add(dependency.getArtifactId()
+							+ "-"
+							+ dependency.getVersion()
+							+ (StringUtils.isEmpty(dependency.getClassifier()) ? ""
+									: "-" + dependency.getClassifier()) + ".jar");
+				}
+				
+				FileUtil.deleteFile(destination, removeFileNames);
+				FileUtil.deleteFile(temporaryPomFile);
+			} catch (Exception e) {
+				getLogger().debug(
+						"Processing a remove-pom.xml of current project is skipped. The reason is a '"
+								+ e.getMessage() + "'.");
+			}
+		} else {
+			getLogger()
+					.debug("Removing current pom file with that of plugin is skipped. The reason is a remove-pom.xml in "
+							+ pluginZip.getName() + " doesn't exist.");
+		}
+		
 	}
 
 	/**
@@ -1432,7 +1561,7 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 * @param encoding
 	 *            file encoding style
 	 */
-	private void processWebXMLFile(Context context, File targetDir,
+	private void processWebXMLFile(Context context, File targetDir, List<String> fileNames,
 			String pluginName, File pluginJar, String encoding)
 			throws Exception {
 		getLogger().debug("Call processWebXMLFile() of DefaultPluginInstaller");
@@ -1442,13 +1571,15 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 			File file = new File(targetDir,
 					CommonConstants.SRC_MAIN_WEBAPP_WEBINF
 							+ CommonConstants.WEB_XML_FILE);
-
+			
 			String contents = pluginInfoManager
 					.readPluginResource(CommonConstants.PLUGIN_RESOURCES
 							+ CommonConstants.SRC_MAIN_WEBAPP_WEBINF
 							+ CommonConstants.WEB_XML_FILE, pluginJar, encoding);
-
 			if (contents != null) {
+				
+				contents = processVelocityToContents(context, contents);
+				
 				if (pluginName.equals(CommonConstants.CORE_PLUGIN)) {
 					FileUtil.addFileContent(
 							file,
@@ -1468,10 +1599,9 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 									+ pluginName + "-configuration-START-->\n"
 									+ contents + "\n<!--" + pluginName
 									+ "-configuration-END-->", true);
-
 				}
-
 			}
+			
 		} catch (Exception e) {
 			getLogger().warn(
 					"Processing a web.xml of current project is skipped. The reason is a '"
@@ -1487,32 +1617,47 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 	 * @param pluginName
 	 *            a target plugin name to install
 	 */
-	private void processTransactionFile(File targetDir, String pluginName)
+	private void processTransactionFile(File targetDir, String pluginName, File pluginJar, String encoding)
 			throws Exception {
 		getLogger().debug(
 				"Call processTransactionFile() of DefaultPluginInstaller");
-
 		try {
-			if (pluginName.equals(CommonConstants.HIBERNATE_PLUGIN)) {
+			
 				// 1. get a transaction configuration file
 				File file = new File(targetDir.getAbsolutePath()
 						+ CommonConstants.SRC_MAIN_RESOURCES + "spring",
 						CommonConstants.CONFIG_TX_FILE);
-
-				FileUtil.replaceFileContent(
-						file,
-						"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
-						"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
-
-				FileUtil.replaceFileContent(file,
-						"<property name=\"dataSource\" ref=\"dataSource\" />",
-						"<property name=\"sessionFactory\" ref=\"sessionFactory\" />");
-			}
+				
+				String contents = pluginInfoManager
+						.readPluginResource(CommonConstants.PLUGIN_RESOURCES
+								+ CommonConstants.SRC_MAIN_RESOURCES_SPRING
+								+ CommonConstants.CONFIG_TX_FILE, pluginJar, encoding);
+				
+				if (!pluginName.equals(CommonConstants.CORE_PLUGIN) && contents != null) {
+					FileUtil.addFileContent(file,
+							"<!--Add new configuration here-->",
+							"<!--Add new configuration here-->\n<!--"
+									+ pluginName + "-configuration-START-->\n"
+									+ contents + "\n<!--" + pluginName
+									+ "-configuration-END-->", true);
+				}
+				
+				if (pluginName.equals(CommonConstants.HIBERNATE_PLUGIN)) {
+					FileUtil.replaceFileContent(
+							file,
+							"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"",
+							"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"");
+	
+					FileUtil.replaceFileContent(file,
+							"<property name=\"dataSource\" ref=\"dataSource\" />",
+							"<property name=\"sessionFactory\" ref=\"sessionFactory\" />");
+				}
 		} catch (Exception e) {
 			getLogger()
 					.warn("Processing a context-transaction.xml of current project is skipped. The reason is a '"
 							+ e.getMessage() + "'.");
 		}
+		
 	}
 
 	/**
@@ -1620,7 +1765,146 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 							+ e.getMessage() + "'.");
 		}
 	}
+	
+	/**
+	 * add loggers or appenders to log4j.xml
+	 * 
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginName
+	 *            a target plugin name to install
+	 * @param pluginJar
+	 *            plugin binary file
+	 * @param encoding
+	 *            file encoding style
+	 */
 
+	private void processLog4jXMLFile(File targetDir, String pluginName,
+			File pluginJar, String encoding) throws Exception {
+		getLogger().debug("Call processLog4jXMLFile() of DefaultPluginInstaller");
+
+		try {
+			// 1. get a log4j.xml file
+			File file = new File(targetDir,
+					CommonConstants.SRC_MAIN_RESOURCES
+							+ CommonConstants.LOG4J_FILE);
+			String contents = pluginInfoManager
+					.readPluginResource(CommonConstants.PLUGIN_RESOURCES
+							+ CommonConstants.SRC_MAIN_RESOURCES
+							+ CommonConstants.LOG4J_FILE, pluginJar, encoding);
+			
+			if (!pluginName.equals(CommonConstants.CORE_PLUGIN) && contents != null) {
+				FileUtil.addFileContent(file,
+						"<!--Add new configuration here-->",
+						"<!--Add new configuration here-->\n<!--"
+								+ pluginName + "-configuration-START-->\n"
+								+ contents + "\n<!--" + pluginName
+								+ "-configuration-END-->", true);
+			}
+		} catch (Exception e) {
+			getLogger().warn(
+					"Processing a log4j.xml of current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
+		}
+	}
+	
+	/**
+	 * add a message resource to messageSource bean definition
+	 * 
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginName
+	 *            a target plugin name to install
+	 * @param pluginJar
+	 *            plugin binary file
+	 * @param encoding
+	 *            file encoding style
+	 */
+
+	private void processMessageFile(File targetDir, String pluginName,
+			File pluginJar, String encoding) throws Exception {
+		getLogger().debug("Call processMessageFile() of DefaultPluginInstaller");
+
+		try {
+			
+			// 1. get a context-message.xml file
+			File file = new File(targetDir.getAbsolutePath()
+					+ CommonConstants.SRC_MAIN_RESOURCES + "spring",
+					CommonConstants.CONFIG_MESSAGE_FILE);
+
+			String contents = pluginInfoManager
+					.readPluginResource(CommonConstants.PLUGIN_RESOURCES
+							+ CommonConstants.SRC_MAIN_RESOURCES_SPRING
+							+ CommonConstants.CONFIG_MESSAGE_FILE, pluginJar, encoding);
+
+			if (!pluginName.equals(CommonConstants.CORE_PLUGIN) && contents != null) {
+				FileUtil.addFileContent(file,
+						"<!--Add new configuration here-->",
+						"<!--Add new configuration here-->\n<!--"
+								+ pluginName + "-configuration-START-->\n"
+								+ contents + "\n<!--" + pluginName
+								+ "-configuration-END-->", true);
+			}
+		} catch (Exception e) {
+			getLogger().warn(
+					"Processing a context-message.xml of current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
+		}
+	}
+	
+	/**
+	 * add a message resource to messageSource bean definition
+	 * 
+	 * @param targetDir
+	 *            target project folder to install a plugin
+	 * @param pluginName
+	 *            a target plugin name to install
+	 * @param pluginJar
+	 *            plugin binary file
+	 * @param encoding
+	 *            file encoding style
+	 */
+
+	private void processLoggingAspectClass(File targetDir, String pluginName, String packageName,
+			File pluginJar, String encoding) throws Exception {
+		getLogger().debug("Call processLoggingAspectClass() of DefaultPluginInstaller");
+
+		try {
+			// 1. get a LoggingAspect.java file
+			File file = new File(targetDir,
+					CommonConstants.SRC_MAIN_JAVA + packageName + System.getProperty("file.separator")
+					+ CommonConstants.PLUGIN_ASPECT_PACKAGE  + CommonConstants.LOGGING_ASPECT_CLASS);
+
+			String contents = pluginInfoManager
+					.readPluginResource(CommonConstants.PLUGIN_RESOURCES
+							+ CommonConstants.SRC_MAIN_JAVA + CommonConstants.PLUGIN_ASPECT_PACKAGE
+							+ CommonConstants.LOGGING_ASPECT_CLASS, pluginJar, encoding);
+			
+			
+			if (!pluginName.equals(CommonConstants.CORE_PLUGIN) && contents != null) {
+				
+				FileUtil.addFileContent(file,
+						"//Add new configuration here",
+						"//Add new configuration here\n//"
+								+ pluginName + "-configuration-START\n"
+								+ contents + "//" + pluginName
+								+ "-configuration-END\n", false);
+			}
+		} catch (Exception e) {
+			getLogger().warn(
+					"Processing a LoggingAspect.java of current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
+		}
+	}
+
+	private String processVelocityToContents(Context context, String contents) throws Exception{
+		StringWriter newContents = new StringWriter();
+		velocity.evaluate(context, newContents, "newContents", contents);
+		return newContents.toString();
+	}
+	
+	
+	
 	/**
 	 * replace current configuration file based on db template in plugin
 	 * 
@@ -1843,7 +2127,6 @@ public class DefaultPluginInstaller extends AbstractLogEnabled implements
 		try {
 			Writer writer = new OutputStreamWriter(
 					new FileOutputStream(output), encoding);
-
 			velocity.mergeTemplate(template, encoding, context, writer);
 			writer.flush();
 		} catch (Exception e) {

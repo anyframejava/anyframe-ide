@@ -1,7 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
   <name>anyframe-ide-command-ant</name>
   <comment>anyframe gen command ant project. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
-  <projects/>
+  <projects>
+    <project>anyframe-ide-command-cli</project>
+    <project>anyframe-ide-command-aspect</project>
+    <project>anyframe-ide-command-common</project>
+    <project>anyframe-maven-plugin</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.wst.common.project.facet.core.builder</name>

@@ -6,12 +6,13 @@ package ${package}.service.impl;
 import java.util.List;
 import javax.inject.Inject;
 
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import org.anyframe.pagination.Page;
-import org.anyframe.datatype.SearchVO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 import ${pojo.packageName}.${pojo.shortName};

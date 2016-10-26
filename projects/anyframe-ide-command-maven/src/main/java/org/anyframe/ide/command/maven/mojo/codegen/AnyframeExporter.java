@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.appfuse.tool.AppFuseExporter;
 import org.appfuse.tool.StringUtils;
+import org.hibernate.tool.hbm2x.Cfg2JavaTool;
 import org.hibernate.tool.hbm2x.GenericExporter;
 import org.hibernate.tool.hbm2x.TemplateProducer;
 import org.hibernate.tool.hbm2x.pojo.POJOClass;
@@ -46,6 +47,11 @@ public class AnyframeExporter extends AppFuseExporter {
 	private String packageName = "";
 	private String projectType = "web";
 	private String templateHome = "";
+	private GenericExporter exporter = null;
+
+//	public Cfg2JavaTool getC2j() {
+//		return getCfg2JavaTool();
+//	}
 
 	public void setTemplateType(String templateType) {
 		this.templateType = templateType;
@@ -241,6 +247,7 @@ public class AnyframeExporter extends AppFuseExporter {
 			exporter.getProperties().put("dbdata", dbdata);
 			this.dbdata = dbdata;
 		}
+		this.exporter = exporter;
 		return exporter;
 	}
 
@@ -250,6 +257,10 @@ public class AnyframeExporter extends AppFuseExporter {
 
 	public void setProjectType(String projectType) {
 		this.projectType = projectType;
+	}
+	
+	public GenericExporter getGenericExporter(){
+		return exporter;
 	}
 
 }

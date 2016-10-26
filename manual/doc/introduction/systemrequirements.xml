@@ -23,7 +23,6 @@
 		Anyframe IDE를 사용하지 않고 Anyframe 기반의 어플리케이션 개발 시에는 아래 하드웨어 요구 사항을 따르지 않고, 제시된 사양에
 		비해 저사양에서 Anyframe을 사용할 수도 있다.
 		</para>
-		
 	<para>
 		<table align="center">
 			<title>System Requirements(HW)</title>
@@ -85,7 +84,7 @@
 							Eclipse IDE
 								</entry>
 						<entry>
-							Eclipse 3.5(Galileo), 3.6(Helios) 테스트 검증
+							Eclipse 3.5(Galileo), 3.6(Helios), 3.7(Indigo) 테스트 검증
 						</entry>
 					</row>
 				</tbody>

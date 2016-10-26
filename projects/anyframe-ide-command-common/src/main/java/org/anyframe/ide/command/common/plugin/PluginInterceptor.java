@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ import java.util.List;
  * 		<dependencies>
  *             ...
  * 			<dependency>
- * 				<groupId>commons-logging</groupId>
- * 				<artifactId>commons-logging</artifactId>
- * 				<version>1.1.1</version>
- * 			</dependency>
+ *				<groupId>org.slf4j</groupId>
+ *				<artifactId>slf4j-log4j12</artifactId>
+ *				<version>1.6.4</version>
+ *			</dependency>
  * 		</dependencies>
  * 	</interceptor>
  * </pre>

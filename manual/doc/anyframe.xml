@@ -27,6 +27,7 @@
 <!ENTITY app_server_configurations_weblogic SYSTEM "appserverconfigurations/weblogic.xml">
 <!ENTITY app_server_configurations_jeus SYSTEM "appserverconfigurations/jeus.xml">
 <!ENTITY app_server_configurations_jboss SYSTEM "appserverconfigurations/jboss.xml">
+<!ENTITY app_server_configurations_websphere SYSTEM "appserverconfigurations/websphere.xml">
 ]
 >
 
@@ -51,10 +52,10 @@
 	
 	<bookinfo>
 		<copyright>
-			<year>2008-2011</year>
+			<year>2008-2012</year>
 			<holder>삼성SDS</holder>
 		</copyright>
-		<releaseinfo>Version 5.1.0</releaseinfo>
+		<releaseinfo>Version 5.2.0</releaseinfo>
 
 		<productname>Anyframe</productname>
 
@@ -164,6 +165,7 @@
 		&app_server_configurations_weblogic;
 		&app_server_configurations_jeus;
 		&app_server_configurations_jboss;
+		&app_server_configurations_websphere;
 	</part>
 
 </book>

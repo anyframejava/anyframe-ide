@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -59,7 +59,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.Annotations;
+//import com.thoughtworks.xstream.annotations.Annotations;
 
 /**
  * This is an JDBCConfigPage class.
@@ -90,10 +90,12 @@ public class ConfigPage implements Page {
 
     // mip-query, query plugin name
     private String pluginMipQuery = CommonConstants.MIP_QUERY_PLUGIN;
+    private String pluginXPQuery = CommonConstants.XP_QUERY_PLUGIN;
     private String pluginQuery = CommonConstants.QUERY_PLUGIN;
 
     // miplatform, map template name
     private String templateMiplatform = "miplatform";
+    private String templateXPlatform = "xplatform";
     private String templateMap = "map";
     
     public boolean useQueryService() {
@@ -106,6 +108,10 @@ public class ConfigPage implements Page {
 
     public boolean useIBatis2() {
         return daoRadios[3].getEnabled() && daoRadios[3].getSelection();
+    }
+    
+    public boolean useMyBatis() {
+        return daoRadios[4].getEnabled() && daoRadios[4].getSelection();
     }
 
     public boolean useSpringJdbc() {
@@ -222,43 +228,7 @@ public class ConfigPage implements Page {
                                                         // box
         appHomeText.setEnabled(false);
 
-        // DAO Framework
-        label =
-            toolkit.createLabel(container,
-                MessageUtil.getMessage("wizard.application.daoframeworks"),
-                SWT.NONE);
-        label.setLayoutData("split, span, gaptop 10");
-        label.setFont(new Font(Display.getDefault(), "\uad74\ub9bc", 9,
-            SWT.BOLD));
-
-        label =
-            toolkit.createLabel(container, null, SWT.SEPARATOR | SWT.HORIZONTAL
-                | SWT.WRAP);
-        label.setLayoutData("grow, wrap, gaptop 10");
-
-        daoRadios = new Button[4];
-        daoRadios[0] = new Button(container, SWT.RADIO);
-        daoRadios[0].setText(MessageUtil
-            .getMessage("wizard.application.daoframeworks.springjdbc"));
-        daoRadios[0].setLayoutData("grow, gap 20, gaptop 10");
-
-        daoRadios[1] = new Button(container, SWT.RADIO);
-        daoRadios[1].setText(MessageUtil
-            .getMessage("wizard.application.daoframeworks.queryservice"));
-        daoRadios[1].setLayoutData("grow, gaptop 10");
-
-        daoRadios[2] = new Button(container, SWT.RADIO);
-        daoRadios[2].setText(MessageUtil
-            .getMessage("wizard.application.daoframeworks.hibernate"));
-        daoRadios[2].setLayoutData("grow, gaptop 10");
-        // daoRadios[2].setVisible(false);
-
-        daoRadios[3] = new Button(container, SWT.RADIO);
-        daoRadios[3].setText(MessageUtil
-            .getMessage("wizard.application.daoframeworks.ibatis2"));
-        daoRadios[3].setLayoutData("grow, wrap, gaptop 10");
-        // daoRadios[3].setVisible(false);
-
+        
         // Templates Group
         label =
             toolkit.createLabel(container,
@@ -316,18 +286,58 @@ public class ConfigPage implements Page {
             toolkit.createLabel(container,
                 MessageUtil.getMessage("wizard.module.template"), SWT.WRAP);
         label.setLayoutData("grow, gap 20, gaptop 10");
-
         templateCombo =
             new Combo(container, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        templateCombo.setLayoutData("grow, span 4, gaptop 10");
+        templateCombo.setLayoutData("grow, wrap, gaptop 10");
         templateCombo.addSelectionListener(new SelectionListener() {
             public void widgetDefaultSelected(SelectionEvent arg0) {
             }
 
             public void widgetSelected(SelectionEvent arg0) {
                 setEnabledByCombo();
+                setSelectionByCombo();
             }
         });
+     // DAO Framework
+        label =
+            toolkit.createLabel(container,
+                MessageUtil.getMessage("wizard.application.daoframeworks"),
+                SWT.NONE);
+        label.setLayoutData("split, span, gaptop 10");
+        label.setFont(new Font(Display.getDefault(), "\uad74\ub9bc", 9,
+            SWT.BOLD));
+
+        label =
+            toolkit.createLabel(container, null, SWT.SEPARATOR | SWT.HORIZONTAL
+                | SWT.WRAP);
+        label.setLayoutData("grow, wrap, gaptop 10");
+
+        daoRadios = new Button[5];
+        daoRadios[0] = new Button(container, SWT.RADIO);
+        daoRadios[0].setText(MessageUtil
+            .getMessage("wizard.application.daoframeworks.springjdbc"));
+        daoRadios[0].setLayoutData("grow, gap 20, gaptop 10");
+
+        daoRadios[1] = new Button(container, SWT.RADIO);
+        daoRadios[1].setText(MessageUtil
+            .getMessage("wizard.application.daoframeworks.queryservice"));
+        daoRadios[1].setLayoutData("grow, gaptop 10");
+
+        daoRadios[2] = new Button(container, SWT.RADIO);
+        daoRadios[2].setText(MessageUtil
+            .getMessage("wizard.application.daoframeworks.hibernate"));
+        daoRadios[2].setLayoutData("grow, gaptop 10");
+        
+        daoRadios[3] = new Button(container, SWT.RADIO);
+        daoRadios[3].setText(MessageUtil
+            .getMessage("wizard.application.daoframeworks.ibatis2"));
+        daoRadios[3].setLayoutData("grow, gaptop 10");
+        
+        daoRadios[4] = new Button(container, SWT.RADIO);
+        daoRadios[4].setText(MessageUtil
+            .getMessage("wizard.application.daoframeworks.mybatis"));
+        daoRadios[4].setLayoutData("grow, gaptop 10");
+       
     }
 
     private void handleDirBrowseTemplateHomeLocation() {
@@ -372,6 +382,8 @@ public class ConfigPage implements Page {
                         templateCombo.remove(templateMiplatform);
                     if (!pList.contains(pluginQuery))
                         templateCombo.remove(templateMap);
+                    if (!pList.contains(pluginXPQuery))
+                        templateCombo.remove(templateXPlatform);
                 }
             } else {
                 Combo templateCombo = getTemplateCombo();
@@ -390,7 +402,7 @@ public class ConfigPage implements Page {
     private void setEnabledByCombo() {
         List<AnyframeTemplateData> templates = null;
         XStream xstream = new XStream();
-        Annotations.configureAliases(xstream, AnyframeTemplateData.class);
+        xstream.processAnnotations(AnyframeTemplateData.class);
         xstream.setMode(XStream.NO_REFERENCES);
 
         FileInputStream templateConfigFile = null;
@@ -419,6 +431,7 @@ public class ConfigPage implements Page {
 
         // template.config 내 dao tag 중 해당 dao
         // framework이 존재하면 enable
+        
         if (daoSet.contains(CommonConstants.DAO_QUERY)) {
             if (pList.contains(CommonConstants.QUERY_PLUGIN))
                 daoRadios[1].setEnabled(true);
@@ -442,6 +455,14 @@ public class ConfigPage implements Page {
                 daoRadios[3].setEnabled(false);
         } else
             daoRadios[3].setEnabled(false);
+        
+        if (daoSet.contains(CommonConstants.DAO_MYBATIS)) {
+            if (pList.contains(CommonConstants.MYBATIS_PLUGIN))
+                daoRadios[4].setEnabled(true);
+            else
+                daoRadios[4].setEnabled(false);
+        } else
+            daoRadios[4].setEnabled(false);
 
         if (daoSet.contains(CommonConstants.DAO_SPRINGJDBC)) {
             if (pList.contains(CommonConstants.CORE_PLUGIN))
@@ -450,6 +471,20 @@ public class ConfigPage implements Page {
                 daoRadios[0].setEnabled(false);
         } else
             daoRadios[0].setEnabled(false);
+    }
+
+    //select default value among the enabled radio buttons.
+    private void setSelectionByCombo() {
+        boolean ckExistSelected = false;
+        
+        for(int i=0; i<daoRadios.length; i++){
+            if(daoRadios[i].isEnabled() && ckExistSelected==false){
+               daoRadios[i].setSelection(true);
+               ckExistSelected = true;
+            }
+            else
+                daoRadios[i].setSelection(false);
+        }
     }
 
     private void createCommandButton(ScrolledForm form, Composite parent) {
@@ -534,26 +569,37 @@ public class ConfigPage implements Page {
                 daoRadios[2].setSelection(true);
                 daoRadios[1].setSelection(false);
                 daoRadios[3].setSelection(false);
+                daoRadios[4].setSelection(false);
             } else if (daoFramwork.equals(CommonConstants.DAO_QUERY)) {
                 daoRadios[1].setSelection(true);
                 daoRadios[0].setSelection(false);
                 daoRadios[2].setSelection(false);
                 daoRadios[3].setSelection(false);
+                daoRadios[4].setSelection(false);
             } else if (daoFramwork.equals(CommonConstants.DAO_IBATIS2)) {
                 daoRadios[3].setSelection(true);
                 daoRadios[0].setSelection(false);
                 daoRadios[1].setSelection(false);
                 daoRadios[2].setSelection(false);
+                daoRadios[4].setSelection(false);
+            } else if (daoFramwork.equals(CommonConstants.DAO_MYBATIS)) {
+                daoRadios[4].setSelection(true);
+                daoRadios[0].setSelection(false);
+                daoRadios[1].setSelection(false);
+                daoRadios[2].setSelection(false);
+                daoRadios[3].setSelection(false);
             } else if (daoFramwork.equals(CommonConstants.DAO_SPRINGJDBC)) {
                 daoRadios[0].setSelection(true);
                 daoRadios[1].setSelection(false);
                 daoRadios[2].setSelection(false);
                 daoRadios[3].setSelection(false);
+                daoRadios[4].setSelection(false);
             } else {
                 daoRadios[0].setSelection(false);
                 daoRadios[1].setSelection(false);
                 daoRadios[2].setSelection(false);
                 daoRadios[3].setSelection(false);
+                daoRadios[4].setSelection(false);
             }
 
         } catch (Exception e1) {
@@ -662,6 +708,8 @@ public class ConfigPage implements Page {
                 daoframework = CommonConstants.DAO_HIBERNATE;
             else if (useIBatis2())
                 daoframework = CommonConstants.DAO_IBATIS2;
+            else if (useMyBatis())
+                daoframework = CommonConstants.DAO_MYBATIS;
             else if (useSpringJdbc())
                 daoframework = CommonConstants.DAO_SPRINGJDBC;
 

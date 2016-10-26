@@ -9,7 +9,7 @@
     </description>
 	
 	<property name="book.name" value="anyframe" />
-	<property name="version" value="5.1.0"/>	
+	<property name="version" value="5.0.1"/>	
 
 	<!--
 	  - set dbf installer folder
@@ -23,7 +23,7 @@
 	<property name="css.dir" value="${dbf.home}/css" />
 	<property name="image.dir" value="image" />
 	<property name="font.dir" value="${dbf.home}/fonts" />
-	<property name="target.dir" value="target/anyframe.en" />
+	<property name="target.dir" value="target/${book.name}.en/${version}/reference" />
 	<property name="html.dir" value="${target.dir}/html" />
 	<property name="htmlsingle.dir" value="${target.dir}/htmlsingle" />
 	<property name="fo.dir" value="${target.dir}/fo" />

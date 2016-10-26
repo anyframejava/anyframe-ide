@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -15,10 +15,9 @@
  */
 package org.anyframe.ide.command.ant.logger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.logging.AbstractLogger;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is an PlexusLogger class.
@@ -26,13 +25,13 @@ import org.codehaus.plexus.logging.Logger;
  */
 public class PlexusLogger extends AbstractLogger {
 
-    private Log logger = LogFactory.getLog(PlexusLogger.class.getName());
+    private Logger logger = LoggerFactory.getLogger(PlexusLogger.class.getName());
 
-    public Log getLogger() {
+    public Logger getLogger() {
         return logger;
     }
 
-    public void setLogger(Log logger) {
+    public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
@@ -49,13 +48,13 @@ public class PlexusLogger extends AbstractLogger {
     }
 
     public void fatalError(String arg0, Throwable arg1) {
-        this.logger.fatal(arg0, arg1);
+        this.logger.error(arg0, arg1);
     }
 
-    public Logger getChildLogger(String arg0) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public org.codehaus.plexus.logging.Logger getChildLogger(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     public void info(String arg0, Throwable arg1) {
         this.logger.info(arg0, arg1);

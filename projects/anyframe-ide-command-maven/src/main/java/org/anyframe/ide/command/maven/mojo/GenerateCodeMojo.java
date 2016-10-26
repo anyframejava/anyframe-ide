@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -116,6 +116,13 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	private String scope;
 
 	/**
+	 * input sample data to database
+	 * 
+	 * @parameter expression="${insertSampleData}" default-value="true"
+	 */
+	private boolean insertSampleData;
+
+	/**
 	 * <i>Maven Internal</i>: Project to interact with.
 	 * 
 	 * @parameter expression="${project}"
@@ -197,10 +204,14 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 			generateCode();
 			executeCodeInstaller();
 			executeConfInstaller();
-			insertInitialSampleData();
+
+			if (insertSampleData) {
+				insertInitialSampleData();
+			}
 			postExecute();
-			
-			System.out.println("CRUD source codes for the given domain name are generated successfully.");
+
+			System.out
+					.println("CRUD source codes for the given domain name are generated successfully.");
 		} catch (Exception ex) {
 			getLog().error(
 					"Fail to execute GenerateCodeMojo. The reason is '"
@@ -775,6 +786,10 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public void setInsertSampleData(boolean insertSampleData) {
+		this.insertSampleData = insertSampleData;
 	}
 
 	public void setBaseDir(File baseDir) {

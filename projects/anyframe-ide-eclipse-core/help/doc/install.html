@@ -132,30 +132,30 @@
 		
 		
 		<div id="install_ctip_plugin">
-		<h4>IDE과 Hudson 연계하기</h4>
+		<h4>IDE과 CTIP 서버 연계하기</h4>
 		<p>
-					Anyframe IDE 과 Hudson 연계를 위해서는 다음과 같은 설정 작업이 필요하다.<br/>
+					Anyframe IDE 과 CTIP 서버 연계를 위해서는 다음과 같은 설정 작업이 필요하다.<br/>
 					
 					<ol>
 						<li>Anyframe 포탈 사이트에서 anyframe-X.X.X.zip 을 다운받는다.</li>
 						<li>압축을 풀고 anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더에 있는 Plugin 패키지 파일(<b>anyframe-ide-eclipse-hudson-X.X.X.jar</b>)를 
-							"<b>[Hudson 설치 폴더]/hudson/war/WEB-INF/lib</b>" 로 복사한다.<br/>
-							anyframe-ide-eclipse-hudson-X.X.X.jar 은 IDE에서 설정한 정보를 Hudson에 반영하는 역할을 수행한다.</li>
-						<li><b>[Hudson 설치 폴더]/hudson/war/WEB-INF/web.xml</b> 파일을 열어서 아래와 같은 내용을 추가하거나,
-						anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더 내에 있는 web.xml 을 [Hudson 설치 폴더]/hudson/war/WEB-INF 폴더에 붙여넣는다.
+							"<b>[CTIP 서버 설치 폴더]/jenkins/war/WEB-INF/lib</b>" 로 복사한다.<br/>
+							anyframe-ide-eclipse-hudson-X.X.X.jar 은 IDE에서 설정한 정보를 CTIP 서버에 반영하는 역할을 수행한다.</li>
+						<li><b>[CTIP 서버 설치 폴더]/jenkins/war/WEB-INF/web.xml</b> 파일을 열어서 아래와 같은 내용을 추가하거나,
+						anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더 내에 있는 web.xml 을 [CTIP 서버 설치 폴더]/jenkins/war/WEB-INF 폴더에 붙여넣는다.
 							<table border="1" cellspacing="0">
 								<tr><td><pre>&lt;servlet&gt;
 	&lt;servlet-name&gt;Hudson Gen Servlet&lt;/servlet-name&gt;
 	&lt;servlet-class&gt;org.anyframe.ide.eclipse.hudson.HudsonGenServlet&lt;/servlet-class&gt;
 	&lt;init-param&gt;
 		&lt;param-name&gt;hudsonHome&lt;/param-name&gt;
-		&lt;!-- 상대경로는 [Hudson 설치 폴더]/bin 기준으로 표현된 것  --&gt;
-		&lt;!-- Hudson을 start 하는 경로가 위의 경로가 아닌경우 아래 param-value 조정해야 함  --&gt;
+		&lt;!-- 상대경로는 [Jenkins 설치 폴더]/bin 기준으로 표현된 것  --&gt;
+		&lt;!-- Jenkins을 start 하는 경로가 위의 경로가 아닌경우 아래 param-value 조정해야 함  --&gt;
 		&lt;param-value&gt;..\hudson&lt;/param-value&gt;
 	&lt;/init-param&gt;
 	&lt;init-param&gt;
-		&lt;!-- 상대경로는 [Hudson 설치 폴더]/bin 기준으로 표현된 것  --&gt;
-		&lt;!-- Hudson을 start 하는 경로가 위의 경로가 아닌경우 아래 param-value 조정해야 함  --&gt;
+		&lt;!-- 상대경로는 [Jenkins 설치 폴더]/bin 기준으로 표현된 것  --&gt;
+		&lt;!-- Jenkins을 start 하는 경로가 위의 경로가 아닌경우 아래 param-value 조정해야 함  --&gt;
 		&lt;param-name&gt;hudsonJobDir&lt;/param-name&gt;
 		&lt;param-value&gt;..\hudson\jobs&lt;/param-value&gt;
 	&lt;/init-param&gt;
@@ -182,7 +182,7 @@
 			cellspacing="0" cellpadding="0">
 			<!-- <tr><th>Footer</th></tr> -->
 			<tr>
-				<td class="copyright">Copyright (C) 2008-2011 Samsung SDS Co.,
+				<td class="copyright">Copyright (C) 2008-2012 Samsung SDS Co.,
 				Ltd. All rights reserved.</td>
 			</tr>
 		</table>

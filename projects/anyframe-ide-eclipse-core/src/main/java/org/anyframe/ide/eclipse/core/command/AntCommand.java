@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2011 the original author or authors.   
+ * Copyright 2008-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -64,13 +64,12 @@ public class AntCommand implements Command {
         String command = commandVo.getCommand();
 
         if (command.equals(CommandUtil.CMD_CREATE_CRUD)) {
-
             CreateCRUDVO vo = (CreateCRUDVO) commandVo;
             String[] args =
                 {command, vo.getDomainClassName(), "-project",
                     vo.getProjectName(), "-package", vo.getPackageName(),
-                    "-scope", vo.getScope(), "-project.home",
-                    vo.getProjectHome(), "-anyframeHome", vo.getAnyframeHome(),
+                    "-scope", vo.getScope(), "-insertSampleData", vo.getInsertSampleData(),
+                    "-project.home", vo.getProjectHome(), "-anyframeHome", vo.getAnyframeHome(),
                     "-basedir", vo.getBasedir(), "-isCLIMode", "false",
                     "-logLevel", logLevel };
             antConfigList.add(args);

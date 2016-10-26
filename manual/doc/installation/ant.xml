@@ -73,7 +73,7 @@
 							</listitem>
 							<listitem>
 								<para>
-									ide : Anyframe Command 관련 라이브러리 및 공통 빌드 Script 파일들, 빌드 도구인 Ant, 샘플을 위한 HsqlDB, Anyframe IDE Editor에서 Hudson 연계를 위한 파일들(anyframe-ide-eclipse-hudson-X.X.X.jar, web.xml) 포함 
+									ide : Anyframe Command 관련 라이브러리 및 공통 빌드 Script 파일들, 빌드 도구인 Ant, 샘플을 위한 HsqlDB, Anyframe IDE Editor에서 CTIP(Jenkins, Hudson) 연계를 위한 파일들(anyframe-ide-eclipse-hudson-X.X.X.jar, web.xml) 포함 
 								</para>
 							</listitem>
 							<listitem>
@@ -204,10 +204,10 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 [install] Dependencies Resolved.
 [install] ------------------------------------------------------------------------------
 [install]  <action>  <name>	<version>
-[install]  Install   datasource	1.0.0
-[install]  Install   spring	1.0.0
-[install]  Install   core		1.0.3
-[install]  Install   logging	1.0.0
+[install]  Install   datasource	1.0.1
+[install]  Install   spring	1.0.1
+[install]  Install   core		1.0.4
+[install]  Install   logging	1.0.1
 [install] ------------------------------------------------------------------------------
 [install] Is this OK? (y, n):]]></programlisting>
 		<para>
@@ -219,10 +219,10 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 		</para>
 		<programlisting language="java"><![CDATA[anyframe installed]]></programlisting>
 		<programlisting language="java"><![CDATA[[installed]  <name>		<current>	<latest>
-[installed]  core		1.0.3            1.0.3
-[installed]  datasource	1.0.0            1.0.0
-[installed]  spring		1.0.0            1.0.0
-[installed]  logging		1.0.0            1.0.0]]></programlisting>
+[installed]  core		1.0.4            1.0.4
+[installed]  datasource	1.0.1            1.0.1
+[installed]  spring		1.0.1            1.0.1
+[installed]  logging		1.0.1            1.0.1]]></programlisting>
 		<para>
 			core plugin과 동일한 방법으로 다른 Plugin들을 추가로 설치할 수 있다.
 			설치할 수 있는 Plugin 목록을 조회하려면 다음과 같은 명령어를 사용한다.

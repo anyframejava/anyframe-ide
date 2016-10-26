@@ -4,8 +4,6 @@ package ${package}.service.impl;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.hibernate.SessionFactory;
@@ -44,13 +42,10 @@ public class ${pojo.shortName}Dao extends HibernateDaoSupport {
 	int pageUnit;
 
 	@Inject
-	private SessionFactory sessionFactory;
-
-	@Resource
 	DynamicHibernateService dynamicHibernateService;
 	
-	@PostConstruct
-	public void initialize() {
+	@Inject
+	public void setHibernateDaoSessionFactory(SessionFactory sessionFactory) {
 		super.setSessionFactory(sessionFactory);
 	}	
 	

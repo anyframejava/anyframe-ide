@@ -9,11 +9,12 @@
     </description>
 
 	<property name="book.name" value="anyframe" />
-	<property name="version" value="5.1.0"/>	
+	<property name="version" value="5.2.0"/>	
 	<!--
 	  - set dbf installer folder and sample project folder
 	 -->
-	<property name="dbf.home" value="/Users/soo/Devel/docbook" />
+	<property name="dbf.home" value="E:/workspace/docbook" />
+	<property name="result.dir" value="E:/Repo/anyframe-opensource/docs/anyframe"/>
 	<!--
       - Configure basic properties that will be used in the file.
       -->
@@ -22,7 +23,7 @@
 	<property name="image.dir" value="image" />
 	<property name="download.dir" value="download" />
 	<property name="font.dir" value="${dbf.home}/fonts" />
-	<property name="target.dir" value="target/anyframe" />
+	<property name="target.dir" value="target/${version}/reference" />
 	<property name="html.dir" value="${target.dir}/html" />
 	<property name="htmlsingle.dir" value="${target.dir}/htmlsingle" />
 	<property name="fo.dir" value="${target.dir}/fo" />
@@ -171,6 +172,17 @@
 		</fop>
 	</target>
 	
+	<target name="deploy-manual">
+		<copy todir="${result.dir}">
+			<fileset dir="target">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- target for local build -->
 	<target name="all" depends="clean, copy, build-html, build-chunks, build-pdf" />
+	<!-- target for CI build -->
+	<target name="all-CI" depends="all, deploy-manual"/>
 
 </project>

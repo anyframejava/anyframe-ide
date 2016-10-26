@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2010 the original author or authors.   
+ * Copyright 2002-2012 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.anyframe.ide.command.cli.util.CommandUtil;
+import org.anyframe.ide.command.maven.mojo.GenerateCodeMojo;
 import org.anyframe.ide.eclipse.core.AnyframeIDEPlugin;
 import org.anyframe.ide.eclipse.core.command.vo.CommandVO;
 import org.anyframe.ide.eclipse.core.preferences.IdePreferencesPage;
@@ -65,6 +66,7 @@ public class AnyframeMavenLaunchConfiguration {
     public ILaunchConfiguration createLaunchConfiguration(String goal,
             CommandVO vo) {
         try {
+            GenerateCodeMojo mm = null;
             String projectName = vo.getProjectName();
             String basedir = vo.getBasedir();
             IProject project = ProjectUtil.findProject(projectName);

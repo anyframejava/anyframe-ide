@@ -98,7 +98,7 @@
         <para>DB정보를 구성하기 위해 위 화면에서 Next 버튼을 클릭하였다면 다음과 같은 JDBC Configuration
         화면이 제공된다.</para>
         
-        <para>Anyframe IDE 에서는 hsqldb, oracle, mysql, db2, sybase DB 타입에 대한 설정 및 template을 지원하고 있다.
+        <para>Anyframe IDE 에서는 hsqldb, oracle, mysql, db2, sybase,mssql DB 타입에 대한 설정 및 template을 지원하고 있다.
         사용하고 싶은 DB를 선택하여 DB정보를 구성한다.
         프로젝트 생성할 때, 사용하고 싶은 DB가 구동이 되어 있어야 샘플 테이블에 대한 DB 스크립트가 정상적으로 수행되므로,
         가능한 한 사용하고 싶은 DB를 구동하는 것을 권장한다.
@@ -132,7 +132,7 @@
 
         <itemizedlist>
           <listitem>
-            <para>Database Type: Database 타입으로, hsqldb, oracle, mysql, db2, sybase를
+            <para>Database Type: Database 타입으로, hsqldb, oracle, mysql, db2, sybase, mssql를
             제공하고 있다.</para>
           </listitem>
 
@@ -154,14 +154,14 @@
 
           <listitem>
             <para>Port: hsqldb의 경우 -1, oracle의 경우 1521, mysql의 경우 3306, Sybase는
-            3000, db2의 경우 50000</para>
+            3000, db2의 경우 50000, mssql의 경우 1433</para>
           </listitem>
 
           <listitem>
             <para>Hibernate Dialect: Hibernate에서 쿼리 수행 시, DBMS에 최적화된 기능을 제공하기
             위해 사용되는 것이 SQL Dialect 이며, 이 Dialect 프라퍼티를 사용하여 해당 DB 별 Dialect
             정보를 설정할 수 있다. 각 DB 별 Dialect 클래스가 따로 존재하여 hsqldb를 선택한 경우, 디폴트로
-            org.hibernate.dialect.HSQLDialect값이 선택된다.(Oracle, MySQL, DB2, Sybase
+            org.hibernate.dialect.HSQLDialect값이 선택된다.(Oracle, MySQL, DB2, Sybase, mssql
             Dialect도 제공함)</para>
           </listitem>
 
@@ -203,6 +203,10 @@
         만약, M2Eclipse 에 문제가 있어 프로젝트가 정상적으로 라이브러리를 인식하지 못한다면, 
         M2Eclipse를 Disable Dependency Management 한 후 다시 Enable Dependency Management 해 주도록 한다.
 		(Maven 프로젝트 선택 &gt;&gt; Maven &gt;&gt; Disable Dependency Management or Enable Dependency Management)
+		(※ 간혹 Enable Dependency Management를 적용하고 나면 프로젝트의 Build Path에서 src/main/resources의 내용이 exclude되어 문제가 발생하는 경우가 있다. 
+		이 때는, 해당 프로젝트에 대해 마우스 오른쪽 버튼을 클릭하여 컨텍스트 메뉴에서 Build Path > Configure Build Path... 메뉴를 클릭하여 
+		Source 탭에서 src/main/resources의 'Excluded:**'를 선택하고 오른쪽에 Remove 버튼을 클릭하여 exclude 설정을 해제한다. 
+		TestCase가 정상적으로 동작할 수 있도록 src/test/resources/의 'Exclude:**' 도 같은 방법으로 조치한다.) 
 		Web 타입 프로젝트일 경우 dynamic web 프로젝트로 생성되고, Service 타입 프로젝트일 경우 java 프로젝트로 생성된다. 
         </para>
       </listitem>         
@@ -253,7 +257,7 @@
         <para>DB정보를 구성하기 위해 위 화면에서 Next 버튼을 클릭하였다면 다음과 같은 JDBC Configuration
         화면이 제공된다.</para>
         
-        <para>Anyframe IDE 에서는 hsqldb, oracle, mysql, db2, sybase DB 타입에 대한 설정 및 template을 지원하고 있다.
+        <para>Anyframe IDE 에서는 hsqldb, oracle, mysql, db2, sybase, mssql DB 타입에 대한 설정 및 template을 지원하고 있다.
         사용하고 싶은 DB를 선택하여 DB정보를 구성한다.
         프로젝트 생성할 때, 사용하고 싶은 DB가 구동이 되어 있어야 샘플 테이블에 대한 DB 스크립트가 정상적으로 수행되므로,
         가능한 한 사용하고 싶은 DB를 구동하는 것을 권장한다.
@@ -261,7 +265,7 @@
         샘플 DB는 <emphasis role="bold">[Anyframe 이 설치된 root 경로]/ide/db/scripts/hsqldb 하위의 start.cmd</emphasis> 파일을 실행시켜서 구동한다.
         </para>
         <para>Anyframe IDE에서는 다양한 DB에 대한 샘플 쿼리문을 제공하고 있다. 
-        현재는 oracle(sampledb-oracle.sql), mysql(sampledb-mysql.sql), sybase(sampledb-sybase.sql), db2(sampledb-db2.sql)에 대한 샘플쿼리문이 제공되고 있다.
+        현재는 oracle(sampledb-oracle.sql), mysql(sampledb-mysql.sql), sybase(sampledb-sybase.sql), db2(sampledb-db2.sql), mssql(sampledb-mssql.sql)에 대한 샘플쿼리문이 제공되고 있다.
 		이런 샘플쿼리문을 반영하기 위해서는 [Anyframe 이 설치된 root 경로]/ide/db/scripts/[DB명]/sampledb-[DB명].sql 파일의 스크립트를 해당 DB에서 실행해준다.
 		</para>
 
@@ -269,7 +273,7 @@
 
         <itemizedlist>
           <listitem>
-            <para>Database Type: Database 타입으로, hsqldb, oracle, mysql, db2, sybase를
+            <para>Database Type: Database 타입으로, hsqldb, oracle, mysql, db2, sybase, mssql를
             제공하고 있다.</para>
           </listitem>
 
@@ -291,14 +295,14 @@
 
           <listitem>
             <para>Port: hsqldb의 경우 -1, oracle의 경우 1521, mysql의 경우 3306, sybase는
-            3000, DB2의 경우 50000</para>
+            3000, DB2의 경우 50000, mssql의 경우 1433</para>
           </listitem>
 
           <listitem>
             <para>Hibernate Dialect: Hibernate에서 쿼리 수행 시, DBMS에 최적화된 기능을 제공하기
             위해 사용되는 것이 SQL Dialect 이며, 이 Dialect 프라퍼티를 사용하여 해당 DB 별 Dialect
             정보를 설정할 수 있다. 각 DB 별 Dialect 클래스가 따로 존재하여 hsqldb를 선택한 경우, 디폴트로
-            org.hibernate.dialect.HSQLDialect값이 선택된다.(Oracle, MySQL, DB2, Sybase
+            org.hibernate.dialect.HSQLDialect값이 선택된다.(Oracle, MySQL, DB2, Sybase, mssql
             Dialect도 제공함.)</para>
           </listitem>
 
@@ -467,7 +471,7 @@
                 <row>
                  <entry>project.daoframework</entry>
 
-                 <entry>DAO Framework 선택(springjdbc, query, hibernate, ibatis2 중 택일)</entry>
+                 <entry>DAO Framework 선택(springjdbc, query, hibernate, ibatis2, mybatis 중 택일)</entry>
 
                  <entry align="center">Y</entry>
 
@@ -523,7 +527,7 @@
                   <row>
                     <entry>db.type</entry>
 
-                    <entry>DB 정보(hsqldb, oracle, mysql, db2, sybase)</entry>
+                    <entry>DB 정보(hsqldb, oracle, mysql, db2, sybase, mssql)</entry>
 
                     <entry align="center">Y</entry>
 
@@ -926,6 +930,10 @@ public class Board implements Serializable {
 						레이어 소스 코드들도 함께 생성하고자 한다면 체크 박스에 체크하도록 한다. Service 타입 프로젝트의 경우, 이
 						체크박스는 활성화 되지 않는다. </para>
 				</listitem>
+				
+				<listitem>
+					<para>Insert sample data into a database: 샘플 데이터를 생성하고자 한다면 체크 박스에 체크하도록 한다.</para>
+				</listitem>
 			</itemizedlist>
 		</listitem>
 		<listitem>
@@ -998,7 +1006,7 @@ public class BoardServiceImpl implements BoardService {
 						클래스명]Dao.java)
 					</para>
 					<programlisting language="java"><![CDATA[@Repository("boardDao")
-public class BoardDaoQueryImpl extends AbstractDAO {
+public class BoardDaoQueryImpl extends QueryServiceDaoSupport {
 
     @Value("#{contextProperties['pageSize'] ?: 10}")
     int pageSize;
@@ -1013,13 +1021,13 @@ public class BoardDaoQueryImpl extends AbstractDAO {
 	
     /** {@inheritDoc} */
     public void create(Board board) throws Exception {
-        super.create("Board", board);
+        super.create("createBoard", board);
     }
     /** {@inheritDoc} */
     public void remove(BoardId id) throws Exception {
         Board board = new Board();        
         board.setId(id);    
-        super.remove("Board", board);
+        super.remove("removeBoard", board);
     }
     중략...
 }]]></programlisting>
@@ -1239,16 +1247,16 @@ public class BoardControllerTest {
 <section id="eclipseplugin_configuration">
   <title>Configuration </title>
 
-  <para>Anyframe IDE를 사용하기 위해 Project Location 확인 및 DAO Frameworks,
-  Template 정보를 설정한다. </para>
+  <para>Anyframe IDE를 사용하기 위해 Project Location 확인 및 Template, DAO Frameworks
+   정보를 설정한다. </para>
 
   <para>프로젝트는 기본적으로 SpringJDBC DAO Framework을 사용하도록 설정되어 있으며,
   Hibernate/JPA으로 DAO Framework 설정을 변경하고 싶을 경우 Installation Tab에서 Hibernate
-  Plugin을 설치해야 한다. Hibernate/JPA Plugin이 설치되어 있지만 예외적으로 template이 miplatform으로 설정되어 있는  
+  Plugin을 설치해야 한다. Hibernate/JPA Plugin이 설치되어 있지만 예외적으로 template이 miplatform 이나 xplatform으로 설정되어 있는  
   경우는 Hibernate/JPA Framework을 사용할 수 없다. </para>
 
-  <para>Template은 기본적으로 default, map, miplatform이 제공되는데, 
-  Installation Tab에서 Mip-Query Plugin을 설치한 경우에 miplatform Template을 사용할 수 있다. </para>
+  <para>Template은 기본적으로 default, miplatform, xplatform이 제공되는데, 
+  Installation Tab에서 mip-query Plugin을 설치한 경우에 miplatform Template을 사용할 수 있다. 또한 xp-query Plugin을 설치한 경우에 xplatform Template을 사용할 수 있다.</para>
 
 <orderedlist numeration="arabic" inheritnum="inherit">
 <listitem>
@@ -1256,20 +1264,13 @@ public class BoardControllerTest {
       &gt;&gt; <emphasis role="bold">Anyframe Tools >> Anyframe IDE</emphasis> 을 선택한다. </para>
 </listitem>
 <listitem>
-  <para>Anyframe IDE Editor에서 Configuration Tab을 선택하고 프로젝트 경로 확인 및 DAO
-      Framework, Template 정보를 구성한다. </para>
+  <para>Anyframe IDE Editor에서 Configuration Tab을 선택하고 프로젝트 경로 확인 및 Template, DAO
+      Framework 정보를 구성한다. </para>
 
       <itemizedlist>
         <listitem>
           <para>Project Location: 현재 프로젝트가 생성된 위치정보가 보인다. </para>
         </listitem>
-
-        <listitem>
-          <para>DAO Frameworks: SpringJDBC, Query Service, Hibernate/JPA, iBatis2 중에 하나를 선택할 수 있고,
-          Hibernate/JPA는 Hibernate Plugin을 설치한 이후에 선택이 가능하다. map, miplatform
-          Template의 경우 Query Service만 지원된다. default Template의 경우에 4가지 DAO Framework을 모두 사용할 수 있다.</para>
-        </listitem>
-
         <listitem>
           <para>Template Selection: 소스코드 template을 설정하기 위한 섹션으로 Maven 프로젝트 일 경우에만 Template Home 경로를 변경할 수 있는 기능이 추가로 제공된다. 
           	<itemizedlist>
@@ -1280,17 +1281,21 @@ public class BoardControllerTest {
 			  </listitem>
 			  <listitem>
 			  	<para>Template Type: Template Home 경로 하위에 있는 template을 리스트로 보여주며, 
-			  	기본적으로 default, map template이 지원된다. 
+			  	기본적으로 default template이 지원된다. 
 			  	default template은 Spring/SpringMVC 등으로 구성된 소스 코드 template이 제공된다. 
-			  	Mip-Query Plugin을 설치한 경우 miplatform template도 선택할 수 있다. 
-			  	miplatform template을 사용한 경우, PID(Presentation Interface Developer)가 설치되어 있어야 생성된 소스가 정상적으로 동작한다.
+			  	Mip-Query Plugin을 설치한 경우 miplatform template을 선택할 수 있으며, xp-query Plugin을 설치한 경우 xplatform template도 선택할 수 있다.
+			  	miplatform template 와 xplatform template의 경우 PID(Presentation Interface Developer)가 설치되어 있어야 생성된 소스가 정상적으로 동작한다.
 			  	</para>
 			  </listitem>
 			  
 			  </itemizedlist>
         </para>
         </listitem>
-       
+        <listitem>
+          <para>DAO Frameworks: SpringJDBC, Query Service, Hibernate/JPA, iBatis2, MyBatis 중에 하나를 선택할 수 있고,
+          Hibernate/JPA는 Hibernate Plugin을 설치한 이후에 선택이 가능하다. miplatform, xplatform
+          Template의 경우 Query Service만 지원된다. default Template의 경우에 5가지 DAO Framework을 모두 사용할 수 있다.</para>
+        </listitem>
       </itemizedlist>
 
 </listitem>
@@ -1325,7 +1330,7 @@ public class BoardControllerTest {
 	      <para>JDBC Configuration </para>
 	      <itemizedlist>
 	        <listitem>
-	          <para>Database Type: Database 타입으로 hsqldb, oracle, mysql, db2, sybase 를
+	          <para>Database Type: Database 타입으로 hsqldb, oracle, mysql, db2, sybase, mssql 를
 	          제공하고 있다.</para>
 	        </listitem>
 	
@@ -1347,14 +1352,14 @@ public class BoardControllerTest {
 	
 	        <listitem>
 	          <para>Port: hsqldb의 경우 -1, oracle의 경우 1521, mysql의 경우 3306, sybase는
-	          3000, db2의 경우 50000</para>
+	          3000, db2의 경우 50000, mssql의 경우 1433</para>
 	        </listitem>
 	
 	        <listitem>
 	          <para>Hibernate Dialect: Hibernate에서 쿼리 수행 시, DBMS에 최적화된 기능을 제공하기 위해
 	          사용되는 것이 SQL Dialect 이며, 이 Dialect 프라퍼티를 사용하여 해당 DB 별 Dialect 정보를 설정할
 	          수 있다. 각 DB 별 Dialect 클래스가 따로 존재하여 hsqldb를 선택한 경우, 디폴트로
-	          org.hibernate.dialect.HSQLDialect값이 선택된다.(oracle, mysql, db2, sybase
+	          org.hibernate.dialect.HSQLDialect값이 선택된다.(oracle, mysql, db2, sybase, mssql
 	          Dialect 도 제공함)</para>
 	        </listitem>
 	
@@ -1588,9 +1593,9 @@ public class BoardControllerTest {
 <section id="eclipseplugin_ctip">
   <title>CTIP</title>
 
-  <para>IDE에서 Hudson을 연결하여 Hudson에 job을 등록하고 job을 실행하기 위해서 사용한다.
-	Hudson 서버와 통신을 하기 위해서는 anyframe-ide-eclipse-hudson-X.X.X.jar 파일을 이용해 설정을 해야 한다. 
-	설치 및 설정과 관련된 자세한 사항은 Continuous Build Server의 [<link linkend="ctip_installation">Installation</link>]과 [<link linkend="ctip_integration">Build Server(Hudson) 연계</link>]을 참조한다.</para>
+  <para>IDE에서 CTIP 서버(Hudson,Jenkins)를 연결하여 CTIP 서버에 job을 등록하고 job을 실행하기 위해서 사용한다.
+	CTIP 서버와 통신을 하기 위해서는 anyframe-ide-eclipse-hudson-X.X.X.jar 파일을 이용해 설정을 해야 한다. 
+	설치 및 설정과 관련된 자세한 사항은 Continuous Build Server의 [<link linkend="ctip_installation">Installation</link>]과 [<link linkend="ctip_integration">Build Server 연계</link>]을 참조한다.</para>
 <orderedlist numeration="arabic" inheritnum="inherit">
 <listitem>
     <para>프로젝트를 선택한 후
@@ -1603,20 +1608,20 @@ public class BoardControllerTest {
 
       <itemizedlist>
         <listitem>
-          <para>Hudson URL</para>
+          <para>CTIP URL</para>
           <mediaobject>
 	        <imageobject>
 	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-url.jpg" />
 	        </imageobject>
 	      </mediaobject>
 	      <itemizedlist>
-	      	<listitem><para>URL: Hudson 서버에 접근하기 위한 url</para></listitem>
-	      	<listitem><para>Configure...: Hudson 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출</para></listitem>
+	      	<listitem><para>URL: CTIP 서버에 접근하기 위한 url</para></listitem>
+	      	<listitem><para>Configure...: CTIP 서버에 접근하기 위한 url을 등록,수정,삭제 등 관리하기 위한 팝업 화면 호출</para></listitem>
 	      </itemizedlist>
         </listitem>
 
         <listitem>
-          <para>Hudson Configuration</para>
+          <para>CTIP Configuration</para>
           <mediaobject>
 	        <imageobject>
 	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-configuration.jpg" />
@@ -1625,7 +1630,7 @@ public class BoardControllerTest {
 	      <itemizedlist>
 	      	<listitem><para>MAVEN_HOME: 프로젝트에서 Maven 빌드도구를 사용하는 경우 보여지며, Maven이 설치된 경로로 설정</para></listitem>
 	      	<listitem><para>ANT_HOME: 프로젝트에서 Ant 빌드도구를 사용하는 경우 보여지며,  Ant가 설치된 경로로 설정</para></listitem>	      	
-	      	<listitem><para>Hudson URL in Email: Hudson Email Notification 시 사용할 url</para></listitem>
+	      	<listitem><para>CTIP URL in Email: CTIP Email Notification 시 사용할 url</para></listitem>
 	      </itemizedlist>
         </listitem>
 
@@ -1691,7 +1696,7 @@ public class BoardControllerTest {
 								</tgroup>
 							</table>	      	
 	      	</listitem>
-	      	<listitem><para>Project Name* : Hudson job name</para></listitem>
+	      	<listitem><para>Project Name* : ctip job name</para></listitem>
 	      	<listitem><para>Custom Workspace : workspace 경로지정</para></listitem>
 	      	<listitem><para>SCM Server Type : subversion, cvs, none 세가지 type 중 선택</para></listitem>
 	      	<listitem><para>SCM Server URL : SCM 서버 url</para></listitem>
