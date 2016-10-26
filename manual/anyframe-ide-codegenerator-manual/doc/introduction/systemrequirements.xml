@@ -87,5 +87,26 @@
 			</tgroup>
 		</informaltable>
 	</para>
-
+	
+	<warning>
+		<title>Code Generator 다국어 지원</title>
+		<para>
+			Code Generator는 다국어 지원을 위해 NL(National Language) Resources를 구성하고 있으며 필요시 확장을 통해 다양한 언어 지원이 가능하다.
+			기본적으로 OS의 언어 구성을 따르며, 원하는 해당 언어로 Eclipse를 구동하고자 할 때는 다음의 설정 중 하나를 선택하여  참고 한다. 또한 매뉴얼의 이미지 및 메뉴 구성은 영어를 기준으로 작성되어 있다.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>eclipse.ini 설정</para>
+				<para>
+					eclipse.ini 파일을 오픈하여  -Duser.language=en -Duser.country=US -Duser.variant=EN 을 추가 한다(영어기준).
+				</para>
+			</listitem>
+			<listitem>
+				<para>실행 시 옵션</para>
+				<para>
+					eclipse.exe -nl en_US 를 실행 파일에 추가하여 실행한다(영어기준).
+				</para>
+			</listitem>
+		</itemizedlist>
+	</warning>
 </chapter>

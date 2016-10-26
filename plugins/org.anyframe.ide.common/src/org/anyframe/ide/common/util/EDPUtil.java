@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.anyframe.ide.common.databases.DatabasesSettingUtil;
 import org.anyframe.ide.common.databases.JdbcOption;
+import org.anyframe.ide.common.messages.Message;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
@@ -69,7 +70,7 @@ public class EDPUtil {
 		Map<String, JdbcOption> map = DatabasesSettingUtil
 				.loadJdbcOptionMap(project);
 		LinkedList<String> list = new LinkedList<String>();
-		list.add("Select the Profile Name");
+		list.add(Message.properties_config_profilename);
 		for (Object obj : map.keySet().toArray())
 			list.add(obj.toString());
 		return list.toArray(new String[list.size()]);
@@ -92,7 +93,7 @@ public class EDPUtil {
 			if (status.getException() != null) {
 				// status.getException().printStackTrace();
 				throw new ConnectionProfileException(
-						"Get SQL Connection Exception");
+						Message.exception_getsqlconnection);
 			}
 		}
 
@@ -103,7 +104,7 @@ public class EDPUtil {
 			return (java.sql.Connection) sqlConnection.getConnection()
 					.getRawConnection();
 		} else {
-			throw new ConnectionProfileException("Get SQL Connection Exception");
+			throw new ConnectionProfileException(Message.exception_getsqlconnection);
 		}
 	}
 
@@ -123,7 +124,7 @@ public class EDPUtil {
 			if (status.getException() != null) {
 				// status.getException().printStackTrace();
 				throw new ConnectionProfileException(
-						"Get SQL Connection Exception");
+						Message.exception_getsqlconnection);
 			}
 		}
 		IManagedConnection managedConnection = ((IConnectionProfile) pf)
@@ -136,9 +137,9 @@ public class EDPUtil {
 				return connectionInfo.getSharedDatabase();
 			else
 				throw new ConnectionProfileException(
-						"Get SQL Connection Exception");
+						Message.exception_getsqlconnection);
 		} else {
-			throw new ConnectionProfileException("Get SQL Connection Exception");
+			throw new ConnectionProfileException(Message.exception_getsqlconnection);
 		}
 	}
 

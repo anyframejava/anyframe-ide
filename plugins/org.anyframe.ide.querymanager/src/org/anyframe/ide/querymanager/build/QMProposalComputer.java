@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -102,12 +103,12 @@ public class QMProposalComputer implements IJavaCompletionProposalComputer {
 			if (x.isDoesNotExist()
 					&& !unit.getJavaProject().isOnClasspath(unit))
 				MessageDialog.openInformation(shell,
-						"CompletionProcessor_error_notOnBuildPath_title",
-						"CompletionProcessor_error_notOnBuildPath_message");
+						Message.exception_notonbuildpathtitle,
+						Message.exception_notonbuildpathmessage);
 			else
 				ErrorDialog.openError(shell,
-						"CompletionProcessor_error_accessing_title",
-						"CompletionProcessor_error_accessing_message",
+						Message.exception_accessingtitle,
+						Message.exception_accessingmessage,
 						x.getStatus());
 		}
 

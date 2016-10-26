@@ -178,7 +178,7 @@ public class Board implements Serializable {
 							</imageobject>
 							<textobject>
 								<phrase>eclipse project 오류 표시</phrase>
-							</textobject> 
+							</textobject>
 						</inlinemediaobject>
 						표시가 뜨는 경우는, Anyframe Test Plugin이 없기 때문이다. Plugin Installation View 에서
 						Anyframe Test Plugin을 설치하면 에러가 해결된다.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.preferences.AnyframePreferencePage;
 import org.anyframe.ide.querymanager.preferences.PreferencesHelper;
 import org.anyframe.ide.querymanager.util.AnyframeJarLoader;
@@ -143,7 +144,7 @@ public final class QMProposalProcessor implements IContentAssistProcessor {
 					testProposal = new CompletionProposal(displayId,
 							content.getOffset(), token.length(),
 							queryId.length(), null, loc.getKey(), null,
-							"Additional Proposal Info");
+							Message.build_addtionalproposalinfo);
 				}
 				proposals[k++] = testProposal;
 			}

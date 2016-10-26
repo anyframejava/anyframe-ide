@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.anyframe.ide.querymanager.dialogs;
 import java.util.ArrayList;
 
 import org.anyframe.ide.common.util.ImageUtil;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -39,7 +39,7 @@ public class XMLOnlyLabelProvider extends StyledCellLabelProvider implements
 	public static final String PLUGIN_ID = "org.anyframe.ide.querymanager";
 	
 	ImageDescriptor XMLFileImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_properties_xmlfile);
+			.getImageDescriptor(PLUGIN_ID, Message.image_properties_xmlfile);
 	Image XMLFileImage = ImageUtil.getImage(XMLFileImageDescriptor);
 
 	private static final ISharedImages PLATFORM_IMAGES = PlatformUI
@@ -66,7 +66,7 @@ public class XMLOnlyLabelProvider extends StyledCellLabelProvider implements
 		} else if (obj instanceof PropertyAddInfo) {
 			if (((PropertyAddInfo) obj)
 					.getType()
-					.equals(MessagePropertiesLoader.property_dialog_scan_deselectall_title)) {
+					.equals(Message.property_dialog_scan_deselectall_title)) {
 				cell.setImage(PLATFORM_IMAGES
 						.getImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER));
 			} else {
@@ -83,7 +83,7 @@ public class XMLOnlyLabelProvider extends StyledCellLabelProvider implements
 	public void dispose() {
 		ImageUtil.disposeImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_properties_xmlfile);
+				.disposeImage(Message.image_properties_xmlfile);
 	}
 
 	public void addListener(ILabelProviderListener listener) {

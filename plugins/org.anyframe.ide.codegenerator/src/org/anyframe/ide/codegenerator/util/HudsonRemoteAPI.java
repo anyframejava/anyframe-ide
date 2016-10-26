@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -65,7 +66,7 @@ public class HudsonRemoteAPI {
 			velocity.init();
 
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, "Fail to make HudsonRemoteAPI.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtomakeapi, e);
 			velocity = null;
 		}
 	}
@@ -354,7 +355,7 @@ public class HudsonRemoteAPI {
 			}
 
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, "Fail to get scm type.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtogetscmtype, e);
 		}
 		return 2;
 	}
@@ -377,7 +378,7 @@ public class HudsonRemoteAPI {
 			return ret;
 
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, "Fail to get scm url.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtogetscmurl, e);
 		}
 
 		return "";
@@ -396,7 +397,7 @@ public class HudsonRemoteAPI {
 			}
 
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, "Fail to get schedule.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtogetschedule, e);
 		}
 		return "";
 	}
@@ -412,7 +413,7 @@ public class HudsonRemoteAPI {
 					.getChildText("childProjects");
 
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, "Fail to get child project.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtogetchildproject, e);
 		}
 
 		return "";

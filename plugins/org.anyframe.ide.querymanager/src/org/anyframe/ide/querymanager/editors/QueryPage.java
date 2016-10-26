@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import org.anyframe.ide.common.util.EDPUtil;
 import org.anyframe.ide.common.util.ImageUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.EditorInput;
 import org.anyframe.ide.querymanager.model.QueryAttribute;
 import org.anyframe.ide.querymanager.model.QueryInputAttribute;
@@ -129,10 +129,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IMessage;
@@ -480,15 +477,15 @@ public class QueryPage implements Page {
 		headForm = form;
 
 		if (modifyFlag) {
-			form.setText(MessagePropertiesLoader.editor_querymanager_editquery_title);
+			form.setText(Message.editor_querymanager_editquery_title);
 			form.setMessage(
-					MessagePropertiesLoader.editor_querymanager_editqurey_title_description
+					Message.editor_querymanager_editqurey_title_description
 							+ " " + this.fileName, SWT.NONE);
 //			 queryIdText.setEnabled(false);
 		} else {
-			form.setText(MessagePropertiesLoader.editor_querymanager_addqurey_title);
+			form.setText(Message.editor_querymanager_addqurey_title);
 			form.setMessage(
-					MessagePropertiesLoader.editor_querymanager_addqurey_title_description,
+					Message.editor_querymanager_addqurey_title_description,
 					SWT.NONE);
 		}
 
@@ -515,11 +512,11 @@ public class QueryPage implements Page {
 	public void removeMessage() {
 		if (modifyFlag)
 			headForm.setMessage(
-					MessagePropertiesLoader.editor_querymanager_editqurey_title_description
+					Message.editor_querymanager_editqurey_title_description
 							+ " " + this.fileName, SWT.NONE);
 		else
 			headForm.setMessage(
-					MessagePropertiesLoader.editor_querymanager_addqurey_title_description,
+					Message.editor_querymanager_addqurey_title_description,
 					SWT.NONE);
 	}
 
@@ -540,14 +537,14 @@ public class QueryPage implements Page {
 		createQueryInformation(
 				form,
 				toolkit,
-				MessagePropertiesLoader.editor_querymanager_queryinfo_title,
+				Message.editor_querymanager_queryinfo_title,
 				client_left);
 		createInputParameterInfo(
 				form,
 				toolkit,
-				MessagePropertiesLoader.editor_querymanager_queryinfo_inputparam,
+				Message.editor_querymanager_queryinfo_inputparam,
 				client_left);
-		createResultMappingInfo(form, toolkit, "Result Mapping", client_left);
+		createResultMappingInfo(form, toolkit, Message.editor_querymanager_resultmapping, client_left);
 
 	}
 
@@ -565,7 +562,7 @@ public class QueryPage implements Page {
 		createDBBrowser(
 				form,
 				toolkit,
-				MessagePropertiesLoader.editor_querymanager_dbbrowser_title,
+				Message.editor_querymanager_dbbrowser_title,
 				client_right);
 		// end right section....
 	}
@@ -611,7 +608,7 @@ public class QueryPage implements Page {
 
 		// start Qurey Information Desgin
 		Label label = new Label(client, SWT.NULL);
-		label.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_queryid);
+		label.setText(Message.editor_querymanager_queryinfo_queryid);
 
 		queryIdText = new Text(client, SWT.BORDER | SWT.SINGLE);
 		queryIdText.setText(queryId);
@@ -628,7 +625,7 @@ public class QueryPage implements Page {
 		// Label dummy = new Label(client, SWT.NULL);
 		isDynamic = new Button(client, SWT.CHECK);
 		isDynamic
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_isdynamic);
+				.setText(Message.editor_querymanager_queryinfo_isdynamic);
 
 		isDynamic.setLayoutData(gd);
 		isDynamic.setEnabled(true);
@@ -649,7 +646,7 @@ public class QueryPage implements Page {
 
 		// mapping style combobox
 		label = new Label(client, SWT.NULL);
-		label.setText("Mapping Style:");
+		label.setText(Message.editor_querymanager_mappingstyle);
 
 		mappingStyleCombo = new Combo(client, SWT.READ_ONLY);
 		mappingStyleCombo.setBounds(50, 50, 150, 65);
@@ -664,7 +661,7 @@ public class QueryPage implements Page {
 		GridData queryStmtData = new GridData();
 		queryStmtData.horizontalSpan = 4;
 		label = new Label(client, SWT.NULL);
-		label.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_querystatement);
+		label.setText(Message.editor_querymanager_queryinfo_querystatement);
 		label.setLayoutData(queryStmtData);
 
 		GridData queryTextData = new GridData(GridData.FILL_BOTH);
@@ -686,7 +683,7 @@ public class QueryPage implements Page {
 		testButton = new Button(client, SWT.PUSH);
 		testButton.setFont(client.getFont());
 		testButton
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_querystatement_testquerybutton);
+				.setText(Message.editor_querymanager_queryinfo_querystatement_testquerybutton);
 
 		testButton.setImage(_RunImmage);
 		testButton.setLayoutData(gds);
@@ -694,7 +691,7 @@ public class QueryPage implements Page {
 		limitRows = new Button(client, SWT.CHECK);
 
 		limitRows
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_querystatement_rowlimit);
+				.setText(Message.editor_querymanager_queryinfo_querystatement_rowlimit);
 		limitRows.setSelection(true);
 
 		limitRows.addSelectionListener(new SelectionListener() {
@@ -725,7 +722,7 @@ public class QueryPage implements Page {
 		limitRowsText = new Text(client, SWT.BORDER | SWT.SINGLE);
 
 		limitRowsText
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_querystatement_defaultlimit);
+				.setText(Message.editor_querymanager_queryinfo_querystatement_defaultlimit);
 
 		limitRows.setLayoutData(recordData);
 		limitRowsText.setEnabled(true);
@@ -747,7 +744,7 @@ public class QueryPage implements Page {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_addquerywizard_sql,
+					Message.exception_log_addquerywizard_sql,
 					e);
 		}
 
@@ -757,15 +754,16 @@ public class QueryPage implements Page {
 
 			public void widgetSelected(SelectionEvent e) {
 				// test Button event
-				if (validate())
+				if (validate()){
 					runTestBtn();
+				}
 			}
 
 		});
 
 		// end Query Information Design
 		section.setText(title);
-		section.setDescription(MessagePropertiesLoader.editor_querymanager_queryinfo_section_desc);
+		section.setDescription(Message.editor_querymanager_queryinfo_section_desc);
 		section.setClient(client);
 		section.setExpanded(true);
 
@@ -774,21 +772,26 @@ public class QueryPage implements Page {
 	}
 
 	public boolean validate() {
-		if (queryIdText.getText().trim().equals(""))
+		if (queryIdText.getText().trim().equals("")){
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_queryidempty,
+					Message.editor_querymanager_message_queryidempty,
 					IMessage.ERROR);
-		else if (queryText.getText().trim().equals(""))
+		}else if (queryText.getText().trim().equals("")){
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_statementEmpty,
+					Message.editor_querymanager_message_statementEmpty,
 					IMessage.ERROR);
-		else if (isExistString(queryIdText.getText())
-				&& (!modifyFlag && queryId.equals(queryIdText.getText())))
+		}else if (isExistString(queryIdText.getText())
+				&& (!modifyFlag && queryId.equals(queryIdText.getText()))){
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_queryidexist,
+					Message.editor_querymanager_message_queryidexist,
 					IMessage.ERROR);
-		else
+		}else if(!validateResultCount()){
+			setMessage(
+					Message.editor_querymanager_message_rowvalidation,
+					IMessage.ERROR);
+		}else{
 			return true;
+		}
 		return false;
 	}
 
@@ -810,10 +813,10 @@ public class QueryPage implements Page {
 			disableQueryID();
 		} catch (InvocationTargetException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_editXMLFIlE, e);
+					Message.exception_log_editXMLFIlE, e);
 		} catch (InterruptedException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_editXMLFIlE, e);
+					Message.exception_log_editXMLFIlE, e);
 		}
 	}
 
@@ -848,7 +851,7 @@ public class QueryPage implements Page {
 								} catch (Exception e) {
 									PluginLoggerUtil
 											.error(QueryManagerActivator.PLUGIN_ID,
-													MessagePropertiesLoader.exception_log_editXMLFIlE,
+													Message.exception_log_editXMLFIlE,
 													e);
 								}
 							}
@@ -898,7 +901,7 @@ public class QueryPage implements Page {
 			queryId = queryIdText.getText();
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_editXMLFIlE, e);
+					Message.exception_log_editXMLFIlE, e);
 		}
 
 	}
@@ -1119,22 +1122,22 @@ public class QueryPage implements Page {
 			queryStatement = getExecutableQuery();
 		} catch (ParseErrorException e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		} catch (MethodInvocationException e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		} catch (ResourceNotFoundException e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		} catch (IOException e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		}
 		if (queryStatement != null) {
 			queryStatement = queryStatement.trim();
 		} else {
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+					Message.editor_querymanager_message_query_doesnt_suported,
 					IMessage.ERROR);
 			return;
 		}
@@ -1149,7 +1152,7 @@ public class QueryPage implements Page {
 		} else {
 			// Query is call Procedure or velocity, {{ }}
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+					Message.editor_querymanager_message_query_doesnt_suported,
 					IMessage.WARNING);
 		}
 
@@ -1190,10 +1193,12 @@ public class QueryPage implements Page {
 					event.doit = false;
 					// run Test Query
 					if (testButton.getEnabled()) {
-						runTestBtn();
+						if (validate()){
+							runTestBtn();
+						}
 					} else {
 						setMessage(
-								MessagePropertiesLoader.editor_querymanager_message_connection,
+								Message.editor_querymanager_message_connection,
 								IMessage.WARNING);
 					}
 				}
@@ -1271,7 +1276,7 @@ public class QueryPage implements Page {
 
 		if (null == conn) {
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_connection_not,
+					Message.editor_querymanager_message_connection_not,
 					IMessage.ERROR);
 			return null;
 		}
@@ -1359,7 +1364,7 @@ public class QueryPage implements Page {
 						queryStatement, typeMap, data, true, contextMap);
 			} catch (Exception e) {
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						MessagePropertiesLoader.exception_log_run_query, e);
+						Message.exception_log_run_query, e);
 			}
 
 			if (DynamicQueryUtil.errorMsg != null) {
@@ -1474,14 +1479,14 @@ public class QueryPage implements Page {
 		client.setLayoutData(gd);
 		// start Result Mapping Design
 		Label label = new Label(client, SWT.NULL);
-		label.setText("Result Class :");
+		label.setText(Message.editor_querymanager_resultclass_text);
 
 		resultClassText = new Text(client, SWT.BORDER | SWT.SINGLE);
 		resultClassText.setLayoutData(gd);
 		resultClassText.setEditable(false);
 
 		classButton = new Button(client, SWT.PUSH);
-		classButton.setText("Browse...");
+		classButton.setText(Message.editor_button_browse);
 		classButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleBrowse();
@@ -1491,7 +1496,7 @@ public class QueryPage implements Page {
 		// end Result Mapping Design
 		input_section.setText(title);
 		input_section
-				.setDescription(MessagePropertiesLoader.editor_querymanager_querymapping_section_desc);
+				.setDescription(Message.editor_querymanager_querymapping_section_desc);
 		input_section.setClient(client);
 		input_section.setExpanded(false);
 
@@ -1532,7 +1537,7 @@ public class QueryPage implements Page {
 		// end Input Parameter Design
 		input_section.setText(title);
 		input_section
-				.setDescription(MessagePropertiesLoader.editor_querymanager_parammapping_section_desc);
+				.setDescription(Message.editor_querymanager_parammapping_section_desc);
 		input_section.setClient(client);
 		input_section.setExpanded(true);
 
@@ -1569,7 +1574,7 @@ public class QueryPage implements Page {
 		client.setLayoutData(dbData);
 
 		Label label = new Label(client, SWT.NULL);
-		label.setText("Connection Profile:");
+		label.setText(Message.editor_querymanager_connectionprofile);
 
 		dbConnectionCombo = new Combo(client, SWT.READ_ONLY);
 		dbConnectionCombo.setBounds(50, 50, 150, 65);
@@ -1580,7 +1585,7 @@ public class QueryPage implements Page {
 			dbConnectionCombo.select(0);
 		} else {
 			setMessage(
-					MessagePropertiesLoader.editor_querymanager_message_connection,
+					Message.editor_querymanager_message_connection,
 					IMessage.WARNING);
 		}
 		
@@ -1596,10 +1601,11 @@ public class QueryPage implements Page {
 								// DB Browser value setting function call
 								getDataBaseBrowser();
 								testButton.setEnabled(true);
+								removeMessage();
 							} 
 						} catch(Exception e) {
 							setMessage(
-									MessagePropertiesLoader.editor_querymanager_message_connection,
+									Message.editor_querymanager_message_connection,
 									IMessage.WARNING);
 							// data browser empty
 							if(treeViewer.getInput() != null)
@@ -1627,7 +1633,7 @@ public class QueryPage implements Page {
 		// start Qurey Information Desgin
 		Group dbBrowser = new Group(client, 0);
 		dbBrowser
-				.setText(MessagePropertiesLoader.editor_querymanager_dbbrowser_title);
+				.setText(Message.editor_querymanager_dbbrowser_title);
 		GridData dbBrowserGD = new GridData(GridData.FILL_BOTH);
 		dbBrowserGD.widthHint = 70;
 		dbBrowserGD.heightHint = 200;
@@ -1650,7 +1656,7 @@ public class QueryPage implements Page {
 
 		// end Query Information Design
 		section.setText(title);
-		section.setDescription(MessagePropertiesLoader.editor_querymanager_databrowser_section_desc);
+		section.setDescription(Message.editor_querymanager_databrowser_section_desc);
 		section.setClient(client);
 		section.setExpanded(true);
 
@@ -1760,15 +1766,15 @@ public class QueryPage implements Page {
 				PluginLoggerUtil
 						.warning(
 								QueryManagerActivator.PLUGIN_ID,
-								MessagePropertiesLoader.editor_querymanager_message_connection);
+								Message.editor_querymanager_message_connection);
 			}
 
 		} catch (Exception e) {
 			PluginLoggerUtil
 			.warning(
 					QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.editor_querymanager_message_connection);
-			throw new Exception("Get SQL Connection Exception");
+					Message.editor_querymanager_message_connection);
+			throw new Exception(Message.exception_getsqlconnection);
 		}
 
 		treeViewer.refresh();
@@ -1800,27 +1806,27 @@ public class QueryPage implements Page {
 		TableColumn tableColumn = new TableColumn(table, 0);
 		tableColumn.setAlignment(0x1000000);
 		tableColumn
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_no);
+				.setText(Message.editor_querymanager_queryinfo_parameter_no);
 
 		tableColumn = new TableColumn(table, 0);
 		tableColumn.setAlignment(0x1000000);
 		tableColumn
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_name);
+				.setText(Message.editor_querymanager_queryinfo_parameter_name);
 
 		tableColumn = new TableColumn(table, 0);
 		tableColumn.setAlignment(0x1000000);
 		tableColumn
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_datatype);
+				.setText(Message.editor_querymanager_queryinfo_parameter_datatype);
 
 		tableColumn = new TableColumn(table, 0);
 		tableColumn.setAlignment(0x1000000);
 		tableColumn
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_binding);
+				.setText(Message.editor_querymanager_queryinfo_parameter_binding);
 
 		tableColumn = new TableColumn(table, 0);
 		tableColumn.setAlignment(0x1000000);
 		tableColumn
-				.setText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_testdata);
+				.setText(Message.editor_querymanager_queryinfo_parameter_testdata);
 
 		// all columns visible in the table
 		for (int i = 0; i < 5; i++) {
@@ -1853,7 +1859,7 @@ public class QueryPage implements Page {
 
 		paramGetButton = new Button(container, SWT.FLAT);
 		paramGetButton
-				.setToolTipText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_getparameter);
+				.setToolTipText(Message.editor_querymanager_queryinfo_parameter_getparameter);
 		paramGetButton.setImage(getParamImage.createImage());
 
 		paramGetButton.addSelectionListener(new SelectionListener() {
@@ -1873,7 +1879,7 @@ public class QueryPage implements Page {
 					getParamRow();
 				else
 					setMessage(
-							MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+							Message.editor_querymanager_message_query_doesnt_suported,
 							IMessage.WARNING);
 			}
 
@@ -1883,7 +1889,7 @@ public class QueryPage implements Page {
 
 		insertButton = new Button(container, SWT.FLAT);
 		insertButton
-				.setToolTipText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_add);
+				.setToolTipText(Message.editor_querymanager_queryinfo_parameter_add);
 		insertButton.setImage(addRowImage.createImage());
 		insertButton.addSelectionListener(new SelectionListener() {
 
@@ -1905,7 +1911,7 @@ public class QueryPage implements Page {
 					table.clearAll();
 
 					setMessage(
-							MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+							Message.editor_querymanager_message_query_doesnt_suported,
 							IMessage.WARNING);
 				}
 			}
@@ -1914,7 +1920,7 @@ public class QueryPage implements Page {
 		// Delete Button to delete rows in parameter
 		deleteButton = new Button(container, SWT.FLAT);
 		deleteButton
-				.setToolTipText(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_delete);
+				.setToolTipText(Message.editor_querymanager_queryinfo_parameter_delete);
 		deleteButton.setImage(removeRowImage.createImage());
 
 		deleteButton.addSelectionListener(new SelectionListener() {
@@ -1969,15 +1975,15 @@ public class QueryPage implements Page {
 
 							if (count == rowCount) {
 								// setMessage(
-								// MessagePropertiesLoader.anyframe_querymanager_eclipse_core_addQueryWizardPage_testQuery,
+								// Message.anyframe_querymanager_eclipse_core_addQueryWizardPage_testQuery,
 								// IMessage.ERROR);
 							} else if (count < rowCount) {
 								setMessage(
-										MessagePropertiesLoader.editor_querymanager_message_error,
+										Message.editor_querymanager_message_error,
 										IMessage.ERROR);
 							} else if (count > rowCount) {
 								setMessage(
-										MessagePropertiesLoader.editor_querymanager_message_error,
+										Message.editor_querymanager_message_error,
 										IMessage.ERROR);
 							}
 
@@ -1987,11 +1993,11 @@ public class QueryPage implements Page {
 							int count = parseQ(parseText, true);
 							if (count < rowCount) {
 								setMessage(
-										MessagePropertiesLoader.editor_querymanager_message_error,
+										Message.editor_querymanager_message_error,
 										IMessage.ERROR);
 							} else if (count > rowCount) {
 								setMessage(
-										MessagePropertiesLoader.editor_querymanager_message_error,
+										Message.editor_querymanager_message_error,
 										IMessage.ERROR);
 							}
 						}
@@ -2081,7 +2087,7 @@ public class QueryPage implements Page {
 			mQueryInputAttribute.setNo(selectedIndex + 2);
 			mQueryInputAttribute.setName("");
 			mQueryInputAttribute
-					.setType(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_varchar);
+					.setType(Message.editor_querymanager_queryinfo_parameter_varchar);
 			mQueryInputAttribute.setBinding("");
 			mQueryInputAttribute.setTest("");
 			queryAttribute.getInputParamVect().insertElementAt(
@@ -2102,7 +2108,7 @@ public class QueryPage implements Page {
 			mQueryInputAttribute.setName("");
 
 			mQueryInputAttribute
-					.setType(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_varchar);
+					.setType(Message.editor_querymanager_queryinfo_parameter_varchar);
 			mQueryInputAttribute.setBinding("");
 			mQueryInputAttribute.setTest("");
 			queryAttribute.getInputParamVect().addElement(mQueryInputAttribute);
@@ -2117,11 +2123,11 @@ public class QueryPage implements Page {
 
 			if (count < rowCount) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_error,
+						Message.editor_querymanager_message_error,
 						IMessage.ERROR);
 			} else if (count > rowCount) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_error,
+						Message.editor_querymanager_message_error,
 						IMessage.ERROR);
 			}
 		} else {
@@ -2130,11 +2136,11 @@ public class QueryPage implements Page {
 			int count = parseQ(parseText, true);
 			if (count < rowCount) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_error,
+						Message.editor_querymanager_message_error,
 						IMessage.ERROR);
 			} else if (count > rowCount) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_error,
+						Message.editor_querymanager_message_error,
 						IMessage.ERROR);
 			}
 		}
@@ -2347,13 +2353,13 @@ public class QueryPage implements Page {
 		try {
 			if (ParseTemplateString.getTemplate(parseText) == null) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+						Message.editor_querymanager_message_query_doesnt_suported,
 						IMessage.WARNING);
 				return false;
 			}
 		} catch (Exception e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		}
 		return true;
 	}
@@ -2365,17 +2371,17 @@ public class QueryPage implements Page {
 		try {
 			if (ParseTemplateString.getTemplate(parseText) == null) {
 				// setMessage(
-				// MessagePropertiesLoader.QUERYMANAGER_QUERYTESTEDITOR_Msg_improperVelocityTemplate_error,
+				// Message.QUERYMANAGER_QUERYTESTEDITOR_Msg_improperVelocityTemplate_error,
 				// IMessage.ERROR);
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_query_doesnt_suported,
+						Message.editor_querymanager_message_query_doesnt_suported,
 						IMessage.WARNING);
 				return;
 			} else
 				t2 = ParseTemplateString.getTemplate(parseText);
 		} catch (Exception e1) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e1);
+					Message.exception_log_run_query, e1);
 		}
 
 		VelocityContext ctx = new VelocityContext();
@@ -2386,7 +2392,7 @@ public class QueryPage implements Page {
 			t2.merge(ctx, writer);
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e);
+					Message.exception_log_run_query, e);
 		}
 		String queryWithOutVeocity = writer.toString();
 		String[] result2 = queryWithOutVeocity.split("\\s");
@@ -2432,7 +2438,7 @@ public class QueryPage implements Page {
 			t = ParseTemplateString.getTemplate(parseText);
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					MessagePropertiesLoader.exception_log_run_query, e);
+					Message.exception_log_run_query, e);
 		}
 		// List l contains the list of all the tokens inside the velocity
 		// template
@@ -2496,7 +2502,7 @@ public class QueryPage implements Page {
 
 				} else {
 					mQueryInputAttribute
-							.setType(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_varchar);
+							.setType(Message.editor_querymanager_queryinfo_parameter_varchar);
 					mQueryInputAttribute.setTest("");
 				}
 
@@ -2524,7 +2530,7 @@ public class QueryPage implements Page {
 
 				} else {
 					mQueryInputAttribute
-							.setType(MessagePropertiesLoader.editor_querymanager_queryinfo_parameter_varchar);
+							.setType(Message.editor_querymanager_queryinfo_parameter_varchar);
 					mQueryInputAttribute.setTest("");
 				}
 				mQueryInputAttribute.setBinding("");
@@ -2561,8 +2567,9 @@ public class QueryPage implements Page {
 	/**
 	 * Validate limitRowsText Text field
 	 */
-	void validateResultCount() {
-
+	boolean validateResultCount() {
+		boolean result = true;
+		
 		limitRowsFlag = true;
 		String resltCounts = limitRowsText.getText();
 		if (resltCounts != null && !resltCounts.equals("")) {
@@ -2571,13 +2578,17 @@ public class QueryPage implements Page {
 				if (ch >= '0' && ch <= '9') {
 				} else {
 					limitRowsFlag = false;
+					result = false;
 					break;
 				}
 			}
 		} else {
 			limitRowsFlag = false;
+			result = false;
 		}
 		// checkComplete();
+		
+		return result;
 	}
 
 	/**
@@ -2592,7 +2603,7 @@ public class QueryPage implements Page {
 
 			if (null == conn || conn.isClosed()) {
 				setMessage(
-						MessagePropertiesLoader.editor_querymanager_message_connection,
+						Message.editor_querymanager_message_connection,
 						IMessage.WARNING);
 				querySuccessfull = false;
 				return;
@@ -2643,14 +2654,14 @@ public class QueryPage implements Page {
 							+ querySe;
 					setMessage(successMessage, IMessage.INFORMATION);
 				} else {
-					setMessage("Check the query. Query is not supported.",
+					setMessage(Message.editor_querymanager_queryisnotsupported,
 							IMessage.ERROR);
 				}
 			} catch (RuntimeException e) {
 				querySuccessfull = false;
 				throw new SQLException(e.getMessage());
 			} catch (SQLException e) {
-				setMessage("Check the query. Query is not available.",
+				setMessage(Message.editor_querymanager_queryisnotavailable,
 						IMessage.ERROR);
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -2731,7 +2742,7 @@ public class QueryPage implements Page {
 			document = builder.parse(file);
 		} catch (FileNotFoundException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2755,7 +2766,8 @@ public class QueryPage implements Page {
 				false, PlatformUI.getWorkbench().getProgressService(),
 				SearchEngine.createWorkspaceScope(), IJavaSearchConstants.TYPE);
 
-		dialog.setTitle("Result Class");
+		dialog.setTitle(Message.editor_querymanager_resultclass_title);
+		dialog.setMessage(Message.editor_querymanager_resultclass_message);
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2012 the original author or authors.   
+ * Copyright 2002-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -20,9 +20,9 @@ import hudson.scheduler.CronTab;
 import java.util.List;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.CtipDetailList;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.command.common.util.CommonConstants;
@@ -112,9 +112,9 @@ public class CtipAddJobPopup extends Dialog {
 		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
 
 		if(isModify){
-			shell.setText("Modify CTIP Job");
+			shell.setText(Message.view_ctip_modifyctipjob);
 		}else{
-			shell.setText("Add New CTIP Job");
+			shell.setText(Message.view_ctip_addnewjob);
 		}
 		shell.setBounds((screenWidth - 450) / 2, (screenHeight - 350) / 3, 450,
 				300);

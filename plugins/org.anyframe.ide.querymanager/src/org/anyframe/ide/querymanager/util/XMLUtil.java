@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerFactory;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.w3c.dom.Document;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
@@ -87,7 +88,7 @@ public class XMLUtil {
 			// transformer.transform(src, dest);
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Save failed: " + xmlFile.getAbsolutePath(), e);
+					Message.exception_savefail + xmlFile.getAbsolutePath(), e);
 		}
 
 	}

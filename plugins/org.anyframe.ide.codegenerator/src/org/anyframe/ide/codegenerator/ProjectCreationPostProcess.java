@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -18,7 +18,6 @@ package org.anyframe.ide.codegenerator;
 import org.anyframe.ide.codegenerator.command.vo.CommandVO;
 import org.anyframe.ide.codegenerator.command.vo.CreatePJTVO;
 import org.anyframe.ide.codegenerator.messages.Message;
-import org.anyframe.ide.codegenerator.util.DatabaseUtil;
 import org.anyframe.ide.codegenerator.util.PostProcess;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;

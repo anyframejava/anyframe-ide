@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 Samsung SDS Co., Ltd.
+ * Copyright 2007-2013 Samsung SDS Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.anyframe.ide.codegenerator.action.CtipViewActionGroup;
 import org.anyframe.ide.codegenerator.action.RefreshCtipViewAction;
 import org.anyframe.ide.codegenerator.action.ServerConfigureCtipViewAction;
 import org.anyframe.ide.codegenerator.config.AnyframeConfig;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.CtipDetailList;
 import org.anyframe.ide.codegenerator.model.table.CtipInfoContentProvider;
 import org.anyframe.ide.codegenerator.model.table.CtipInfoLabelProvider;
@@ -36,6 +35,7 @@ import org.anyframe.ide.codegenerator.popups.CtipAddJobPopup;
 import org.anyframe.ide.codegenerator.popups.CtipConfigurationPopup;
 import org.anyframe.ide.codegenerator.popups.CtipManageUrlPopup;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -52,7 +52,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -212,7 +211,7 @@ public class CtipView extends ViewPart {
 		//
 		fFilteredTree.setBackground(parent.getDisplay().getSystemColor(25));
 		fFilteredTree.setLayoutData(new GridData(1808));
-		fFilteredTree.setInitialText("type filter text of job name");
+		fFilteredTree.setInitialText(Message.view_ctip_typejobname);
 
 		fTree = fFilteredTree.getViewer().getTree();
 		fTree.setLinesVisible(true);
@@ -659,7 +658,7 @@ public class CtipView extends ViewPart {
 				TreeItem[] treeItems = fFilteredTree.getViewer().getTree()
 						.getSelection();
 				for (TreeItem item : treeItems) {
-					item.setText("building");
+					item.setText(Message.view_ctip_run_progress);
 				}
 				break;
 			}
@@ -748,7 +747,7 @@ public class CtipView extends ViewPart {
 
 		});
 
-		fFilteredTree.setInitialText("type filter text of job name");
+		fFilteredTree.setInitialText(Message.view_ctip_typejobname);
 		fFilteredTree.getViewer().refresh(true);
 	}
 

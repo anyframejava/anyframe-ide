@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.anyframe.ide.querymanager.actions;
 
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.util.AbstractQueryManagerAction;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -35,9 +35,9 @@ public class RefreshAction extends AbstractQueryManagerAction {
 	 */
 	public RefreshAction() {
 		super(
-				MessagePropertiesLoader.view_explorer_action_refresh_title,
-				MessagePropertiesLoader.view_explorer_action_refresh_desc,
-				MessagePropertiesLoader.image_explorer_action_refresh);
+				Message.view_explorer_action_refresh_title,
+				Message.view_explorer_action_refresh_desc,
+				Message.image_explorer_action_refresh);
 	}
 
 	/**

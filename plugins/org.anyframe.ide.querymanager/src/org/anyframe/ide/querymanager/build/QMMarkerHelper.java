@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.anyframe.ide.querymanager.actions.EnableNatureAction;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.parsefile.ParserHelper;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
 import org.eclipse.core.resources.IProject;
@@ -142,7 +143,7 @@ public class QMMarkerHelper {
 										.markAProblem(
 												"Query Id \""
 														+ loc.key
-														+ "\" is not used in any of the DAO files in the project or used in GenericDAO class. "
+														+ Message.build_queryidisnotused_message
 														+ project.getName(),
 												(Location) loc,
 												1,
@@ -174,13 +175,13 @@ public class QMMarkerHelper {
 								break;
 							}
 
-							monitor.subTask("Creating the Markers for  "
+							monitor.subTask(Message.build_createmarkersfor 
 									+ loc.getFile().getLocation());
 							builderHelper
 									.markAProblem(
 											"Query Id \""
 													+ loc.key
-													+ "\" is not used in any of the DAO files in the project or used in GenericDAO class. "
+													+ Message.build_queryidisnotused_message
 													+ project.getName(),
 											(Location) loc,
 											1,
@@ -271,7 +272,7 @@ public class QMMarkerHelper {
 						BuilderHelper
 								.getInstance()
 								.markAProblemInDAO(
-										"Expected Query Id is not defined in this Project. ",
+										Message.exception_queryidisnotdefined,
 										(Location) loc, 1, true, markerId);
 					else
 						BuilderHelper
@@ -279,7 +280,7 @@ public class QMMarkerHelper {
 								.markAProblemInDAO(
 										"Query Id \""
 												+ loc.key
-												+ "\" does not exist in any of the Query Mapping XML files defined in this Project. ",
+												+ Message.build_queryidisnotexistinxmlfile_message,
 										(Location) loc, 1, true, markerId);
 				}
 			}
@@ -290,7 +291,7 @@ public class QMMarkerHelper {
 					BuilderHelper
 							.getInstance()
 							.markAProblemInDAO(
-									"Expected Query Id is not defined in this Project. ",
+									Message.exception_queryidisnotdefined,
 									(Location) loc, 1, true, markerId);
 				else
 					BuilderHelper
@@ -298,7 +299,7 @@ public class QMMarkerHelper {
 							.markAProblemInDAO(
 									"Query Id \""
 											+ loc.key
-											+ "\" does not exist in any of the Query Mapping XML files defined in this Project. ",
+											+ Message.build_queryidisnotexistinxmlfile_message,
 									(Location) loc, 1, true, markerId);
 			}
 		}
@@ -330,7 +331,7 @@ public class QMMarkerHelper {
 					BuilderHelper
 							.getInstance()
 							.markAProblem(
-									"The result class is not set or does not exist. Please add a valid class. ",
+									Message.exception_resultclassisnotset,
 									loc, 1, false,
 									QMMarkerHelper.BUILDER_ERROR_MARKER_ID);
 			}

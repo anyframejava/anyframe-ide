@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.anyframe.ide.querymanager.editors;
 import java.util.ArrayList;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QMXMLTableTreeViewer;
 import org.anyframe.ide.querymanager.model.QueryInputAttribute;
 import org.eclipse.core.resources.IFile;
@@ -75,8 +76,8 @@ public class ModifyQueryActionDelegate extends AbstractQueryActionDelegate {
 
 			if (targetEditor.getSite().getShell() != null) {
 				MessageDialog.openInformation(
-						targetEditor.getSite().getShell(), "Modify Query",
-						"Select the query to modify");
+						targetEditor.getSite().getShell(), Message.editor_querymanager_modifyquery,
+						Message.editor_querymanager_selectthequerytomodify);
 			}
 			return;
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.anyframe.ide.querymanager;
 
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -33,7 +33,7 @@ import org.osgi.framework.BundleContext;
  */
 public class QueryManagerActivator extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.anyframe.ide.querymanager.views";
+	public static final String PLUGIN_ID = "org.anyframe.ide.querymanager";
 
 	private QMExplorerView qmExplorerView;
 
@@ -99,9 +99,9 @@ public class QueryManagerActivator extends AbstractUIPlugin {
 	}
 
 	public String getAddQuertyTitleName() {
-		String title = MessagePropertiesLoader.editor_querymanager_message_addquerytitle_prefix
+		String title = Message.editor_querymanager_message_addquerytitle_prefix
 				+ "0"
-				+ MessagePropertiesLoader.editor_querymanager_message_addquerytitle_suffix;
+				+ Message.editor_querymanager_message_addquerytitle_suffix;
 		IWorkbenchPage Page = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage();
 
@@ -114,7 +114,7 @@ public class QueryManagerActivator extends AbstractUIPlugin {
 				if (refEditor
 						.getTitle()
 						.startsWith(
-								MessagePropertiesLoader.editor_querymanager_message_addquerytitle_prefix)) {
+								Message.editor_querymanager_message_addquerytitle_prefix)) {
 					int titleNum = getTitleNum(refEditor.getTitle());
 					if (maxNum < titleNum || maxNum == titleNum)
 						maxNum = titleNum;
@@ -122,13 +122,13 @@ public class QueryManagerActivator extends AbstractUIPlugin {
 				}
 			}
 			if (queryPage == 0)
-				title = MessagePropertiesLoader.editor_querymanager_message_addquerytitle_prefix
+				title = Message.editor_querymanager_message_addquerytitle_prefix
 						+ String.valueOf(maxNum)
-						+ MessagePropertiesLoader.editor_querymanager_message_addquerytitle_suffix;
+						+ Message.editor_querymanager_message_addquerytitle_suffix;
 			else
-				title = MessagePropertiesLoader.editor_querymanager_message_addquerytitle_prefix
+				title = Message.editor_querymanager_message_addquerytitle_prefix
 						+ String.valueOf(maxNum + 1)
-						+ MessagePropertiesLoader.editor_querymanager_message_addquerytitle_suffix;
+						+ Message.editor_querymanager_message_addquerytitle_suffix;
 
 			return title;
 		} else {

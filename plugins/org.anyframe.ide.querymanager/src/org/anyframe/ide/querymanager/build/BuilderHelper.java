@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.parsefile.FilesParser;
 import org.anyframe.ide.querymanager.util.AnyframeJarLoader;
 import org.eclipse.core.resources.IMarker;
@@ -175,7 +176,7 @@ public class BuilderHelper {
 		} catch (Exception e) {
 			// LOGGER.error(" Problem creating a marker .... " + e);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Problem creating a marker", e);
+					Message.exception_createmarker, e);
 			return false;
 
 		}
@@ -223,11 +224,11 @@ public class BuilderHelper {
 
 	public HashMap collectAllQueryIdsForProject(IProject project) {
 		IProgressMonitor monitor = new NullProgressMonitor();
-		monitor.subTask("Analyzing the project cached information.....");
+		monitor.subTask(Message.build_analyzingtheproject);
 		HashMap returnQryIds = null;
 		HashMap allQueryIds = (HashMap) queryIds.get(project.getName());
 		HashMap daoQueryIds = (HashMap) allDAOQueryIds.get(project.getName());
-		monitor.subTask("Getting the cached information if exist.....");
+		monitor.subTask(Message.build_getthecacheinfo);
 		if (allQueryIds != null && allQueryIds.size() > 0) {
 			monitor.subTask("Retrieved " + allQueryIds.size()
 					+ " queries from the cache.");

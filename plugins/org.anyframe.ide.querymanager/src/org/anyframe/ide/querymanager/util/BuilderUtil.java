@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.build.AnyframeNature;
 import org.anyframe.ide.querymanager.build.AnyframeProjectBuilder;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.views.QueryExplorerHelper;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
@@ -128,7 +129,7 @@ public class BuilderUtil {
 			return result.toString();
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					" Problem reading file " + file.getName(), e);
+					Message.exception_problemreadfile + file.getName(), e);
 		} finally {
 			try {
 				result = null;
@@ -137,7 +138,7 @@ public class BuilderUtil {
 					stream.close();
 			} catch (Exception e) {
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						" Problem closing stream of " + file.getName(), e);
+						Message.exception_problemclosingstream + file.getName(), e);
 			}
 		}
 		return null;
@@ -199,12 +200,12 @@ public class BuilderUtil {
 	}
 
 	public boolean runJobToAddBuilder(final IProject anyframeProject) {
-		Job addBilderJob = new Job("Adding Builder to project "
+		Job addBilderJob = new Job(Message.util_addingbuildertoproject
 				+ anyframeProject.getName()) {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(
-						"Checking whether builder is added already...", 1000);
-				monitor.subTask("Checking whether builder is added already...");
+						Message.util_checkbuilderalreadyadded, 1000);
+				monitor.subTask(Message.util_checkbuilderalreadyadded);
 				final ArrayList treeQueryList = new QueryExplorerHelper()
 						.collectTreeViewQueries(monitor);
 				if (monitor.isCanceled()) {
@@ -240,7 +241,7 @@ public class BuilderUtil {
 			desc = anyframeProject.getDescription();
 		} catch (CoreException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"could not add Anyframe Builder to project : "
+					Message.exception_couldnotaddanyframebuilder
 							+ anyframeProject.getName() + e.getMessage(), e);
 		}
 		if (desc == null)

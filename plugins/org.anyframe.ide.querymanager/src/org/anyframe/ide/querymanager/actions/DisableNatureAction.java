@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.build.AnyframeNature;
 import org.anyframe.ide.querymanager.build.BuilderHelper;
 import org.anyframe.ide.querymanager.build.QMMarkerHelper;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -137,7 +138,7 @@ public class DisableNatureAction implements IObjectActionDelegate {
 			// LOGGER.error("Can't disable nature " + ex.toString());
 			// LOGGER.error(ex);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Can't disable nature", ex);
+					Message.exception_disablenatureaction, ex);
 		}
 	}
 

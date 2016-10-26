@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import java.util.jar.JarFile;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -73,14 +74,14 @@ public class AnyframeJarLoader {
 				}
 			}
 		} catch (Exception e) {
-			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, "There was a problem while Loading And Reading the Jar File. ", e);
+			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, Message.exception_loadjarfile, e);
 		}
 		//1.get jar file
 		JarFile jarFile = null;
 		try{
 			jarFile = new JarFile(jarPath);
 		}catch(Exception e){
-			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, "There was a problem while Loading And Reading the Jar File. ", e);
+			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, Message.exception_loadjarfile, e);
 		}
 		//2.parse the jar file. construct HashMap. Return.
 		HashMap classMethodsMap = new HashMap();
@@ -112,7 +113,7 @@ public class AnyframeJarLoader {
 					classMethodsMap.put(key1, methodNames);
 				} catch (ClassNotFoundException e) {
 					PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, 
-										"There was a problem while Loading And Reading the Jar File. ",
+							Message.exception_loadjarfile,
 										e);
 					
 				}				
@@ -143,7 +144,7 @@ public class AnyframeJarLoader {
                 			jarFile = new JarFile(jarPath);
                 			
                 		}catch(Exception e){
-                			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, "There was a problem while Loading And Reading the Jar File. ", e);
+                			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID, Message.exception_loadjarfile, e);
                 			continue forLoop;
                 		}                		
                 	}

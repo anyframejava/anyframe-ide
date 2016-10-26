@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2012 the original author or authors.   
+ * Copyright 2002-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -15,12 +15,7 @@
  */
 package org.anyframe.ide.codegenerator.command.maven;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,27 +29,22 @@ import org.anyframe.ide.codegenerator.ProjectCreationPostProcess;
 import org.anyframe.ide.codegenerator.command.MavenCommand;
 import org.anyframe.ide.codegenerator.command.vo.CommandVO;
 import org.anyframe.ide.codegenerator.command.vo.CreatePJTVO;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.MavenJob;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.PostProcess;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.util.XmlFileUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
-import org.anyframe.ide.common.CommonActivator;
-import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.dialog.JdbcType;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.XMLUtil;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.swt.widgets.Display;
 import org.maven.ide.eclipse.internal.launch.MavenLaunchDelegate.BackgroundResourceRefresher;
-import org.osgi.framework.Bundle;
 
 /**
  * This is an AnyframeBackgroundResourceRefresher class.
@@ -111,7 +101,7 @@ public class AnyframeBackgroundResourceRefresher extends
 										.getJdbcConfigFileInputStream());
 					} catch (IOException e) {
 						PluginLoggerUtil.error(CodeGeneratorActivator.PLUGIN_ID,
-								"Can't get jdbc configuration.", e);
+								Message.wizard_application_error_cannotgetjdbcconfiguration, e);
 					}
 
 					PluginContainer container = null;
@@ -182,7 +172,7 @@ public class AnyframeBackgroundResourceRefresher extends
 									} catch (CoreException e) {
 										PluginLoggerUtil
 												.error(ID,
-														"failed to change db information",
+														Message.view_exception_failtochagnedbinfo,
 														e);
 									}
 								}
@@ -195,7 +185,7 @@ public class AnyframeBackgroundResourceRefresher extends
 			job.setPostProcess(postProcess);
 			job.schedule();
 		} catch (CoreException e) {
-			PluginLoggerUtil.error(ID, "failed to refresh resources.", e);
+			PluginLoggerUtil.error(ID, Message.view_exception_failtorefreshresources, e);
 		}
 	}
 }

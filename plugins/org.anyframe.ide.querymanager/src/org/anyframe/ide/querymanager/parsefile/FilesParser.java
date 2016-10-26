@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.QueryManagerConstants;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
 import org.anyframe.ide.querymanager.util.BuilderUtil;
 import org.eclipse.core.resources.IFile;
@@ -77,11 +78,11 @@ public class FilesParser {
 			mappingFiles = getPropertiesFile(project);
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Exception occurred while getting propertyfiles.", e);
+					Message.excpetion_getpropertyfile, e);
 		}
 
 		for (int i = 0; i < files.size(); i++) {
-			monitor.subTask("Searching the file " + ((ArrayList) files).get(i));
+			monitor.subTask(Message.parsefile_searchfile + ((ArrayList) files).get(i));
 			String file = (String) ((ArrayList) files).get(i);
 			if (monitor.isCanceled()) {
 				monitor.done();
@@ -91,7 +92,7 @@ public class FilesParser {
 					file.length());
 			QMPropertiesXMLUtil util = new QMPropertiesXMLUtil();
 			if (file.toUpperCase().endsWith(".XML") && isMappingXMLFile(file)) {
-				monitor.subTask("Collecting the QueryIds : XML File " + file);
+				monitor.subTask(Message.parsefile_collectionthequeryidsxmlfile + file);
 				Map queryIds = xmlFileParser.collectXMLQueryIds(project,
 						filePath, allQueryIds, monitor);
 				// if (queryIds != null && queryIds.size()!=0){
@@ -123,7 +124,7 @@ public class FilesParser {
 				// Traverse through DAO file and get
 				// the Query Ids used in this
 				// file
-				monitor.subTask("Collecting the QueryIds : Java File " + file);
+				monitor.subTask(Message.parsefile_collectionthequeryidsjavafile + file);
 				Map queryIdsInDaos = javaFileParser
 						.collectDaoQueryIdsFromProject(project, filePath,
 								daoQueryIds, monitor, technicalMap);
@@ -153,7 +154,7 @@ public class FilesParser {
 		String projectPath = project.getLocation().toString();
 
 		for (int i = 0; i < files.size(); i++) {
-			monitor.subTask("Searching the file " + ((ArrayList) files).get(i));
+			monitor.subTask(Message.parsefile_searchfile + ((ArrayList) files).get(i));
 			String file = (String) ((ArrayList) files).get(i);
 			if (monitor.isCanceled()) {
 				monitor.done();
@@ -164,7 +165,7 @@ public class FilesParser {
 
 			QMPropertiesXMLUtil util = new QMPropertiesXMLUtil();
 			if (file.toUpperCase().endsWith(".XML")) {
-				monitor.subTask("Collecting the QueryIds : XML File " + file);
+				monitor.subTask(Message.parsefile_collectionthequeryidsxmlfile + file);
 				Map queryIds = xmlFileParser.collectXMLQueryIds(project,
 						filePath, allQueryIds, monitor);
 				// if (queryIds != null && queryIds.size()!=0){
@@ -191,7 +192,7 @@ public class FilesParser {
 				// Traverse through DAO file and get
 				// the Query Ids used in this
 				// file
-				monitor.subTask("Collecting the QueryIds : Java File " + file);
+				monitor.subTask(Message.parsefile_collectionthequeryidsjavafile + file);
 				Map queryIdsInDaos = javaFileParser
 						.collectDaoQueryIdsFromProject(project, filePath,
 								daoQueryIds, monitor, technicalMap);
@@ -239,7 +240,7 @@ public class FilesParser {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		// if (file.exists()) {

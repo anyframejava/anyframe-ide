@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -39,6 +39,7 @@ import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.dialog.JdbcType;
+import org.anyframe.ide.common.properties.PropertiesSettingUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.XMLUtil;
@@ -190,12 +191,7 @@ public class AntCommand implements Command {
 
 				if (vo.getDatabaseType().equals("hsqldb")) {
 					java.util.List<JdbcType> jdbcTypes = null;
-					File jdbcConfigFile = new File(vo.getProjectHome()
-							+ ProjectUtil.SLASH + Constants.SETTING_HOME
-							+ ProjectUtil.SLASH
-							+ Constants.DRIVER_SETTING_XML_FILE
-							+ ProjectUtil.SLASH
-							+ Constants.DRIVER_SETTING_XML_FILE);
+					File jdbcConfigFile = new File(PropertiesSettingUtil.JDBCDRIVERS_LOC);
 					if (jdbcConfigFile.exists()) {
 						try {
 							jdbcTypes = (java.util.List<JdbcType>) XmlFileUtil
@@ -213,7 +209,7 @@ public class AntCommand implements Command {
 						} catch (IOException e) {
 							PluginLoggerUtil.error(
 									CodeGeneratorActivator.PLUGIN_ID,
-									"Can't get jdbc configuration.", e);
+									Message.wizard_application_error_cannotgetjdbcconfiguration, e);
 						}
 					}
 

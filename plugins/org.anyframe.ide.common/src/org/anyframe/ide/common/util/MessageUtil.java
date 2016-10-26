@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
 package org.anyframe.ide.common.util;
 
 import org.anyframe.ide.common.CommonActivator;
+import org.anyframe.ide.common.messages.Message;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * This is MessageUtil class.
  * 
  * @author Sujeong Lee
+ * @author Eunjin Jang
  */
-public class MessageUtil {
-
+public class MessageUtil {	
 	public static void showMessage(String message, String title) {
 		MessageDialogUtil.openMessageDialog(title, message,
 				MessageDialog.INFORMATION);
@@ -47,12 +48,12 @@ public class MessageUtil {
 			// "\nSee Error Log for more details.", e));
 			MessageDialogUtil.openDetailMessageDialog(
 					CommonActivator.PLUGIN_ID, title, message, message
-							+ "\nSee Error Log for more details.\n" + e,
+							+ Message.error_seedetail + e,
 					MessageDialog.ERROR);
 		} else {
 			MessageDialogUtil.openDetailMessageDialog(
 					CommonActivator.PLUGIN_ID, title, message, message
-							+ "\nSee Error Log for more details.\n" + e,
+							+ Message.error_seedetail + e,
 					MessageDialog.ERROR);
 		}
 	}

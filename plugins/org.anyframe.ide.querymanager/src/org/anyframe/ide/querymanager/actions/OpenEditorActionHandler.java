@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.build.Location;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.EditorInput;
 import org.anyframe.ide.querymanager.model.FileInfoVO;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
@@ -97,15 +97,15 @@ public class OpenEditorActionHandler {
 
 		} catch (FileNotFoundException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
-			MessageDialogUtil.openMessageDialog("Not available DTD in XML file",
-					"Check DTD in XML file.", MessageDialog.ERROR);
+					Message.action_checkdtdinxmlfile, e);
+			MessageDialogUtil.openMessageDialog(Message.exception_notavailabledtd,
+					Message.action_checkdtdinxmlfile, MessageDialog.ERROR);
 		} catch (Exception e) {
 			// e.printStackTrace();
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
-			MessageDialogUtil.openMessageDialog("Not available DTD in XML file",
-					"Check DTD in XML file.", MessageDialog.ERROR);
+					Message.action_checkdtdinxmlfile, e);
+			MessageDialogUtil.openMessageDialog(Message.exception_notavailabledtd,
+					Message.action_checkdtdinxmlfile, MessageDialog.ERROR);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class OpenEditorActionHandler {
 			}
 		} catch (NullPointerException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 	}
@@ -229,7 +229,7 @@ public class OpenEditorActionHandler {
 
 		String tempId = object.toString().substring(1);
 		int index = tempId
-				.indexOf(MessagePropertiesLoader.view_explorer_util_queryid_suffix);
+				.indexOf(Message.view_explorer_util_queryid_suffix);
 		if (index == -1) {
 			queryId = tempId;
 		} else {

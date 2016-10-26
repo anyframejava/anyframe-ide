@@ -2,6 +2,95 @@
 ==========================
 http://www.anyframe-ent.com
 
+Changes in version 2.8.0 (2013-04-12)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Properties
+    . Configuration file 위치를  Eclipse Properties UI 화면에서 정의하도록 개선 
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선    
+
+2) Code Generator - Eclipse Plugin
+  - m2eclipse 의존관계 개선  
+    . 사용자가 원하는 m2eclipse로 설치하여 진행하도록 개선
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+
+3) Query Manager - Eclipse Plugin
+  - Bug fix
+    . Row Limit 에 숫자 외 값을 입력 시 경고 발생등 조치  
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+  
+4) Common(Enterprise Ed.) - Eclipse Plugin
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+  
+5) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - Next key Paging 처리 지원
+    . Next key 방식의 Paging, Dynamic Paging 메소드 등 Generate 가능하도록 소스 및 템플릿 개선
+  - SQL ID 변경 이슈
+    . 메소드 이름 수정 시 SQL ID가 입력값이 아닌 값으로  변경되는 이슈 개선
+  - dynamic DML 타입일 경우 input type
+    . 기존 VO Input type이 Map 인 것을 VO type이 생성되도록 개선    
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선    
+  
+6) VO Manager(Enterprise Ed.) - Eclipse Plugin
+  - 매뉴얼 추가
+    . Eclipse Help Contents에 VO Manager 매뉴얼 추가
+  - Editor
+    . Paste 버튼 기능 오류 개선, Configuration xml file을 통한 버튼명 및 버튼 사용여부를 정의하도록 개선
+    . Insert Dialog 기능 개선, 입력 시 포커스 및 Validation 개선    
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+
+7) UnitTest Manager(Enterprise Ed.) - Eclipse Plugin
+  - 매뉴얼 추가
+    . Eclipse Help Contents에 VO Manager 매뉴얼 추가
+  - Bug fix
+    . Properties 내 JVM 결과 대기 시간 속성이  저장이 안되었던 이슈 개선 
+    . Run this test 시 ServiceRunner를 못찾던 이슈 개선
+    . Console 창 테스트 결과 출력 결과에 관한 이슈 및 가독성을 고려한 포맷으로 변경
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+
+* 참조 라이브러리 변경 내역
+  - org.maven.ide.eclipse_0.12.1.20110112-1712.jar 추가
+  
+* 테스트 내역
+  - Anyframe Java IDE 2.8.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-138] Anyframe IDE Configuration 구성 개선
+  Code Generator - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-136] Code Generator의 m2eclipse Dependency 관계 개선
+  Query Manager - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+  Common(Enterprise Ed.)
+    . [AEJIDE-256] Fragment 프로젝트 구성
+	. [AEJIDE-257] 다국어(한국어) 메세지 작성
+  DAO Manager(Enterprise Ed.)
+    . [AEJIDE-261] DML 타입이 dynamic인 경우 Input Type의 디폴트 값이 Map 으로 변경
+    . [AEJIDE-271] DAO Manager에서 메소드의 이름을 변경할 때, SQL ID가 잘못 변경되는 문제
+	. [AEJIDE-281] Next key 방식의 Pageing, DynamicPaging 타입 추가
+  VO Manager(Enterprise Ed.)
+    . [AEJIDE-260] Insert Dialog 개선
+    . [AEJIDE-267] VO Manager 매뉴얼 작업
+    . [AEJIDE-282] Paste 버튼 기능 개선
+  UnitTest Manager(Enterprise Ed.)
+    . [AEJIDE-268] UnitTest Manager 매뉴얼 작업
+
 Changes in version 2.7.0 (2012-12-28)
 -------------------------------------
 * 주요 변경 내역

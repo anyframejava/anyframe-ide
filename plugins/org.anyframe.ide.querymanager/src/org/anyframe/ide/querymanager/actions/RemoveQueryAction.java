@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.querymanager.DTDResolver;
 import org.anyframe.ide.querymanager.build.Location;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.FileInfoVO;
 import org.anyframe.ide.querymanager.model.QueryTreeVO;
 import org.anyframe.ide.querymanager.util.AbstractQueryManagerAction;
@@ -60,9 +60,9 @@ public class RemoveQueryAction extends AbstractQueryManagerAction {
 
 	public RemoveQueryAction() {
 		super(
-				MessagePropertiesLoader.view_explorer_action_remove_query_title,
-				MessagePropertiesLoader.view_explorer_action_remove_query_desc,
-				MessagePropertiesLoader.image_explorer_action_removiequery);
+				Message.view_explorer_action_remove_query_title,
+				Message.view_explorer_action_remove_query_desc,
+				Message.image_explorer_action_removiequery);
 	}
 
 	/**
@@ -87,10 +87,10 @@ public class RemoveQueryAction extends AbstractQueryManagerAction {
 
 			if (MessageDialogUtil
 					.confirmMessageDialog(
-							MessagePropertiesLoader.view_explorer_action_remove_query_confirm_title,
-							MessagePropertiesLoader.view_explorer_action_remove_query_confirm
+							Message.view_explorer_action_remove_query_confirm_title,
+							Message.view_explorer_action_remove_query_confirm
 									+ selectedId
-									+ MessagePropertiesLoader.view_explorer_action_remove_query_confirm_suffix)) {
+									+ Message.view_explorer_action_remove_query_confirm_suffix)) {
 
 				Object ob = null;
 				if (obj != null) {
@@ -129,8 +129,8 @@ public class RemoveQueryAction extends AbstractQueryManagerAction {
 			}
 
 			if (MessageDialogUtil.confirmMessageDialog(
-					"Confirm Delete",
-					"Are you sure you want to delete the Query ID '"
+					Message.view_explorer_action_confirmdelete,
+					Message.view_explorer_action_deletequeryid
 							+ selectedList.toString().substring(1,
 									selectedList.toString().length() - 1)
 							+ "'?")) {

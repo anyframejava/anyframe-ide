@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.anyframe.ide.querymanager.build;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -42,15 +43,15 @@ public class QMRenameQueryIdResolution implements IMarkerResolution {
 
 	public String getLabel() {
 		if (loc != null)
-			return "Rename query id '" + loc.getKey() + "' in "
+			return Message.build_renamequeryid + loc.getKey() + "' in "
 					+ loc.getFile().getName();
 		else
-			return "Rename query id.";
+			return Message.build_renamequeryidsentence;
 	}
 
 	public void run(IMarker marker) {
 		openEditor(loc.getFile());
-		marker = createMarker(loc, IMarker.BOOKMARK, "Duplictae Query Id :"
+		marker = createMarker(loc, IMarker.BOOKMARK, Message.build_duplicatequeryid_one
 				+ loc.key + " exists in the project");
 		IWorkbenchPage activePage1 = QueryManagerActivator.getDefault()
 				.getActiveWorkbenchPage();

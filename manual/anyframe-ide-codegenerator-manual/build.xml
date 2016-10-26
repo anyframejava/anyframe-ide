@@ -9,7 +9,7 @@
     </description>
 
 	<property name="book.name" value="codegenerator" />
-	<property name="version" value="2.7.0"/>	
+	<property name="version" value="2.8.0"/>	
 	<!--
 	  - set dbf installer folder and sample project folder
 	 -->

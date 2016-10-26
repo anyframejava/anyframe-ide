@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,21 @@ public interface Constants {
 	String DFAULT_TEMPLATE_HOME = SETTING_HOME + FILE_SEPERATOR + "templates";
 
 	String METADATA_FILE = "project.mf";
+
+	String COMMON_CONFIG_PREFS_FILE = "." + FILE_SEPERATOR
+			+ ".settings" + FILE_SEPERATOR + "org.anyframe.ide.common.prefs";
+	String COMMON_CONFIG_PREFS_KEY = "COMMON_CONFIG_PATH";
+
+	String COMMON_SETTINGS_XML_FILE = "org.anyframe.ide.common.config.xml";
+	
 	String DB_SETTINGS_XML_FILE = "org.anyframe.ide.common.databases.config.xml";
 	String DRIVER_SETTING_XML_FILE = "org.anyframe.ide.common.jdbcdriver.config.xml";
+
+	// common config
+	String XML_COMMON_ROOT = "anyframe";
+	String XML_TAG_TEMPLATE = "template";
+	String XML_TAG_JDBCDRIVERS = "jdbcdrivers";
+	String XML_TAG_DATABASES = "databases";
 
 	// project.mf
 	String ANYFRAME_HOME = "anyframe.home";
@@ -114,15 +127,28 @@ public interface Constants {
 	boolean DB_CON_CHK = false;
 	String DB_CON_MSG = "";
 
+	String DB_TYPE_HSQLDB = "hsqldb";
+	String DB_TYPE_ORACLE = "oracle";
+	String DB_TYPE_MYSQL = "mysql";
 	String DB_TYPE_SYBASE = "sybase";
+	String DB_TYPE_DB2 = "db2";
+	String DB_TYPE_MSSQL = "mssql";
 	String DB_NO_SCHEMA = "No Schema";
-	
+
 	String XML_DRIVER_CONFIG_OTHERS = "Others...";
 
 	// for online runtime - check whether enterprise version(online) is installed or not
 	String TEMPLATE_TYPE_ONLINE = "online";
 	
 	//Pling id ID
-	String EDITOR_ID_DAO	= "com.anyframe.ide.daomanager.daoeditor.editor.impl.DAOEditorMultiPageEditorPart";
+	String EDITOR_ID_DAO	= "com.anyframe.ide.daomanager.editor.impl.DAOEditorMultiPageEditorPart";
 	String EDITOR_ID_VO		= "com.anyframe.ide.vomanager.ui.views.VOEditor";
+	
+	//extension point name
+	String EXTENSION_ID_DBSETTING_DIALOG = "database";
+	String EXTENSION_ID_PROPERTY = "property";
+
+	String DB_SCHEMA_PUBLIC = "PUBLIC";
+
+	String DB_SETTING_DEFAULT_POSTFIX = "[Default]";
 }

@@ -5,10 +5,10 @@
 	<extension point="org.eclipse.ui.newWizards">
 		<wizard category="org.anyframe.ide.common.wizards.anyframe"
 			class="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard"
-			id="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard" name="Project"
+			id="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard" name="%Wizard_Menu_Project"
 			icon="images/icon_project.gif" project="true">
 			<description>
-           		Create an Anyframe project
+           		%Wizard_Desc_Project
          	</description>
 		</wizard>
 		<!--
@@ -31,18 +31,18 @@
 		-->
 		<wizard category="org.anyframe.ide.common.wizards.anyframe"
 			class="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard"
-			id="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard" name="Domain/VO Classes from DB Tables"
+			id="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard" name="%Wizard_Menu_VOClasses"
 			icon="images/icon_domain.png" project="false">
     		<description>
-           		Generate Domain classes with Anyframe templates
+           		%Wizard_Desc_VOClasses
          	</description>
 		</wizard>
 		<wizard category="org.anyframe.ide.common.wizards.anyframe"
 			class="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard"
-			id="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard" name="All CRUD Classes"
+			id="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard" name="%Wizard_Menu_CRUDClasses"
 			icon="images/icon_crud.png" project="false">
     		<description>
-           		Generate all CRUD classes, JSP and SQL from generated domain classes with Anyframe templates
+           		
          	</description>
 		</wizard>
 	</extension>
@@ -51,7 +51,7 @@
 		<page category="org.anyframe.ide.common.preferences.anyframe"
 			class="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
 			id="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
-			name="Build">
+			name="%Preferences_Menu_Build">
 		</page>
 	</extension>
 
@@ -80,13 +80,13 @@
 			class="org.anyframe.ide.codegenerator.views.CtipView" 
 			icon="images/icon_building.png" 
 			id="org.anyframe.ide.codegenerator.views.CtipView" 
-			name="CTIP Integration" />
+			name="%Views_Menu_CTIP" />
 	  <view
 	        category="org.anyframe.ide.common.views.anyframe"
 	        class="org.anyframe.ide.codegenerator.views.InstallationView"
 	        icon="images/icon_plugin.png"
 	        id="org.anyframe.ide.codegenerator.views.InstallationView"
-	        name="Plugin Installation">
+	        name="%Views_Menu_Plugin">
 	  </view>
 	 </extension>
   <extension
@@ -96,7 +96,7 @@
            category="org.anyframe.ide.common.properties.anyframe"
            class="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
            id="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
-           name="Code Generator"
+           name="%PropertyPage_Menu_CodeGen"
            objectClass="org.eclipse.core.resources.IProject">
      </page>
   </extension>  

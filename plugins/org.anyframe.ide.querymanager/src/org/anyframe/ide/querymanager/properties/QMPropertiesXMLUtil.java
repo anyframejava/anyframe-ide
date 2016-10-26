@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.QueryManagerConstants;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.util.XMLUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -71,7 +72,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 		return resultList;
 	}
@@ -102,7 +103,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		return result;
@@ -134,7 +135,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		return result;
@@ -165,7 +166,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		return result;
@@ -196,7 +197,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		return result;
@@ -227,7 +228,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 		return result;
 	}
@@ -258,7 +259,7 @@ public class QMPropertiesXMLUtil {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 		return result;
 	}

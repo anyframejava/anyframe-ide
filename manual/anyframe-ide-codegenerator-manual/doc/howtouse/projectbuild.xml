@@ -50,7 +50,7 @@
 빌드 결과물은 [프로젝트 Home]/target에 존재하며, 리포트 결과물은 [프로젝트 Home]/target/site/내에 존재한다.
     </para>
     
-    <para>만약 M2Eclipse 를 이용하여 이를 수행하였을 때 "site" goal이 정상적으로 수행이 안 된다면, pom.xml 파일이 있는 경로에서 위와 같은 goal을 cmd창을 통해 수행한다.</para>
+    <para>만약 m2e를 이용하여 이를 수행하였을 때 "site" goal이 정상적으로 수행이 안 된다면, pom.xml 파일이 있는 경로에서 위와 같은 goal을 cmd창을 통해 수행한다.</para>
 
   </section>
   

@@ -211,7 +211,7 @@
 							<entry align="center">hsqldb2.zip</entry>
 							<entry align="center">
 								<ulink
-									url="http://dev.anyframejava.org/docs/anyframe/ide/codegenerator/2.7.1-SNAPSHOT/reference/download/sampledb/hsqldb2.zip">Download</ulink>
+									url="http://dev.anyframejava.org/docs/anyframe/ide/codegenerator/2.8.0/reference/download/sampledb/hsqldb2.zip">Download</ulink>
 							</entry>
 						</row>
 					</tbody>
@@ -786,7 +786,7 @@
 						</imageobject>
 						<textobject>
 							<phrase>Problems view 오류 표시</phrase>
-						</textobject> 
+						</textobject>
 					</mediaobject>
 
 					<para>
@@ -799,24 +799,8 @@
 					<para>프로젝트의 Classpath에 Maven Dependencies가 추가되었는지 확인한다.(Build Type이
 						Maven일 경우)</para>
 					<para>
-						Maven 프로젝트의 경우 pom.xml 파일이 존재하며, M2Eclipse 가 활성화된 상태로 import 된다.
-						M2Eclipse 가 활성화되면 생성된 프로젝트에 Maven Dependencies Libraries가 Build
-						Path로 추가되어 프로젝트가 정상적으로 참조라이브러리를 인식하게 된다. 
-				</para>
-					<para>
-						☞ 프로젝트 우클릭 &gt;&gt; Build Path &gt;&gt; Configure Build Path...
-						&gt;&gt; Libraries
-						탭에 Maven Dependencies 항목이 없을 경우,
-						프로젝트 우클릭 &gt;&gt; Maven &gt;&gt; Disable Dependency Management
-						클릭 후 다시 Enable Dependency Management 해주도록 한다.
-						(※ 간혹 Enable Dependency Management를 적용하고 나면 프로젝트의 Build Path에서
-						src/main/resources의 내용이 exclude되어
-						문제가 발생하는 경우가 있다. 이 때는, 해당 프로젝트에 대해 마우스 오른쪽 버튼을 클릭하여 컨텍스트 메뉴에서
-						Build Path > Configure Build Path... 메뉴를 클릭하여 Source 탭에서
-						src/main/resources의
-						'Excluded:**'를 선택하고 오른쪽에 Remove 버튼을 클릭하여 exclude 설정을 해제한다.
-						TestCase가 정상적으로 동작할 수 있도록 src/test/resources/의 'Exclude:**' 도 같은 방법으로
-						조치한다.) 
+						m2e가 활성화되면 생성된 프로젝트에 Maven Dependencies Libraries가 Build Path로 추가되어
+						프로젝트가 정상적으로 참조라이브러리를 인식하게 된다. 
 				</para>
 				</listitem>
 			</itemizedlist>

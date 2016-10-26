@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.filesystem.IFileStore;
@@ -77,7 +78,7 @@ public class ParserHelper {
 		} catch (CoreException e) {
 			// QueryManagerPlugin.showErrorLog(e);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Exception occurred while parsing file.", e);
+					Message.exception_parsefile, e);
 		}
 		return files;
 	}

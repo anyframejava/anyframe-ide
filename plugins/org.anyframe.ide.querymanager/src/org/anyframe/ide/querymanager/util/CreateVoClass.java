@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.InputStream;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -80,7 +81,7 @@ public class CreateVoClass {
 				String msg = "org.anyframe.querymanager.eclipse.core.tableMappingWizard.vo.class";
 				if ("RMC".equals(classType))
 					msg = "org.anyframe.querymanager.eclipse.core.tableMappingWizard.rmc.class";
-				// if (openConfirmationDailogue(MessagePropertiesLoader.getProperty(msg)
+				// if (openConfirmationDailogue(Message.getProperty(msg)
 				// 		+ " " +file.getName() + " "))
 				// {
 				// 		file.setContents(voClassInputStream, true, false, null);
@@ -186,7 +187,7 @@ public class CreateVoClass {
 				} catch (CoreException exception) {
 					// LOGGER.error(exception.getMessage());
 					PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-							"Exception occurred while running SQL Query.",
+							Message.exception_sqlquery,
 							exception);
 
 				}
@@ -301,9 +302,9 @@ public class CreateVoClass {
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getShell();
 		// String title =
-		// 		MessagePropertiesLoader.anyframe_querymanager_eclipse_core_tableMappingWizard_openDialogConfirm;
+		// 		Message.anyframe_querymanager_eclipse_core_tableMappingWizard_openDialogConfirm;
 		// String message = voClassName + " " +
-		// 		MessagePropertiesLoader.anyframe_querymanager_eclipse_core_tableMappingWizard_openDialogMsg;
+		// 		Message.anyframe_querymanager_eclipse_core_tableMappingWizard_openDialogMsg;
 		String title = null;
 		String message = null;
 		if (MessageDialog.openConfirm(parent, title, message))

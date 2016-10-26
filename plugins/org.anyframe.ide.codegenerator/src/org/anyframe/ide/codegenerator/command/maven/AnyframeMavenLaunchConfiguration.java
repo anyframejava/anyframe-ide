@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2012 the original author or authors.   
+ * Copyright 2002-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.command.vo.CommandVO;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;
@@ -138,7 +139,7 @@ public class AnyframeMavenLaunchConfiguration {
 			return workingCopy;
 		} catch (CoreException ex) {
 			PluginLoggerUtil.error(ID,
-					"failed to create maven launch configuration", ex);
+					Message.view_exception_failtocreatemavenlaunchconfiguration, ex);
 		}
 		return null;
 	}

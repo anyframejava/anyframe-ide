@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -24,8 +24,8 @@ import org.anyframe.ide.codegenerator.command.vo.CreateModelVO;
 import org.anyframe.ide.codegenerator.command.vo.CreatePJTVO;
 import org.anyframe.ide.codegenerator.command.vo.InstallPluginVO;
 import org.anyframe.ide.codegenerator.command.vo.UninstallPluginVO;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.PluginUtil;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;
@@ -163,14 +163,14 @@ public class MavenCommand implements Command {
 			generator.generateArchetype(request, result);
 			Exception cause = result.getCause();
 			if (cause != null) {
-				String msg = "Unable to create project from archetype " + archetypeArtifactId;
+				String msg = Message.exception_log_unabletocreateproject + archetypeArtifactId;
 				throw new CoreException(new Status(IStatus.ERROR, CodeGeneratorActivator.PLUGIN_ID, -1, msg, cause));
 			}
 
 			// 2. import project
 			ProjectUtil.importProject(basedir, artifactArtifactId);
 			// 3. add maven project nature
-			ProjectUtil.enableNature(artifactArtifactId);
+//			ProjectUtil.enableNature(artifactArtifactId);
 
 			// 4. modify project.home, db.lib
 			String projectHome = vo.getBasedir() + ProjectUtil.SLASH + artifactArtifactId;

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2012 the original author or authors.   
+ * Copyright 2002-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -110,7 +110,7 @@ public class IdePreferencesPage extends PreferencePage implements
 
 	private void createProjectBuildGroup(Composite parent) {
 		buildTypeGroup = new Group(parent, SWT.NONE);
-		buildTypeGroup.setText(Message.ide_preferences_buildtype_title);
+		buildTypeGroup.setText(Message.preferences_buildtype_title);
 		buildTypeGroup.setLayout(new GridLayout());
 		buildTypeGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -124,8 +124,8 @@ public class IdePreferencesPage extends PreferencePage implements
 			}
 
 			public void widgetSelected(SelectionEvent arg0) {
-				homeGroup.setText(Message.ide_preferences_mavenhome_title);
-				homeLabel.setText(Message.ide_preferences_mavenhome_label);
+				homeGroup.setText(Message.preferences_mavenhome_title);
+				homeLabel.setText(Message.preferences_mavenhome_label);
 				homeText.setText(store.getString(MAVEN_HOME));
 
 				if (offlineCheck != null)
@@ -144,8 +144,8 @@ public class IdePreferencesPage extends PreferencePage implements
 			}
 
 			public void widgetSelected(SelectionEvent arg0) {
-				homeGroup.setText(Message.ide_preferences_anyframehome_title);
-				homeLabel.setText(Message.ide_preferences_anyframehome_label);
+				homeGroup.setText(Message.preferences_anyframehome_title);
+				homeLabel.setText(Message.preferences_anyframehome_label);
 				homeText.setText(store.getString(ANYFRAME_HOME));
 
 				if (offlineCheck != null) {
@@ -268,15 +268,15 @@ public class IdePreferencesPage extends PreferencePage implements
 			offlineCheck.setVisible(true);
 			offlineCheck.setSelection(store.getBoolean(OFFLINE_MODE));
 
-			homeGroup.setText(Message.ide_preferences_anyframehome_title);
-			homeLabel.setText(Message.ide_preferences_anyframehome_label);
+			homeGroup.setText(Message.preferences_anyframehome_title);
+			homeLabel.setText(Message.preferences_anyframehome_label);
 			homeText.setText(store.getString(ANYFRAME_HOME));
 
 		} else {
 			antBuildTypeRadio.setSelection(false);
 			mavenBuildTypeRadio.setSelection(true);
-			homeGroup.setText(Message.ide_preferences_mavenhome_title);
-			homeLabel.setText(Message.ide_preferences_mavenhome_label);
+			homeGroup.setText(Message.preferences_mavenhome_title);
+			homeLabel.setText(Message.preferences_mavenhome_label);
 			homeText.setText(store.getString(MAVEN_HOME));
 
 			if (offlineCheck != null)
@@ -284,12 +284,12 @@ public class IdePreferencesPage extends PreferencePage implements
 
 		}
 
-		logLevelGroup.setText(Message.ide_preferences_loglevel_title);
-		logLevelLabel.setText(Message.ide_preferences_loglevel_label);
+		logLevelGroup.setText(Message.preferences_loglevel_title);
+		logLevelLabel.setText(Message.preferences_loglevel_label);
 
-		archetypeGroup.setText(Message.ide_preferences_archetype_title);
+		archetypeGroup.setText(Message.preferences_archetype_title);
 		basicArchetypeLabel
-				.setText(Message.ide_preferences_archetype_basic_label);
+				.setText(Message.preferences_archetype_basic_label);
 
 		String basicStore = store.getString(BASIC_ARCHETYPE);
 		if (StringUtils.isNotEmpty(basicStore)) {
@@ -313,7 +313,7 @@ public class IdePreferencesPage extends PreferencePage implements
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID,
-					Message.ide_preferences_exception_error_archetypeversions,
+					Message.preferences_exception_archetypeversions,
 					e);
 		}
 	}
@@ -353,7 +353,7 @@ public class IdePreferencesPage extends PreferencePage implements
 				if (!MessageDialogUtil
 						.confirmMessageDialog(
 								Message.ide_message_title,
-								Message.ide_preferences_anyframehome_validate_specified)) {
+								Message.preferences_anyframehome_validate_specified)) {
 					return false;
 				}
 			}
@@ -363,7 +363,7 @@ public class IdePreferencesPage extends PreferencePage implements
 					|| !ProjectUtil.existPath(getHomeLocation()
 							+ ProjectUtil.SLASH + "ide")) {
 				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						Message.ide_preferences_anyframehome_validate_correct,
+						Message.preferences_anyframehome_validate_correct,
 						MessageDialog.ERROR);
 				return false;
 			}
@@ -374,7 +374,7 @@ public class IdePreferencesPage extends PreferencePage implements
 			if (getHomeLocation() == null || getHomeLocation().length() == 0) {
 				if (!MessageDialogUtil.confirmMessageDialog(
 						Message.ide_message_title,
-						Message.ide_preferences_mavenhome_validate_specified)) {
+						Message.preferences_mavenhome_validate_specified)) {
 					return false;
 				}
 			}
@@ -383,7 +383,7 @@ public class IdePreferencesPage extends PreferencePage implements
 					|| !ProjectUtil.existPath(getHomeLocation()
 							+ ProjectUtil.SLASH + "lib")) {
 				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						Message.ide_preferences_mavenhome_validate_correct,
+						Message.preferences_mavenhome_validate_correct,
 						MessageDialog.ERROR);
 				return false;
 
@@ -406,7 +406,7 @@ public class IdePreferencesPage extends PreferencePage implements
 				if (!isValid) {
 					MessageDialogUtil.openMessageDialog(
 							Message.ide_message_title,
-							Message.ide_preferences_mavenhome_validate_correct,
+							Message.preferences_mavenhome_validate_correct,
 							MessageDialog.ERROR);
 					return isValid;
 				}

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -113,26 +113,26 @@ public class ProjectUtil {
 		return project;
 	}
 
-	public static void enableNature(String projectName) {
-		try {
-			IProject project = findProject(projectName);
-			MavenPlugin plugin = MavenPlugin.getDefault();
-			IProgressMonitor monitor = new NullProgressMonitor();
-
-			ResolverConfiguration configuration = new ResolverConfiguration();
-			// default : false
-			// configuration.setIncludeModules(false);
-			configuration.setActiveProfiles("");
-
-			IProjectConfigurationManager configurationManager = plugin
-					.getProjectConfigurationManager();
-			configurationManager.enableMavenNature(project, configuration,
-					monitor);
-
-		} catch (CoreException ex) {
-			PluginLoggerUtil.error(ID, ex.getMessage(), ex);
-		}
-	}
+	//	public static void enableNature(String projectName) {
+//		try {
+//			IProject project = findProject(projectName);
+//			MavenPlugin plugin = MavenPlugin.getDefault();
+//			IProgressMonitor monitor = new NullProgressMonitor();
+//
+//			ResolverConfiguration configuration = new ResolverConfiguration();
+//			// default : false
+//			// configuration.setIncludeModules(false);
+//			configuration.setActiveProfiles("");
+//
+//			IProjectConfigurationManager configurationManager = plugin
+//					.getProjectConfigurationManager();
+//			configurationManager.enableMavenNature(project, configuration,
+//					monitor);
+//
+//		} catch (CoreException ex) {
+//			PluginLoggerUtil.error(ID, ex.getMessage(), ex);
+//		}
+//	}
 
 	public static PropertiesIO getProjectProperties(IProject currentProject)
 			throws Exception {

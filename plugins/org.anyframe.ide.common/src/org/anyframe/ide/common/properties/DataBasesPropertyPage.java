@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.anyframe.ide.common.properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.anyframe.ide.common.CommonActivator;
@@ -48,7 +46,6 @@ import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.ProjectUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -63,6 +60,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -103,7 +101,6 @@ public class DataBasesPropertyPage extends PropertyPage {
 	private boolean isModifyListConfig = false;
 
 	public static final String PROGRAM_NAME = "Databases";
-	private static final String DEFAULT_POSTFIX = "[Default]";
 
 	public DataBasesPropertyPage() {
 		this.dbSettingDialog = CommonActivator.getInstance()
@@ -182,7 +179,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 			public void run() {
 				if (viewer.getTable().getSelectionIndex() > -1) {
 					if (viewer.getTable().getSelection()[0].getText().endsWith(
-							DEFAULT_POSTFIX)) {
+							Constants.DB_SETTING_DEFAULT_POSTFIX)) {
 						MessageDialogUtil
 								.openMessageDialog(
 										Message.ide_message_title,
@@ -242,25 +239,21 @@ public class DataBasesPropertyPage extends PropertyPage {
 				ComponentUtil.moveUpTableViewerSelectedItem(viewer);
 			}
 		};
-		moveUpAction.setText("move up");
+		moveUpAction.setText(Message.ide_button_moveup);
 
 		moveDownAction = new Action() {
 			public void run() {
 				ComponentUtil.moveDownTableViewerSelectedItem(viewer);
 			}
 		};
-		moveDownAction.setText("move down");
+		moveDownAction.setText(Message.ide_button_movedown);
 
 	}
 
 	private void loadSettings() {
 		IProject project = (IProject) getElement().getAdapter(IProject.class);
 
-		String settingJdbcConfigFileFullName = project.getLocation()
-				+ Constants.FILE_SEPERATOR + Constants.SETTING_HOME
-				+ Constants.FILE_SEPERATOR + Constants.DRIVER_SETTING_XML_FILE;
-
-		File jdbcConfigFile = new File(settingJdbcConfigFileFullName);
+		File jdbcConfigFile = new File(PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 		if (!jdbcConfigFile.exists()) {
 			URL fileLocation = this.getClass().getProtectionDomain()
 					.getCodeSource().getLocation();
@@ -273,10 +266,10 @@ public class DataBasesPropertyPage extends PropertyPage {
 							+ Constants.DRIVER_SETTING_XML_FILE);
 					if (!configFile.exists()) {
 						throw new Exception(
-								"Jdbc configration file is not exist in jar.");
+								Message.properties_jdbc_configuration_notfound);
 					}
 					copyFile(configFile.getAbsolutePath(),
-							settingJdbcConfigFileFullName);
+							PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 				} else {
 					ZipFile zipFile = new ZipFile(jarFile);
 					ZipEntry zipEntry = zipFile
@@ -284,13 +277,13 @@ public class DataBasesPropertyPage extends PropertyPage {
 
 					InputStream inputStream = zipFile.getInputStream(zipEntry);
 
-					copyFile(inputStream, settingJdbcConfigFileFullName);
+					copyFile(inputStream, PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 				}
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (Exception e) {
-				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID,
-						"Copying a jdbc configuraion file is skipped. The reason is a "
-								+ e.getMessage() + ".");
+				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, NLS.bind(
+						Message.properties_jdbc_configuration_copy_fail,
+						e.getMessage()));
 			}
 
 		}
@@ -308,14 +301,19 @@ public class DataBasesPropertyPage extends PropertyPage {
 			InputStream fis = new FileInputStream(input);
 			copyFile(fis, dest);
 		} catch (Exception e) {
-			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID,
-					"Copying a jdbc configuraion file is skipped. The reason is a "
-							+ e.getMessage() + ".");
+			PluginLoggerUtil.info(
+					CommonActivator.PLUGIN_ID,
+					NLS.bind(Message.properties_jdbc_configuration_copy_fail,
+							e.getMessage()));
 		}
 	}
 
 	private void copyFile(InputStream input, String dest) {
 		try {
+			File file = new File(dest);
+			if(!file.exists()){
+				file.getParentFile().mkdirs();
+			}
 			FileOutputStream fos = new FileOutputStream(dest);
 
 			int data = 0;
@@ -325,9 +323,10 @@ public class DataBasesPropertyPage extends PropertyPage {
 			input.close();
 			fos.close();
 		} catch (Exception e) {
-			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID,
-					"Copying a jdbc configuraion file is skipped. The reason is a "
-							+ e.getMessage() + ".");
+			PluginLoggerUtil.info(
+					CommonActivator.PLUGIN_ID,
+					NLS.bind(Message.properties_jdbc_configuration_copy_fail,
+							e.getMessage()));
 		}
 	}
 
@@ -355,7 +354,8 @@ public class DataBasesPropertyPage extends PropertyPage {
 		// viewer.getTable().setHeaderVisible(true);
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.None);
-		column.getColumn().setText("Datasource Name");
+		column.getColumn()
+				.setText(Message.properties_database_datasource_title);
 		column.getColumn().setWidth(400);
 
 		viewer.setLabelProvider(new TableViewLabelProvider() {
@@ -372,7 +372,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 				JdbcOption jdbcOption = (JdbcOption) element;
 				String append = "";
 				if (jdbcOption.isDefault()) {
-					append = DEFAULT_POSTFIX;
+					append = Constants.DB_SETTING_DEFAULT_POSTFIX;
 				}
 				return jdbcOption.getDbName() + " ("
 						+ (jdbcOption.getUrl() + ")" + append);
@@ -528,8 +528,10 @@ public class DataBasesPropertyPage extends PropertyPage {
 		for (JdbcOption jdbcOption : settings) {
 			String dsName = jdbcOption.getDbName();
 			if (foundDsNames.contains(dsName)) {
-				MessageUtil.showMessage("Duplicated DataSource Name : "
-						+ dsName, PROGRAM_NAME);
+				MessageUtil.showMessage(
+						NLS.bind(
+								Message.properties_validation_dbname_duplicate,
+								dsName), PROGRAM_NAME);
 				return true;
 			} else {
 				foundDsNames.add(dsName);

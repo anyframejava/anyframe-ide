@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2012 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.File;
 import org.anyframe.ide.common.CommonActivator;
 import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.messages.Message;
+import org.anyframe.ide.common.util.ProjectUtil;
 import org.anyframe.ide.common.util.PropertyUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.SWT;
@@ -46,7 +47,8 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 public class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage implements
 		IWorkbenchPropertyPage {
 
-	private Text templateLocText;
+	private Text configLocText;
+
 	private IProject project;
 
 	private IPropertyPage thisPropertyPage;
@@ -71,13 +73,14 @@ public class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage implements
 
 		Label label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData());
-		label.setText(Message.properties_config_template_description);
+		label.setText(Message.properties_config_xml_description);
 
 		Composite composite = new Composite(parent, 0);
 		GridLayout layout = new GridLayout(1, false);
 		composite.setLayout(layout);
 
-		createContentsGroup(composite);
+		createTemplateGroup(composite);
+
 		loadSettings();
 
 		return composite;
@@ -86,73 +89,70 @@ public class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage implements
 	@Override
 	public boolean performOk() {
 		if (isChangedConfig) {
-			saveProperties();
+			saveSettings();
 		}
 		return super.performOk();
 	}
 
-	private void createContentsGroup(final Composite parent) {
+	private void createTemplateGroup(final Composite parent) {
 		// Group
 		Group group = new Group(parent, SWT.SHADOW_NONE);
-		group.setText(Message.properties_config_section);
+		group.setText(Message.properties_config_xml_section);
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Template Location
 		new Label(group, SWT.NONE)
-				.setText(Message.properties_templatehome_location);
-		templateLocText = new Text(group, SWT.BORDER);
-		templateLocText.addListener(SWT.Modify, new Listener() {
+				.setText(Message.properties_xml_configuration_location);
+		configLocText = new Text(group, SWT.BORDER);
+		configLocText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event arg0) {
 				isChangedConfig = true;
 			}
 		});
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 10;
-		templateLocText.setLayoutData(gridData);
+		configLocText.setLayoutData(gridData);
 
-		GridData templateLocSearchButtonData = new GridData(SWT.NULL);
-		templateLocSearchButtonData.widthHint = 90;
-		Button templateLocSearchButton = new Button(group, SWT.BUTTON1);
-		templateLocSearchButton.setText(Message.ide_button_browse);
-		templateLocSearchButton.addSelectionListener(new SelectionAdapter() {
+		GridData xmlLocSearchButtonData = new GridData(SWT.NULL);
+		xmlLocSearchButtonData.widthHint = 90;
+		Button xmlLocSearchButton = new Button(group, SWT.BUTTON1);
+		xmlLocSearchButton.setText(Message.ide_button_browse);
+		xmlLocSearchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dlg = new DirectoryDialog(parent.getShell(),
 						SWT.OPEN);
-				dlg.setMessage("Please select a template location and click OK");
+				dlg.setMessage(Message.properties_xml_location_info);
 				String str = dlg.open();
 				if (str != null) {
-					templateLocText.setText(str);
+					configLocText.setText(str);
 					isChangedConfig = true;
 				}
 			}
 		});
-		templateLocSearchButton.setLayoutData(templateLocSearchButtonData);
+		xmlLocSearchButton.setLayoutData(xmlLocSearchButtonData);
 	}
 
 	private void loadSettings() {
-		String projectLocation = project.getLocation().toOSString();
-		String metaFile = projectLocation + Constants.METAINF
-				+ Constants.METADATA_FILE;
-		File f = new File(metaFile);
-		if (f.exists()) {
-			PropertyUtil propertyUtil = new PropertyUtil(metaFile);
-			templateLocText.setText(propertyUtil
-					.getProperty(Constants.PROJECT_TEMPLATE_HOME));
-		}
+		String propertyFile = PropertiesSettingUtil.getPrefs(project
+				.getLocation().toOSString());
+		PropertyUtil propertyUtil = new PropertyUtil(propertyFile);
+		configLocText.setText(propertyUtil
+				.getProperty(Constants.COMMON_CONFIG_PREFS_KEY));
 	}
 
-	private void saveProperties() {
-		String projectLocation = project.getLocation().toOSString();
-		String metaFile = projectLocation + Constants.METAINF
-				+ Constants.METADATA_FILE;
-		File f = new File(metaFile);
+	private void saveSettings() {
+		String fileName = project.getLocation().toOSString()
+				+ Constants.FILE_SEPERATOR + Constants.COMMON_CONFIG_PREFS_FILE;
+		File f = new File(fileName);
 		if (f.exists()) {
-			PropertyUtil propertyUtil = new PropertyUtil(metaFile);
-			propertyUtil.setProperty(Constants.PROJECT_TEMPLATE_HOME,
-					templateLocText.getText());
+			PropertyUtil propertyUtil = new PropertyUtil(fileName);
+			propertyUtil.setProperty(Constants.COMMON_CONFIG_PREFS_KEY,
+					configLocText.getText());
 			propertyUtil.write();
 		}
+
+		ProjectUtil.refreshProject(project.getName());
 	}
 
 	public IPropertyPage getThisPropertyPage() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 Samsung SDS Co., Ltd.
+ * Copyright 2007-2013 Samsung SDS Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

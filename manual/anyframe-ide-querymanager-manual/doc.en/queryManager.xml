@@ -56,11 +56,11 @@
 	<bookinfo>
 
 		<copyright>
-			<year>2007-2012</year>
+			<year>2007-2013</year>
 			<holder>Samsung SDS</holder>
 		</copyright>
 
-		<releaseinfo>version 2.7.0-SNAPSHOT</releaseinfo>
+		<releaseinfo>version 2.8.0</releaseinfo>
 
 		<productname>Anyframe Query Manager</productname>
 

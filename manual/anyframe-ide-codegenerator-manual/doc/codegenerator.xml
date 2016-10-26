@@ -42,10 +42,10 @@
 	
 	<bookinfo>
 		<copyright>
-			<year>2008-2012</year>
+			<year>2008-2013</year>
 			<holder>삼성SDS</holder>
 		</copyright>
-		<releaseinfo>Version 2.7.0</releaseinfo>
+		<releaseinfo>2.8.0</releaseinfo>
 
 		<productname>Anyframe Java IDE Code Generator</productname>
 
@@ -74,7 +74,7 @@
 		<title>Introduction</title>
 		<partintro id="introduction-intro">
 			<para>
-             Anyframe Java Core는 Spring 기반에서 다양한 best-of-breed 오픈 소스를 통합 및 확장하여 구성한 어플리케이션 프레임워크, MVC 아키텍처를 
+                Anyframe Java Core는 Spring 기반에서 다양한 best-of-breed 오픈 소스를 통합 및 확장하여 구성한 어플리케이션 프레임워크, MVC 아키텍처를 
                 준수하여 웹 어플리케이션의 프리젠테이션 레이어를 구조적으로 개발할 수 있도록 지원하는 웹 프레임워크를 제공하며 프레임워크 기반의 업무용 프로그램 개발을 
                 효과적으로 진행할 수 있도록 기술 공통 서비스, 템플릿 기반의 프로젝트 구조 및 샘플 코드, 매뉴얼 등을 제공한다.		
                 또한 Eclipse Plugin 형태의 Code Generator를 제공함으로써 기존 방식보다 훨씬 쉽고 빠르게 Anyframe 기반 개발 환경을 구성할 수 있도록 Scaffolding, 코드 생성 기능 

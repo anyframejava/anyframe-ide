@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -18,8 +18,8 @@ package org.anyframe.ide.codegenerator.wizards;
 import java.util.Set;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.PluginUtil;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
@@ -36,7 +36,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;

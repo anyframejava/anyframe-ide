@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.anyframe.ide.querymanager.build.AnyframeNature;
 import org.anyframe.ide.querymanager.build.BuilderHelper;
 import org.anyframe.ide.querymanager.build.Location;
 import org.anyframe.ide.querymanager.build.QMMarkerHelper;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -135,7 +136,7 @@ public class EnableNatureAction implements IObjectActionDelegate {
 							while (colItr.hasNext()) {
 								Location loc = (Location) colItr.next();
 								if (!builder.markAProblem(
-										"Repitition of Query Id",
+										Message.action_repetitionofqueryid,
 										(Location) loc, 1, true,
 										QMMarkerHelper.BUILDER_ERROR_MARKER_ID)) {
 									// if markAProblem
@@ -161,7 +162,7 @@ public class EnableNatureAction implements IObjectActionDelegate {
 			// LOGGER
 			// .error("could not enable Anyframe Nature :" + ex.getMessage());
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"could not enable Anyframe Nature", ex);
+					Message.exception_couldnotenableanyframenature, ex);
 
 		}
 	}

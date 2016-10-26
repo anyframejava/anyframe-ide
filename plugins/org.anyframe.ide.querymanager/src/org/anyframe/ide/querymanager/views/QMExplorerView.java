@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.anyframe.ide.querymanager.actions.RefreshAction;
 import org.anyframe.ide.querymanager.build.BuilderHelper;
 import org.anyframe.ide.querymanager.build.Location;
 import org.anyframe.ide.querymanager.build.QMMarkerHelper;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.FileInfoVO;
 import org.anyframe.ide.querymanager.model.QueryExplorerViewContentProvider;
 import org.anyframe.ide.querymanager.model.QueryExplorerViewLabelProvider;
@@ -95,7 +96,7 @@ public class QMExplorerView extends ViewPart implements
 		ISelectionChangedListener {
 
 	public static final String ID = QueryManagerActivator.PLUGIN_ID
-			+ ".QMExplorerView";
+			+ ".views.QMExplorerView";
 
 	protected PatternFilter patternFilter;
 	protected FilteredTree filter;
@@ -269,12 +270,12 @@ public class QMExplorerView extends ViewPart implements
 
 	private void jobGetIds() {
 
-		Job treeViewJob = new Job("Searching Queries") {
+		Job treeViewJob = new Job(Message.view_explorer_searchquery) {
 
 			protected IStatus run(IProgressMonitor monitor) {
 
-				monitor.beginTask("Searching the queries for Tree View", 100);
-				monitor.subTask("Getting the Queries....");
+				monitor.beginTask(Message.view_explorer_searchthequery, 100);
+				monitor.subTask(Message.view_explorer_getthequery);
 
 				monitor.worked(25);
 				QueryExplorerHelper helper = new QueryExplorerHelper();
@@ -320,12 +321,12 @@ public class QMExplorerView extends ViewPart implements
 
 	private void jobGetIds_with_link() {
 
-		Job treeViewJob = new Job("Searching Queries") {
+		Job treeViewJob = new Job(Message.view_explorer_searchquery) {
 
 			protected IStatus run(IProgressMonitor monitor) {
 
-				monitor.beginTask("Searching the queries for Tree View", 100);
-				monitor.subTask("Getting the Queries....");
+				monitor.beginTask(Message.view_explorer_searchthequery, 100);
+				monitor.subTask(Message.view_explorer_getthequery);
 
 				monitor.worked(25);
 				QueryExplorerHelper helper = new QueryExplorerHelper();
@@ -376,7 +377,7 @@ public class QMExplorerView extends ViewPart implements
 					false, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Error while removing existing markers for project "
+					Message.exception_removeexistmarker
 							+ project.getName() + "  ", e);
 		}
 	}
@@ -422,7 +423,7 @@ public class QMExplorerView extends ViewPart implements
 										Location loc = (Location) colItr.next();
 										if (!builder
 												.markAProblem(
-														"Repeatition of Query Id",
+														Message.action_repetitionofqueryid,
 														(Location) loc,
 														1,
 														true,

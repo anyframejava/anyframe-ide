@@ -42,10 +42,10 @@
 
 	<bookinfo>
 		<copyright>
-			<year>2007-2012</year>
+			<year>2007-2013</year>
 			<holder>삼성 SDS</holder>
 		</copyright>
-		<releaseinfo>version 2.7.0</releaseinfo>
+		<releaseinfo>2.8.0</releaseinfo>
 
 		<productname>Anyframe Java IDE Query Manager</productname>
 

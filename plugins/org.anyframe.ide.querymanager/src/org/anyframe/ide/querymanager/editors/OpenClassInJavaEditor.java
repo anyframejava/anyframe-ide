@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.anyframe.ide.querymanager.QueryManagerActivator;
 import org.anyframe.ide.querymanager.build.Location;
 import org.anyframe.ide.querymanager.build.QMMarkerHelper;
 import org.anyframe.ide.querymanager.dialogs.QueryIdDialog;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QMXMLTableTreeViewer;
 import org.anyframe.ide.querymanager.model.QueryIdModel;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
@@ -163,7 +164,7 @@ public class OpenClassInJavaEditor extends AbstractQueryActionDelegate {
 				IMarker marker = createMarker(file, loc.getCharStart(),
 						loc.getCharEnd(),
 						QMMarkerHelper.QUERYNAV_DBLCLK_BOOK_MARKER_ID,
-						"Opening the Query from Query XML file.");
+						Message.editor_explorer_openthequeryfromqueryxml);
 
 				IEditorPart editor = openEditor(loc.getFile(),
 						"org.eclipse.jdt.ui.CompilationUnitEditor");
@@ -189,7 +190,7 @@ public class OpenClassInJavaEditor extends AbstractQueryActionDelegate {
 					IMarker marker = createMarker(file, loc.getCharStart(),
 							loc.getCharEnd(),
 							QMMarkerHelper.QUERYNAV_DBLCLK_BOOK_MARKER_ID,
-							"Opening the Query from Query XML file.");
+							Message.editor_explorer_openthequeryfromqueryxml);
 
 					IEditorPart editor = openEditor(loc.getFile(),
 							"org.eclipse.jdt.ui.CompilationUnitEditor");
@@ -200,9 +201,9 @@ public class OpenClassInJavaEditor extends AbstractQueryActionDelegate {
 		} else {
 			MessageDialog.openWarning(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getShell(),
-					"Java Class does not exist", "Selected Query ID \""
+					Message.editor_querymanager_javaclassnotexist, Message.editor_querymanager_queryisnotusedone
 							+ selectedText
-							+ "\" does not used in any java file.");
+							+ Message.editor_querymanager_queryisnotusedtwo);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*   
- * Copyright 2002-2012 the original author or authors.   
+ * Copyright 2002-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -17,8 +17,8 @@ package org.anyframe.ide.codegenerator.popups;
 
 import java.util.List;
 
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.common.util.ButtonUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
@@ -173,12 +173,12 @@ public class CtipManageUrlPopup extends Dialog {
 		taskViewer = new TableViewer(taskTable);
 
 		TableViewerColumn taskName = new TableViewerColumn(taskViewer, SWT.None);
-		taskName.getColumn().setText("Name");
+		taskName.getColumn().setText(Message.view_ctip_urlpopop_columnname);
 		taskName.getColumn().setWidth(100);
 
 		TableViewerColumn buildstatus = new TableViewerColumn(taskViewer,
 				SWT.None);
-		buildstatus.getColumn().setText("URL");
+		buildstatus.getColumn().setText(Message.view_ctip_urlpopop_columnurl);
 		buildstatus.getColumn().setWidth(200);
 
 		return taskTable;

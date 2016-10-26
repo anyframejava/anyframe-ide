@@ -8,7 +8,7 @@
 			fixed="false"
 			icon="images/database_gear.png"
 			id="org.anyframe.ide.querymanager.perspective.QMPluginPerspective"
-			name="Query Manager">
+			name="%Perspective_Menu_QueryManager">
 		</perspective> 
 	</extension>
 	
@@ -36,7 +36,7 @@
 			extensions="xml"
 			icon="images/database_edit.png"
 			id="org.anyframe.editor.xml.MultiPageEditor"
-			name="Query Manager Editor">
+			name="%Editor_Menu_QueryManager">
 			<contentTypeBinding
 				contentTypeId="com.sds.qm.content-type">
 			</contentTypeBinding>
@@ -46,7 +46,7 @@
 			extensions="config"
 			icon="images/database_edit.png"
 			id="org.anyframe.ide.querymanager.editors.QueryEditor"
-			name="Query Test">
+			name="%Editor_Menu_Test">
 		</editor>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards" id="nodeContextAction">
@@ -55,9 +55,9 @@
 			class="org.anyframe.ide.querymanager.wizards.AddSQMPFileWizard"
 			icon="images/pencil_add.png"
 			id="org.anyframe.ide.querymanager.wizards.AddSQMPFileWizard"
-			name="SQL XML File">
+			name="%Wizard_Menu_SQL">
 			<description>
-           		Generate a SQL XML file for Anyframe Query Service
+           		%Wizard_Desc_SQL
          	</description>
          </wizard>
 	</extension>
@@ -260,13 +260,13 @@
 			class="org.anyframe.ide.querymanager.views.QMResultsView" 
 			icon="images/database_table.png" 
 			id="org.anyframe.ide.querymanager.views.QMResultsView" 
-			name="Query Results" />
+			name="%View_Menu_Results" />
   <view
         category="org.anyframe.ide.common.views.anyframe"
         class="org.anyframe.ide.querymanager.views.QMExplorerView"
         icon="images/database_tree.png"
         id="org.anyframe.ide.querymanager.views.QMExplorerView"
-        name="Query Explorer">
+        name="%View_Menu_Explorer">
   </view> 
 	</extension>
 	

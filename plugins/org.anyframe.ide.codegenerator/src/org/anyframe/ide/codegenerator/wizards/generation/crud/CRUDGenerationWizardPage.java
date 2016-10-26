@@ -1,5 +1,5 @@
 /* 
- * Copyright 2008-2012 the original author or authors. 
+ * Copyright 2008-2013 the original author or authors. 
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -105,7 +105,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		this.project = project;
 
 		this.setTitle(pageName);
-		this.setDescription("Select Domain Model Classes.");
+		this.setDescription(Message.wizard_crud_gen_selectdomainmodelclasses);
 	}
 
 	public void createControl(Composite parent) {
@@ -120,14 +120,14 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		createPackageFields(composite);
 		createOptions(composite);
 
-		setPageComplete(false);
+		setPageComplete(isPageComplete());
 		setErrorMessage(null);
 		setMessage(null);
 		setControl(composite);
 	}
 
 	private void createInfoSelectAllField(Composite comp) {
-		new Label(comp, SWT.LEFT).setText("Domain Model Classes.");
+		new Label(comp, SWT.LEFT).setText(Message.wizard_crud_gen_domainmodelclasses);
 
 		new Label(comp, SWT.NONE);
 		new Label(comp, SWT.NONE);
@@ -175,6 +175,8 @@ public class CRUDGenerationWizardPage extends WizardPage {
 						packageText.setText(pjtProps
 								.readValue(CommonConstants.PACKAGE_NAME)
 								+ domainNameWithDot);
+								
+						setPageComplete(isPageComplete());
 					}
 				});
 		modelTableViewer.setInput(getDomainList());
@@ -191,9 +193,10 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		data.horizontalSpan = 3;
 		comp.setLayoutData(data);
 
-		new Label(comp, SWT.NONE).setText("Base Package :");
+		new Label(comp, SWT.NONE).setText(Message.wizard_crud_gen_basepackage);
 
 		packageText = new Text(comp, SWT.BORDER);
+		
 		packageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		packageText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event event) {
@@ -203,7 +206,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 
 		GridData buttonGridData = new GridData(85, 25);
 		Button packageEditButton = new Button(comp, SWT.PUSH);
-		packageEditButton.setText("Edit");
+		packageEditButton.setText(Message.ide_button_edit);
 		packageEditButton.setLayoutData(buttonGridData);
 		packageEditButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -226,7 +229,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 				ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 						comp.getShell(), new PackageLabelProvider());
 				dialog.setElements(packageSet.toArray());
-				dialog.setTitle("Package Selection");
+				dialog.setTitle(Message.wizard_crud_gen_packageselection);
 				dialog.open();
 
 				Object selectedResult = dialog.getFirstResult();
@@ -240,7 +243,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 
 	private void createOptions(Composite parent) {
 		Group optionsGroup = new Group(parent, SWT.NULL);
-		optionsGroup.setText("Other options");
+		optionsGroup.setText(Message.wizard_crud_gen_otheroptions);
 		optionsGroup.setLayout(new GridLayout());
 		GridData data = new GridData();
 		data.verticalAlignment = GridData.FILL;
@@ -291,6 +294,12 @@ public class CRUDGenerationWizardPage extends WizardPage {
 			setErrorMessage(Message.wizard_application_validation_pkgname);
 			return false;
 		}
+		
+		String selected = getSelectedDomain();
+		if(selected == null || "".equals(selected)){
+			return false;
+		}
+		
 		setErrorMessage(null);
 		setMessage(null);
 		return true;

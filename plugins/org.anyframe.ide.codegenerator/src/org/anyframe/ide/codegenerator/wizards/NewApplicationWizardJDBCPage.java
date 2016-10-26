@@ -1,5 +1,5 @@
 /*   
- * Copyright 2008-2012 the original author or authors.   
+ * Copyright 2008-2013 the original author or authors.   
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");   
  * you may not use this file except in compliance with the License.   
@@ -22,8 +22,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.DatabaseUtil;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.util.XmlFileUtil;
 import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
@@ -269,7 +269,7 @@ public class NewApplicationWizardJDBCPage extends WizardPage {
 					ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 							group.getShell(), new SchemaLabelProvider());
 					dialog.setElements(schemaSet.toArray());
-					dialog.setTitle("Schema Selection");
+					dialog.setTitle(Message.wizard_application_schemaselection);
 					dialog.open();
 
 					Object selectedResult = dialog.getFirstResult();
@@ -327,7 +327,7 @@ public class NewApplicationWizardJDBCPage extends WizardPage {
 							.getJdbcConfigFileInputStream());
 		} catch (IOException e) {
 			PluginLoggerUtil.error(CodeGeneratorActivator.PLUGIN_ID,
-					"Can't get jdbc configuration.", e);
+					Message.view_exception_failtocreatemavenlaunchconfiguration, e);
 		}
 	}
 

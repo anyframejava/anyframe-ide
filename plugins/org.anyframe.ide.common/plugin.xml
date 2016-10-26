@@ -18,18 +18,24 @@
         name="Anyframe"
         objectClass="org.eclipse.core.resources.IProject">
 		</page>
+  <page
+        adaptable="true"
+        category="org.anyframe.ide.common.properties.anyframe"
+        class="org.anyframe.ide.common.properties.DataBasesPropertyPage"
+        id="org.anyframe.ide.common.properties.DataBasesPropertyPage"
+        name="%Property_Menu_Databases"
+        objectClass="org.eclipse.core.resources.IProject">
+  </page>
+  <page
+        adaptable="true"
+        category="org.anyframe.ide.common.properties.anyframe"
+        class="org.anyframe.ide.common.properties.ConfigPropertyPage"
+        id="org.anyframe.ide.common.properties.ConfigPropertyPage"
+        name="%Property_Menu_Config"
+        objectClass="org.eclipse.core.resources.IProject">
+  </page>
 	</extension>
 	
-	<extension point="org.eclipse.ui.propertyPages"> 
-		<page
-			adaptable="true"
-			id="org.anyframe.ide.common.properties.DataBasesPropertyPage"
-			objectClass="org.eclipse.core.resources.IProject"
-			class="org.anyframe.ide.common.properties.DataBasesPropertyPage"
-			name="Databases"
-			category="org.anyframe.ide.common.properties.anyframe">
-		</page>
-	</extension>
 	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page class="org.anyframe.ide.common.preferences.PreferencePage"

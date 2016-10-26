@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.anyframe.ide.querymanager.build;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -51,13 +52,13 @@ public class QMMarkerResolution implements IMarkerResolution {
 	}
 
 	public String getLabel() {
-		return "Query Id exist in " + loc.getFile().getName();
+		return Message.build_queryidexist + loc.getFile().getName();
 	}
 
 	public void run(IMarker marker) {
 		openEditor(loc.getFile());
-		marker = createMarker(loc, IMarker.BOOKMARK, "Duplictae Query Id :"
-				+ loc.key + " exists in the project");
+		marker = createMarker(loc, IMarker.BOOKMARK, Message.build_duplicatequeryid_one
+				+ loc.key + Message.build_queryidexistintheproject);
 		IWorkbenchPage activePage1 = QueryManagerActivator.getDefault()
 				.getActiveWorkbenchPage();
 		if (activePage1.getActiveEditor() != null)

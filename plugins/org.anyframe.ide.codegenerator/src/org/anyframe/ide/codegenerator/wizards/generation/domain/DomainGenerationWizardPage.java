@@ -1,5 +1,5 @@
 /* 
- * Copyright 2008-2012 the original author or authors. 
+ * Copyright 2008-2013 the original author or authors. 
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.tree.ITreeModel;
 import org.anyframe.ide.codegenerator.model.tree.SimpleTreeNode;
 import org.anyframe.ide.codegenerator.model.tree.TreeContentProvider;
 import org.anyframe.ide.codegenerator.model.tree.TreeLabelProvider;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -103,7 +103,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 		createTableRefreshFields(composite);
 		createTables(composite);
 
-		setPageComplete(false);
+		setPageComplete(isPageComplete());
 		setErrorMessage(null);
 		setMessage(null);
 		setControl(composite);
@@ -126,7 +126,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 		comp.setLayout(new GridLayout(3, false));
 		comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		new Label(comp, SWT.LEFT).setText("Base Package : ");
+		new Label(comp, SWT.LEFT).setText(Message.wizard_crud_gen_basepackage);
 
 		packageText = new Text(comp, SWT.BORDER);
 		packageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -139,7 +139,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 
 		GridData buttonGridData = new GridData(85, 25);
 		Button packageEditButton = new Button(comp, SWT.PUSH);
-		packageEditButton.setText("Edit");
+		packageEditButton.setText(Message.ide_button_edit);
 		packageEditButton.setLayoutData(buttonGridData);
 		packageEditButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -162,7 +162,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 				ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 						comp.getShell(), new PackageLabelProvider());
 				dialog.setElements(packageSet.toArray());
-				dialog.setTitle("Package Selection");
+				dialog.setTitle(Message.wizard_crud_gen_packageselection);
 				dialog.open();
 
 				Object selectedResult = dialog.getFirstResult();
@@ -179,13 +179,13 @@ public class DomainGenerationWizardPage extends WizardPage {
 		comp.setLayout(new GridLayout(2, false));
 		comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		new Label(comp, SWT.LEFT).setText("Select Tables");
+		new Label(comp, SWT.LEFT).setText(Message.wizard_generation_domain_selecttables);
 
 		GridData buttonGridData = new GridData(85, 25);
 		buttonGridData.horizontalAlignment = SWT.END;
 		buttonGridData.grabExcessHorizontalSpace = true;
 		refreshButton = new Button(comp, SWT.PUSH);
-		refreshButton.setText("Refresh");
+		refreshButton.setText(Message.ide_button_refresh);
 		refreshButton.setLayoutData(buttonGridData);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -291,6 +291,8 @@ public class DomainGenerationWizardPage extends WizardPage {
 					tableTreeViewer.setChecked(model.getParent(), false);
 				}
 			}
+			
+			setPageComplete(isPageComplete());
 		}
 	};
 
@@ -419,6 +421,12 @@ public class DomainGenerationWizardPage extends WizardPage {
 			setErrorMessage(Message.wizard_application_validation_pkgname);
 			return false;
 		}
+		
+		Object[] tables = tableTreeViewer.getCheckedElements();
+		if(tables.length < 1){
+			return false;
+		}
+		
 		setErrorMessage(null);
 		setMessage(null);
 		return true;

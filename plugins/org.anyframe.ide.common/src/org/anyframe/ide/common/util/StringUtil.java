@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,17 +139,19 @@ public class StringUtil {
 	// ##### bonobono : this methods are derived from <Anyframe Core>
 	/**
 	 * convert to string camel case typed.
-	 * 
-	 * @param targetString
-	 *            a String to be converted to Camel Case
-	 * @param posChar
-	 *            a character to make next Character upper case (ex: "_")
+	 * @param targetString a String to be converted to Camel Case
+	 * @param posChar a character to make next Character upper case (ex: "_")
+	 * @param useOrigicalCase 모든 문자의 대소문자를 그대로 유지할지 여부(기본적으로는 false 로 작업한다.)
 	 * @return
 	 */
-	public static String toCamelCase(String targetString, char posChar) {
+	public static String toCamelCase(String targetString, char posChar, boolean useOrigicalCase) {
 		StringBuffer result = new StringBuffer();
 		boolean nextUpper = false;
-		String allLower = targetString.toLowerCase();
+		
+		String allLower = targetString;
+		if(!useOrigicalCase){
+			allLower = targetString.toLowerCase();
+		}
 
 		for (int i = 0; i < allLower.length(); i++) {
 			char currentChar = allLower.charAt(i);
@@ -176,7 +178,24 @@ public class StringUtil {
 	public static String toCamelCase(String underScoredStr) {
 		if (isEmptyOrNull(underScoredStr))
 			return "";
-		return toCamelCase(underScoredStr, '_');
+		return toCamelCase(underScoredStr, '_', false);
+	}
+	
+	/**
+	 * sampleData -> SAMPLE_DATA
+	 * @param str
+	 * @return
+	 */
+	public static String convertToUnderScore(String str) {
+		String result = "";
+		for (int i = 0; i < str.length(); ++i) {
+			char currentChar = str.charAt(i);
+			if ((i > 0) && (Character.isUpperCase(currentChar))) {
+				result = result.concat("_");
+			}
+			result = result.concat(Character.toString(currentChar).toUpperCase());
+		}
+		return result;
 	}
 
 	// works exactly same as Velocity StringUtils.removeUnderScores method, and

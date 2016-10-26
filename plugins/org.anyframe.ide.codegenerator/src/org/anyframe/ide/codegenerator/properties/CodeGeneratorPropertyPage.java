@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 Samsung SDS Co., Ltd.
+ * Copyright 2007-2013 Samsung SDS Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoList;
 import org.anyframe.ide.codegenerator.util.FileUtil;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -231,10 +231,11 @@ public class CodeGeneratorPropertyPage extends PropertyPage implements
 				}
 			}
 		}
-
+		
 		if (templateTypeCombo.getText().equals(Constants.TEMPLATE_TYPE_ONLINE)) {
 			daoFrameworkTypeCombo.add(CommonConstants.DAO_SPRINGJDBC);
 		} else {
+		
 			if (daoSet.contains(CommonConstants.DAO_QUERY)
 					&& pList.contains(CommonConstants.QUERY_PLUGIN)) {
 				daoFrameworkTypeCombo.add(CommonConstants.DAO_QUERY);
@@ -270,7 +271,7 @@ public class CodeGeneratorPropertyPage extends PropertyPage implements
 
 		if (daoFrameworkTypeCombo.getItemCount() < 1) {
 			validationResult
-					.setText("There is no selected Template or DAO Framework. You should select Template and DAO Framework.");
+					.setText(Message.property_error_noselectedtemplate);
 		} else {
 			validationResult.setText("");
 		}
@@ -331,7 +332,7 @@ public class CodeGeneratorPropertyPage extends PropertyPage implements
 
 			if (templateTypeCombo.getItemCount() < 1) {
 				validationResult
-						.setText("There is no selected Template or DAO Framework. You should select Template and DAO Framework.");
+						.setText(Message.property_error_noselectedtemplate);
 			} else {
 				validationResult.setText("");
 			}

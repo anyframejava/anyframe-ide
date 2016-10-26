@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.anyframe.ide.common.databases;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,9 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.anyframe.ide.common.CommonActivator;
 import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.messages.Message;
+import org.anyframe.ide.common.properties.PropertiesSettingUtil;
 import org.anyframe.ide.common.util.EncryptUtil;
 import org.anyframe.ide.common.util.ListUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
@@ -45,10 +49,7 @@ import org.anyframe.ide.common.util.PropertyUtil;
 import org.anyframe.ide.common.util.StringUtil;
 import org.anyframe.ide.common.util.XMLAnalyzer;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.w3c.dom.Document;
 
@@ -58,9 +59,6 @@ import org.w3c.dom.Document;
  * @author Sujeong Lee
  */
 public class DatabasesSettingUtil {
-
-	private static final String DB_SETTINGS_XML_FILE = Constants.SETTING_HOME
-			+ Constants.FILE_SEPERATOR + Constants.DB_SETTINGS_XML_FILE;
 
 	public static List<JdbcOption> getDatasourcesByProject(IProject project) {
 		JdbcOption communityJdbcOption = loadCommunityJdbcOption(project);
@@ -153,13 +151,20 @@ public class DatabasesSettingUtil {
 	}
 
 	public static List<JdbcOption> loadJdbcOptionList(IProject project) {
-		IFile file = project.getFile(DB_SETTINGS_XML_FILE);
+		File file = new File(PropertiesSettingUtil
+				.getDatabasesFile(project.getLocation().toOSString()));
+		
 		if (!file.exists()) {
 			return null;
 		}
 		try {
-			Document doc = XMLAnalyzer.getDocumentFromIfile(file);
-			List<Map<String, String>> types = XMLAnalyzer.getData(doc,
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			factory.setNamespaceAware(true);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(file);
+			
+			List<Map<String, String>> types = XMLAnalyzer.getData(document,
 					Constants.XML_CONFIG_ROOT_PATH);
 			if (types.size() > 0) {
 				List<JdbcOption> jdbcOptions = new ArrayList<JdbcOption>();
@@ -207,7 +212,10 @@ public class DatabasesSettingUtil {
 			return false;
 		}
 
-		IFile file = project.getFile(DB_SETTINGS_XML_FILE);
+		//IFile file = project.getFile(PropertiesSettingUtil
+		//		.getDatabasesFile(project.getLocation().toOSString()));
+		File file = new File(PropertiesSettingUtil
+				.getDatabasesFile(project.getLocation().toOSString()));
 
 		StringBuilder contents = new StringBuilder(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<dbexplorer>\n");
@@ -231,10 +239,11 @@ public class DatabasesSettingUtil {
 					jdbc.getUserName()));
 			contents.append(makeTagElemStr(Constants.XML_TAG_PASSWORD,
 					EncryptUtil.encrypt(jdbc.getPassword())));
-			contents.append(makeTagElemStr(Constants.XML_TAG_SCHEMA,
+			contents.append(makeTagElemStr(
+					Constants.XML_TAG_SCHEMA,
 					jdbc.getSchema() == null
-					|| jdbc.getSchema().equals(Constants.DB_NO_SCHEMA) ? ""
-					: jdbc.getSchema()));
+							|| jdbc.getSchema().equals(Constants.DB_NO_SCHEMA) ? ""
+							: jdbc.getSchema()));
 
 			contents.append(makeTagElemStr(Constants.XML_TAG_DIALECT,
 					jdbc.getDialect()));
@@ -256,18 +265,10 @@ public class DatabasesSettingUtil {
 			if (!isValidate) {
 				return false;
 			}
-			InputStream in = new ByteArrayInputStream(contents.toString()
-					.getBytes("UTF-8"));
-			if (file.exists()) {
-				file.setContents(in, IFile.KEEP_HISTORY,
-						new NullProgressMonitor());
-			} else {
-				IFolder folder = project.getFolder(Constants.SETTING_HOME);
-				if (!folder.exists()) {
-					folder.create(true, true, new NullProgressMonitor());
-				}
-				file.create(in, true, new NullProgressMonitor());
-			}
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(contents.toString());
+			writer.close();
+			
 		} catch (Exception e) {
 			PluginLoggerUtil
 					.error(CommonActivator.PLUGIN_ID, e.getMessage(), e);
@@ -396,7 +397,7 @@ public class DatabasesSettingUtil {
 			dbLibFile = new File(projectHome, path);
 		}
 
-		URL[] url = { dbLibFile.toURL() };
+		URL[] url = { dbLibFile.toURI().toURL() };
 
 		URLClassLoader loader = new URLClassLoader(url);
 

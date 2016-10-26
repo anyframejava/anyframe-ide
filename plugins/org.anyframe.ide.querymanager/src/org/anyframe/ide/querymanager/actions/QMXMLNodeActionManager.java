@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -114,8 +115,8 @@ public class QMXMLNodeActionManager extends XMLNodeActionManager {
 						}
 						if (MessageDialog.openConfirm(
 								viewer.getControl().getShell(),
-								"Delete Confirmation",
-								"Are you sure you want to Delete "
+								Message.view_explorer_action_deleteconfirmation,
+								Message.view_explorer_action_deletenodeconfirm 
 										+ node.getNodeName() + " ?")) {
 
 							// Removing query id from tree viewer

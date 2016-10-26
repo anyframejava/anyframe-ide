@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.anyframe.ide.querymanager.actions;
 
 import org.anyframe.ide.querymanager.editors.QMEditor;
 import org.anyframe.ide.querymanager.editors.QueryEditor;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.EditorInput;
 import org.anyframe.ide.querymanager.util.AbstractQueryManagerAction;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
@@ -45,9 +45,9 @@ public class LinkEditorAction extends AbstractQueryManagerAction {
 		// super("Link in Editor", "Link in Editor",
 		// "images/page_white_link.png");
 		super(
-				MessagePropertiesLoader.view_explorer_action_linkeditor_title,
-				MessagePropertiesLoader.view_explorer_action_linkeditor_desc,
-				MessagePropertiesLoader.image_explorer_linkeditor);
+				Message.view_explorer_action_linkeditor_title,
+				Message.view_explorer_action_linkeditor_desc,
+				Message.image_explorer_linkeditor);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class LinkEditorAction extends AbstractQueryManagerAction {
 				if (page.getActiveEditor()
 						.getTitle()
 						.startsWith(
-								MessagePropertiesLoader.editor_querymanager_message_addquerytitle_prefix)) {
+								Message.editor_querymanager_message_addquerytitle_prefix)) {
 					editorType = 2;
 				} else {
 					editorType = 1;

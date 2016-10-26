@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.util.Vector;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -168,14 +169,14 @@ public class JavaClassTemplateGenerator {
 
 				// LOGGER.error("couldn't find the template", rnfe);
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						"couldn't find the template", rnfe);
+						Message.exception_couldnotfindthetemplate, rnfe);
 			} catch (ParseErrorException pee) {
 				// syntax error: problem parsing the
 				// template
 				// LOGGER.error("syntax error: problem parsing the template",
 				// pee);
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						"syntax error: problem parsing the template", pee);
+						Message.exception_problemparsingthetemplate, pee);
 
 			} catch (MethodInvocationException mie) {
 				// something invoked in the template
@@ -185,13 +186,13 @@ public class JavaClassTemplateGenerator {
 				// "something invoked in the template threw an exception",
 				// mie);
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						"something invoked in the template threw an exception",
+						Message.exception_somethinginvokedinthetemplate,
 						mie);
 			} catch (Exception exception) {
 
 				// LOGGER.error("Some error occured", exception);
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						"Some error occured", exception);
+						Message.exception_someerroroccured, exception);
 			}
 
 			// Create a Context object
@@ -226,7 +227,7 @@ public class JavaClassTemplateGenerator {
 
 			// LOGGER.error("Fail to transform template", exception);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Fail to transform template", exception);
+					Message.exception_failtotransformtemplate, exception);
 		}
 		return new ByteArrayInputStream(writer.toString().getBytes());
 	}
@@ -251,7 +252,7 @@ public class JavaClassTemplateGenerator {
 		} catch (Exception e) {
 			// QueryManagerPlugin.showErrorLog(e);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Exception occurred while generating template source.", e);
+					Message.exception_generatetemplatesource, e);
 		} finally {
 			try {
 				if (reader != null)
@@ -281,7 +282,7 @@ public class JavaClassTemplateGenerator {
 			} catch (Exception e) {
 				// QueryManagerPlugin.showErrorLog(e);
 				PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-						"Exception occurred while getting template file.", e);
+						Message.exception_gettemplatefile, e);
 			}
 		}
 		return f;

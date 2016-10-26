@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.anyframe.ide.querymanager.nl1 Fragment
+Bundle-SymbolicName: org.anyframe.ide.querymanager.nl1
+Bundle-Version: 2.8.0
+Fragment-Host: org.anyframe.ide.querymanager
+Bundle-ClassPath: .

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -73,7 +74,7 @@ public class AnyframeProjectBuilder extends IncrementalProjectBuilder {
 			// LOGGER.error("Error while removing existing markers for project "
 			// + project.getName() + "  ", e);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Error while removing existing markers for project "
+					Message.exception_removeexistmarker
 							+ project.getName() + "  ", e);
 		}
 		if (kind == AUTO_BUILD || kind == INCREMENTAL_BUILD) {
@@ -116,7 +117,7 @@ public class AnyframeProjectBuilder extends IncrementalProjectBuilder {
 									Location loc = (Location) colItr.next();
 									if (!builderHelper
 											.markAProblem(
-													"Repitition of Query Id",
+													Message.action_repetitionofqueryid,
 													(Location) loc,
 													1,
 													true,

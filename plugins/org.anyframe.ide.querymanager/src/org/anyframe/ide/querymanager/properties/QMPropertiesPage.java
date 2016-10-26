@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import org.anyframe.ide.common.util.ImageUtil;
 import org.anyframe.ide.querymanager.dialogs.ElementSelectAddDialog;
 import org.anyframe.ide.querymanager.dialogs.ElementSelectScanDialog;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.views.QMExplorerView;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -133,7 +133,7 @@ public class QMPropertiesPage extends PropertyPage implements
 	private void createContentsGroup(Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData());
-		label.setText(MessagePropertiesLoader.property_dialog_text);
+		label.setText(Message.property_dialog_text);
 
 		// Group
 		Group group = new Group(parent, SWT.SHADOW_NONE);
@@ -143,7 +143,7 @@ public class QMPropertiesPage extends PropertyPage implements
 		fillPropertiesPage(group);
 
 		checkComment = new Button(group, SWT.CHECK);
-		checkComment.setText("Enable query comment append.");
+		checkComment.setText(Message.property_enablequerycommentappend);
 		checkComment.setToolTipText("");
 		checkComment.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
@@ -155,7 +155,7 @@ public class QMPropertiesPage extends PropertyPage implements
 		});
 
 		checkDupl = new Button(group, SWT.CHECK);
-		checkDupl.setText("Enable Query ID duplication checking.");
+		checkDupl.setText(Message.property_enablequeryidduplicationchecking);
 		checkDupl.setToolTipText("");
 		checkDupl.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
@@ -167,7 +167,7 @@ public class QMPropertiesPage extends PropertyPage implements
 		});
 
 		checkUsedUnused = new Button(group, SWT.CHECK);
-		checkUsedUnused.setText("Enable Query ID is used or unused checking.");
+		checkUsedUnused.setText(Message.property_enablequeryidcheck);
 		checkUsedUnused.setToolTipText("");
 		checkUsedUnused.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
@@ -217,14 +217,14 @@ public class QMPropertiesPage extends PropertyPage implements
 		compositeButtonArea.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
 		buttonAdd = createButton(compositeButtonArea,
-				MessagePropertiesLoader.property_add_button, "", //$NON-NLS-2$ //$NON-NLS-1$
+				Message.property_add_button, "", //$NON-NLS-2$ //$NON-NLS-1$
 				buttonListener);
 		buttonRemove = createButton(compositeButtonArea,
-				MessagePropertiesLoader.property_dialog_remove_button,
+				Message.property_dialog_remove_button,
 				"", //$NON-NLS-2$ //$NON-NLS-1$
 				buttonListener);
 		buttonScan = createButton(compositeButtonArea,
-				MessagePropertiesLoader.property_dialog_scan_button, "", //$NON-NLS-2$ //$NON-NLS-1$
+				Message.property_dialog_scan_button, "", //$NON-NLS-2$ //$NON-NLS-1$
 				buttonListener);
 
 	}
@@ -249,7 +249,7 @@ public class QMPropertiesPage extends PropertyPage implements
 			for (int i = 0; i < scanResult.size(); i++) {
 				TableItem item = new TableItem(tableList, SWT.NONE);
 				item.setImage(ImageUtil.getImage(ImageUtil
-						.getImageDescriptor(PLUGIN_ID , MessagePropertiesLoader.image_properties_xmlfile)));
+						.getImageDescriptor(PLUGIN_ID , Message.image_properties_xmlfile)));
 				item.setText(scanResult.get(i) + ""); //$NON-NLS-1$
 			}
 		}
@@ -362,7 +362,7 @@ public class QMPropertiesPage extends PropertyPage implements
 		for (int i = 0; i < list.size(); i++) {
 			TableItem item = new TableItem(tableList, SWT.NONE);
 			item.setImage(ImageUtil.getImage(ImageUtil
-					.getImageDescriptor(PLUGIN_ID , MessagePropertiesLoader.image_properties_xmlfile)));
+					.getImageDescriptor(PLUGIN_ID , Message.image_properties_xmlfile)));
 			item.setText(list.get(i).toString());
 		}
 

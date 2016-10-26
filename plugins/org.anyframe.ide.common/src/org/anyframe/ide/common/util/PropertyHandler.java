@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.anyframe.ide.common.CommonActivator;
+import org.anyframe.ide.common.messages.Message;
 import org.eclipse.core.resources.IProject;
 
 /**
@@ -60,15 +61,15 @@ public class PropertyHandler {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(path);
-			prop.store(out, "AnyFrame IDE Framework properties");
+			prop.store(out, Message.properties_title);
 		} catch (IOException e) {
-			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, "Fail to save properties with " + e.getMessage() + ".");
+			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, Message.exception_save_properties + e.getMessage() + ".");
 		} finally {
 			try {
 				if (out != null)
 					out.close();
 			} catch (IOException e) {
-				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, "Fail to save properties with " + e.getMessage() + ".");
+				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, Message.exception_save_properties + e.getMessage() + ".");
 			}
 		}
 	}
@@ -80,11 +81,11 @@ public class PropertyHandler {
 
 			properties.load(in);
 		} catch (FileNotFoundException e) {
-			PluginLogger.info("Cannot find Properties file : " + path + "/"
+			PluginLogger.info(Message.exception_find_properties + path + "/"
 					+ FILENAME);
 		} catch (IOException e) {
 			PluginLogger
-					.info("Error occurred during loading Properties file : "
+					.info(Message.exception_load_properties
 							+ path + "/" + FILENAME);
 		} finally {
 			try {
@@ -92,7 +93,7 @@ public class PropertyHandler {
 					in.close();
 				}
 			} catch (IOException e) {
-				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, "Fail to load properties with " + e.getMessage() + ".");
+				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, Message.exception_load_propertieswith + e.getMessage() + ".");
 			}
 		}
 	}

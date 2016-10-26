@@ -77,25 +77,25 @@
 			<contains string="${ide.version}" substring="SNAPSHOT" casesensitive="false" />
 			<then>
 				<svn username="${subv.username}" password="${subv.password}">
-					<checkout url="${subv.url.ctip.trunk}/packager" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
+					<checkout url="${subv.url.ctip.tag}/packager" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
 				</svn>
 			</then>
 			<else>
 				<mkdir dir="${build}/temp/src/ctip-packager" />
 				<svn username="${subv.username}" password="${subv.password}">
-					<checkout url="${subv.url.ctip.tag}/packager/${ide.version}" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
+					<checkout url="${subv.url.ctip.tag}/packager/${ctip.version}" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
 				</svn>
 			</else>
 		</if>
 
 		<artifact:dependencies filesetId="anyframe-ide-ctip-integration" useScope="compile">
-			<dependency groupId="org.anyframe.ide" artifactId="anyframe-ide-ctip-integration" version="${ide.version}" />
+			<dependency groupId="org.anyframe.ide" artifactId="anyframe-ide-ctip-integration" version="${ctip.version}" />
 			<localRepository path="${userhome}/temp/repo" />
 		</artifact:dependencies>
 
 		<copy todir="${dist}/anyframe-ide-${ide.version}/ctip" overwrite="true">
 			<fileset dir="${userhome}/temp/repo/org/anyframe/ide">
-				<include name="**/anyframe-ide-ctip-integration-${ide.version}.jar" />
+				<include name="**/anyframe-ide-ctip-integration-${ctip.version}.jar" />
 			</fileset>
 			<fileset dir="${build}/temp/src/ctip-packager/init">
 				<include name="web.xml" />

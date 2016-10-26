@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.anyframe.ide.common.util.ImageUtil;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -41,24 +41,24 @@ public class QueryExplorerViewLabelProvider extends StyledCellLabelProvider
 	public static final String PLUGIN_ID = "org.anyframe.ide.querymanager";
 	
 	ImageDescriptor XMLFileImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_explorer_xmlfile);
+			.getImageDescriptor(PLUGIN_ID, Message.image_explorer_xmlfile);
 	Image XMLFileImage = ImageUtil.getImage(XMLFileImageDescriptor);
 
 	ImageDescriptor usedQueryIDImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_explorer_usedid);
+			.getImageDescriptor(PLUGIN_ID, Message.image_explorer_usedid);
 	Image usedQueryIDImage = ImageUtil.getImage(usedQueryIDImageDescriptor);
 
 	ImageDescriptor unusedQueryIDImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_explorer_unusedid);
+			.getImageDescriptor(PLUGIN_ID, Message.image_explorer_unusedid);
 	Image unusedQueryIDImage = ImageUtil.getImage(unusedQueryIDImageDescriptor);
 
 	ImageDescriptor usedQueryIDDuplicatedImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_explorer_usediddup);
+			.getImageDescriptor(PLUGIN_ID, Message.image_explorer_usediddup);
 	Image usedQueryIDDuplicatedImage = ImageUtil
 			.getImage(usedQueryIDDuplicatedImageDescriptor);
 
 	ImageDescriptor unusedQueryIDDuplicatedImageDescriptor = ImageUtil
-			.getImageDescriptor(PLUGIN_ID, MessagePropertiesLoader.image_explorer_unusediddup);
+			.getImageDescriptor(PLUGIN_ID, Message.image_explorer_unusediddup);
 	Image unusedQueryIDDuplicatedImage = ImageUtil
 			.getImage(unusedQueryIDDuplicatedImageDescriptor);
 
@@ -132,7 +132,7 @@ public class QueryExplorerViewLabelProvider extends StyledCellLabelProvider
 		} else {
 			String id = obj.toString();
 			int index = id
-					.indexOf(MessagePropertiesLoader.view_explorer_util_queryid_suffix);
+					.indexOf(Message.view_explorer_util_queryid_suffix);
 			String queryID = id.substring(1);
 
 			if (index == -1) {
@@ -165,15 +165,15 @@ public class QueryExplorerViewLabelProvider extends StyledCellLabelProvider
 	public void dispose() {
 		ImageUtil.disposeImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_explorer_xmlfile);
+				.disposeImage(Message.image_explorer_xmlfile);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_explorer_usedid);
+				.disposeImage(Message.image_explorer_usedid);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_explorer_unusedid);
+				.disposeImage(Message.image_explorer_unusedid);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_explorer_usediddup);
+				.disposeImage(Message.image_explorer_usediddup);
 		ImageUtil
-				.disposeImage(MessagePropertiesLoader.image_explorer_unusediddup);
+				.disposeImage(Message.image_explorer_unusediddup);
 
 	}
 

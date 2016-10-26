@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QMXMLTableTreeViewer;
 import org.anyframe.ide.querymanager.parsefile.ParserHelper;
 import org.eclipse.core.resources.IFile;
@@ -140,9 +141,9 @@ public class OpenVOClassInJavaEditor extends AbstractQueryActionDelegate {
 					if (!fileExists) {
 						MessageDialog.openWarning(PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getShell(),
-								"VO Class does not exist",
-								"Selected VO Class \"" + selectedText
-										+ "\" does not exist.");
+								Message.editor_voclassnotexist,
+								Message.editor_selectvoclass_one + selectedText
+										+ Message.editor_selectvoclass_two);
 					}
 
 				}

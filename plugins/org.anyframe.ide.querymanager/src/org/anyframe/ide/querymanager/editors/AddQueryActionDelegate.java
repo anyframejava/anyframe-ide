@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.anyframe.ide.querymanager.editors;
 
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QMXMLTableTreeViewer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
@@ -53,8 +54,8 @@ public class AddQueryActionDelegate extends AbstractQueryActionDelegate
 		if (textSelection == null) {
 			if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell(), "Modify Query",
-						"Select the query to modify");
+						.getActiveWorkbenchWindow().getShell(), Message.editor_querymanager_modifyquery,
+						Message.editor_querymanager_selectthequerytomodify);
 			}
 			return;
 		}

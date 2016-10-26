@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.anyframe.ide.common.databases.DatabasesSettingUtil;
 import org.anyframe.ide.common.databases.JdbcOption;
 import org.anyframe.ide.common.messages.Message;
 import org.anyframe.ide.common.properties.DataBasesPropertyPage;
+import org.anyframe.ide.common.properties.PropertiesSettingUtil;
 import org.anyframe.ide.common.util.ButtonUtil;
 import org.anyframe.ide.common.util.ConnectionUtil;
 import org.anyframe.ide.common.util.ImageUtil;
@@ -46,6 +47,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -105,9 +107,7 @@ public class DbSettingDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		File jdbcConfigFile = new File(project.getLocation()
-				+ Constants.FILE_SEPERATOR + Constants.SETTING_HOME
-				+ Constants.FILE_SEPERATOR + Constants.DRIVER_SETTING_XML_FILE);
+		File jdbcConfigFile = new File(PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 		if (jdbcConfigFile.exists()) {
 			try {
 				jdbcTypes = (java.util.List<JdbcType>) XMLUtil
@@ -115,7 +115,7 @@ public class DbSettingDialog extends Dialog {
 								jdbcConfigFile));
 			} catch (FileNotFoundException e) {
 				PluginLoggerUtil.error(CommonActivator.PLUGIN_ID,
-						"Fail to find jdbc configuration file.", e);
+						Message.exception_find_jdbcconfig, e);
 			}
 		} else {
 			PluginLoggerUtil.warning(CommonActivator.PLUGIN_ID,
@@ -197,7 +197,8 @@ public class DbSettingDialog extends Dialog {
 			if (!result.get(STR_KEY_MSG).equals("")) {
 				append = "\n" + result.get(STR_KEY_MSG);
 			}
-			MessageUtil.showMessage(Message.properties_connection_fail + append,
+			MessageUtil.showMessage(
+					Message.properties_connection_fail + append,
 					DataBasesPropertyPage.PROGRAM_NAME);
 		}
 	}
@@ -263,7 +264,8 @@ public class DbSettingDialog extends Dialog {
 		tableComposite.setLayout(layout);
 
 		final Group connectionInfoGroup = new Group(tableComposite, SWT.NULL);
-		connectionInfoGroup.setText(Message.properties_database_config_description);
+		connectionInfoGroup
+				.setText(Message.properties_database_config_description);
 
 		GridLayout connectionInfoLayout = new GridLayout(3, false);
 		connectionInfoLayout.marginHeight = 1;
@@ -316,7 +318,8 @@ public class DbSettingDialog extends Dialog {
 					if (StringUtil.isContainKorean(str)) {
 						schemaException
 								.setText(Message.properties_validation_dbjar_valid
-										+ " : Korean");
+										+ " : "
+										+ Message.properties_validation_dbjar_valid_korean);
 					}
 				}
 			}
@@ -373,17 +376,18 @@ public class DbSettingDialog extends Dialog {
 				Message.ide_button_browse, "");
 		schemaButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				Map<Object, Object> result = checkConnection("", driverText.getText(),
-								driverClassNameText.getText(),
-								urlText.getText(), userIdText.getText(),
-								passwordText.getText());
+				Map<Object, Object> result = checkConnection("",
+						driverText.getText(), driverClassNameText.getText(),
+						urlText.getText(), userIdText.getText(),
+						passwordText.getText());
 				boolean checkResult = (Boolean) result
 						.get(Constants.DB_CON_CHK_KEY);
 
 				if (!checkResult) {
 					isChangedDBConfig = true;
 					setDefaultSchema();
-					settingConnectionResultErrorMessage(Message.wizard_jdbc_checkjdbc + " "
+					settingConnectionResultErrorMessage(Message.wizard_jdbc_checkjdbc
+							+ " "
 							+ (String) result.get(Constants.DB_CON_MSG_KEY));
 				} else {
 					schemaException.setText("");
@@ -395,7 +399,7 @@ public class DbSettingDialog extends Dialog {
 							connectionInfoGroup.getShell(),
 							new SchemaLabelProvider());
 					dialog.setElements(schemaSet.toArray());
-					dialog.setTitle("Schema Selection");
+					dialog.setTitle(Message.properties_database_schema_title);
 					dialog.open();
 
 					Object selectedResult = dialog.getFirstResult();
@@ -477,7 +481,7 @@ public class DbSettingDialog extends Dialog {
 			msg += Message.wizard_jdbc_username;
 		}
 
-		if (!databaseTypeCombo.getText().equals("sybase")) {
+		if (!databaseTypeCombo.getText().equals(Constants.DB_TYPE_SYBASE)) {
 			if (StringUtil.isEmptyOrNull(schemaText.getText())
 					|| schemaText.getText().equals(
 							Message.wizard_jdbc_defaultschema)) {
@@ -488,7 +492,7 @@ public class DbSettingDialog extends Dialog {
 		}
 
 		if (!"".equals(msg)) {
-			return "Please fill missing items [" + msg + "]";
+			return NLS.bind(Message.properties_info_missing, msg);
 		}
 		return "";
 	}
@@ -514,19 +518,23 @@ public class DbSettingDialog extends Dialog {
 		private void setDefaultSettingByType(int index) {
 
 			String url = "";
-			if (jdbcTypes.get(index).getType().equalsIgnoreCase("hsqldb")) {
+			if (jdbcTypes.get(index).getType()
+					.equalsIgnoreCase(Constants.DB_TYPE_HSQLDB)) {
 				url = Constants.DB_HSQL_SERVER_URL;
 			} else if (jdbcTypes.get(index).getType()
-					.equalsIgnoreCase("oracle")) {
+					.equalsIgnoreCase(Constants.DB_TYPE_ORACLE)) {
 				url = Constants.DB_ORACLE_URL;
-			} else if (jdbcTypes.get(index).getType().equalsIgnoreCase("mysql")) {
+			} else if (jdbcTypes.get(index).getType()
+					.equalsIgnoreCase(Constants.DB_TYPE_MYSQL)) {
 				url = Constants.DB_MYSQL_URL;
 			} else if (jdbcTypes.get(index).getType()
-					.equalsIgnoreCase("sybase")) {
+					.equalsIgnoreCase(Constants.DB_TYPE_SYBASE)) {
 				url = Constants.DB_SYBASE_URL;
-			} else if (jdbcTypes.get(index).getType().equalsIgnoreCase("db2")) {
+			} else if (jdbcTypes.get(index).getType()
+					.equalsIgnoreCase(Constants.DB_TYPE_DB2)) {
 				url = Constants.DB_DB2_URL;
-			} else if (jdbcTypes.get(index).getType().equalsIgnoreCase("mssql")) {
+			} else if (jdbcTypes.get(index).getType()
+					.equalsIgnoreCase(Constants.DB_TYPE_MSSQL)) {
 				url = Constants.DB_MSSQL_URL;
 			}
 
@@ -591,7 +599,7 @@ public class DbSettingDialog extends Dialog {
 		if (isChangedDBConfig)
 			schemaText.setText(Message.properties_jdbc_defaultschema);
 		else
-			schemaText.setText("PUBLIC");
+			schemaText.setText(Constants.DB_SCHEMA_PUBLIC);
 		schemaException.setText("");
 	}
 
@@ -628,8 +636,7 @@ public class DbSettingDialog extends Dialog {
 		}
 		fillJdbcOption(jdbc);
 		if (jdbc.toString().contains("<") || jdbc.toString().contains(">")) {
-			MessageUtil.showMessage(
-					"Database information can't contains \"<\" or \">\".",
+			MessageUtil.showMessage(Message.properties_validation_inequality,
 					DataBasesPropertyPage.PROGRAM_NAME);
 			return;
 		}
@@ -675,24 +682,24 @@ public class DbSettingDialog extends Dialog {
 		result.put(Constants.DB_CON_MSG_KEY, Constants.DB_CON_MSG);
 		Connection connection = null;
 		try {
-			connection = DatabasesSettingUtil.getConnection(projectHome, driverJarName, dbDriver,
-					dbUrl, userName, password);
+			connection = DatabasesSettingUtil.getConnection(projectHome,
+					driverJarName, dbDriver, dbUrl, userName, password);
 		} catch (Exception e) {
 			result.put(Constants.DB_CON_MSG_KEY, e.getMessage());
 			PluginLoggerUtil.error(CommonActivator.PLUGIN_ID,
 					Message.exception_getconnection, e);
 		} finally {
-			if (connection != null){
+			if (connection != null) {
 				result.put(Constants.DB_CON_CHK_KEY, true);
 				DatabasesSettingUtil.close(connection);
-			}else{
+			} else {
 				settingConnectionResultErrorMessage(Message.exception_getconnection);
 			}
 		}
 		return result;
 	}
-	
-	private void settingConnectionResultErrorMessage(String resultMessage){
+
+	private void settingConnectionResultErrorMessage(String resultMessage) {
 		schemaException.setText(resultMessage);
 	}
 }

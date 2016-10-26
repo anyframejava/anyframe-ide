@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.anyframe.ide.querymanager.QueryManagerConstants;
 import org.anyframe.ide.querymanager.build.BuilderHelper;
 import org.anyframe.ide.querymanager.build.Location;
 import org.anyframe.ide.querymanager.build.QMMarkerHelper;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.FileInfoVO;
 import org.anyframe.ide.querymanager.model.QueryTreeVO;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
@@ -219,7 +219,7 @@ public class QueryExplorerHelper {
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"Check DTD in XML file.", e);
+					Message.action_checkdtdinxmlfile, e);
 		}
 
 		return resultList;
@@ -337,7 +337,7 @@ public class QueryExplorerHelper {
 					int count = 0;
 					while (keySet
 							.contains(object
-									+ MessagePropertiesLoader.view_explorer_util_queryid_suffix
+									+ Message.view_explorer_util_queryid_suffix
 									+ count)) {
 						count++;
 					}
@@ -345,7 +345,7 @@ public class QueryExplorerHelper {
 					if (util.getPropertiesDupl2(((Location) ids.get(object))
 							.getFile().getProject())) {
 						strId = object
-								+ MessagePropertiesLoader.view_explorer_util_queryid_suffix
+								+ Message.view_explorer_util_queryid_suffix
 								+ count;
 					} else {
 						strId = object + "";
@@ -506,7 +506,7 @@ public class QueryExplorerHelper {
 		IMarker marker = QMExplorerView.createMarker(file, loc.getCharStart(),
 				loc.getCharEnd(),
 				QMMarkerHelper.QUERYNAV_DBLCLK_BOOK_MARKER_ID,
-				"Opening the Query from Query Navigator.");
+				Message.view_explorer_openthequeryfromquerynavigator);
 		// show the location of query id.
 		IWorkbenchPage activePage1 = QueryManagerActivator.getDefault()
 				.getActiveWorkbenchPage();

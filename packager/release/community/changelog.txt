@@ -2,6 +2,49 @@
 ==========================
 http://www.anyframejava.org
 
+Changes in version 2.8.0 (2013-04-12)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Properties
+    . Configuration file 위치를  Eclipse Properties UI 화면에서 정의하도록 개선 
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선   
+
+2) Code Generator - Eclipse Plugin
+  - m2eclipse 의존관계 개선  
+    . 사용자가 원하는 m2eclipse로 설치하여 진행하도록 개선
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+
+3) Query Manager - Eclipse Plugin
+  - Bug fix
+    . Row Limit 에 숫자 외 입력 시 경고발생등 조치  
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+
+* 참조 라이브러리 변경 내역
+  - org.maven.ide.eclipse_0.12.1.20110112-1712.jar 추가
+  
+ * 테스트 내역
+  - Anyframe Java IDE 2.8.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-138] Anyframe IDE Configuration 구성 개선
+  Code Generator - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-136] Code Generator의 m2eclipse Dependency 관계 개선
+  Query Manager - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+
 Changes in version 2.7.0 (2012-12-28)
 -------------------------------------
 * 주요 변경 내역

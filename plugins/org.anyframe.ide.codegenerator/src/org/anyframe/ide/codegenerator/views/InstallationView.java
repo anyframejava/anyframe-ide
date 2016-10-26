@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 Samsung SDS Co., Ltd.
+ * Copyright 2007-2013 Samsung SDS Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import org.anyframe.ide.codegenerator.action.InstallViewAction;
 import org.anyframe.ide.codegenerator.action.RefreshInstallViewAction;
 import org.anyframe.ide.codegenerator.action.UninstallViewAction;
 import org.anyframe.ide.codegenerator.action.UpdateListInstallViewAction;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoContentProvider;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoLabelProvider;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoList;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
@@ -49,8 +49,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -205,7 +203,7 @@ public class InstallationView extends ViewPart {
 		//
 		fFilteredTree.setBackground(parent.getDisplay().getSystemColor(25));
 		fFilteredTree.setLayoutData(new GridData(1808));
-		fFilteredTree.setInitialText("type filter text of plugin name");
+		fFilteredTree.setInitialText(Message.view_ctip_typepluginname);
 
 		fTree = fFilteredTree.getViewer().getTree();
 		fTree.setLinesVisible(true);
@@ -826,7 +824,7 @@ public class InstallationView extends ViewPart {
 
 		});
 
-		fFilteredTree.setInitialText("type filter text of plugin name");
+		fFilteredTree.setInitialText(Message.view_ctip_typepluginname);
 		
 		if (pio != null) {
 			PluginInfoList pluginInfoList = new PluginInfoList(pio);

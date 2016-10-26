@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.sql.Driver;
 import java.sql.SQLException;
 
 import org.anyframe.ide.common.databases.JdbcOption;
+import org.anyframe.ide.common.messages.Message;
 
 /**
  * This is ConnectionUtil class.
@@ -36,12 +37,12 @@ public class ConnectionUtil {
 	public static Connection getConnection(JdbcOption jdbc) throws Exception {
 
 		if (jdbc == null) {
-			throw new IllegalStateException("There is no DB configuration.");
+			throw new IllegalStateException(Message.exception_nodbconfiguration);
 
 		}
 
 		if (jdbc.getDriverClassName() == null) {
-			throw new SQLException("Driver name is null for JDBC connection");
+			throw new SQLException(Message.exception_drivernamenull);
 		}
 
 		Driver driver = ConnectionUtil.getDriverFromPath(jdbc.getDriverJar(),

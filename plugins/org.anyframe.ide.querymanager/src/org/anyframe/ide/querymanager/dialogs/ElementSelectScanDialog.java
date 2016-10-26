@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.anyframe.ide.common.util.ImageUtil;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.parsefile.FilesParser;
 import org.anyframe.ide.querymanager.properties.QMPropertiesPage;
 import org.eclipse.core.resources.IProject;
@@ -75,7 +75,7 @@ public class ElementSelectScanDialog extends Dialog {
 
 	protected void configureShell(Shell newShell) {
 
-		newShell.setText(MessagePropertiesLoader.property_dialog_scan_title);
+		newShell.setText(Message.property_dialog_scan_title);
 		super.configureShell(newShell);
 
 		Monitor mon = Display.getDefault().getMonitors()[0];
@@ -100,7 +100,7 @@ public class ElementSelectScanDialog extends Dialog {
 		layoutData.horizontalSpan = 4;
 		labelInfo.setLayoutData(layoutData);
 		labelInfo
-				.setText(MessagePropertiesLoader.property_dialog_scan_message);
+				.setText(Message.property_dialog_scan_message);
 
 		table = new Table(composite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL
 				| SWT.H_SCROLL);
@@ -113,8 +113,8 @@ public class ElementSelectScanDialog extends Dialog {
 		buttonSelectAll = new QMPropertiesPage()
 				.createButton(
 						composite,
-						MessagePropertiesLoader.property_dialog_scan_selectall_title,
-						MessagePropertiesLoader.property_dialog_scan_selectall_tooltip,
+						Message.property_dialog_scan_selectall_title,
+						Message.property_dialog_scan_selectall_tooltip,
 						buttonSelectListener);
 		GridData layoutSelectButton = new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL);
@@ -124,8 +124,8 @@ public class ElementSelectScanDialog extends Dialog {
 		buttonDeSelectAll = new QMPropertiesPage()
 				.createButton(
 						composite,
-						MessagePropertiesLoader.property_dialog_scan_deselectall_title,
-						MessagePropertiesLoader.property_dialog_scan_deselectall_tooltip,
+						Message.property_dialog_scan_deselectall_title,
+						Message.property_dialog_scan_deselectall_tooltip,
 						buttonDeSelectListener);
 		GridData layoutDeselectButton = new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL);
@@ -141,13 +141,13 @@ public class ElementSelectScanDialog extends Dialog {
 
 	private void settingTable(final Table table) {
 
-		Job treeViewJob = new Job("Scanning mapping-xml files") { //$NON-NLS-1$
+		Job treeViewJob = new Job(Message.dialog_scanmappingxml) { //$NON-NLS-1$
 
 			protected IStatus run(IProgressMonitor monitor) {
 
 				monitor.beginTask(
-						"Scanning the mapping-xml files for Dialog", 100); //$NON-NLS-1$
-				monitor.subTask("Getting the Files...."); //$NON-NLS-1$
+						Message.dialog_scanmappingxmlfordialog, 100); //$NON-NLS-1$
+				monitor.subTask(Message.dialog_getthefile); //$NON-NLS-1$
 
 				if (monitor.isCanceled()) {
 					monitor.done();
@@ -180,7 +180,7 @@ public class ElementSelectScanDialog extends Dialog {
 								item.setImage(ImageUtil.getImage(ImageUtil
 										.getImageDescriptor(
 												PLUGIN_ID,
-												MessagePropertiesLoader.image_properties_xmlfile)));
+												Message.image_properties_xmlfile)));
 								item.setText(fileNameList.get(i) + ""); //$NON-NLS-1$
 								item.setChecked(true);
 							}
@@ -195,7 +195,7 @@ public class ElementSelectScanDialog extends Dialog {
 											TableItem item = new TableItem(
 													table, SWT.NONE);
 											item.setImage(ImageUtil.getImage(ImageUtil
-													.getImageDescriptor(PLUGIN_ID,MessagePropertiesLoader.image_properties_xmlfile)));
+													.getImageDescriptor(PLUGIN_ID,Message.image_properties_xmlfile)));
 											item.setText(fileNameList.get(i)
 													+ ""); //$NON-NLS-1$
 											item.setChecked(true);

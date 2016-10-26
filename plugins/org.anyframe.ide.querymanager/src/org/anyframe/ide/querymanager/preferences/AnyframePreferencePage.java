@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.anyframe.ide.querymanager.preferences;
 
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -53,15 +54,6 @@ public class AnyframePreferencePage extends PreferencePage implements
 	static Text findListSufix;
 	static Text valueObjectPrefix;
 
-	/* Label of the text fields */
-
-	private final String CREATE_PREFIX = "Create Prefix:";
-	private final String UPDATE_PREFIX = "Update Prefix:";
-	private final String REMOVE_PREFIX = "Remove Prefix:";
-	private final String FIND_PREFIX = "Find Prefix:";
-	private final String LIST_SUFFIX = "Find List suffix:";
-	private final String PK_SUFFIX = "Find by PK suffix:";
-	private final String VALUE_OBJECT = "Value Object prefix:";
 
 	/* IDs for the Anyframe Preference page */
 
@@ -83,7 +75,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		super();
 		store = QueryManagerActivator.getDefault().getPreferenceStore();
 		setPreferenceStore(store);
-		setDescription("AbstractDAO prefix and suffix");
+		setDescription(Message.preferences_abstractdaoprefixandsuffix);
 	}
 
 	/**
@@ -106,7 +98,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		preferenceWindow.setLayout(layout);
 
 		Label label = new Label(preferenceWindow, SWT.NONE);
-		label.setText(CREATE_PREFIX);
+		label.setText(Message.preferences_createprefix);
 
 		// create prefix text
 
@@ -115,7 +107,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		createPrefix.setText(store.getString(CREATE_PREFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(UPDATE_PREFIX);
+		label.setText(Message.preferences_updateprefix);
 
 		// update prefix text
 
@@ -125,7 +117,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		updatePrefix.setText(store.getString(UPDATE_PREFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(REMOVE_PREFIX);
+		label.setText(Message.preferences_removeprefix);
 
 		// remove prefix text
 
@@ -135,7 +127,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		removePrefix.setText(store.getString(REMOVE_PREFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(FIND_PREFIX);
+		label.setText(Message.preferences_findprefix);
 
 		// find prefix text
 
@@ -145,7 +137,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		findPrefix.setText(store.getString(FIND_PREFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(LIST_SUFFIX);
+		label.setText(Message.preferences_listsuffix);
 
 		// find list suffix
 
@@ -158,7 +150,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		findListSufix.setText(store.getString(FIND_LIST_SUFFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(PK_SUFFIX);
+		label.setText(Message.preferences_pksuffix);
 
 		// find by pk suffix text
 
@@ -168,7 +160,7 @@ public class AnyframePreferencePage extends PreferencePage implements
 		findPKSufix.setText(store.getString(FIND_BYPK_SUFFIX_ID));
 
 		label = new org.eclipse.swt.widgets.Label(preferenceWindow, SWT.NONE);
-		label.setText(VALUE_OBJECT);
+		label.setText(Message.preferences_valueobjectprefix);
 
 		// Value Object prefix
 

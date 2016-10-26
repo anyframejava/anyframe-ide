@@ -1,0 +1,10 @@
+<chapter id="introduction_license">
+	<title>License</title>
+	<para>
+		Anyframe Java adopts <emphasis role="bold">Apache Licence Version 2.0</emphasis> as a licensing policy.
+		Yet, the external open sources used in Anyframe follow the licensing policy of the original open sources.
+	</para>
+	<para>
+		<ulink url="http://www.apache.org/licenses/LICENSE-2.0"><emphasis role="bold">http://www.apache.org/licenses/LICENSE-2.0</emphasis></ulink>
+	</para>
+</chapter>

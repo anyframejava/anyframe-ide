@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import java.util.HashMap;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.StringUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QMDetails;
 import org.anyframe.ide.querymanager.model.QMResultsContentProvider;
 import org.anyframe.ide.querymanager.model.QMResultsLabelProvider;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -35,7 +35,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -44,7 +43,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -55,7 +53,7 @@ import org.eclipse.ui.part.ViewPart;
 public class QMResultsView extends ViewPart {
 
 	public static final String ID = QueryManagerActivator.PLUGIN_ID
-			+ ".QMResultsView";
+			+ ".views.QMResultsView";
 
 	// private static final Log LOGGER =
 	// LogFactory.getLog(QMResultsView.class);
@@ -133,7 +131,7 @@ public class QMResultsView extends ViewPart {
 		GridData data1 = new GridData(GridData.FILL_BOTH);
 		tabFolder.setLayoutData(data1);
 		TabItem messagesTab = new TabItem(tabFolder, SWT.NONE);
-		messagesTab.setText("Messages");
+		messagesTab.setText(Message.view_explorer_messages);
 
 		messagesTable = new Table(tabFolder, SWT.SINGLE | SWT.BORDER
 				| SWT.FULL_SELECTION);
@@ -142,19 +140,19 @@ public class QMResultsView extends ViewPart {
 		messagesTable.setHeaderVisible(true);
 
 		TableColumn col = new TableColumn(messagesTable, SWT.NONE);
-		col.setText("Status");
+		col.setText(Message.view_explorer_status);
 		col.pack();
 
 		col = new TableColumn(messagesTable, SWT.NONE);
-		col.setText("Location");
+		col.setText(Message.view_explorer_location);
 		col.pack();
 
 		col = new TableColumn(messagesTable, SWT.NONE);
-		col.setText("SQL");
+		col.setText(Message.view_explorer_sql);
 		col.pack();
 
 		col = new TableColumn(messagesTable, SWT.NONE);
-		col.setText("Text");
+		col.setText(Message.view_explorer_text);
 		col.pack();
 
 		tabFolder.setSelection(messagesTab);
@@ -203,7 +201,7 @@ public class QMResultsView extends ViewPart {
 			tabItem.dispose();
 
 		tabItem = new TabItem(tabFolder, SWT.CLOSE);
-		tabItem.setText("Query Results");
+		tabItem.setText(Message.view_explorer_queryresult);
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tabItem.setControl(composite);

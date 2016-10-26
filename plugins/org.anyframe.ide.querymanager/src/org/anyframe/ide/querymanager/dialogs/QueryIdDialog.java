@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.anyframe.ide.querymanager.dialogs;
 
 import org.anyframe.ide.querymanager.build.Location;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.model.QueryIdContentProvider;
 import org.anyframe.ide.querymanager.model.QueryIdModel;
 import org.anyframe.ide.querymanager.model.QueryIdTableContentProvider;
@@ -52,9 +53,9 @@ public class QueryIdDialog extends Dialog {
 
 	private TableViewer tableViewer;
 
-	private static final String shelName = "Query Id Selection Dialog";
+	private static final String shelName = Message.dialog_queryidselectiondialog_title;
 
-	private static final String paramName = "List of all files in the respective projects that below Query Id has.";
+	private static final String paramName = Message.dialog_queryidhas_message;
 
 	private String projectName;
 
@@ -109,7 +110,7 @@ public class QueryIdDialog extends Dialog {
 		parameterLabel.setText(paramName);
 
 		Label parameterLabel1 = new Label(composite, SWT.NULL | SWT.LEFT);
-		parameterLabel1.setText("Query Id: " + queryId);
+		parameterLabel1.setText(Message.dialog_queryid + queryId);
 
 		GridData data = new GridData(GridData.FILL, GridData.FILL, true, true,
 				2, 10);
@@ -122,15 +123,15 @@ public class QueryIdDialog extends Dialog {
 		table.setLayoutData(data);
 
 		TableColumn column = new TableColumn(table, SWT.None);
-		column.setText("Project name");
+		column.setText(Message.dialog_projectname);
 		column.setWidth(120);
 
 		column = new TableColumn(table, SWT.None);
-		column.setText("Query file");
+		column.setText(Message.dialog_queryfile);
 		column.setWidth(160);
 
 		column = new TableColumn(table, SWT.None);
-		column.setText("File path");
+		column.setText(Message.dialog_filename);
 		column.setWidth(180);
 
 		tableViewer = new TableViewer(table);
@@ -177,8 +178,8 @@ public class QueryIdDialog extends Dialog {
 			MessageDialog
 					.openWarning(
 							this.getShell(),
-							" Warning",
-							"Select a file in the table before pressing 'Ok' button. Press 'Cancel' button to cancel the window.");
+							Message.dialog_warning,
+							Message.dialog_selectfile_message);
 		} else {
 			projectName = ((QueryIdModel) obj).getProjectName();
 			queryFile = ((QueryIdModel) obj).getQueryFile();

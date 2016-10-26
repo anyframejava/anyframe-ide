@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.anyframe.ide.common.databases;
 
+import org.anyframe.ide.common.messages.Message;
 import org.anyframe.ide.common.util.EncryptUtil;
 import org.anyframe.ide.common.util.MessageUtil;
 import org.anyframe.ide.common.util.PropertyHandler;
@@ -84,7 +85,7 @@ public class DatabasesUtils {
 
 			String message = fromProject ? "project" : "preference";
 
-			MessageUtil.showMessage("Cannot find jdbc option in the " + message
+			MessageUtil.showMessage(Message.exception_find_jdbcoption + message
 					+ " properties", DatabasesConstants.PROGRAM_NAME);
 			return false;
 		}

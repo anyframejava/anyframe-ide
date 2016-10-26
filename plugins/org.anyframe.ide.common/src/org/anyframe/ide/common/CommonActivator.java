@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2012 the original author or authors.
+ * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@ package org.anyframe.ide.common;
 
 import org.anyframe.ide.common.dialog.IDBSettingDialog;
 import org.anyframe.ide.common.properties.IPropertyPage;
-import org.anyframe.ide.common.util.PluginLogger;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.StringUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -84,11 +82,11 @@ public class CommonActivator extends AbstractUIPlugin {
 	}
 
 	private IDBSettingDialog loadIDBSettingDialog() {
-		return (IDBSettingDialog) getConnector(PLUGIN_ID, "database");
+		return (IDBSettingDialog) getConnector(PLUGIN_ID, Constants.EXTENSION_ID_DBSETTING_DIALOG);
 	}
 
 	private IPropertyPage loadIPropertyPage() {
-		return (IPropertyPage) getConnector(PLUGIN_ID, "property");
+		return (IPropertyPage) getConnector(PLUGIN_ID, Constants.EXTENSION_ID_PROPERTY);
 	}
 
 	public IDBSettingDialog getDBSettingDialog() {
@@ -116,9 +114,6 @@ public class CommonActivator extends AbstractUIPlugin {
 	 * 
 	 * @param pluginId
 	 * @param extensionPointId
-	 * @return
-	 * 
-	 *         referecne com.anyframe.ide.common.PluginUtilExt.getConnector
 	 */
 	private Object getConnector(String pluginId, String extensionPointId) {
 		String pluginIdWithExtensionPointId = StringUtil.generateQualifiedName(

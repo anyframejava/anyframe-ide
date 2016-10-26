@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.anyframe.ide.querymanager.wizards;
 
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.querymanager.QueryManagerActivator;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.util.BuilderUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -50,9 +51,9 @@ public class AddSQMPFileWizard extends NewXMLWizard {
 		// new file page
 		newFilePage = new NewFilePage(fSelection);
 
-		newFilePage.setTitle("Create a New Query Mapping XML File");
+		newFilePage.setTitle(Message.wizard_createquerymappingxmlfile_title);
 		newFilePage
-				.setDescription("This wizard will create a new Anyframe Query Mapping XML file.");
+				.setDescription(Message.wizard_createquerymappingxmlfile);
 
 		newFilePage.defaultName = "mapping-query";
 
@@ -79,7 +80,7 @@ public class AddSQMPFileWizard extends NewXMLWizard {
 	// 		openEditor(newFile);
 	// }
 	// catch (Exception exception) {
-	// 		LOGGER.error(MessagePropertiesLoader.getProperty("error.addSQMPFileWizard.creating.sql.file"),
+	// 		LOGGER.error(Message.getProperty("error.addSQMPFileWizard.creating.sql.file"),
 	// 		exception);
 	// }
 	// 		return result;
@@ -107,7 +108,7 @@ public class AddSQMPFileWizard extends NewXMLWizard {
 			// LOGGER.error("An error occured during creating SQL File.",
 			// exception);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"An error occured during creating SQL File.", ex);
+					Message.wizard_createsqlfile, ex);
 		}
 		// Add AnyFrame Builder to project.
 
@@ -138,7 +139,7 @@ public class AddSQMPFileWizard extends NewXMLWizard {
 		} catch (PartInitException ex) {
 			// LOGGER.error("An error occured during opening DBIO Editor.", exception);
 			PluginLoggerUtil.error(QueryManagerActivator.PLUGIN_ID,
-					"An error occured during opening DBIO Editor.", ex);
+					Message.wizard_createdbioeditor, ex);
 			// editor can not open for some reason
 			return;
 		}

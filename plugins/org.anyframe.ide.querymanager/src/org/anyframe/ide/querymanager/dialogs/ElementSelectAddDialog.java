@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.anyframe.ide.common.util.VersionUtil;
-import org.anyframe.ide.querymanager.messages.MessagePropertiesLoader;
+import org.anyframe.ide.querymanager.messages.Message;
 import org.anyframe.ide.querymanager.parsefile.FilesParser;
 import org.anyframe.ide.querymanager.properties.QMPropertiesPage;
 import org.anyframe.ide.querymanager.properties.QMPropertiesXMLUtil;
@@ -86,7 +86,7 @@ public class ElementSelectAddDialog extends Dialog {
 	}
 
 	protected void configureShell(Shell newShell) {
-		newShell.setText(MessagePropertiesLoader.property_dialog_add_title);
+		newShell.setText(Message.property_dialog_add_title);
 		super.configureShell(newShell);
 
 		Monitor mon = Display.getDefault().getMonitors()[0];
@@ -110,7 +110,7 @@ public class ElementSelectAddDialog extends Dialog {
 		GridData layoutData = new GridData(GridData.BEGINNING);
 		labelInfo.setLayoutData(layoutData);
 		labelInfo
-				.setText(MessagePropertiesLoader.property_dialog_add_message);
+				.setText(Message.property_dialog_add_message);
 
 //		new VersionUtil();
 		String platformVer = VersionUtil.getPlatformVersion();
@@ -118,7 +118,7 @@ public class ElementSelectAddDialog extends Dialog {
 
 		PatternFilter patternFilter = new PatternFilter();
 		patternFilter
-				.setPattern(MessagePropertiesLoader.property_dialog_add_xmlfile_extention);
+				.setPattern(Message.property_dialog_add_xmlfile_extention);
 		if (platformVer.substring(0, 3).equals("3.5") //$NON-NLS-1$
 				|| productVer.substring(0, 3).equals("3.5")) { //$NON-NLS-1$
 			filter = new FilteredTree(composite, SWT.NONE | SWT.H_SCROLL
@@ -141,13 +141,13 @@ public class ElementSelectAddDialog extends Dialog {
 	}
 
 	private void getFiles() {
-		Job treeViewJob = new Job("Searching mapping-xml files") {
+		Job treeViewJob = new Job(Message.dialog_searchmappingxml) {
 
 			protected IStatus run(IProgressMonitor monitor) {
 
-				monitor.beginTask("Searching the mapping-xml files for Dialog",
+				monitor.beginTask(Message.dialog_searchmappingxmlfordialog,
 						100);
-				monitor.subTask("Getting the Files....");
+				monitor.subTask(Message.dialog_getthefile);
 
 				monitor.worked(25);
 				settingTree(viewer);
@@ -286,7 +286,7 @@ public class ElementSelectAddDialog extends Dialog {
 						folderName = folderName + "/" + folderList.get(j); //$NON-NLS-1$
 					}
 
-					info.setType(MessagePropertiesLoader.property_dialog_add_typefolder);
+					info.setType(Message.property_dialog_add_typefolder);
 					info.setName(folderName);
 					info.setChild(temp);
 
@@ -312,7 +312,7 @@ public class ElementSelectAddDialog extends Dialog {
 			}
 
 			if (infoList.size() != 0) {
-				vo.setType(MessagePropertiesLoader.property_dialog_add_typepackage);
+				vo.setType(Message.property_dialog_add_typepackage);
 				vo.setName(packageName);
 				vo.setChild(infoList);
 				resultList.add(vo);
@@ -379,7 +379,7 @@ public class ElementSelectAddDialog extends Dialog {
 							.toString()
 							.toUpperCase()
 							.endsWith(
-									MessagePropertiesLoader.property_dialog_add_xmlfile_extention)) {
+									Message.property_dialog_add_xmlfile_extention)) {
 
 						TreePath treePath = path[i];
 
@@ -392,11 +392,11 @@ public class ElementSelectAddDialog extends Dialog {
 									.getSegment(j);
 
 							if (vo.getType()
-									.equals(MessagePropertiesLoader.property_dialog_add_typepackage)) {
+									.equals(Message.property_dialog_add_typepackage)) {
 								packageName = vo.getName();
 							} else if (vo
 									.getType()
-									.equals(MessagePropertiesLoader.property_dialog_add_typefolder)) {
+									.equals(Message.property_dialog_add_typefolder)) {
 								folderName = vo.getName();
 							} else {
 								fileName = vo.getName();

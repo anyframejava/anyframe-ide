@@ -16,6 +16,7 @@ img{text-align:left;border:0px;}
 .imagelink,.imagelink:hover{text-decoration:none;}
 td{vertical-align:top;}
 th{font-weight:bold;}
+caption{font-weight:bold;font-size:14px;color:#333;}
 
 /* PIPED LINKS */
 .piped{display:block;zoom:1;}
