@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.anyframe.ide.command.common.util.JdbcOption;
+
 /**
  * This is an DatabaseUtil class.
  * 
@@ -36,14 +38,14 @@ import java.util.StringTokenizer;
 public class CLIDatabaseUtil {
 
 	public static synchronized String[] getTableListAsDomainName(
-			PropertiesIO pio) throws Exception {
-		String driverJarName = pio.readValue(PluginConstants.DB_DRIVER_PATH);
-		String dbDriver = pio.readValue(PluginConstants.DB_DRIVER_CLASS);
-		String dbUrl = pio.readValue(PluginConstants.DB_URL);
-		String userName = pio.readValue(PluginConstants.DB_USERNAME);
-		String password = pio.readValue(PluginConstants.DB_PASSWORD);
-		String schemaName = pio.readValue(PluginConstants.DB_SCHEMA);
-		String dbType = pio.readValue(PluginConstants.DB_TYPE);
+			JdbcOption jdbcOption) throws Exception {
+		String driverJarName = jdbcOption.getDriverJar();
+		String dbDriver = jdbcOption.getDriverClassName();
+		String dbUrl = jdbcOption.getUrl();
+		String userName = jdbcOption.getUserName();
+		String password = jdbcOption.getPassword();
+		String schemaName = jdbcOption.getSchema();
+		String dbType = jdbcOption.getDbType();
 
 		Connection conn = null;
 		ResultSet rs = null;

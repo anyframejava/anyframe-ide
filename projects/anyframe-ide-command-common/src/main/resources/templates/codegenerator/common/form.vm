@@ -1,0 +1,156 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/#getDomainNameLower(${domain.name}).do?method=list'/>">${domain.name} List</a></div>
+    </div>
+    <hr />
+<script type="text/javascript" src="<c:url value='/sample/javascript/InputCalendar.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>   
+<script type="text/javascript">
+	function fncCreate${domain.name}() {		    		    
+        document.#getDomainNameLower(${domain.name})Form.action="<c:url value='/#getDomainNameLower(${domain.name}).do?method=create'/>";
+        document.#getDomainNameLower(${domain.name})Form.submit();
+	}
+	
+	function fncUpdate${domain.name}() {	    
+        document.#getDomainNameLower(${domain.name})Form.action="<c:url value='/#getDomainNameLower(${domain.name}).do?method=update'/>";
+        document.#getDomainNameLower(${domain.name})Form.submit();
+	}
+	
+	function fncRemove${domain.name}(){	
+		if(confirmDelete('#getDomainNameLower(${domain.name})')) {
+		    document.#getDomainNameLower(${domain.name})Form.action="<c:url value='/#getDomainNameLower(${domain.name}).do?method=remove'/>";
+		    document.#getDomainNameLower(${domain.name})Form.submit();
+		}	    
+	}
+</script>      
+<!--************************** begin of contents *****************************-->
+    <div id="container">
+    	<div class="cont_top">
+        	<h2>
+        		#foreach($column in $domain.columns)
+					#if($column.isKey == true)
+						#set($primaryKey = $column.fieldName)
+	        			#break
+	        		#else
+	        			#set($primaryKey = "")
+	        		#end	
+        		#end
+        		#set($ifEmptyPrefifx = '${empty')
+        		#set($ifNotEmptyPrefifx = '${not empty')
+	
+				<c:if test="${ifEmptyPrefifx} #getDomainNameLower(${domain.name}).${primaryKey}||#getDomainNameLower(${domain.name}).${primaryKey}==0}">	
+			 	Add ${domain.name} Information
+			 	<c:set var="readonly" value="false"/>
+				</c:if>
+			
+				<c:if test="${ifNotEmptyPrefifx} #getDomainNameLower(${domain.name}).${primaryKey}&& #getDomainNameLower(${domain.name}).${primaryKey}!=0}">					
+				Update ${domain.name} Information
+				<c:set var="readonly" value="true"/>				 
+				</c:if>					 				 
+			</h2>
+        </div>
+        <div class="view">
+		<form:form modelAttribute="#getDomainNameLower(${domain.name})" method="post" action="#getDomainNameLower(${domain.name}).do" id="#getDomainNameLower(${domain.name})Form" name="#getDomainNameLower(${domain.name})Form">
+	 	<table summary="This table shows detail information about the #getDomainNameLower(${domain.name})">
+    	<caption>Detail information</caption>
+        <colgroup>
+        	<col style="width:20%;" />
+            <col style="width:80%;" />
+        </colgroup>
+		<tbody>
+		<c:if test="${ifEmptyPrefifx} #getDomainNameLower(${domain.name}).${primaryKey}||#getDomainNameLower(${domain.name}).${primaryKey}==0}">
+#foreach($column in $domain.columns)
+#if($column.isKey)	
+    	<tr>
+        	<th><label for="${column.fieldName}"><spring:message code="#getDomainNameLower(${domain.name}).${column.fieldName}" />&nbsp;*</label></th>
+            <td><form:input path="${column.fieldName}" cssClass="w_normal" /><form:errors path="${column.fieldName}" cssClass="errors" /></td>
+        </tr>
+#end
+#end
+		</c:if>
+
+		<c:if test="${ifNotEmptyPrefifx} #getDomainNameLower(${domain.name}).${primaryKey}&& #getDomainNameLower(${domain.name}).${primaryKey}!=0}">					
+#foreach($column in $domain.columns)
+#if($column.isKey)
+		<tr>
+        	<th><label for="${column.fieldName}"><spring:message code="#getDomainNameLower(${domain.name}).${column.fieldName}" />&nbsp;*</label></th>
+            <td><form:input path="${column.fieldName}" cssClass="w_normal" readonly="${readonly}"/><form:errors path="${column.fieldName}" cssClass="errors" /></td>
+        </tr>
+#end
+#end
+		</c:if>
+#foreach($column in $domain.columns)
+#if(!$column.isKey)
+    	<tr>
+        	<th><label for="${column.fieldName}"><spring:message code="#getDomainNameLower(${domain.name}).${column.fieldName}" />#if(!$column.nullable) &nbsp;*#end</label></th>
+            <td>
+	        #if(${column.fieldType} == "java.util.Date" || ${column.typeName} == "date" || ${column.typeName} == "java.sql.Date" ||${column.typeName} == "timestamp" || ${column.typeName} == "time")        
+	        	<form:input path="${column.fieldName}" cssClass="w_date" maxlength="10" />
+	        	<a class="underline_none" href="javascript:popUpCalendar(document.#getDomainNameLower(${domain.name})Form.${column.fieldName}, 'yyyy-mm-dd');"><img src="<c:url value='/sample/images/btn_calendar_i.gif'/>" alt="Calendar"/></a>
+	        	<form:errors path="${column.fieldName}" cssClass="errors" />	        	
+	        #elseif(${column.typeName} == "boolean" || ${column.typeName} == "java.lang.Boolean")
+	        	<form:checkbox path="${column.fieldName}" cssClass="checkbox"/>    
+	        	<form:errors path="${column.fieldName}" cssClass="errors" />
+			#elseif(${column.typeName} == "[B")
+	        	<form:input path="${column.fieldName}" cssClass="w_normal" />
+	        	<form:errors path="${column.fieldName}" cssClass="errors" />
+	        #else
+	        	<form:input path="${column.fieldName}" cssClass="w_normal" #if($column.length > 0) maxlength="${column.length}"#end/>
+	        	<form:errors path="${column.fieldName}" cssClass="errors" />
+	        #end	            
+	        </td>
+        </tr>    
+#end
+#end
+	</tbody>
+    </table>
+	<input type="hidden" name="rootPath" value="<c:url value='/'/>"/>	
+</form:form>
+</div>
+
+<!--************************** begin of buttons *****************************-->
+        <div class="btncontainer_center">
+	    <a href="<c:url value='/#getDomainNameLower(${domain.name}).do?method=list'/>">
+	    <span class="button default icon">
+	        <span class="list">&nbsp;</span>
+	        <span class="none_a txt_num4"><spring:message code="movie.button.list" /></span>
+	    </span>
+	    </a>    
+	    		#foreach($column in $domain.columns)
+					#if($column.isKey)
+						#set($primaryKey = $column.fieldName)
+	        			#break
+	        		#end	
+        		#end
+        		#set($ifEmptyPrefifx = '${empty')
+        		#set($ifNotEmptyPrefifx = '${not empty')
+        		
+<!--		<c:if test="$ifEmptyPrefifx #getDomainNameLower(${domain.name}).${primaryKey}||#getDomainNameLower(${domain.name}).${primaryKey}==0}">	
+		    <a href="javascript:fncCreate${domain.name}();">
+		    <span class="button default icon">
+		        <span class="add">&nbsp;</span>
+		        <span class="none_a txt_num3"><spring:message code="movie.button.add" /></span>
+		    </span>
+		    </a>		
+		</c:if> 
+		<c:if test="$ifNotEmptyPrefifx #getDomainNameLower(${domain.name}).${primaryKey}&&#getDomainNameLower(${domain.name}).${primaryKey}!=0}">
+		    <a href="javascript:fncUpdate${domain.name}();">
+		    <span class="button default icon">
+		        <span class="update">&nbsp;</span>
+		        <span class="none_a txt_num6"><spring:message code="movie.button.update" /></span>
+		    </span>
+		    </a> 
+		    <a href="javascript:fncRemove${domain.name}();">
+		    <span class="button default icon">
+		        <span class="delete">&nbsp;</span>
+		        <span class="none_a txt_num6"><spring:message code="movie.button.remove" /></span>
+		    </span>
+		    </a> 	    		        												        		
+		</c:if>	-->	
+    	</div>
+	</div>
+    <hr />
+<%@ include file="/sample/common/bottom.jsp"%>

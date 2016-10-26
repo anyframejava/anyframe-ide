@@ -1,0 +1,4 @@
+<!--${domain.name}-START-->
+	<value>${domain.packageName}.${domain.name}</value>
+<!--${domain.name}-END-->
+<!--Add new Entities here-->

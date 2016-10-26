@@ -1,0 +1,89 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+#set($keyMap = {})
+#set($keyList =[])
+#foreach($list in $domain.columns)
+#if($list.isKey)
+	#set($dummy = $keyList.add($list.fieldName))
+	#set($dummy = $keyMap.put($list.fieldName, $list.columnName))
+#end
+#end
+<dynamic-hibernate>
+	<query name="find${domain.name}List">
+		<![CDATA[
+		FROM ${domain.name} #getDomainNameLower(${domain.name}) 
+		\#if ($keywordNum != "")			
+			WHERE 		
+			\#if ($condition == "All" || $condition == "")
+#**************##set($keyCount = '0')
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") #**#
+					OR #**#
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end##
+					\#if ($isNumeric == "true")
+						${column.columnName} = :keywordNum
+					\#else
+						${column.columnName} like :keywordStr
+					\#end##
+#******************##end
+#**************##end
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)#**#
+				\#elseif ($condition == "${column.fieldName}")
+					\#if ($isNumeric == "true")
+						${column.columnName} = :keywordNum
+					\#else
+						${column.columnName} LIKE :keywordStr
+					\#end
+#******************##end
+#**************##end
+				\#end
+			\#end			
+		]]>
+	</query>
+
+	<query name="count${domain.name}List">
+		<![CDATA[
+		SELECT count(*) 
+		FROM ${domain.name} #getDomainNameLower(${domain.name}) 
+		\#if ($keywordNum != "")			
+			WHERE 		
+			\#if ($condition == "All" || $condition == "")
+#**************##set($keyCount = '0')
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") #**#
+					OR #**#
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end##
+					\#if ($isNumeric == "true")
+						${column.columnName} = :keywordNum
+					\#else
+						${column.columnName} like :keywordStr
+					\#end##
+#******************##end
+#**************##end
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)#**#
+				\#elseif ($condition == "${column.fieldName}")
+					\#if ($isNumeric == "true")
+						${column.columnName} = :keywordNum
+					\#else
+						${column.columnName} LIKE :keywordStr
+					\#end
+#******************##end
+#**************##end
+				\#end
+			\#end						
+		]]>
+	</query>	
+</dynamic-hibernate>
+

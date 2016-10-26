@@ -26,7 +26,8 @@ import java.util.zip.ZipFile;
 import org.anyframe.ide.command.ant.task.container.PluginContainer;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.artifact.ant.AntResolutionListener;
 import org.apache.tools.ant.BuildException;
@@ -65,8 +66,7 @@ public abstract class AbstractPluginTask extends Task {
 	 * main method for executing custom task
 	 */
 	public void execute() {
-		ClassLoader originalClassLoader = Thread.currentThread()
-				.getContextClassLoader();
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			initialize();
 			lookupComponents();
@@ -86,22 +86,16 @@ public abstract class AbstractPluginTask extends Task {
 	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
-		File metadataFile = new File(new File(this.target)
-				+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+		String configFile = ConfigXmlUtil.getCommonConfigFile(this.target);
+		ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
-		if (metadataFile.exists()) {
-			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-			String isOffline = pio.readValue(CommonConstants.OFFLINE);
+		String isOffline = projectConfig.getOffline();
+		boolean offline = (isOffline != null) ? Boolean.valueOf(isOffline) : false;
 
-			boolean offline = (isOffline != null) ? new Boolean(isOffline
-					.substring(0, 1).toUpperCase()
-					+ isOffline.substring(1).toLowerCase()).booleanValue()
-					: false;
-			if (offline) {
-				log("Ant is executing in offline mode. Any libraries not already in your local repository will be inaccessible.");
-			}
-			this.initialize(offline);
+		if (offline) {
+			log("Ant is executing in offline mode. Any libraries not already in your local repository will be inaccessible.");
 		}
+		this.initialize(offline);
 	}
 
 	/**
@@ -112,12 +106,10 @@ public abstract class AbstractPluginTask extends Task {
 	 */
 	public void initialize(boolean isOffline) throws Exception {
 		if (this.pluginContainer == null) {
-			this.pluginContainer = new PluginContainer(this.anyframeHome,
-					getTarget(), isOffline);
+			this.pluginContainer = new PluginContainer(this.anyframeHome, getTarget(), isOffline);
 		}
 
-		listeners = Collections.singletonList(new AntResolutionListener(
-				getProject(), false));
+		listeners = Collections.singletonList(new AntResolutionListener(getProject(), false));
 	}
 
 	/*********************************************************************/
@@ -148,18 +140,15 @@ public abstract class AbstractPluginTask extends Task {
 	 * @param pluginZip
 	 *            zip file includes plugin binary file
 	 */
-	public void copyPomFile(ZipFile pluginZip, String fileName)
-			throws Exception {
+	public void copyPomFile(ZipFile pluginZip, String fileName) throws Exception {
 		InputStream inputStream = null;
 		try {
 			ZipEntry input = pluginZip.getEntry(fileName);
 			inputStream = pluginZip.getInputStream(input);
 
-			File temporaryDir = new File(getTarget()
-					+ CommonConstants.fileSeparator + "temp");
+			File temporaryDir = new File(getTarget() + CommonConstants.fileSeparator + "temp");
 			temporaryDir.mkdirs();
-			IOUtil.copy(inputStream, new FileOutputStream(new File(
-					temporaryDir, "pom_" + this.name + ".xml")));
+			IOUtil.copy(inputStream, new FileOutputStream(new File(temporaryDir, "pom_" + this.name + ".xml")));
 		} finally {
 			IOUtil.close(inputStream);
 		}
@@ -175,8 +164,7 @@ public abstract class AbstractPluginTask extends Task {
 	 * @return true if value is empty or equals to ${property}
 	 */
 	protected boolean isEmpty(String property, String value) {
-		if (value == null || value.equals("")
-				|| value.equals("${" + property + "}"))
+		if (value == null || value.equals("") || value.equals("${" + property + "}"))
 			return true;
 		return false;
 	}
@@ -210,8 +198,7 @@ public abstract class AbstractPluginTask extends Task {
 	}
 
 	public String getEncoding() {
-		return ((null == this.encoding) || "".equals(this.encoding)) ? "UTF-8"
-				: this.encoding;
+		return ((null == this.encoding) || "".equals(this.encoding)) ? "UTF-8" : this.encoding;
 	}
 
 	public void setEncoding(String encoding) {
@@ -241,8 +228,7 @@ public abstract class AbstractPluginTask extends Task {
 	// for test case (set pluginCatalogFile location)
 	public void setPluginCatalogLog(String catalogFile) {
 		if (this.pluginContainer == null) {
-			this.pluginContainer = new PluginContainer(this.anyframeHome,
-					getTarget(), false);
+			this.pluginContainer = new PluginContainer(this.anyframeHome, getTarget(), false);
 		}
 	}
 

@@ -28,8 +28,9 @@ import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginInterceptor;
 import org.anyframe.ide.command.common.plugin.PluginResource;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.anyframe.ide.command.common.util.ValidationUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
@@ -82,7 +83,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 
 		try {
 			// 1. check validation about current project
-			PropertiesIO pio = checkProject(baseDir);
+			ProjectConfig projectConfig = checkProject(baseDir);
 			Model pjtPom = checkProjectPom(baseDir);
 			Map<String, PluginInfo> pluginMap = checkInstalledPlugins(baseDir);
 
@@ -91,7 +92,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 			checkPluginName(request, pluginName);
 
 			// 3. create pluginBuildInfo object
-			String packageName = pio.readValue(CommonConstants.PACKAGE_NAME);
+			String packageName = projectConfig.getPackageName();
 			PluginInfo pluginBuildInfo = getPluginBuildInfo(packageName,
 					pjtPom, pluginMap);
 
@@ -153,30 +154,24 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 	 * @return project information properties
 	 * @throws Exception
 	 */
-	private PropertiesIO checkProject(String baseDir) throws Exception {
+	private ProjectConfig checkProject(String baseDir) throws Exception {
 		getLogger().debug("Call checkProject() of DefaultPluginPackager");
 
-		// 1. check a project.mf file
-		File metadataFile = new File(baseDir + CommonConstants.METAINF,
-				CommonConstants.METADATA_FILE);
-		if (!metadataFile.exists()) {
-			throw new CommandException("Can not find a '"
-					+ metadataFile.getAbsolutePath()
-					+ "' file. Please check a location of your project.");
-		}
-
-		PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-		if (StringUtils.isEmpty(pio.readValue(CommonConstants.PACKAGE_NAME))) {
+		// 1. get a project configuration
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+		ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+		
+		if (StringUtils.isEmpty(projectConfig.getPackageName())) {
 			throw new CommandException(
 					"Can not find a package.name property value in '"
-							+ metadataFile.getAbsolutePath()
+							+ configFile
 							+ "' file. Please check the package name.");
 		}
 
 		getLogger().debug(
 				"Current plugin sample project directory is a " + baseDir);
 
-		return pio;
+		return projectConfig;
 	}
 
 	/**
@@ -216,9 +211,9 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 				"Call checkInstalledPlugins() of DefaultPluginBuildManager");
 
 		// 1. check a plugin-installed.xml file
-		File pluginInstalledFile = new File(baseDir + CommonConstants.METAINF,
-				CommonConstants.PLUGIN_INSTALLED_FILE);
-
+		File pluginInstalledFile = new File(baseDir
+				+ CommonConstants.PLUGIN_INSTALLED_FILE_PATH);
+		
 		if (!pluginInstalledFile.exists())
 			throw new CommandException("Can not find a '"
 					+ pluginInstalledFile.getAbsolutePath()
@@ -300,6 +295,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		// 1. check existing plugin names
 		Map<String, PluginInfo> pluginNames = this.pluginCatalogManager
 				.getPlugins(request);
+		
 		if (pluginNames != null && pluginNames.containsKey(pluginName))
 			throw new CommandException("The same plugin name '" + pluginName
 					+ "' already exists. Please use another plugin name.");
@@ -318,7 +314,8 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 	 * 
 	 * @return plugin resource list
 	 */
-	private List<PluginResource> getPluginResources(String packageName, String pluginName) {
+	private List<PluginResource> getPluginResources(String packageName,
+			String pluginName) {
 		getLogger().debug(
 				"Call getPluginResources() of DefaultPluginBuildManager");
 		List<PluginResource> resources = new ArrayList<PluginResource>();
@@ -338,7 +335,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		List<String> webappIncludeNames = new ArrayList<String>();
 		webappIncludeNames.add("**/" + pluginName + "/**/*.*");
 		List<Include> webappResourceIncludes = getIncludes(webappIncludeNames);
-		
+
 		// webapp resource exclude
 		List<Exclude> webappResourceExcludes = new ArrayList<Exclude>();
 		Exclude webxml = new Exclude();
@@ -349,8 +346,7 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		welcomeFile.setName("**/" + CommonConstants.WELCOME_FILE);
 		welcomeFile.setMerged(true);
 		webappResourceExcludes.add(welcomeFile);
-		
-		
+
 		PluginResource srcMainJavaResource = getPluginResource(SRC_MAIN_JAVA,
 				true, true, javaResourceIncludes, null);
 		PluginResource srcMainResourcesResource = getPluginResource(
@@ -360,8 +356,8 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		PluginResource srcTestResourcesResource = getPluginResource(
 				SRC_TEST_RESOURCES, true, false, xmlResourceIncludes, null);
 		PluginResource srcMainWebappResource = getPluginResource(
-				SRC_MAIN_WEBAPP, false, false,
-				webappResourceIncludes, webappResourceExcludes);
+				SRC_MAIN_WEBAPP, false, false, webappResourceIncludes,
+				webappResourceExcludes);
 
 		resources.add(srcMainJavaResource);
 		resources.add(srcMainResourcesResource);
@@ -403,7 +399,6 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		return pluginResource;
 	}
 
-
 	/**
 	 * get include folders
 	 * 
@@ -423,5 +418,5 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		}
 		return includes;
 	}
-	
+
 }

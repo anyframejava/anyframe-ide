@@ -1,0 +1,47 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.service.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import ${package}.service.${domain.name}MiPService;
+
+import org.anyframe.mip.query.service.impl.MiPDao;
+import org.anyframe.mip.query.service.impl.MiPServiceImpl;
+import org.anyframe.mip.query.impl.MiPQueryServiceImpl;
+
+import com.tobesoft.platform.data.DatasetList;
+import com.tobesoft.platform.data.VariableList;
+
+
+@Service("#getDomainNameLower(${domain.name})MiPService")
+public class ${domain.name}MiPServiceImpl extends MiPServiceImpl implements ${domain.name}MiPService {
+    
+    @Inject
+	public ${domain.name}MiPServiceImpl(MiPDao mipDao){
+		super.mipDao = mipDao;
+	}
+    
+	public void saveAll(VariableList inVl, DatasetList inDl,
+                    VariableList outVl, DatasetList outDl) throws Exception {
+
+            Map sqlMap = new HashMap();
+            sqlMap.put(MiPQueryServiceImpl.QUERY_INSERT, "create${domain.name}");
+            sqlMap.put(MiPQueryServiceImpl.QUERY_UPDATE, "update${domain.name}");
+            sqlMap.put(MiPQueryServiceImpl.QUERY_DELETE, "remove${domain.name}");
+
+            super.mipDao.saveAll(sqlMap, inDl.get("dsSave"));
+    }
+
+    public void getPagingList(VariableList inVl, DatasetList inDl,
+                    VariableList outVl, DatasetList outDl) throws Exception {
+            
+            outDl.add("dsResult",super.mipDao.getPagingList("find${domain.name}List", inDl.get("dsSearch")));
+    }  
+}

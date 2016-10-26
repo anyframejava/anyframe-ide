@@ -28,14 +28,10 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class AnyframeTemplateData {
 
 	private String type = "";
-	private String generic = "";
-	private String ftl = "";
+	private String vm = "";
 	private String src = "";
-	private String mergeSrc = "";
-	private String mergeKey = "";
-	private boolean share = false;
-	private String dao = "";
-	private String framework = "";
+	private String common = "";
+	private String merge = "";
 
 	public String getType() {
 		return type;
@@ -45,20 +41,12 @@ public class AnyframeTemplateData {
 		this.type = type;
 	}
 
-	public String getGeneric() {
-		return generic;
+	public String getVm() {
+		return vm;
 	}
 
-	public void setGeneric(String generic) {
-		this.generic = generic;
-	}
-
-	public String getFtl() {
-		return ftl;
-	}
-
-	public void setFtl(String ftl) {
-		this.ftl = ftl;
+	public void setVm(String vm) {
+		this.vm = vm;
 	}
 
 	public String getSrc() {
@@ -69,44 +57,24 @@ public class AnyframeTemplateData {
 		this.src = src;
 	}
 
-	public String getMergeSrc() {
-		return mergeSrc;
+	public String getCommon() {
+		return common;
 	}
 
-	public void setMergeSrc(String mergeSrc) {
-		this.mergeSrc = mergeSrc;
+	public void setCommon(String common) {
+		this.common = common;
 	}
 
-	public String getMergeKey() {
-		return mergeKey;
+	public String getMerge() {
+		return merge;
 	}
 
-	public void setMergeKey(String mergeKey) {
-		this.mergeKey = mergeKey;
+	public void setMerge(String merge) {
+		this.merge = merge;
 	}
 
-	public boolean isShare() {
-		return share;
-	}
-
-	public void setShare(boolean share) {
-		this.share = share;
-	}
-
-	public String getDao() {
-		return dao;
-	}
-
-	public void setDao(String dao) {
-		this.dao = dao;
-	}
-
-	public String getFramework() {
-		return framework;
-	}
-
-	public void setFramework(String framework) {
-		this.framework = framework;
+	public String toString() {
+		return "AnyframeTemplateData [type=" + type + ", vm=" + vm + ", src=" + src + ", common=" + common + ", merge=" + merge + "]";
 	}
 
 }

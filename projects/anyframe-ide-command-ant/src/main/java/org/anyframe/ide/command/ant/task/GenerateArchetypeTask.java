@@ -16,6 +16,9 @@
 package org.anyframe.ide.command.ant.task;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,8 +33,9 @@ import org.anyframe.ide.command.common.PluginInfoManager;
 import org.anyframe.ide.command.common.PluginInstaller;
 import org.anyframe.ide.command.common.catalog.ArchetypeCatalogDataSource;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.apache.maven.archetype.common.ArchetypeArtifactManager;
 import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.archetype.metadata.ArchetypeDescriptor;
@@ -41,6 +45,7 @@ import org.apache.maven.model.Model;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -84,11 +89,6 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	private String archetypeArtifactId = "";
 
 	/**
-	 * archetype style
-	 */
-	private String pjttype = "web";
-
-	/**
 	 * offline mode
 	 */
 	private String offline = "False";
@@ -99,16 +99,13 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 * main method for executing custom task
 	 */
 	public void execute() {
-		ClassLoader originalClassLoader = Thread.currentThread()
-				.getContextClassLoader();
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			if (isEmpty("offline", getOffline())) {
 				setOffline("False");
 			}
 
-			this.offlineMode = new Boolean(this.offline.substring(0, 1)
-					.toUpperCase()
-					+ offline.substring(1).toLowerCase()).booleanValue();
+			this.offlineMode = new Boolean(this.offline.substring(0, 1).toUpperCase() + offline.substring(1).toLowerCase()).booleanValue();
 
 			initialize(this.offlineMode);
 			lookupComponents();
@@ -126,18 +123,12 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 * look up essential components which can install, uninstall, etc.
 	 */
 	public void lookupComponents() {
-		pluginInstaller = (DefaultPluginInstaller) getPluginContainer().lookup(
-				DefaultPluginInstaller.class.getName());
-		pluginInfoManager = (DefaultPluginInfoManager) getPluginContainer()
-				.lookup(DefaultPluginInfoManager.class.getName());
-		archetypeArtifactManager = (ArchetypeArtifactManager) getPluginContainer()
-				.lookup(ArchetypeArtifactManager.ROLE);
-		pluginCatalogManager = (DefaultPluginCatalogManager) getPluginContainer()
-				.lookup(DefaultPluginCatalogManager.class.getName());
-		archetypeCatalogDataSource = (ArchetypeCatalogDataSource) getPluginContainer()
-				.lookup(ArchetypeCatalogDataSource.class.getName());
-		pluginPomManager = (DefaultPluginPomManager) getPluginContainer()
-				.lookup(DefaultPluginPomManager.class.getName());
+		pluginInstaller = (DefaultPluginInstaller) getPluginContainer().lookup(DefaultPluginInstaller.class.getName());
+		pluginInfoManager = (DefaultPluginInfoManager) getPluginContainer().lookup(DefaultPluginInfoManager.class.getName());
+		archetypeArtifactManager = (ArchetypeArtifactManager) getPluginContainer().lookup(ArchetypeArtifactManager.ROLE);
+		pluginCatalogManager = (DefaultPluginCatalogManager) getPluginContainer().lookup(DefaultPluginCatalogManager.class.getName());
+		archetypeCatalogDataSource = (ArchetypeCatalogDataSource) getPluginContainer().lookup(ArchetypeCatalogDataSource.class.getName());
+		pluginPomManager = (DefaultPluginPomManager) getPluginContainer().lookup(DefaultPluginPomManager.class.getName());
 	}
 
 	/**
@@ -155,63 +146,43 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 			Context context = prepareVelocityContext();
 
 			// 3. find archetype jar file
-			File archetypeJar = pluginInfoManager.getPluginFile(getRequest(),
-					getArchetypeGroupId(), getArchetypeArtifactId(),
-					getArchetypeVersion());
-			ClassLoader archetypeJarLoader = archetypeArtifactManager
-					.getArchetypeJarLoader(archetypeJar);
+			File archetypeJar = pluginInfoManager.getPluginFile(getRequest(), getArchetypeGroupId(), getArchetypeArtifactId(), getArchetypeVersion());
+			ClassLoader archetypeJarLoader = archetypeArtifactManager.getArchetypeJarLoader(archetypeJar);
 			Thread.currentThread().setContextClassLoader(archetypeJarLoader);
 
 			// 4. make a target directory
-			File targetDir = new File(getTarget()
-					+ CommonConstants.fileSeparator + pjtname);
+			File targetDir = new File(getTarget() + CommonConstants.fileSeparator + pjtname);
 			targetDir.mkdirs();
 
 			// 5. merge template and copy merged file to output directory
 			processTemplates(context, targetDir, archetypeJar);
 
-			// 6. change project.mf
-			File metadataFile = new File(new File(getTarget(), getPjtname())
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-			boolean pomHandling = true;
-			if (metadataFile.exists()) {
-				PropertiesIO pio = new PropertiesIO(metadataFile
-						.getAbsolutePath());
+			// 6. change project configuration
+			String configFile = ConfigXmlUtil.getCommonConfigFile(getTarget() + CommonConstants.fileSeparator + getPjtname());
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
-				pio.setProperty(CommonConstants.ANYFRAME_HOME,
-						getAnyframeHome());
-				pio.setProperty(CommonConstants.PROJECT_HOME, getTarget()
-						+ CommonConstants.fileSeparator + getPjtname());
-				pio.setProperty(CommonConstants.PROJECT_BUILD_TYPE,
-						CommonConstants.PROJECT_BUILD_TYPE_ANT);
-				pio.setProperty(CommonConstants.OFFLINE, new Boolean(
-						this.offlineMode).toString());
-				pio.write();
+			projectConfig.setAnyframeHome(getAnyframeHome());
+			projectConfig.setPjtHome(getTarget() + CommonConstants.fileSeparator + getPjtname());
+			projectConfig.setOffline(String.valueOf(this.offlineMode));
 
-				pomHandling = false;
-			}
+			projectConfig.setTemplateHomePath(getTarget() + CommonConstants.fileSeparator + getPjtname() + CommonConstants.TEMPLATE_HOME);
+			projectConfig.setDatabasesPath(getTarget() + CommonConstants.fileSeparator + getPjtname() + CommonConstants.fileSeparator
+					+ CommonConstants.SETTING_HOME);
+			projectConfig.setJdbcdriverPath(getTarget() + CommonConstants.fileSeparator + getPjtname() + CommonConstants.fileSeparator
+					+ CommonConstants.SETTING_HOME);
+			ConfigXmlUtil.saveProjectConfig(projectConfig);
 
 			// 7. in case of service type project, copy dependent libararies and
 			// update .classpath
-
 			Model model = pluginPomManager.readPom(pluginInfoManager
-					.getPluginResource("archetype-resources/"
-							+ Constants.ARCHETYPE_POM, archetypeJar));
+					.getPluginResource("archetype-resources/" + Constants.ARCHETYPE_POM, archetypeJar));
 			Properties currentProperties = model.getProperties();
 
-			if (getPjttype().equals(CommonConstants.PROJECT_TYPE_SERVICE)) {
-				// 7.1 copy dependent libraries to project.home/lib folder
-				pluginInstaller.processDependencyLibs(getRequest(),
-						getPjttype(), new File(getTarget(), pjtname),
-						archetypeJar, currentProperties);
-
-				// 7.2 change .classpath file
-				pluginInstaller.processClasspath(getRequest(), new File(
-						getTarget(), pjtname), null, pomHandling,
-						currentProperties);
-			}
 			// 8. remove pom.xml
 			removePom();
+
+			// 9. create build.xml with vm for version
+			createBuildXml(configFile);
 
 		} catch (Exception e) {
 			log("Fail to execute GenerateArchetypeTask", e, Project.MSG_ERR);
@@ -229,13 +200,11 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 * 
 	 */
 	private void checkValidation() throws Exception {
-		File pluginsXML = new File(getTarget() + CommonConstants.fileSeparator
-				+ pjtname + CommonConstants.METAINF,
+		File pluginsXML = new File(getTarget() + CommonConstants.fileSeparator + pjtname + CommonConstants.METAINF,
 				CommonConstants.PLUGIN_INSTALLED_FILE);
 
 		if (pluginsXML.exists()) {
-			throw new BuildException(
-					"You already generated a basic or service archetype. Try anyframe -help.");
+			throw new BuildException("You already generated a basic or service archetype. Try anyframe -help.");
 		}
 		setInitialValue();
 	}
@@ -267,15 +236,12 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 *            archetype binary file
 	 */
 	@SuppressWarnings("unchecked")
-	private void processTemplates(Context context, File targetDir,
-			File archetypeJar) throws Exception {
+	private void processTemplates(Context context, File targetDir, File archetypeJar) throws Exception {
 		// 1. get zipfile from archetype jar file
-		ZipFile archetypeZip = archetypeArtifactManager
-				.getArchetypeZipFile(archetypeJar);
+		ZipFile archetypeZip = archetypeArtifactManager.getArchetypeZipFile(archetypeJar);
 
 		// 2. get archetype-descriptor for basic archetype
-		ArchetypeDescriptor archetypeDescriptor = archetypeArtifactManager
-				.getFileSetArchetypeDescriptor(archetypeJar);
+		ArchetypeDescriptor archetypeDescriptor = archetypeArtifactManager.getFileSetArchetypeDescriptor(archetypeJar);
 
 		// 3. get all file names from archetypeFile
 		List<String> fileNames = FileUtil.resolveFileNames(archetypeJar);
@@ -283,37 +249,27 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 		List<FileSet> fileSets = archetypeDescriptor.getFileSets();
 
 		for (FileSet fileSet : fileSets) {
-			log("Processing filesets in [" + CommonConstants.METAINF_ANYFRAME
-					+ CommonConstants.PLUGIN_FILE + "]", Project.MSG_DEBUG);
+			log("Processing filesets in [" + CommonConstants.METAINF_ANYFRAME + CommonConstants.PLUGIN_FILE + "]", Project.MSG_DEBUG);
 
 			// 3.1 scan resources
 			List<String> templates = FileUtil.findFiles(fileNames,
-					Constants.ARCHETYPE_RESOURCES
-							+ CommonConstants.fileSeparator
-							+ fileSet.getDirectory(), fileSet.getIncludes(),
+					Constants.ARCHETYPE_RESOURCES + CommonConstants.fileSeparator + fileSet.getDirectory(), fileSet.getIncludes(),
 					fileSet.getExcludes());
 
 			List<String> changedTemplates = new ArrayList<String>();
 			for (String template : templates) {
-				template = StringUtils.replaceOnce(template,
-						Constants.ARCHETYPE_RESOURCES,
-						CommonConstants.PLUGIN_RESOURCES);
+				template = StringUtils.replaceOnce(template, Constants.ARCHETYPE_RESOURCES, CommonConstants.PLUGIN_RESOURCES);
 				changedTemplates.add(template);
 			}
 
 			// 3.2 make directory for copying archetype template
-			pluginInstaller.getOutput(context, targetDir,
-					fileSet.getDirectory(), "", fileSet.isPackaged(),
-					(String) context.get("package")).mkdirs();
+			pluginInstaller.getOutput(context, targetDir, fileSet.getDirectory(), "", fileSet.isPackaged(), (String) context.get("package")).mkdirs();
 			log("Copying fileset " + fileSet, Project.MSG_DEBUG);
 
 			// 3.3 merge template and copy files to output directory
-			pluginInstaller.processTemplate(context, targetDir, archetypeZip,
-					fileSet.getDirectory(), (String) context.get("package"),
-					fileSet.isPackaged(), fileSet.isFiltered(), templates,
-					changedTemplates, getEncoding());
-			log("Copied " + changedTemplates.size() + " files",
-					Project.MSG_DEBUG);
+			pluginInstaller.processTemplate(context, targetDir, archetypeZip, fileSet.getDirectory(), (String) context.get("package"),
+					fileSet.isPackaged(), fileSet.isFiltered(), templates, changedTemplates, getEncoding());
+			log("Copied " + changedTemplates.size() + " files", Project.MSG_DEBUG);
 		}
 	}
 
@@ -327,31 +283,21 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 		if (isEmpty("package", getPackage()))
 			setPackage(getPjtname());
 
-		if (isEmpty("pjttype", getPjttype()))
-			setPjttype("web");
-
 		if (isEmpty("archetypeGroupId", getArchetypeGroupId()))
 			setArchetypeGroupId(CommonConstants.ARCHETYPE_GROUP_ID);
 
 		if (isEmpty("archetypeArtifactId", getArchetypeArtifactId())) {
-			if (getPjttype().equals("web"))
-				setArchetypeArtifactId(CommonConstants.ARCHETYPE_BASIC_ARTIFACT_ID);
-			else
-				setArchetypeArtifactId(CommonConstants.ARCHETYPE_SERVICE_ARTIFACT_ID);
+			setArchetypeArtifactId(CommonConstants.ARCHETYPE_BASIC_ARTIFACT_ID);
 		}
 		this.pjtversion = "1.0-SNAPSHOT";
 
 		if (isEmpty("archetypeVersion", getArchetypeVersion()))
 			try {
-				setArchetypeVersion(archetypeCatalogDataSource
-						.getLatestArchetypeVersion(getRequest(),
-								getArchetypeArtifactId(), "ant",
-								getAnyframeHome()));
+				setArchetypeVersion(archetypeCatalogDataSource.getLatestArchetypeVersion(getRequest(), getArchetypeArtifactId(), "ant",
+						getAnyframeHome()));
 			} catch (Exception e) {
-				log("Error setting initial value : " + e.getMessage(),
-						Project.MSG_ERR);
-				throw new BuildException(
-						"You failed to get an archetype verion. Please check the archetype version.");
+				log("Error setting initial value : " + e.getMessage(), Project.MSG_ERR);
+				throw new BuildException("You failed to get an archetype verion. Please check the archetype version.");
 			}
 	}
 
@@ -362,30 +308,22 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 *            archetype binary file
 	 */
 	public void processClasspath(File archetypeJar) throws Exception {
-		List<Dependency> dependencyList = pluginPomManager
-				.getDependencies(archetypeJar);
+		List<Dependency> dependencyList = pluginPomManager.getDependencies(archetypeJar);
 
 		List<String> classentries = new ArrayList<String>();
 		StringBuffer dependencies = new StringBuffer();
 
 		for (Dependency dependencyInfo : dependencyList) {
-			dependencies.append("<classpathentry kind=\"lib\" path=\"" + "lib/"
-					+ dependencyInfo.getArtifactId() + "-"
-					+ dependencyInfo.getVersion() + ".jar\"/> \n");
+			dependencies.append("<classpathentry kind=\"lib\" path=\"" + "lib/" + dependencyInfo.getArtifactId() + "-" + dependencyInfo.getVersion()
+					+ ".jar\"/> \n");
 
-			classentries.add(dependencyInfo.getGroupId() + ","
-					+ dependencyInfo.getArtifactId() + ","
-					+ dependencyInfo.getVersion());
+			classentries.add(dependencyInfo.getGroupId() + "," + dependencyInfo.getArtifactId() + "," + dependencyInfo.getVersion());
 		}
 
-		File classpathFile = new File(getTarget()
-				+ CommonConstants.fileSeparator + pjtname, ".classpath");
+		File classpathFile = new File(getTarget() + CommonConstants.fileSeparator + pjtname, ".classpath");
 
-		FileUtil.replaceFileContent(classpathFile,
-				"<!--Add new classpathentry here-->", "</classpath>",
-				"<!--Add new classpathentry here-->\n</classpath>",
-				"<!--Add new classpathentry here-->",
-				"<!--Add new classpathentry here-->\n"
+		FileUtil.replaceFileContent(classpathFile, "<!--Add new classpathentry here-->", "</classpath>",
+				"<!--Add new classpathentry here-->\n</classpath>", "<!--Add new classpathentry here-->", "<!--Add new classpathentry here-->\n"
 						+ dependencies.toString());
 	}
 
@@ -394,11 +332,37 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 	 */
 	private void removePom() throws Exception {
 		// 1. make a pom_foundation.xml file into target/temp folder
-		File temporaryPomFile = new File(getTarget()
-				+ CommonConstants.fileSeparator + pjtname, "pom.xml");
+		File temporaryPomFile = new File(getTarget() + CommonConstants.fileSeparator + pjtname, "pom.xml");
 
 		// 2. remove pom file
 		FileUtil.deleteFile(temporaryPomFile);
+	}
+
+	/**
+	 * merge build file with version
+	 */
+	private void createBuildXml(String configFile) throws Exception {
+		File targetFile = new File(getTarget() + CommonConstants.fileSeparator + pjtname, "build.xml");
+		if (!targetFile.exists())
+			targetFile.createNewFile();
+
+		Writer writer = new OutputStreamWriter(new FileOutputStream(targetFile), getEncoding());
+
+		// 1. initialize velocity engine
+		VelocityEngine velocity = new VelocityEngine();
+		velocity.setProperty("runtime.log.logsystem.log4j.logger.level", "DEBUG");
+		velocity.setProperty("velocimacro.library", "");
+		velocity.setProperty("resource.loader", "class");
+		velocity.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
+		velocity.init();
+
+		VelocityContext context = new VelocityContext();
+		context.put("version", pjtversion);
+		context.put("projectConfigPath", configFile.replace("\\", "/"));
+
+		velocity.mergeTemplate("template/build.vm", getEncoding(), context, writer);
+		writer.flush();
 	}
 
 	/*********************************************************************/
@@ -434,14 +398,6 @@ public class GenerateArchetypeTask extends AbstractPluginTask {
 
 	public void setArchetypeVersion(String archetypeVersion) {
 		this.archetypeVersion = archetypeVersion;
-	}
-
-	public String getPjttype() {
-		return pjttype;
-	}
-
-	public void setPjttype(String pjttype) {
-		this.pjttype = pjttype;
 	}
 
 	public String getOffline() {

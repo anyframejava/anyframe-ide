@@ -21,8 +21,7 @@ import java.util.Properties;
 
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.cli.util.Messages;
-import org.anyframe.ide.command.cli.util.PluginConstants;
-import org.anyframe.ide.command.cli.util.PropertiesIO;
+import org.anyframe.ide.command.cli.util.XmlUtil;
 import org.apache.tools.ant.launch.Launcher;
 
 /**
@@ -36,8 +35,8 @@ public class CLIAntRunner {
 	public static String SLASH = System.getProperty("file.separator");
 	public static String applicationHome = "." + SLASH;
 	public static String projectHome = "." + SLASH;
-	public static String META_INF = "META-INF";
-	public static String PROJECT_MF = "project.mf";
+	public static String SETTINGS = "." + SLASH + ".settings" + SLASH + "anyframe";
+	public static String COMMON_CONFIG_PREFS = "org.anyframe.ide.common.config.xml";
 
 	public static void main(String[] args) {
 		try {
@@ -64,7 +63,7 @@ public class CLIAntRunner {
 		// [Check #2] in case, command doesn't exist or command is '-help'
 		checkIsCommandNotFound(command, args);
 
-		// [Check #3] in case, ide command executed without project.mf
+		// [Check #3] in case, ide command executed without configuration file
 		checkIsValidGenCommand(command, args);
 
 		// [Check #4] in case, anyframe command executed with proper
@@ -74,8 +73,7 @@ public class CLIAntRunner {
 
 	public void execute(String[] args) throws Exception {
 		String command = args[0];
-		if (!command.equals(CommandUtil.CMD_CREATE_PROJECT)
-				&& CommandUtil.containsCommand(command)) {
+		if (!command.equals(CommandUtil.CMD_CREATE_PROJECT) && CommandUtil.containsCommand(command)) {
 			redirectToParentExecute(args, command);
 			return;
 		}
@@ -86,24 +84,21 @@ public class CLIAntRunner {
 		Launcher.main(argArgs);
 	}
 
-	private void redirectToParentExecute(String[] args, String command)
-			throws IOException, Exception {
+	private void redirectToParentExecute(String[] args, String command) throws IOException, Exception {
 		// set project home path
 		projectHome = new File(".").getCanonicalPath();
 		// Set default property value
 		// If there are same args options, default value will be overwritten
 		// while processing super.execute()
-		if (CommandUtil.CMD_INSTALL.equals(command)
-				|| CommandUtil.CMD_UNINSTALL.equals(command)) {
-			System.setProperty("project.home", projectHome);
+		if (CommandUtil.CMD_INSTALL.equals(command) || CommandUtil.CMD_UNINSTALL.equals(command)) {
+			System.setProperty("anyframe.pjthome", projectHome);
 			System.setProperty("log4j.ignoreTCL", "true");
-			PropertiesIO pio = getProjectManifest();
 
-			System.setProperty("project.home", projectHome);
-			System.setProperty("pjtname", pio
-					.readValue(PluginConstants.PROJECT_NAME));
-			System.setProperty("package", pio
-					.readValue(PluginConstants.PACKAGE_NAME));
+			XmlUtil.getProjectConfig(XmlUtil.getCommonConfigFile(projectHome));
+
+			System.setProperty("anyframe.pjthome", XmlUtil.getProjectHome());
+			System.setProperty("pjtname", XmlUtil.getProjectName());
+			System.setProperty("package", XmlUtil.getPackageName());
 			System.setProperty("metadata", ".");
 		}
 
@@ -112,17 +107,15 @@ public class CLIAntRunner {
 
 	private void checkIsCommandNotFound(String command, String[] args) {
 
-		if (!CommandUtil.containsCommandBuildXml(command)
-				&& !CommandUtil.containsCommand(command)) {
-			
+		if (!CommandUtil.containsCommandBuildXml(command) && !CommandUtil.containsCommand(command)) {
+
 			if (command.equals(CommandUtil.CMD_HELP)) {
 				if (args.length < 3) {
 					System.out.println(Messages.ANT_HELP);
 				} else {
 
 					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND.containsKey(args[2].trim())) {
-						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND
-								.get(args[2].trim());
+						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND.get(args[2].trim());
 
 						System.out.println(commandMessage);
 					} else {
@@ -136,60 +129,35 @@ public class CLIAntRunner {
 		}
 	}
 
-	private void checkIsValidCoreCommand(String command, String[] args)
-			throws Exception {
+	private void checkIsValidCoreCommand(String command, String[] args) throws Exception {
 
-		if (!CommandUtil.containsCommand(command)
-				|| command.equals(CommandUtil.CMD_CREATE_PROJECT)
-				|| command.equals(CommandUtil.CMD_LIST)) {
+		if (!CommandUtil.containsCommand(command) || command.equals(CommandUtil.CMD_CREATE_PROJECT) || command.equals(CommandUtil.CMD_LIST)) {
 			return;
 		}
 
-		String metadataDir = projectHome + SLASH + META_INF;
+		String settingsDir = projectHome + SLASH + SETTINGS;
 		if (projectHome.endsWith(SLASH))
-			metadataDir = projectHome + META_INF;
-		File metadata = new File(metadataDir);
-		if (!metadata.exists() || !metadata.isDirectory()) {
+			settingsDir = projectHome + SETTINGS;
+		File settings = new File(settingsDir);
+		if (!settings.exists() || !settings.isDirectory()) {
 			System.err.println(Messages.NOT_SUPPORTED_FOLDER_ERROR);
-			System.exit(0);
-		}
-
-		if (!isValidProjectTypeInBuildPropertiesFile(command)) {
-			System.err.println(Messages.NOT_SUPPORTED_ERROR);
 			System.exit(0);
 		}
 
 		checkArgs(args);
 	}
 
-	private boolean isValidProjectTypeInBuildPropertiesFile(String command) {
-		PropertiesIO pio = getProjectManifest();
+	private void checkIsValidGenCommand(String command, String[] args) throws Exception {
 
-		if (pio == null
-				|| pio.readValue(PluginConstants.PROJECT_TYPE).equals(
-						PluginConstants.PROJECT_TYPE_SERVICE)) {
-			if (command.equals(CommandUtil.CMD_RUN)) {
-				System.err.println(Messages.NOT_SUPPORTED_COMMAND);
-				return false;
-			}
-		}
+		if (CommandUtil.containsCommandBuildXml(command) && !command.equals(CommandUtil.CMD_CREATE_PROJECT)) {
 
-		return true;
-	}
+			String settingsDir = projectHome + SLASH + SETTINGS;
 
-	private void checkIsValidGenCommand(String command, String[] args)
-			throws Exception {
-
-		if (CommandUtil.containsCommandBuildXml(command)
-				&& !command.equals(CommandUtil.CMD_CREATE_PROJECT)) {
-
-			String projectmf = projectHome + SLASH + META_INF + SLASH
-					+ PROJECT_MF;
 			if (projectHome.endsWith(SLASH))
-				projectmf = projectHome + META_INF + SLASH + PROJECT_MF;
+				settingsDir = projectHome + SETTINGS;
 
-			File appPropertiesFile = new File(projectmf);
-			if (!appPropertiesFile.exists()) {
+			File config = new File(settingsDir + SLASH + COMMON_CONFIG_PREFS);
+			if (!config.exists()) {
 				System.err.println(Messages.INSIDE_PROJECT);
 				System.exit(0);
 			}
@@ -218,20 +186,17 @@ public class CLIAntRunner {
 		}
 	}
 
-	private static String[] makeAntCommand(String buildXmlFile,
-			String targetName, String[] args) throws Exception {
+	private static String[] makeAntCommand(String buildXmlFile, String targetName, String[] args) throws Exception {
 
 		String[] antArgs = new String[3];
 		antArgs[0] = "-f";
-		antArgs[1] = anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH
-				+ "scripts" + SLASH + buildXmlFile;
+		antArgs[1] = anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH + "scripts" + SLASH + buildXmlFile;
 		antArgs[2] = targetName;
 
 		return antArgs;
 	}
 
-	private static void setSystemPropertyBeforeExecute(String targetName,
-			String[] args) {
+	private static void setSystemPropertyBeforeExecute(String targetName, String[] args) {
 		setSystemPropertyWithCmdLineArgs(args);
 
 		if (args[0].equals(CommandUtil.CMD_CREATE_CRUD)) {
@@ -242,8 +207,7 @@ public class CLIAntRunner {
 			System.setProperty("entity", args[1]);
 		}
 
-		System.setProperty("ant.home", anyframeHome + SLASH + "ide" + SLASH
-				+ "ant");
+		System.setProperty("ant.home", anyframeHome + SLASH + "ide" + SLASH + "ant");
 		System.setProperty("basedir", getProjectBaseDir(targetName));
 		System.setProperty("anyframeHome", anyframeHome);
 		System.setProperty("project.home", getProjectHomeDir(targetName));
@@ -254,8 +218,7 @@ public class CLIAntRunner {
 
 	private static String getProjectBaseDir(String targetName) {
 		String basedir = ".";
-		if (applicationHome.equals("." + SLASH)
-				&& targetName.equals(CommandUtil.CMD_CREATE_PROJECT)) {
+		if (applicationHome.equals("." + SLASH) && targetName.equals(CommandUtil.CMD_CREATE_PROJECT)) {
 			basedir = anyframeHome + SLASH + "applications";
 			System.setProperty("target", basedir);
 		} else if (!applicationHome.equals("." + SLASH)) {
@@ -281,8 +244,7 @@ public class CLIAntRunner {
 
 		if (!projectHome.equals("." + SLASH)) {
 			pjtHome = projectHome;
-		} else if (projectHome.equals("." + SLASH)
-				&& targetName.equals(CommandUtil.CMD_CREATE_PROJECT)) {
+		} else if (projectHome.equals("." + SLASH) && targetName.equals(CommandUtil.CMD_CREATE_PROJECT)) {
 			if (applicationHome.equals("." + SLASH))
 				pjtHome = anyframeHome + SLASH + "applications";
 			else
@@ -325,29 +287,10 @@ public class CLIAntRunner {
 		}
 	}
 
-	private static PropertiesIO getProjectManifest() {
-		String fileFolderPath = projectHome;
-		if (!projectHome.endsWith(SLASH)) {
-			fileFolderPath += SLASH;
-		}
-
-		PropertiesIO pio = null;
-		try {
-			pio = new PropertiesIO(fileFolderPath + "META-INF" + SLASH
-					+ "project.mf");
-		} catch (Exception e) {
-			// ignore exception
-		}
-		return pio;
-	}
-
-	public static String[] makeAntCommand(String targetName, String[] args)
-			throws Exception {
+	public static String[] makeAntCommand(String targetName, String[] args) throws Exception {
 		String[] antArgs = new String[3];
 		antArgs[0] = "-f";
-		antArgs[1] = anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH
-				+ "scripts" + System.getProperty("file.separator")
-				+ "plugin-install.xml";
+		antArgs[1] = anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH + "scripts" + System.getProperty("file.separator") + "plugin-install.xml";
 		antArgs[2] = targetName;
 		// antArgs[3] = "-quiet";
 
@@ -357,8 +300,7 @@ public class CLIAntRunner {
 		int i = 1;
 
 		if (CommandUtil.containsPluginNameNecessaryCommand(args[0])
-				|| (CommandUtil.containsPluginNameOptionalCommand(args[0]) && (args.length > 1 && !args[1]
-						.substring(0, 1).equals("-")))) {
+				|| (CommandUtil.containsPluginNameOptionalCommand(args[0]) && (args.length > 1 && !args[1].substring(0, 1).equals("-")))) {
 			i = 2;
 		}
 
@@ -373,18 +315,15 @@ public class CLIAntRunner {
 		return antArgs;
 	}
 
-	public static Properties getAntProperties(String target, String buildXml,
-			String[] properties, String[] args) throws Exception {
+	public static Properties getAntProperties(String target, String buildXml, String[] properties, String[] args) throws Exception {
 		checkArgs(args);
 		Properties antProperties = new Properties();
 
-		antProperties.setProperty("anyframeHome", System
-				.getProperty("anyframeHome"));
+		antProperties.setProperty("anyframeHome", System.getProperty("anyframeHome"));
 
 		int i = 1;
 		if (CommandUtil.containsPluginNameNecessaryCommand(args[0])
-				|| (CommandUtil.containsPluginNameOptionalCommand(args[0]) && !args[1]
-						.substring(0, 1).equals("-"))) {
+				|| (CommandUtil.containsPluginNameOptionalCommand(args[0]) && !args[1].substring(0, 1).equals("-"))) {
 			i = 2;
 		}
 
@@ -442,15 +381,14 @@ public class CLIAntRunner {
 	private static void checkCommand(String[] args) {
 		// in case, args[0] doesn't exist or args[0] is '-help'
 		if (!CommandUtil.containsCommand(args[0])) {
-			
+
 			if (args[0].equals(CommandUtil.CMD_HELP)) {
 				if (args.length < 3) {
 					System.out.println(Messages.ANT_HELP);
-					
+
 				} else {
 					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND.containsKey(args[2].trim())) {
-						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND
-								.get(args[2].trim());
+						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND.get(args[2].trim());
 
 						System.out.println(commandMessage);
 					} else {
@@ -460,7 +398,7 @@ public class CLIAntRunner {
 			} else {
 				System.err.println(Messages.WRONG_ARGS);
 			}
-			
+
 			System.exit(0);
 		}
 	}

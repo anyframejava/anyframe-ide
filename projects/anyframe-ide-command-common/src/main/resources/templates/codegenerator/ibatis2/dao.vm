@@ -1,0 +1,63 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.service.impl;
+
+import java.util.List;
+import javax.inject.Inject;
+
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import ${domain.packageName}.${domain.name};
+
+/**
+ * ${domain.name}Dao implementation class with iBatis2
+ * @author $author
+ */
+@Repository("#getDomainNameLower(${domain.name})Dao")
+public class ${domain.name}Dao extends SqlMapClientDaoSupport {
+  
+  	@Value("#{contextProperties['pageSize'] ?: 10}")
+	int pageSize;
+
+	@Value("#{contextProperties['pageUnit'] ?: 10}")
+	int pageUnit;
+		
+	@Inject
+	public void setSuperSqlMapClient(SqlMapClient sqlMapClient) {
+		super.setSqlMapClient(sqlMapClient);
+	}
+	
+	public void create(${domain.name} #getDomainNameLower(${domain.name})) {
+		getSqlMapClientTemplate().insert("insert${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+	
+	public void update(${domain.name} #getDomainNameLower(${domain.name})) {
+		getSqlMapClientTemplate().update("update${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+	
+	public void remove(${domain.name} #getDomainNameLower(${domain.name})) {
+		getSqlMapClientTemplate().delete("delete${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+	
+	public ${domain.name} get(${domain.name} #getDomainNameLower(${domain.name})) {
+		return (${domain.name}) getSqlMapClientTemplate().queryForObject("get${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page getPagingList(SearchVO searchVO) {
+      int pageIndex = searchVO.getPageIndex();		
+	 
+	  List<${domain.name}> list=getSqlMapClientTemplate().queryForList("get${domain.name}List", pageSize*(pageIndex-1), pageSize);
+	  int rowCount= (Integer)getSqlMapClientTemplate().queryForObject("get${domain.name}ListCnt");
+	  
+	  return new Page(list, pageIndex, rowCount, pageUnit, pageSize);
+  }	
+}

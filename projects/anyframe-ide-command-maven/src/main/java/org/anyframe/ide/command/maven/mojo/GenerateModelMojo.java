@@ -15,47 +15,40 @@
  */
 package org.anyframe.ide.command.maven.mojo;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.Set;
 
 import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.PluginInfoManager;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
+import org.anyframe.ide.command.common.util.DBUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.PrettyPrinter;
-import org.anyframe.ide.command.common.util.PropertiesIO;
-import org.anyframe.ide.command.maven.mojo.codegen.AnyframeArtifactCollector;
-import org.anyframe.ide.command.maven.mojo.codegen.AnyframePOJOExporter;
+import org.anyframe.ide.command.common.util.JdbcOption;
+import org.anyframe.ide.command.common.util.ProjectConfig;
+import org.anyframe.ide.command.common.util.VelocityUtil;
+import org.anyframe.ide.command.maven.mojo.codegen.Column;
+import org.anyframe.ide.command.maven.mojo.codegen.Domain;
+import org.anyframe.ide.command.maven.mojo.codegen.GenerationUtil;
 import org.anyframe.ide.command.maven.mojo.codegen.SourceCodeChecker;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.appfuse.mojo.exporter.ModelGeneratorMojo;
-import org.codehaus.mojo.hibernate3.configuration.AnnotationComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.ComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.JDBCComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.JPAComponentConfiguration;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
 import org.codehaus.plexus.components.interactivity.Prompter;
-import org.hibernate.HibernateException;
-import org.hibernate.tool.hbm2x.Exporter;
-import org.hibernate.tool.hbm2x.POJOExporter;
-import org.hibernate.tool.hbm2x.XMLPrettyPrinter;
-import org.hibernate.util.StringHelper;
 
 /**
  * This is an AnyframeModelGenerator class.
@@ -63,8 +56,10 @@ import org.hibernate.util.StringHelper;
  * @goal create-model
  * @author Matt Raible
  * @author modified by SooYeon Park
+ * @author modified by Sujeong Lee
  */
-public class GenerateModelMojo extends ModelGeneratorMojo {
+public class GenerateModelMojo extends AbstractPluginMojo {
+
 	/** @component role="org.codehaus.plexus.components.interactivity.Prompter" */
 	private Prompter prompter;
 
@@ -96,7 +91,7 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 	protected String projectHome = "";
 
 	/**
-	 * The project's home.
+	 * The package name.
 	 * 
 	 * @parameter expression="${package}"
 	 */
@@ -119,342 +114,188 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 	 */
 	private boolean isCLIMode;
 
-	private List<ComponentConfiguration> componentConfigurations = new ArrayList<ComponentConfiguration>();
-
-	private PropertiesIO pio = null;
+	private ProjectConfig projectConfig;
+	private JdbcOption jdbcOption;
 
 	// project meta information
-	private String basePackage = "";
-	private String daoframework = "hibernate";
-	private String templateDirectory;
-	private String templateType = "default";
 	protected String templateHome;
 
-	// db properties
-	private String dialect = "";
-	private String driverClass = "";
-	private String userName = "";
-	private String passWord = "";
-	private String url = "";
-	private String dbType = "";
-	private String dbSchema = "";
-
-	// etc.
-	private String hibernateCfgFilePath = "";
-	private String hibernateRevengFilePath = null;
+	private static String COLUMN_NAME = "COLUMN_NAME";
+	private static String TYPE_NAME = "TYPE_NAME";
+	private static String COLUMN_SIZE = "COLUMN_SIZE";
+	private static String NULLABLE = "NULLABLE";
+	private static String FK_TABLE_NAME = "PKTABLE_NAME";
+	private static String FK_COLUMN_NAME = "FKCOLUMN_NAME";
 
 	private SourceCodeChecker sourceCodeChecker = new SourceCodeChecker();
 
-	// test
-	private File hibernateCfgFile = null;
+	private Map<String, String> typeMapper = new HashMap<String, String>();
 
-	public GenerateModelMojo() {
-		componentConfigurations.add(new AnnotationComponentConfiguration());
-		componentConfigurations.add(new JDBCComponentConfiguration());
-		componentConfigurations.add(new JPAComponentConfiguration());
-	}
+	private VelocityEngine velocity;
+	private Connection conn;
 
-	/**
-	 * main method for executing GenerateModelMojo. This mojo is executed when
-	 * you input 'mvn anyframe:create-model [-options]'
-	 */
+	private Set<String> importList = new HashSet<String>();
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
-
 		try {
+			setConfiguration();
 			checkInstalledPlugins(new String[] { CommonConstants.CORE_PLUGIN });
-			pio = setProperties();
+
+			// mapping column type with java type
+			typeMapper = GenerationUtil.getTypeMappingConfig(templateHome);
+
 			if (isCLIMode) {
-				sourceCodeChecker.checkExistingModel(this.isCLIMode,
-						this.prompter, pio, this.projectHome, this.packageName,
-						this.table);
+				sourceCodeChecker.checkExistingModel(this.isCLIMode, this.prompter, projectConfig, this.projectHome, this.packageName, this.table);
 			}
-			generateModel();
-			executeInstaller();
+
+			String[] tables = null;
+			if(table.equals("*")){
+				tables = DBUtil.getTableList(jdbcOption);
+			}else if(table.indexOf(",") > 0){
+				tables = table.split(",");
+			}
 			
-			System.out.println("Domain classes for the given table names are generated successfully.");
+			String strTable = table;
+			
+			conn = DBUtil.getConnection(jdbcOption.getDriverJar(), jdbcOption.getDriverClassName(), jdbcOption.getUrl(),
+					jdbcOption.getUserName(), jdbcOption.getPassword());
+			
+			if(tables != null){
+				for(int i=0; i<tables.length; i++){
+					strTable = tables[i];
+					Domain targetDomain = generateModel(strTable);
+					executeGenerate(targetDomain);
+				}
+			}else{
+				Domain targetDomain = generateModel(strTable);
+				executeGenerate(targetDomain);
+			}
+			
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute GenerateModelMojo. The reason is '"
-							+ ex.getMessage() + "'.");
+			ex.printStackTrace();
+			getLog().error("Fail to execute GenerateModelMojo. The reason is '" + ex.getMessage() + "'.");
 			throw new MojoFailureException(null);
 		}
 	}
 
-	public PropertiesIO setProperties() throws Exception {
-		// 1. read project.mf
-		File metadataFile = new File(baseDir.getAbsolutePath()
-				+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+	private void setConfiguration() throws Exception {
+		// 1. get project configuration
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir.getAbsolutePath());
+		projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+		jdbcOption = ConfigXmlUtil.getDefaultDatabase(projectConfig);
 
-		if (!metadataFile.exists()) {
-			throw new CommandException("Can not find a '"
-					+ metadataFile.getAbsolutePath()
-					+ "' file. Please check a location of your project.");
+		// 2. set member variables from project configuration
+		if(StringUtils.isEmpty(templateHome)){
+			this.templateHome = projectConfig.getTemplatePath(CommonConstants.PROJECT_NAME_CODE_GENERATOR);
 		}
 
-		PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-
-		// 2. set member variables from project.mf
-		this.daoframework = pio
-				.readValue(CommonConstants.APP_DAOFRAMEWORK_TYPE);
-		this.templateType = pio.readValue(CommonConstants.APP_TEMPLATE_TYPE);
-		this.templateHome = pio
-				.readValue(CommonConstants.PROJECT_TEMPLATE_HOME);
-		this.basePackage = pio.readValue(CommonConstants.PACKAGE_NAME);
-
-		this.dialect = pio.readValue(CommonConstants.DB_DIALECT);
-		this.driverClass = pio.readValue(CommonConstants.DB_DRIVER_CLASS);
-		this.userName = pio.readValue(CommonConstants.DB_USERNAME);
-		this.passWord = pio.readValue(CommonConstants.DB_PASSWORD);
-		this.url = pio.readValue(CommonConstants.DB_URL);
-		this.dbType = pio.readValue(CommonConstants.DB_TYPE);
-		this.dbSchema = pio.readValue(CommonConstants.DB_SCHEMA);
-		this.templateDirectory = templateHome + "/" + templateType + "/source/";
-
-		// 3. set maven project
-		setMavenProject();
-
-		// 4. set location to be generated codes
-		setGenLocation(this.projectHome + "/src/main/java");
-
-		// 5. set table
-		setTable();
-
-		return pio;
+		// 3. package default setting
+		if (StringUtils.isEmpty(packageName)) {
+			this.packageName = projectConfig.getPackageName() + ".domain";
+		}
 	}
 
-	private void setMavenProject() {
-		// 1. set maven project
-		project.setFile(new File(this.projectHome + "/temp"));
+	public Domain generateModel(String strTable) throws Exception {
+		// init importList
+		importList = new HashSet<String>();
+		
+		List<Column> targetColumns = new ArrayList<Column>();
+		Map<String, String> pkMap = new HashMap<String, String>();
+		Map<String, String> fkMap = new HashMap<String, String>();
 
-		// 2. set maven project's properties
-		setProjectProperties(new Properties());
+		DatabaseMetaData dmeta = conn.getMetaData();
 
-		// 3. set maven component's properties
-		Properties componentProperties = new Properties();
-		// for test
-		if (StringUtils.isEmpty(this.hibernateCfgFilePath)) {
-			this.hibernateCfgFilePath = "/src/main/resources/hibernate/hibernate.cfg.xml";
+		ResultSet primaryKeys = dmeta.getPrimaryKeys(null, jdbcOption.getSchema(), strTable);
+		while (primaryKeys.next()) {
+			pkMap.put(primaryKeys.getString(COLUMN_NAME), primaryKeys.getString(COLUMN_NAME));
+		}
+		
+		ResultSet foreignKeys = dmeta.getImportedKeys(null, jdbcOption.getSchema(), strTable);
+		while (foreignKeys.next()) {
+			fkMap.put(foreignKeys.getString(FK_COLUMN_NAME), foreignKeys.getString(FK_TABLE_NAME));
+			// remove from pkMap
+			pkMap.remove(foreignKeys.getString(FK_COLUMN_NAME));
 		}
 
-		componentProperties.setProperty("configurationfile",
-				this.hibernateCfgFilePath);
+		ResultSet columns = dmeta.getColumns(null, jdbcOption.getSchema(), strTable, "%");
 
-		if (StringUtils.isEmpty(this.packageName)) {
-			this.packageName = new StringBuilder(
-					String.valueOf(this.basePackage)).append(".domain")
-					.toString();
-		}
-		componentProperties.setProperty("packagename", this.packageName);
-
-		// for test
-		if (StringUtils.isEmpty(this.hibernateRevengFilePath)) {
-			this.hibernateRevengFilePath = "/target/test-classes/hibernate.reveng.xml";
-		}
-		componentProperties.setProperty("revengfile",
-				this.hibernateRevengFilePath);
-
-		componentProperties.setProperty("implementation", "jdbcconfiguration");
-		componentProperties.setProperty("outputDirectory",
-				this.baseDir.getAbsolutePath()
-						+ "/target/appfuse/generated-sources");
-
-		File revengFile = new File(this.projectHome,
-				"target/test-classes/hibernate.reveng.xml");
-		if (revengFile.exists() && getComponentProperty("revengfile") == null)
-			componentProperties.setProperty("revengfile",
-					"src/test/resources/hibernate.reveng.xml");
-		if (getComponentProperty("revengfile") == null)
-			componentProperties.setProperty("revengfile",
-					"target/test-classes/hibernate.reveng.xml");
-
-		setComponentProperties(componentProperties);
-	}
-
-	public void generateModel() throws Exception {
-		File existingConfig = new File(this.projectHome,
-				getComponentProperty("revengfile"));
-
-		if (!existingConfig.exists()) {
-			java.io.InputStream in = this.getClass().getResourceAsStream(
-					"/templates/default/source/model/hibernate.reveng.ftl");
-			StringBuffer configFile = new StringBuffer();
-			try {
-				InputStreamReader isr = new InputStreamReader(in);
-				BufferedReader reader = new BufferedReader(isr);
-				String line;
-				while ((line = reader.readLine()) != null)
-					configFile.append(line).append("\n");
-				reader.close();
-				getLog().debug(
-						(new StringBuilder("Writing 'hibernate.reveng.xml' to "))
-								.append(existingConfig.getPath()).toString());
-				FileUtils.writeStringToFile(existingConfig,
-						configFile.toString());
-			} catch (IOException io) {
-				throw new MojoFailureException(io.getMessage());
+		while (columns.next()) {
+			Column column = new Column();
+			column.setColumnName(columns.getString(COLUMN_NAME));
+			column.setColumnType(columns.getString(TYPE_NAME));
+			column.setLength(String.valueOf(columns.getInt(COLUMN_SIZE)));
+			column.setFieldName(underscoreToVariable(columns.getString(COLUMN_NAME)));
+			
+			String fieldType = typeMapper.get(columns.getString(TYPE_NAME));
+			if(fieldType == null || "".equals(fieldType)){
+				fieldType = Object.class.getName(); // defaultType = Object
 			}
-		}
-
-		if (this.hibernateCfgFile == null) {
-			this.hibernateCfgFile = new File(this.projectHome,
-					getComponentProperty("configurationfile"));
-		}
-
-		if (this.hibernateCfgFile.exists()) {
-			// TODO [CASE] hibernate.cfg.xml contents are different from
-		} else {
-			try {
-				// 1. generate hibernate.cfg.xml
-				String hibernateCfgXml = null;
-				hibernateCfgXml = getHibernateCfgXml();
-
-				String metadataDialect = "";
-				if (this.dbType.equalsIgnoreCase("sybase"))
-					metadataDialect = "<property name=\"hibernatetool.metadatadialect\">org.anyframe.ide.command.maven.mojo.codegen.dialect.SybaseMetaDataDialect</property>\n";
-
-				String replaceString = "<!--hibernate jdbc configuration here-->\n"
-						+ "<!--hibernate jdbc configuration-START-->\n"
-						+ "<property name=\"hibernate.dialect\">"
-						+ this.dialect
-						+ "</property>\n"
-						+ metadataDialect
-						+ "<property name=\"hibernate.connection.driver_class\">"
-						+ this.driverClass
-						+ "</property>\n"
-						+ "<property name=\"hibernate.connection.username\">"
-						+ this.userName
-						+ "</property>\n"
-						+ "<property name=\"hibernate.connection.password\">"
-						+ this.passWord
-						+ "</property>\n"
-						+ "<property name=\"hibernate.connection.url\">"
-						+ this.url
-						+ "</property>\n"
-						+ "<!--hibernate jdbc configuration-END-->";
-
-				hibernateCfgXml = hibernateCfgXml.replace(
-						"<!--hibernate jdbc configuration here-->",
-						replaceString);
-
-				File xmlFile = new File(this.projectHome, getComponentProperty(
-						"configurationfile",
-						"src/main/resources/hibernate/hibernate.cfg.xml"));
-
-				FileUtils.writeStringToFile(xmlFile, hibernateCfgXml);
-
-				XMLPrettyPrinter.prettyPrintFile(
-						PrettyPrinter.getDefaultTidy(), xmlFile, xmlFile, true);
-
-				getLog().info(
-						(new StringBuilder(
-								"Hibernate.cfg.xml is generated to project"))
-								.toString());
-			} catch (Exception e) {
-				throw new HibernateException(
-						"Hibernate.cfg.xml is not found in /src/main/resources/hibernate/.",
-						e);
+			column.setFieldType(fieldType);
+			
+			if (pkMap.get(columns.getString(COLUMN_NAME)) != null) {
+				column.setIsKey(true);
+			} else {
+				column.setIsKey(false);
 			}
+			
+			if (fkMap.get(columns.getString(COLUMN_NAME)) != null) {
+				column.setFkey(true);
+				column.setFkTable(fkMap.get(columns.getString(COLUMN_NAME)));
+			} else {
+				column.setFkey(false);
+			}
+			
+			int nullable = columns.getInt(NULLABLE);
+			if (nullable == DatabaseMetaData.columnNullable) {
+				column.setNotNull(false);
+			} else {
+				column.setNotNull(true);
+			}
+
+			if (column.getFieldType().indexOf(".") > 0) {
+				importList.add(column.getFieldType());
+			}
+			targetColumns.add(column);
 		}
 
-		super.doExecute();
+		primaryKeys.close();
+		foreignKeys.close();
+		columns.close();
+		
+		Domain targetDomain = new Domain();
+		targetDomain.setTable(strTable);
+		targetDomain.setName(underscoreToCamel(strTable));
+		targetDomain.setPackageName(packageName);
+		targetDomain.setColumns(targetColumns);
+
+		return targetDomain;
 	}
 
-	public void executeInstaller() throws Exception {
-		// add new package to spring context-hibernate.xml file
-		if (this.daoframework.equals("hibernate")
-				|| this.daoframework.equals("query")) {
+	public void executeGenerate(Domain targetDomain) throws Exception {
+		velocity = VelocityUtil.initializeFileResourceVelocity(templateHome);
 
-			String packageLocation = StringHelper.replace(this.packageName,
-					".", "/");
+		String packageLocation = targetDomain.getPackageName().replace(".", CommonConstants.fileSeparator);
 
-			File existingFile = new File(projectHome
-					+ "/src/main/resources/spring/context-hibernate.xml");
-			try {
-				FileUtil.replaceStringXMLFilePretty(existingFile,
-						"<!--Add new Packages to scan here-->", "<value>"
-								+ packageLocation + "</value>");
-				getLog().info(
-						"Adding '"
-								+ packageLocation
-								+ "' packages to spring hibernate xml(context-hibernate.xml)...");
-			} catch (Exception e) {
-				if (this.daoframework.equals("hibernate")) {
-					if (e instanceof FileNotFoundException)
-						getLog().warn(
-								"The process of adding new packages information in context-hibernate.xml is skipped.\n"
-										+ "        context-hibernate.xml is not found in /src/main/resources/spring/.");
-					else
-						getLog().warn(
-								"The process of adding new packages information in context-hibernate.xml is skipped.\n"
-										+ "        <!--Add new Packages to scan here--> token is not found in /src/main/resources/spring/context-hibernate.xml.");
-				}
-			}
+		Collections.sort(new ArrayList<String>(importList));
+
+		Context context = new VelocityContext();
+		context.put("domain", targetDomain);
+		context.put("package", targetDomain.getPackageName());
+		context.put("StringUtils", new StringUtils());
+		context.put("importList", importList);
+		context.put("author", System.getProperty("user.name"));
+
+		String targetPath = baseDir.getAbsolutePath() + CommonConstants.SRC_MAIN_JAVA + packageLocation;
+		FileUtil.makeDir(targetPath, "");
+		
+		String target = targetPath + CommonConstants.fileSeparator + targetDomain.getName() + ".java";
+		String template = "common" + CommonConstants.fileSeparator + "vo.vm";
+
+		try {
+			VelocityUtil.mergeTemplate(velocity, context, template, new File(target), "UTF-8");
+		} catch (Exception e) {
+			getLog().warn("Merging of " + target + " with template" + " is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
-
-	}
-
-	protected Exporter configureExporter(Exporter exp)
-			throws MojoExecutionException {
-		// add output directory to compile roots
-		this.project.addCompileSourceRoot(new File(getComponent()
-				.getOutputDirectory()).getPath());
-
-		// now set the extra properties for the POJO
-		// Exporter
-		POJOExporter exporter = (POJOExporter) super.configureExporter(exp);
-
-		// Add custom template path if specified
-		String[] templatePaths;
-		if (templateDirectory != null) {
-			templatePaths = new String[exporter.getTemplatePaths().length + 1];
-			templatePaths[0] = templateDirectory;
-			if (exporter.getTemplatePaths().length > 1) {
-				for (int i = 1; i < exporter.getTemplatePaths().length; i++) {
-					templatePaths[i] = exporter.getTemplatePaths()[i - 1];
-				}
-			}
-		} else {
-			templatePaths = exporter.getTemplatePaths();
-		}
-
-		exporter.setTemplatePath(templatePaths);
-		exporter.setTemplateName("model/Pojo.ftl");
-		exporter.getProperties().setProperty("package", this.packageName);
-		exporter.getProperties().setProperty("ejb3",
-				getComponentProperty("ejb3", "true"));
-		exporter.getProperties().setProperty("jdk5",
-				getComponentProperty("jdk5", "true"));
-
-		if (isFullSource()) {
-			exporter.getProperties().setProperty("appfusepackage",
-					this.packageName);
-		} else {
-			exporter.getProperties().setProperty("appfusepackage",
-					"org.anyframe.generic");
-		}
-
-		return exporter;
-	}
-
-	protected Exporter createExporter() {
-
-		AnyframePOJOExporter exporter = new AnyframePOJOExporter();
-		exporter.setPropertiesIO(pio);
-		exporter.setArtifactCollector(new AnyframeArtifactCollector());
-
-		return exporter;
-	}
-
-	protected ComponentConfiguration getComponentConfiguration(String name)
-			throws MojoExecutionException {
-		for (Iterator<ComponentConfiguration> it = componentConfigurations
-				.iterator(); it.hasNext();) {
-			ComponentConfiguration componentConfiguration = it.next();
-			if (componentConfiguration.getName().equals(name)) {
-				return componentConfiguration;
-			}
-		}
-		throw new MojoExecutionException("Could not get ConfigurationTask.");
 	}
 
 	/**
@@ -463,11 +304,9 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 	 * @throws Exception
 	 */
 	protected void checkInstalledPlugins(String[] pluginNames) throws Exception {
-		Map<String, PluginInfo> installedPlugins = pluginInfoManager
-				.getInstalledPlugins(baseDir.getAbsolutePath());
+		Map<String, PluginInfo> installedPlugins = pluginInfoManager.getInstalledPlugins(baseDir.getAbsolutePath());
 		if (installedPlugins.size() == 0) {
-			throw new CommandException(
-					"Can not find any installed plugin information. Please install any plugin at the very first.");
+			throw new CommandException("Can not find any installed plugin information. Please install any plugin at the very first.");
 		}
 
 		boolean isInstalled = false;
@@ -482,150 +321,33 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 		}
 
 		if (!isInstalled) {
-			throw new CommandException(
-					"Can not find installed plugin ["
-							+ uninstallPluginsNames.toString()
-									.substring(
-											0,
-											uninstallPluginsNames.toString()
-													.length() - 1)
-							+ "] information. Please install those plugins at the very first.");
+			throw new CommandException("Can not find installed plugin ["
+					+ uninstallPluginsNames.toString().substring(0, uninstallPluginsNames.toString().length() - 1)
+					+ "] information. Please install those plugins at the very first.");
 		}
 	}
 
-	private String getHibernateCfgXml() throws Exception {
-		InputStream in = new FileInputStream(new File(this.templateDirectory
-				+ "model/hibernate.cfg.ftl"));
-		StringBuffer configFile = new StringBuffer();
-		try {
-			InputStreamReader isr = new InputStreamReader(in);
-			BufferedReader reader = new BufferedReader(isr);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				configFile.append(line).append("\n");
-			}
-			reader.close();
-		} catch (IOException io) {
-			// throw new MojoFailureException(io.getMessage());
-		}
-		return configFile.toString();
+	private String underscoreToVariable(String s) {
+		String camelCaseString = underscoreToCamel(s);
+		return camelCaseString.substring(0, 1).toLowerCase() + camelCaseString.substring(1);
 	}
 
-	private void setGenLocation(String location) {
-		addDefaultComponent(location, "configuration", false);
-		addDefaultComponent(location, "jdbcconfiguration", true);
-		addDefaultComponent(location, "annotationconfiguration", true);
-	}
-
-	private void setProjectProperties(Properties properties) {
-		Properties mavenProperties = this.project.getProperties();
-		Iterator<Object> itr = properties.keySet().iterator();
-
-		while (itr.hasNext()) {
-			String key = (String) itr.next();
-			mavenProperties.setProperty(key, (String) properties.get(key));
+	private String underscoreToCamel(String s) {
+		String camelCaseString = "";
+		String[] parts = s.split("_");
+		for (String part : parts) {
+			camelCaseString = camelCaseString + part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase();
 		}
-	}
-
-	private void setComponentProperties(Properties properties) {
-		Map<String, String> componentProperties = getComponentProperties();
-
-		Iterator<Object> itr = properties.keySet().iterator();
-		while (itr.hasNext()) {
-			String key = (String) itr.next();
-
-			componentProperties.put(key, (String) properties.get(key));
-		}
-	}
-
-	private void setTable() throws MojoExecutionException, MojoFailureException {
-
-		getLog().info("Input Table Name is " + this.table);
-		if (getComponentProperty("revengfile") == null) {
-			getComponentProperties().put("revengfile",
-					"target/test-classes/hibernate.reveng.xml");
-		}
-
-		File existingConfig = new File(this.projectHome,
-				getComponentProperty("revengfile"));
-		try {
-			InputStream in = null;
-			try {
-				in = new BufferedInputStream(new FileInputStream(templateHome
-						+ "/" + this.templateType
-						+ "/source/model/hibernate.reveng.ftl"));
-			} catch (Exception e) {
-				// this is for test case execution
-				in = this.getClass().getResourceAsStream(
-						"/templates/default/source/model/hibernate.reveng.ftl");
-			}
-			// InputStream in =
-			// this.getClass().getResourceAsStream("/anyframe/model/hibernate.reveng.ftl");
-
-			StringBuffer configFile = new StringBuffer();
-			InputStreamReader isr = new InputStreamReader(in);
-			BufferedReader reader = new BufferedReader(isr);
-			String line;
-
-			// get schema information from application
-			// properties file
-			while ((line = reader.readLine()) != null) {
-
-				if (line.contains("<schema-selection match-schema=")) {
-					if (this.dbType.equalsIgnoreCase("syabse"))
-						continue;
-				}
-				line = line.replace("${schema}", this.dbSchema);
-				configFile.append(line).append("\n");
-			}
-			reader.close();
-
-			getLog().debug(
-					"Writing 'hibernate.reveng.xml' to "
-							+ existingConfig.getPath());
-			FileUtils.writeStringToFile(existingConfig, configFile.toString());
-
-			// replace string text
-			String tableFilterString = "<table-filter match-name=\"${tableName}\"/>";
-			if (this.table.equals("*")) {
-				tableFilterString = tableFilterString.replace("${tableName}",
-						".*");
-			} else if (this.table.indexOf(",") == -1) {
-				tableFilterString = tableFilterString.replace("${tableName}",
-						this.table);
-			} else {
-				StringTokenizer tokenizer = new StringTokenizer(this.table, ",");
-				String tempString = "";
-				while (tokenizer.hasMoreTokens()) {
-					tempString = tempString
-							+ tableFilterString.replace("${tableName}",
-									tokenizer.nextToken()) + "\n";
-				}
-				tableFilterString = tempString;
-			}
-
-			getLog().debug(
-					"Writing table filter string [" + tableFilterString
-							+ "] to 'hibernate.reveng.xml'");
-
-			FileUtil.replaceStringXMLFilePretty(existingConfig,
-					"<!--Add table names to generate domain classes-->",
-					tableFilterString);
-
-		} catch (IOException io) {
-			throw new MojoFailureException(io.getMessage());
-		} catch (Exception e) {
-			throw new MojoFailureException(e.getMessage());
-		}
-	}
-
-	public MavenProject getProject() {
-		return project;
+		return camelCaseString;
 	}
 
 	// getter, setter for ANT Task
 	public void setTable(String table) {
 		this.table = table;
+	}
+	
+	public void setTemplateHome(String templateHome) {
+		this.templateHome = templateHome;
 	}
 
 	public void setProjectHome(String projectHome) {
@@ -644,25 +366,12 @@ public class GenerateModelMojo extends ModelGeneratorMojo {
 		this.packageName = packageName;
 	}
 
-	public void setPrompter(Prompter prompter) {
-		this.prompter = prompter;
-	}
-
 	public void setCLIMode(boolean isCLIMode) {
 		this.isCLIMode = isCLIMode;
 	}
 
-	// for test
-	public void setHibernateCfgFilePath(String hibernateCfgFilePath) {
-		this.hibernateCfgFilePath = hibernateCfgFilePath;
-	}
-
-	public void setHibernateRevengFilePath(String hibernateRevengFilePath) {
-		this.hibernateRevengFilePath = hibernateRevengFilePath;
-	}
-
-	public void setHibernateCfgFile(File hibernateCfgFile) {
-		this.hibernateCfgFile = hibernateCfgFile;
+	public void setPrompter(Prompter prompter) {
+		this.prompter = prompter;
 	}
 
 	public void setPluginInfoManager(PluginInfoManager pluginInfoManager) {

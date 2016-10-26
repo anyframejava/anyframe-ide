@@ -548,9 +548,7 @@ public class FileUtil {
 
 		Project antProject = new Project();
 		antProject.init();
-
 		AntUtil.executeReplaceTask(antProject, file, token, value);
-		
 		
 		if (isPretty) {
 			XMLPrettyPrinter.prettyPrintFile(PrettyPrinter.getDefaultTidy(),
@@ -775,6 +773,48 @@ public class FileUtil {
 					String key = trimmedLine.substring(
 							4 + pluginName.length() + 1, length - 9);
 
+					StringBuffer value = new StringBuffer();
+					while ((aLine = reader.readLine()) != null) {
+						trimmedLine = aLine.trim();
+						matcher = endPattern.matcher(trimmedLine);
+						if (matcher.find()) {
+							map.put(key, value.toString());
+							break;
+						}
+						value.append(aLine + "\n");
+					}
+				}
+			}
+
+			return map;
+		} finally {
+			inputStream.close();
+			reader.close();
+		}
+	}
+	
+	public static Map<String, String> findReplaceRegionOfProperties(
+			InputStream inputStream, String pluginName) throws Exception {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				inputStream));
+		try {
+			Pattern startPattern = Pattern
+					.compile("(?i)(?u)(?s)\\A(?:(?:\\#" + pluginName
+							+ "\\-)).*(?s).*(?:(?:\\-START))\\z");
+			Pattern endPattern = Pattern
+					.compile("(?i)(?u)(?s)\\A(?:(?:\\#" + pluginName
+							+ "\\-)).*(?s).*(?:(?:\\-END))\\z");
+
+			String aLine = null;
+			HashMap<String, String> map = new HashMap<String, String>();
+			while ((aLine = reader.readLine()) != null) {
+				String trimmedLine = aLine.trim();
+				Matcher matcher = startPattern.matcher(trimmedLine);
+				if (matcher.find()) {
+					int length = trimmedLine.length();
+
+					String key = trimmedLine.substring(
+							4 + pluginName.length() + 1, length - 9);
 					StringBuffer value = new StringBuffer();
 					while ((aLine = reader.readLine()) != null) {
 						trimmedLine = aLine.trim();

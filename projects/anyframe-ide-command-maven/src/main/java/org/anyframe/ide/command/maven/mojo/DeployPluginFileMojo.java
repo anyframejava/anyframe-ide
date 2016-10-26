@@ -31,6 +31,7 @@ import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 
 /**
@@ -68,14 +69,14 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 	 *            default-value="anyframe-repository"
 	 */
 	private String repositoryId;
-	
+
 	/**
 	 * define whether version of target plugin is latest. If this paramter value
 	 * is 'true', then change value of latest in plugin-catalog-xxx.xml
 	 * 
 	 * @parameter expression="${isLatest}" default-value="true"
 	 */
-	private boolean isLatest;	
+	private boolean isLatest;
 
 	/**
 	 * main method for executing DeployPluginFileMojo. This mojo is executed
@@ -173,10 +174,19 @@ public class DeployPluginFileMojo extends AbstractPluginMojo {
 								+ repositoryId + " into settings.xml");
 			}
 
+			Proxy proxy = super.settings.getActiveProxy();
+			String proxyHost = null;
+			int proxyPort = -1;
+
+			if (proxy != null) {
+				proxyHost = proxy.getHost();
+				proxyPort = proxy.getPort();
+			}
+
 			// 6. update plugin catalig file in remote repository
 			pluginCatalogManager.updatePluginCatalog(request, baseDir, url,
-					server.getUsername(), server.getPassword(), pluginInfo
-							.isEssential(), isLatest, pluginInfo);
+					server.getUsername(), server.getPassword(), proxyHost,
+					proxyPort, pluginInfo.isEssential(), isLatest, pluginInfo);
 		} catch (Exception ex) {
 			getLog().error(
 					"Fail to execute DeployPluginFileMojo. The reason is '"

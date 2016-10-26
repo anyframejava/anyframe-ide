@@ -15,7 +15,12 @@
  */
 package org.anyframe.ide.command.common;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
@@ -234,31 +239,73 @@ public class DefaultPluginUninstallTest extends AbstractCommandTest {
 				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		File sampleDir = new File("./src/test/resources/project/installsample");
+		File sampleDir = new File("./src/test/resources/project/sample");
 
+		makeConfigFile(new File("./src/test/resources/project/sample").getAbsolutePath());
+		
 		File metadataDir = new File(baseDir, "META-INF");
 		metadataDir.mkdirs();
 
-		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/",
-				CommonConstants.PLUGIN_INSTALLED_FILE), metadataDir);
+		File settingsDir = new File(baseDir, ".settings");
+		settingsDir.mkdirs();
 
-		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/",
-				CommonConstants.METADATA_FILE), metadataDir);
-
-		FileUtil.copyDir(new File(sampleDir, Constants.ARCHETYPE_POM),
-				new File(baseDir));
-
+		File anyframeDir = new File(settingsDir, "anyframe");
+		anyframeDir.mkdirs();
+		
 		File webDir = new File(baseDir, "/src/main/webapp/WEB-INF/");
 		webDir.mkdirs();
-
-		FileUtil.copyDir(new File(PATH_SAMPLE_PROJECT
-				+ "/src/main/webapp/WEB-INF/", CommonConstants.WEB_XML_FILE),
-				webDir);
-
+		
 		new File(baseDir, "src/main/java").mkdirs();
 		new File(baseDir, "src/main/resources/spring").mkdirs();
 		new File(baseDir, "src/test/java").mkdirs();
 		new File(baseDir, "src/test/resources").mkdirs();
 		new File(baseDir, "src/main/webapp/WEB-INF/jsp").mkdirs();
+		
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/",
+				CommonConstants.PLUGIN_INSTALLED_FILE), metadataDir);
+
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/",
+				CommonConstants.COMMON_CONFIG_PREFS_FILE), settingsDir);
+		
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/anyframe/",
+				CommonConstants.COMMON_CONFIG_XML_FILE), anyframeDir);
+		
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/anyframe/",
+				CommonConstants.DATABASE_CONFIG_XML_FILE), anyframeDir);
+
+		FileUtil.copyDir(new File(sampleDir, Constants.ARCHETYPE_POM),
+				new File(baseDir));
+
+		FileUtil.copyDir(new File(PATH_SAMPLE_PROJECT
+				+ "/src/main/webapp/WEB-INF/", CommonConstants.WEB_XML_FILE),
+				webDir);
+		
+		FileUtil.copyDir(new File(sampleDir, Constants.ARCHETYPE_POM),
+				new File(baseDir));
+
+	}
+	
+	private void makeConfigFile(String baseDir) throws Exception {
+		File file = new File(baseDir + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME + CommonConstants.fileSeparator
+				+ CommonConstants.COMMON_CONFIG_XML_FILE);
+
+		List<String> lines = new ArrayList<String>();
+
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String line = in.readLine();
+		while (line != null) {
+			if (line.indexOf("<databases>") > 0) {
+				line = "\t\t<databases>" + baseDir + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME + "</databases>";
+			}
+			lines.add(line);
+			line = in.readLine();
+		}
+		in.close();
+
+		// now, write the file again with the changes
+		PrintWriter out = new PrintWriter(file);
+		for (String l : lines)
+			out.println(l);
+		out.close();
 	}
 }

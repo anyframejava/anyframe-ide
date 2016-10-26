@@ -46,21 +46,14 @@ public class AntUtil {
 	static {
 		datatypeFactories.put("db2", "org.dbunit.ext.db2.Db2DataTypeFactory");
 		datatypeFactories.put("h2", "org.dbunit.ext.h2.H2DataTypeFactory");
-		datatypeFactories.put("hsqldb",
-				"org.dbunit.ext.hsqldb.HsqldbDataTypeFactory");
-		datatypeFactories.put("mssql",
-				"org.dbunit.ext.mssql.MsSqlDataTypeFactory");
-		datatypeFactories.put("mysql",
-				"org.dbunit.ext.mysql.MySqlDataTypeFactory");
-		datatypeFactories.put("oracle",
-				"org.dbunit.ext.oracle.OracleDataTypeFactory");
-		datatypeFactories.put("postgresql",
-				"org.dbunit.ext.postgresql.PostgresqlDataTypeFactory");
+		datatypeFactories.put("hsqldb", "org.dbunit.ext.hsqldb.HsqldbDataTypeFactory");
+		datatypeFactories.put("mssql", "org.dbunit.ext.mssql.MsSqlDataTypeFactory");
+		datatypeFactories.put("mysql", "org.dbunit.ext.mysql.MySqlDataTypeFactory");
+		datatypeFactories.put("oracle", "org.dbunit.ext.oracle.OracleDataTypeFactory");
+		datatypeFactories.put("postgresql", "org.dbunit.ext.postgresql.PostgresqlDataTypeFactory");
 	}
 
-	public static void executeCopyTask(Project antProject,
-			String inSourceDirectory, String inDestinationDirectory,
-			String inPattern, boolean multiple) {
+	public static void executeCopyTask(Project antProject, String inSourceDirectory, String inDestinationDirectory, String inPattern, boolean multiple) {
 		Copy copyTask = (Copy) antProject.createTask("copy");
 
 		if (multiple) {
@@ -77,8 +70,7 @@ public class AntUtil {
 		copyTask.execute();
 	}
 
-	public static void executeCopyTask(Project antProject, String sourceFile,
-			String targetFile) {
+	public static void executeCopyTask(Project antProject, String sourceFile, String targetFile) {
 		Copy copy = (Copy) antProject.createTask("copy");
 		copy.setFile(new File(sourceFile));
 		copy.setTofile(new File(targetFile));
@@ -93,8 +85,7 @@ public class AntUtil {
 		echoTask.execute();
 	}
 
-	public static void executeLoadFileTask(Project antProject,
-			String sourceDirectory, String inFile, String propName) {
+	public static void executeLoadFileTask(Project antProject, String inFile, String propName) {
 		if (!new File(inFile).exists()) {
 			return;
 		}
@@ -107,10 +98,9 @@ public class AntUtil {
 		loadFileTask.execute();
 	}
 
-	public static void executeReplaceTask(Project antProject, File file,
-			String token, String value) throws Exception {
+	public static void executeReplaceTask(Project antProject, File file, String token, String value) throws Exception {
 		Replace replaceData = (Replace) antProject.createTask("replace");
-		
+
 		replaceData.setFile(file);
 		replaceData.setEncoding(ENCODING);
 		replaceData.setToken(token);
@@ -118,10 +108,9 @@ public class AntUtil {
 		replaceData.execute();
 	}
 
-	public static void executeReplaceTask(Project antProject, File file,
-			String startToken, String startValue, String endToken,
-			String endValue) throws Exception {
-		
+	public static void executeReplaceTask(Project antProject, File file, String startToken, String startValue, String endToken, String endValue)
+			throws Exception {
+
 		Replace start = (Replace) antProject.createTask("replace");
 		start.setFile(file);
 		start.setEncoding(ENCODING);
@@ -137,11 +126,9 @@ public class AntUtil {
 		end.execute();
 	}
 
-	public static void executeReplaceRegExpTask(Project antProject, File file,
-			String startToken, String endToken, String tokenToReplace)
+	public static void executeReplaceRegExpTask(Project antProject, File file, String startToken, String endToken, String tokenToReplace)
 			throws Exception {
-		ReplaceRegExp regExpTask = (ReplaceRegExp) antProject
-				.createTask("replaceregexp");
+		ReplaceRegExp regExpTask = (ReplaceRegExp) antProject.createTask("replaceregexp");
 		regExpTask.setFile(file);
 		regExpTask.setEncoding(ENCODING);
 		regExpTask.setMatch(startToken + "(?s:.)*" + endToken);
@@ -150,11 +137,9 @@ public class AntUtil {
 		regExpTask.execute();
 	}
 
-	public static void executeReplaceRegExpTask(Project antProject, File file,
-			String startToken, String endToken, String tokenToReplace,
+	public static void executeReplaceRegExpTask(Project antProject, File file, String startToken, String endToken, String tokenToReplace,
 			String newToken, String newValue) throws Exception {
-		executeReplaceRegExpTask(antProject, file, startToken, endToken,
-				tokenToReplace);
+		executeReplaceRegExpTask(antProject, file, startToken, endToken, tokenToReplace);
 
 		Replace replaceData = (Replace) antProject.createTask("replace");
 		replaceData.setFile(file);
@@ -164,9 +149,8 @@ public class AntUtil {
 		replaceData.execute();
 	}
 
-	public static void executeDbUnitTask(String dbType, String url,
-			String driverClass, String userName, String password,
-			String dbSchema, File src, String projectHome) throws Exception {
+	public static void executeDbUnitTask(String dbType, String url, String driverClass, String userName, String password, String dbSchema, File src,
+			String projectHome) throws Exception {
 		Project antProject = new Project();
 		antProject.init();
 
@@ -178,14 +162,11 @@ public class AntUtil {
 		dbunitTask.setUserid(userName);
 		dbunitTask.setPassword(password);
 		if (dbType.equalsIgnoreCase("sybase")) {
-			// 1. read project.mf
-			File metadataFile = new File(projectHome + CommonConstants.METAINF,
-					CommonConstants.METADATA_FILE);
+			// 1. read project configuration
+			File metadataFile = new File(ConfigXmlUtil.getCommonConfigFile(projectHome));
 
 			if (!metadataFile.exists()) {
-				throw new CommandException("Can not find a '"
-						+ metadataFile.getAbsolutePath()
-						+ "' file. Please check a location of your project.");
+				throw new CommandException("Can not find a '" + metadataFile.getAbsolutePath() + "' file. Please check a location of your project.");
 			}
 
 			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
@@ -205,8 +186,7 @@ public class AntUtil {
 			property.setValue(datatypeFactories.get(dbType));
 		} else {
 			// default
-			property
-					.setValue("org.dbunit.dataset.datatype.DefaultDataTypeFactory");
+			property.setValue("org.dbunit.dataset.datatype.DefaultDataTypeFactory");
 		}
 		dbConfig.addProperty(property);
 

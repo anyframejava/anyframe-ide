@@ -18,10 +18,9 @@ package org.anyframe.ide.command.cli;
 import java.io.File;
 import java.util.Properties;
 
-import org.anyframe.ide.command.cli.CLIAntRunner;
-import org.anyframe.ide.command.cli.util.PluginConstants;
-
 import junit.framework.TestCase;
+
+import org.anyframe.ide.command.common.util.CommonConstants;
 
 /**
  * TestCase Name : CLIAntRunnerTest <br>
@@ -58,10 +57,10 @@ public class CLIAntRunnerTest extends TestCase {
 		runner.prepare(args);		
 		
 		// 2. execute CLIAntRunner with 'install' command
-		args = new String[] { "install", PluginConstants.CORE_PLUGIN };
+		args = new String[] { "install", CommonConstants.CORE_PLUGIN };
 		runner.prepare(args);
 
-		assertEquals("Fail to check no arguments.", PluginConstants.CORE_PLUGIN, System
+		assertEquals("Fail to check no arguments.", CommonConstants.CORE_PLUGIN, System
 				.getProperty("name")); 
 	}
 

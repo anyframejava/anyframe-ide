@@ -1,0 +1,7 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--${domain.name}-START-->
+<value>classpath:hibernate/dynamic-hibernate-#getDomainNameLower(${domain.name}).xml</value>
+<!--${domain.name}-END-->
+<!--Add new file name here-->

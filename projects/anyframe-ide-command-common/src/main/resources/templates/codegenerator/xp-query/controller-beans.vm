@@ -1,0 +1,8 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--${domain.name}-START-->
+	<bean name ="/#getDomainNameLower(${domain.name})XP.do" class="${package}.web.${domain.name}XPController"/>
+	<mvc:view-controller path="/#getDomainNameLower(${domain.name})XPView.do" view-name="redirect:/xp-query/extends/XPlatformAX.jsp?xpid=#getDomainNameLower(${domain.name})/list${domain.name}.xfdl" />   
+<!--${domain.name}-END-->
+<!--Add additional controller beans here-->

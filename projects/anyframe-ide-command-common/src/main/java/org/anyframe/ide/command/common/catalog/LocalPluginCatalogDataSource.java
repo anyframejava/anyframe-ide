@@ -23,7 +23,9 @@ import java.util.Map;
 
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -253,33 +255,23 @@ public class LocalPluginCatalogDataSource extends AbstractLogEnabled {
 	}
 
 	/**
-	 * Get current project build type from project.mf file
+	 * Get current project build type from configuration file
 	 * 
 	 * @param baseDir
 	 *            the path of current project
 	 * @return build type of current project
 	 */
-	private String getProjectBuildType(String baseDir) {
+	private String getProjectBuildType(String baseDir) throws Exception{
 		String projectBuildType = "";
-		File metadataFile = new File(new File(baseDir)
-				+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+		ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
-		if (metadataFile.exists()) {
-			try {
-				PropertiesIO pio = new PropertiesIO(metadataFile
-						.getAbsolutePath());
-
-				projectBuildType = pio
-						.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-
-			} catch (Exception e) {
-				getLogger().warn(
-						"Loading properties from project.mf in " + baseDir
-								+ " is skipped. The reason is "
-								+ e.getMessage());
-			}
+		String anyframeHome = projectConfig.getAnyframeHome();
+		projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+		if (anyframeHome != null && !"".equals(anyframeHome)) {
+			projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
 		}
-
+		
 		return projectBuildType;
 	}
 

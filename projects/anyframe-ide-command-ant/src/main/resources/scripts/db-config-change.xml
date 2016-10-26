@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="Anyframe DB Config Chagne ANT" default="change-db" basedir="${basedir}">
-	<property file="${basedir}/META-INF/project.mf" />
+
 	<import file="${anyframeHome}/ide/cli/scripts/anyframe-path.xml" />
 	<import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml" />
 
@@ -11,8 +11,7 @@
 	<log level="${logLevel}" />		
 
 	<target name="change-db">
-		<change-db projecthome="${project.home}" anyframeHome="${anyframeHome}" target="${project.home}"/>
-		<copy file="${db.lib}" todir="${anyframeHome}/ide/cli/lib" />
+		<change-db projecthome="${basedir}" anyframeHome="${anyframeHome}" target="${basedir}"/>
 	</target>
 
 </project>

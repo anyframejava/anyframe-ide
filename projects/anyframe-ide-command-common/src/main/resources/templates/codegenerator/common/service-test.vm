@@ -1,0 +1,85 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+#macro( getFieldNameUpper $fieldName )### START getFieldNameUpper
+${fieldName.substring(0,1).toUpperCase()}${fieldName.substring(1)}##
+#end#### END getFieldNameUpper
+package ${package}.service;
+
+import static org.junit.Assert.assertNotNull;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.anyframe.datatype.SearchVO;
+import org.anyframe.pagination.Page;
+
+import ${domain.packageName}.${domain.name};
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/main/resources/spring/context-*.xml" })
+public class ${domain.name}ServiceTest{
+    
+    @Inject
+	@Named("#getDomainNameLower(${domain.name})Service")
+    private ${domain.name}Service #getDomainNameLower(${domain.name})Service;    
+
+	@Test	 
+	@Rollback(value=true)	    
+    public void manage${domain.name}() throws Exception {
+        // 1. create a new #getDomainNameLower(${domain.name})#**#
+        ${domain.name} #getDomainNameLower(${domain.name}) = get${domain.name}();
+        #getDomainNameLower(${domain.name})Service.create(#getDomainNameLower(${domain.name}));
+        
+        // 2. assert - create
+		#getDomainNameLower(${domain.name}) = #getDomainNameLower(${domain.name})Service.get(#getDomainNameLower(${domain.name}));
+		assertNotNull("fail to fetch a #getDomainNameLower(${domain.name})", #getDomainNameLower(${domain.name}));
+				
+		// 3. update #getDomainNameLower(${domain.name})#**#
+		#getDomainNameLower(${domain.name})Service.update(#getDomainNameLower(${domain.name}));
+
+		// 4. assert - update
+		#getDomainNameLower(${domain.name}) = #getDomainNameLower(${domain.name})Service.get(#getDomainNameLower(${domain.name}));
+		assertNotNull("fail to fetch a #getDomainNameLower(${domain.name})", #getDomainNameLower(${domain.name}));
+
+		// 5. remove a #getDomainNameLower(${domain.name})#**#
+		#getDomainNameLower(${domain.name})Service.remove(#getDomainNameLower(${domain.name}));
+      }
+    
+    private ${domain.name} get${domain.name}() throws Exception {
+		${domain.name} #getDomainNameLower(${domain.name}) = new ${domain.name}();
+       
+        // enter fields
+#******##foreach($column in $domain.columns)
+#******##if($column.isKey || $column.notNull)##		
+#******##if($column.columnType == "DATE")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new Date(${column.sampleDataArray.get(1)}));
+#******##elseif($column.columnType == "TIME")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new TIME(${column.sampleDataArray.get(1)}));
+#******##elseif($column.columnType == "DATETIME" || $column.columnType == "TIMESTAMP")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new Timestamp(${column.sampleDataArray.get(1)}));
+#******##elseif($column.fieldType == "java.lang.String")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})("${column.sampleDataArray.get(1)}");
+#******##else##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(${column.sampleDataArray.get(1)});
+#******##end##
+#******##end##
+#******##end
+
+		return #getDomainNameLower(${domain.name});
+	}
+	
+	@Test
+	public void find${domain.name}List() throws Exception {
+		SearchVO searchVO = new SearchVO();
+        searchVO.setPageIndex(1);
+		Page page = #getDomainNameLower(${domain.name})Service.getPagingList(searchVO);
+
+		assertNotNull("page is not null", page);
+	}	
+}

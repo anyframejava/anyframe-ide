@@ -20,7 +20,6 @@ import java.io.File;
 import org.anyframe.ide.command.common.DefaultPluginInfoManager;
 import org.anyframe.ide.command.common.PluginInfoManager;
 import org.anyframe.ide.command.maven.mojo.GenerateCodeMojo;
-import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.codehaus.plexus.components.interactivity.Prompter;
@@ -45,6 +44,8 @@ public class GenerateCodeTask extends AbstractPluginTask {
 	private String projecthome = "";
 	/** base package name */
 	private String packageName = "";
+	/** template type */
+	private String templateType = "";
 	/** generate scope(all, service, web) */
 	private String scope = "all";
 	/** check command line interface mode */
@@ -62,7 +63,7 @@ public class GenerateCodeTask extends AbstractPluginTask {
 
 			codeGenerator.setPrompter(this.prompter);
 			codeGenerator.setPluginInfoManager(this.pluginInfoManager);
-			
+
 			if (isEmpty("projecthome", this.projecthome))
 				this.projecthome = new File(this.baseDir).getAbsolutePath();
 			else
@@ -70,6 +71,7 @@ public class GenerateCodeTask extends AbstractPluginTask {
 
 			codeGenerator.setBaseDir(new File(this.baseDir));
 			codeGenerator.setEntity(this.entity);
+			codeGenerator.setTemplateType(this.templateType);
 
 			codeGenerator.setProjectHome(this.projecthome);
 
@@ -83,16 +85,13 @@ public class GenerateCodeTask extends AbstractPluginTask {
 			}
 			codeGenerator.setScope(this.scope);
 
-			codeGenerator.setMavenProject(new MavenProject());
-
 			if (isEmpty("isCLIMode", this.isCLIMode)) {
 				this.isCLIMode = "true";
 			}
-			codeGenerator
-					.setCLIMode(new Boolean(this.isCLIMode).booleanValue());
-			
+			codeGenerator.setCLIMode(new Boolean(this.isCLIMode).booleanValue());
+
 			codeGenerator.setInsertSampleData(new Boolean(this.insertSampleData).booleanValue());
-			
+
 			codeGenerator.execute();
 		} catch (Exception e) {
 			log("Fail to execute GenerateCodeTask", e, Project.MSG_ERR);
@@ -100,15 +99,12 @@ public class GenerateCodeTask extends AbstractPluginTask {
 		}
 	}
 
-
 	/**
 	 * look up essential components.
 	 */
 	public void lookupComponents() {
-		this.prompter = (Prompter) getPluginContainer().lookup(
-				Prompter.class.getName());
-		this.pluginInfoManager = (PluginInfoManager) getPluginContainer().lookup(
-				DefaultPluginInfoManager.class.getName());
+		this.prompter = (Prompter) getPluginContainer().lookup(Prompter.class.getName());
+		this.pluginInfoManager = (PluginInfoManager) getPluginContainer().lookup(DefaultPluginInfoManager.class.getName());
 	}
 
 	/**
@@ -169,6 +165,25 @@ public class GenerateCodeTask extends AbstractPluginTask {
 	}
 
 	/**
+	 * get template type
+	 * 
+	 * @return template type
+	 */
+	public String getTemplateType() {
+		return templateType;
+	}
+
+	/**
+	 * set template type
+	 * 
+	 * @param templateType
+	 *            template type
+	 */
+	public void setTemplateType(String templateType) {
+		this.templateType = templateType;
+	}
+
+	/**
 	 * get code generation scope
 	 * 
 	 * @return code generation scope
@@ -206,13 +221,14 @@ public class GenerateCodeTask extends AbstractPluginTask {
 	public void setIsCLIMode(String isCLIMode) {
 		this.isCLIMode = isCLIMode;
 	}
-	
+
 	/**
 	 * input sample data to database
+	 * 
 	 * @param insertSampleData
 	 */
 	public void setInsertSampleData(String insertSampleData) {
 		this.insertSampleData = insertSampleData;
 	}
-	
+
 }

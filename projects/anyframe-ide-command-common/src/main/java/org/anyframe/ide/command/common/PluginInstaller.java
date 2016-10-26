@@ -122,8 +122,6 @@ public interface PluginInstaller {
 	 * 
 	 * @param request
 	 *            information includes maven repository, db settings, etc.
-	 * @param projectType
-	 *            generated project's style ('web' or 'service')
 	 * @param targetDir
 	 *            target project folder to install a plugin
 	 * @param pluginJar
@@ -132,7 +130,7 @@ public interface PluginInstaller {
 	 *            properties of pom in current project
 	 */
 	void processDependencyLibs(ArchetypeGenerationRequest request,
-			String projectType, File targetDir, File pluginJar,
+			File targetDir, File pluginJar,
 			Properties pomProperties);
 
 	/**

@@ -1,0 +1,5 @@
+<!--${domain.name}-START-->
+    <typeAlias alias="${domain.name}" type="${domain.packageName}.${domain.name}" />			
+<!--${domain.name}-END-->
+<!--Add new alias here-->
+

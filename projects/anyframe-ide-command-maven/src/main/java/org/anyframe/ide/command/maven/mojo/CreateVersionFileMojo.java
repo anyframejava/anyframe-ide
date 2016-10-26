@@ -2,6 +2,7 @@ package org.anyframe.ide.command.maven.mojo;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
@@ -11,6 +12,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.MethodInvocationException;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -46,34 +50,28 @@ public class CreateVersionFileMojo extends AbstractPluginMojo {
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
+
+			initializeVelocity();
+
+			VelocityContext context = new VelocityContext();
+			context.put("releaseVersion", project.getVersion());
+
+			DateTime currentDateTime = new DateTime();
+			DateTimeFormatter dateTimeFormatter = DateTimeFormat
+					.forPattern(datePattern);
+			context.put("releaseDate", dateTimeFormatter.print(currentDateTime));
+
+			// in case of anyframe-online-xxxx project, create license.txt
+			if (project.getArtifactId().contains("online")) {
+				createFile(context, CommonConstants.SRC_MAIN_RESOURCES
+						+ CommonConstants.fileSeparator + "META-INF",
+						"license.txt", "license.vm");
+			}
+
+			// excludes assembly project, create Version.java
 			if (!project.getPackaging().equals("pom")) {
-				initializeVelocity();
-
-				File srcFolder = new File(baseDir
-						+ CommonConstants.SRC_MAIN_JAVA);
-
-				if (!srcFolder.isDirectory()) {
-					srcFolder.mkdirs();
-				}
-
-				File versionFile = new File(srcFolder, "Version.java");
-				versionFile.createNewFile();
-
-				Writer writer = new OutputStreamWriter(new FileOutputStream(
-						versionFile), getEncoding());
-
-				VelocityContext context = new VelocityContext();
-				context.put("releaseVersion", project.getVersion());
-
-				DateTime currentDateTime = new DateTime();
-				DateTimeFormatter dateTimeFormatter = DateTimeFormat
-						.forPattern(datePattern);
-				context.put("releaseDate",
-						dateTimeFormatter.print(currentDateTime));
-
-				velocity.mergeTemplate("Version.vm", getEncoding(), context,
-						writer);
-				writer.flush();
+				createFile(context, CommonConstants.SRC_MAIN_JAVA,
+						"Version.java", "Version.vm");
 			}
 		} catch (Exception ex) {
 			getLog().error(
@@ -81,6 +79,24 @@ public class CreateVersionFileMojo extends AbstractPluginMojo {
 							+ ex.getMessage() + "'.");
 			throw new MojoFailureException(null);
 		}
+	}
+
+	private void createFile(VelocityContext context, String targetFolderName,
+			String targetFileName, String templateName) throws Exception {
+		File targetFolder = new File(baseDir, targetFolderName);
+		if (!targetFolder.isDirectory()) {
+			targetFolder.mkdirs();
+		}
+
+		File targetFile = new File(targetFolder, targetFileName);
+		if (!targetFile.exists())
+			targetFile.createNewFile();
+
+		Writer writer = new OutputStreamWriter(
+				new FileOutputStream(targetFile), getEncoding());
+
+		velocity.mergeTemplate(templateName, getEncoding(), context, writer);
+		writer.flush();
 	}
 
 	/**

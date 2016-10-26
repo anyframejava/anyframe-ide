@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--sample data here-->
+<!--${domain.name}-START-->
+<dataset>
+#foreach($column in $domain.columns)
+#**##if(${column.isFkey})
+#********##foreach($fkSampleDataMap in $column.fkSampleDataList)
+	<${column.fkTable}
+#************##foreach($mapEntry in $fkSampleDataMap.entrySet())
+		${mapEntry.key}="${mapEntry.value}"
+#************##end 
+	/>
+#********##end
+#**##end
+#end
+#foreach($i in [0..3])
+	<${domain.table}
+#**##foreach($column in $domain.columns)
+		${column.columnName}="${column.sampleDataArray.get($i)}" 
+#**##end
+	/>
+#end 
+</dataset>
+<!--${domain.name}-START-->

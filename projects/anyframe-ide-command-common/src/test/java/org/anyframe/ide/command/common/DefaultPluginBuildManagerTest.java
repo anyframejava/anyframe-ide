@@ -20,6 +20,7 @@ import java.io.File;
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.model.Model;
@@ -33,11 +34,11 @@ import org.apache.maven.model.Model;
  * <li>#-1 Positive Case : create a plugin build file.</li>
  * <li>#-2 Positive Case : remove a plugin build file.</li>
  * <li>#-3 Negative Case : fail to create a plugin build file without a project
- * information(project.mf) file.</li>
+ * information file.</li>
  * <li>#-4 Negative Case : fail to create a plugin build file without a
  * installed plugin(plugin-installed.xml) file.</li>
  * <li>#-5 Negative Case : fail to create a plugin build file without a project
- * base package information in project information(project.mf) file.</li>
+ * base package information in project information file.</li>
  * <li>#-6 Negative Case : fail to create a plugin build file with invalid
  * plugin name in pom.xml file.</li>
  * </ul>
@@ -132,7 +133,7 @@ public class DefaultPluginBuildManagerTest extends AbstractCommandTest {
 
 	/**
 	 * [Flow #-3] Negative Case : fail to create a plugin build file without a
-	 * project information(project.mf) file.
+	 * project information file.
 	 */
 	public void testCreatePluginBuildWithoutProjectInfo() throws Exception {
 		// 1. set input arguments for creating a build file
@@ -143,9 +144,8 @@ public class DefaultPluginBuildManagerTest extends AbstractCommandTest {
 		try {
 			pluginBuildManager.activate(createRequest(baseDir), baseDir);
 		} catch (CommandException e) {
-			File metadataFile = new File(new File(baseDir)
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-			assertEquals("Can not find a '" + metadataFile.getAbsolutePath()
+			String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+			assertEquals("Can not find a '" + configFile
 					+ "' file. Please check a location of your project.",
 					e.getMessage());
 		}
@@ -178,7 +178,7 @@ public class DefaultPluginBuildManagerTest extends AbstractCommandTest {
 
 	/**
 	 * [Flow #-5] Negative Case : fail to create a plugin build file without a
-	 * project base package information in project information(project.mf) file.
+	 * project base package information in project information file.
 	 */
 	public void testCreatePluginBuildWithoutPackageInfo() throws Exception {
 		// 1. set input arguments for creating a build file
@@ -189,10 +189,16 @@ public class DefaultPluginBuildManagerTest extends AbstractCommandTest {
 		try {
 			pluginBuildManager.activate(createRequest(baseDir), baseDir);
 		} catch (CommandException e) {
-			File metadataFile = new File(new File(baseDir)
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+			
+			System.out.println("=====================testCreatePluginBuildWithoutPackageInfo======================");
+			System.out.println("Can not find a package.name property value in '"
+					+ configFile
+					+ "' file. Please check the package name.");
+			System.out.println(e.getMessage());
+			
 			assertEquals("Can not find a package.name property value in '"
-					+ metadataFile.getAbsolutePath()
+					+ configFile
 					+ "' file. Please check the package name.", e.getMessage());
 		}
 	}

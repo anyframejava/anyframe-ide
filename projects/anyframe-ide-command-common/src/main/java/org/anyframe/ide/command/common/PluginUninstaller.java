@@ -109,8 +109,6 @@ public interface PluginUninstaller {
 	 * 
 	 * @param baseDir
 	 *            the path of current project
-	 * @param projectType
-	 *            generated project's style ('web' or 'service')
 	 * @param pluginName
 	 *            plugin name
 	 * @param installedPluginJars
@@ -123,7 +121,7 @@ public interface PluginUninstaller {
 	 *            directory for backup
 	 * @throws Exception
 	 */
-	void processDependencyLibs(String baseDir, String projectType,
+	void processDependencyLibs(String baseDir, 
 			String pluginName, Map<String, File> installedPluginJars,
 			File removePluginJar, Properties properties, File backupDir)
 			throws Exception;

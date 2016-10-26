@@ -30,6 +30,7 @@ import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
 import org.apache.maven.archetype.catalog.Archetype;
+import org.apache.maven.settings.Proxy;
 
 /**
  * This is a PluginCollector class. This class is for collecting plugins and
@@ -42,7 +43,6 @@ public class PluginCollector {
 
 	public PluginContainer getContainer() {
 		return this.container;
-
 	}
 
 	/**
@@ -51,8 +51,9 @@ public class PluginCollector {
 	 * @param baseDir
 	 *            project folder
 	 */
-	public PluginCollector(String baseDir) throws Exception {
+	public PluginCollector(String baseDir, Proxy proxy) throws Exception {
 		this.container = new PluginContainer(baseDir);
+		container.getRequest().setActiveProxy(proxy);
 	}
 
 	/**

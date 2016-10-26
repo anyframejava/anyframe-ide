@@ -41,8 +41,7 @@ public class DefaultPluginInfoManagerTest extends AbstractCommandTest {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		pluginInfoManager = (DefaultPluginInfoManager) lookup(DefaultPluginInfoManager.class
-				.getName());
+		pluginInfoManager = (DefaultPluginInfoManager) lookup(DefaultPluginInfoManager.class.getName());
 	}
 
 	/**
@@ -51,45 +50,31 @@ public class DefaultPluginInfoManagerTest extends AbstractCommandTest {
 	 */
 	public void testGetPluginDetail() throws Exception {
 		ArchetypeGenerationRequest request = createRequest("");
-		String pluginName = "remoting";
+		String pluginName = "cxf";
 		String pluginVersion = "1.0.0";
 
 		// 1. find a plugin information
-		PluginInfo pluginInfo = pluginInfoManager.getPluginInfo(request,
-				pluginName, pluginVersion);
+		PluginInfo pluginInfo = pluginInfoManager.getPluginInfo(request, pluginName, pluginVersion);
 
 		// 2. assert
-		assertEquals("fail to convert xml to plugin object - name.",
-				"remoting", pluginInfo.getName());
-		assertEquals("fail to convert xml to plugin object - groupId.",
-				"org.anyframe.plugin", pluginInfo.getGroupId());
-		assertEquals("fail to convert xml to plugin object - artifactId.",
-				"anyframe-remoting-pi", pluginInfo.getArtifactId());
-		assertEquals("fail to convert xml to plugin object - version.",
-				"1.0.0", pluginInfo.getVersion());
-		assertEquals("fail to convert xml to plugin object - dependencies.",
-				"core", pluginInfo.getDependentPlugins().get(0).getName());
-		assertEquals("fail to convert xml to plugin object - dependencies.",
-				"1.0.0>=*", pluginInfo.getDependentPlugins().get(0)
-						.getVersion());
+		assertEquals("fail to convert xml to plugin object - name.", "cxf", pluginInfo.getName());
+		assertEquals("fail to convert xml to plugin object - groupId.", "org.anyframe.plugin", pluginInfo.getGroupId());
+		assertEquals("fail to convert xml to plugin object - artifactId.", "anyframe-cxf-pi", pluginInfo.getArtifactId());
+		assertEquals("fail to convert xml to plugin object - version.", "1.0.0", pluginInfo.getVersion());
+		assertEquals("fail to convert xml to plugin object - dependencies.", "core", pluginInfo.getDependentPlugins().get(0).getName());
+		assertEquals("fail to convert xml to plugin object - dependencies.", "1.0.0 >= *", pluginInfo.getDependentPlugins().get(0).getVersion());
 
 		// 3. find plugin list which depends on a specific plugin
-		Map<String, String> dependendedPlugins = pluginInfoManager
-				.getDependedPlugins(request, PATH_SAMPLE_PROJECT, pluginInfo);
+		Map<String, String> dependendedPlugins = pluginInfoManager.getDependedPlugins(request, PATH_SAMPLE_PROJECT, pluginInfo);
 
 		// 4. assert
-		assertEquals(
-				"fail to find plugin list which depends on a specific plugin.",
-				0, dependendedPlugins.size());
+		assertEquals("fail to find plugin list which depends on a specific plugin.", 0, dependendedPlugins.size());
 
 		// 5. find plugin list which a specific plugin depends on
-		Map<String, String> dependentPlugins = pluginInfoManager
-				.getDependentPlugins(request, pluginInfo);
+		Map<String, String> dependentPlugins = pluginInfoManager.getDependentPlugins(request, pluginInfo);
 
 		// 6. assert
-		assertEquals(
-				"fail to find plugin list which a specific plugin depends on.",
-				1, dependentPlugins.size());
+		assertEquals("fail to find plugin list which a specific plugin depends on.", 1, dependentPlugins.size());
 	}
 
 	/**
@@ -97,8 +82,7 @@ public class DefaultPluginInfoManagerTest extends AbstractCommandTest {
 	 * 'installed' property value
 	 */
 	public void testGetPluginsWithInstallInfo() throws Exception {
-		Map<String, PluginInfo> plugins = pluginInfoManager
-				.getPluginsWithInstallInfo(createRequest(""), PATH_SAMPLE_PROJECT);
+		Map<String, PluginInfo> plugins = pluginInfoManager.getPluginsWithInstallInfo(createRequest(""), PATH_SAMPLE_PROJECT);
 
 		assertNotNull("fail to find plugin list.", plugins.get("cxf"));
 	}
@@ -107,14 +91,12 @@ public class DefaultPluginInfoManagerTest extends AbstractCommandTest {
 	 * [Flow #-3] Positive Case : get all installable plugins
 	 */
 	public void testGetInstallablePlugins() throws Exception {
-		Map<String, PluginInfo> installablePlugins = pluginInfoManager
-				.getInstallablePlugins(createRequest(""), PATH_SAMPLE_PROJECT);
+		Map<String, PluginInfo> installablePlugins = pluginInfoManager.getInstallablePlugins(createRequest(""), PATH_SAMPLE_PROJECT);
 
-		assertEquals("fail to get installable plugins.", 8, installablePlugins
-				.size());
+		assertEquals("fail to get installable plugins.", 7, installablePlugins.size());
 	}
 
 	public void testShowPluginInfo() throws Exception {
-		pluginInfoManager.showPluginInfo(createRequest(""), "remoting");
+		pluginInfoManager.showPluginInfo(createRequest(""), "cxf");
 	}
 }

@@ -15,52 +15,32 @@
  */
 package org.anyframe.ide.command.maven.mojo;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.persistence.Entity;
-
-import org.anyframe.ide.command.cli.util.PluginConstants;
 import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.PluginInfoManager;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.AntUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.PrettyPrinter;
-import org.anyframe.ide.command.common.util.PropertiesIO;
-import org.anyframe.ide.command.maven.mojo.codegen.AnyframeExporter;
-import org.anyframe.ide.command.maven.mojo.codegen.AnyframeGeneratorMojo;
-import org.anyframe.ide.command.maven.mojo.codegen.ArtifactInstaller;
+import org.anyframe.ide.command.common.util.JdbcOption;
+import org.anyframe.ide.command.common.util.ProjectConfig;
+import org.anyframe.ide.command.common.util.VelocityUtil;
+import org.anyframe.ide.command.maven.mojo.codegen.AnyframeCodeMergeHelper;
+import org.anyframe.ide.command.maven.mojo.codegen.AnyframeDomainParser;
+import org.anyframe.ide.command.maven.mojo.codegen.AnyframeTemplateData;
+import org.anyframe.ide.command.maven.mojo.codegen.Domain;
 import org.anyframe.ide.command.maven.mojo.codegen.SourceCodeChecker;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.appfuse.mojo.HibernateExporterMojo;
-import org.codehaus.mojo.hibernate3.configuration.AnnotationComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.ComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.JDBCComponentConfiguration;
-import org.codehaus.mojo.hibernate3.configuration.JPAComponentConfiguration;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
 import org.codehaus.plexus.components.interactivity.Prompter;
-import org.hibernate.tool.hbm2x.Exporter;
-import org.hibernate.tool.hbm2x.XMLPrettyPrinter;
 
 /**
  * This is an AnyframeCodeGenerator class.
@@ -68,8 +48,9 @@ import org.hibernate.tool.hbm2x.XMLPrettyPrinter;
  * @goal create-crud
  * @author Matt Raible
  * @author modified by SooYeon Park
+ * @author modified by Sujeong Lee
  */
-public class GenerateCodeMojo extends AnyframeGeneratorMojo {
+public class GenerateCodeMojo extends AbstractPluginMojo {
 	/** @component role="org.codehaus.plexus.components.interactivity.Prompter" */
 	private Prompter prompter;
 
@@ -109,6 +90,13 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	private String packageName;
 
 	/**
+	 * The generated code's templateType.
+	 * 
+	 * @parameter expression="${templateType}"
+	 */
+	private String templateType = "";
+
+	/**
 	 * The scope.
 	 * 
 	 * @parameter expression="${scope}" default-value="all"
@@ -123,25 +111,12 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	private boolean insertSampleData;
 
 	/**
-	 * <i>Maven Internal</i>: Project to interact with.
-	 * 
-	 * @parameter expression="${project}"
-	 * @required
-	 * @readonly
-	 * @noinspection UnusedDeclaration
-	 */
-	protected MavenProject project;
-
-	/**
 	 * execution mode
 	 * 
 	 * @parameter expression="${isCLIMode}" default-value="true"
 	 */
 	private boolean isCLIMode;
 
-	private List<ComponentConfiguration> componentConfigurations = new ArrayList<ComponentConfiguration>();
-
-	// project meta information
 	/**
 	 * project's name
 	 * 
@@ -149,43 +124,21 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	 */
 	private String projectName;
 
-	private String basePackage = "";
-	private String daoframework = "hibernate";
-	private String templateType = "";
-	protected String templateHome;
-	private String projectType = "web";
+	private ProjectConfig projectConfig;
+	private JdbcOption jdbcOption;
 
-	// db properties
-	private String dialect = "";
-	private String driverClass = "";
-	private String userName = "";
-	private String password = "";
-	private String url = "";
-	private String dbType = "";
-	private String dbSchema = "";
+	// project meta information
+	private String templateHome;
+	private String basePackage;
 
 	// etc.
-	private String webframework = "spring";
-	private String hibernateCfgFilePath = "";
 	private String modelpackage = "";
 	private String entityClassName = "";
-	private String packaging = "jar";
-	private boolean genericcore = false;
+	private String packaging = "war";
 
 	private SourceCodeChecker sourceCodeChecker = new SourceCodeChecker();
 
-	// test
-	private String outputDirectory = "";
-	private String destinationDirectory = "";
-	private String webDestinationDirectory = "";
-	private String domainPjtDirectory;
-	private File hibernateCfgFile = null;
-
-	public GenerateCodeMojo() {
-		componentConfigurations.add(new AnnotationComponentConfiguration());
-		componentConfigurations.add(new JDBCComponentConfiguration());
-		componentConfigurations.add(new JPAComponentConfiguration());
-	}
+	private VelocityEngine velocity;
 
 	/**
 	 * main method for executing GenerateCodeMojo. This mojo is executed when
@@ -193,431 +146,157 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
+			setConfiguration();
 			checkInstalledPlugins(new String[] { CommonConstants.CORE_PLUGIN });
-			setProperties();
-			if (isCLIMode) {
-				sourceCodeChecker.checkExistingCrud(this.isCLIMode,
-						this.prompter, this.templateType, this.templateHome,
-						this.projectHome, this.basePackage, this.packageName,
-						this.entityClassName, this.scope, this.daoframework);
-			}
-			generateCode();
-			executeCodeInstaller();
-			executeConfInstaller();
 
+			if (isCLIMode) {
+				sourceCodeChecker.checkExistingCrud(this.isCLIMode, this.prompter, this.templateType, this.templateHome, this.projectHome,
+						this.basePackage, this.packageName, this.entityClassName, this.scope);
+			}
+
+			// get target domain with sample data contains
+			Domain targetDomain = generateDomain();
+
+			// file generate
+			executeGenerate(targetDomain);
+
+			// insert sample data
 			if (insertSampleData) {
 				insertInitialSampleData();
 			}
+
 			postExecute();
 
-			System.out
-					.println("CRUD source codes for the given domain name are generated successfully.");
+			System.out.println("CRUD source codes for the given domain name are generated successfully.");
 		} catch (Exception ex) {
-			getLog().error(
-					"Fail to execute GenerateCodeMojo. The reason is '"
-							+ ex.getMessage() + "'.");
+			ex.printStackTrace();
+			getLog().error("Fail to execute GenerateCodeMojo. The reason is '" + ex.getMessage() + "'.");
 			throw new MojoFailureException(null);
 		}
 	}
 
-	private void setProperties() throws Exception {
-		// 1. read project.mf
-		File metadataFile = new File(baseDir.getAbsolutePath()
-				+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+	private void setConfiguration() throws Exception {
+		// 1. read project configuration
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir.getAbsolutePath());
+		projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+		jdbcOption = ConfigXmlUtil.getDefaultDatabase(projectConfig);
 
-		if (!metadataFile.exists()) {
-			throw new CommandException("Can not find a '"
-					+ metadataFile.getAbsolutePath()
-					+ "' file. Please check a location of your project.");
+		// 2. set member variables from configuration
+		if (StringUtils.isEmpty(templateHome)) {
+			this.templateHome = projectConfig.getTemplatePath(CommonConstants.PROJECT_NAME_CODE_GENERATOR);
 		}
+		this.basePackage = projectConfig.getPackageName();
 
-		PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
+		getLog().info("Scope for generation code is automatically set to 'all'.");
+		this.packaging = "war";
 
-		// 2. set member variables from project.mf
-		this.projectName = pio.readValue(PluginConstants.PROJECT_NAME);
-		this.basePackage = pio.readValue(PluginConstants.PACKAGE_NAME);
-
-		this.dialect = pio.readValue(CommonConstants.DB_DIALECT);
-		this.driverClass = pio.readValue(PluginConstants.DB_DRIVER_CLASS);
-		this.userName = pio.readValue(PluginConstants.DB_USERNAME);
-		this.password = pio.readValue(PluginConstants.DB_PASSWORD);
-		this.url = pio.readValue(PluginConstants.DB_URL);
-		this.dbType = pio.readValue(PluginConstants.DB_TYPE);
-		this.dbSchema = pio.readValue(PluginConstants.DB_SCHEMA);
-
-		this.daoframework = pio
-				.readValue(CommonConstants.APP_DAOFRAMEWORK_TYPE);
-		this.templateType = pio.readValue(CommonConstants.APP_TEMPLATE_TYPE);
-
-		if (StringUtils.isEmpty(this.templateHome)) {
-			this.templateHome = pio
-					.readValue(CommonConstants.PROJECT_TEMPLATE_HOME);
-		}
-		this.projectType = pio.readValue(PluginConstants.PROJECT_TYPE);
-		if (this.scope.equalsIgnoreCase("all")) {
-			if (this.projectType
-					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_WEB))
-				getLog().info(
-						"Scope for generation code is automatically set to 'all'.");
-			else if (this.projectType
-					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_SERVICE)) {
-				this.scope = PluginConstants.PROJECT_TYPE_SERVICE;
-				getLog().info(
-						"Scope for generation code is automatically set to 'service'. You cannot use scope 'all' because your project is a 'service' type.");
-			}
-		}
-		if (this.scope.equalsIgnoreCase("web")) {
-			if (this.projectType
-					.equalsIgnoreCase(PluginConstants.PROJECT_TYPE_SERVICE)) {
-				this.scope = PluginConstants.PROJECT_TYPE_SERVICE;
-				getLog().info(
-						"Scope for generation code is automatically set to 'service'. You cannot use scope 'web' because your project is a 'service' type.");
-			}
-		}
-
-		if (!this.scope.equals("service"))
-			this.packaging = "war";
 		int lastDotIndex = this.entity.lastIndexOf(".");
-		this.modelpackage = (lastDotIndex != -1) ? entity.substring(0,
-				lastDotIndex) : this.basePackage + ".domain";
-		this.entityClassName = lastDotIndex != -1 ? entity
-				.substring(lastDotIndex + 1) : entity;
+		this.modelpackage = (lastDotIndex != -1) ? entity.substring(0, lastDotIndex) : this.basePackage + ".domain";
+		this.entityClassName = lastDotIndex != -1 ? entity.substring(lastDotIndex + 1) : entity;
 		if (StringUtils.isEmpty(this.packageName)) {
-			this.packageName = this.basePackage + "."
-					+ this.entity.toLowerCase();
-		}
-		if (StringUtils.isEmpty(this.templateHome)) {
-			this.templateHome = baseDir.getParent()
-					+ CommonConstants.fileSeparator + "templates";
+			this.packageName = this.basePackage + "." + this.entity.toLowerCase();
 		}
 
 		// 3. check temporary directory
 		checkTemporaryDirectory();
-
-		// 4. set maven project
-		setMavenProject();
-
-		// 5. set System properties
-		System.setProperty("entity", this.entityClassName);
-		System.setProperty("modelpackage", this.modelpackage);
-		System.setProperty("type", "pojo");
-		System.setProperty("disableInstallation", "true");
-		System.setProperty("entity.check", "false");
-
-		// 6. set location to be generated codes
-		setGenLocation(this.projectHome + CommonConstants.fileSeparator
-				+ ".temp");
 	}
 
-	public void generateCode() throws MojoExecutionException,
-			MojoFailureException {
-		addAllEntitiesToHibernateCfgXml();
-		super.execute();
+	public Domain generateDomain() throws Exception {
+		String simpleEntity = entity;
+		if (simpleEntity.indexOf(".") > 0) {
+			simpleEntity = entity.substring(entity.lastIndexOf(".") + 1);
+		}
+		
+		String targetDomainFile = this.baseDir.getAbsolutePath() + CommonConstants.SRC_MAIN_JAVA
+				+ this.modelpackage.replace(".", CommonConstants.fileSeparator) + CommonConstants.fileSeparator + simpleEntity + ".java";
+
+		String targetEntity = entity;
+		if (targetEntity.indexOf(".") < 0) {
+			targetEntity = modelpackage + "." + targetEntity;
+		}
+
+		return AnyframeDomainParser.parse(targetDomainFile, targetEntity, jdbcOption, templateHome);
 	}
 
-	public void executeCodeInstaller() throws Exception {
-		// for test
-		if (StringUtils.isEmpty(this.destinationDirectory)) {
-			this.destinationDirectory = this.projectHome
-					+ CommonConstants.fileSeparator;
-		}
+	private void executeGenerate(Domain targetDomain) throws Exception {
 
-		ArtifactInstaller installer = new ArtifactInstaller(project,
-				this.modelpackage, this.entityClassName, getOutputDirectory(),
-				this.destinationDirectory, this.genericcore, this.templateHome);
-		installer.setLog(getLog());
-		installer.setDomainPjtDirectory(this.projectHome
-				+ CommonConstants.fileSeparator + this.projectName);
+		List<AnyframeTemplateData> templateInfoList = sourceCodeChecker.getTemplateList(templateType, templateHome, this.basePackage,
+				this.packageName, this.entityClassName, scope);
 
-		installer.execute();
+		velocity = VelocityUtil.initializeFileResourceVelocity(templateHome);
 
-		// for test
-		if (StringUtils.isEmpty(this.webDestinationDirectory)) {
-			this.webDestinationDirectory = this.projectHome
-					+ CommonConstants.fileSeparator;
-		}
+		Context context = new VelocityContext();
+		context.put("package", packageName);
+		context.put("domain", targetDomain);
+		context.put("author", System.getProperty("user.name"));
 
-		if (!this.scope.equals("service")) {
-			installer.setWebDestinationDirectory(this.webDestinationDirectory);
-			installer.setMainPjtDirectory(this.projectHome
-					+ CommonConstants.fileSeparator);
-			installer.webExecute();
-		}
-	}
+		for (AnyframeTemplateData info : templateInfoList) {
+			String template = "";
+			String target = this.baseDir.getAbsolutePath() + CommonConstants.fileSeparator + info.getSrc();
 
-	public void executeConfInstaller() throws Exception {
-		// for test
-		if (StringUtils.isEmpty(this.destinationDirectory)) {
-			this.destinationDirectory = this.projectHome;
-		}
+			String vmFile = info.getVm();
+			if (Boolean.valueOf(info.getCommon())) {
+				template = "common" + CommonConstants.fileSeparator + vmFile;
+			} else {
+				template = templateType + CommonConstants.fileSeparator + vmFile;
+			}
 
-		if (StringUtils.isEmpty(this.domainPjtDirectory)) {
-			this.domainPjtDirectory = this.projectHome;
-		}
+			boolean isMerge = Boolean.valueOf(info.getMerge());
+			String tempTarget = this.baseDir.getAbsolutePath() + CommonConstants.fileSeparator + ".temp" + CommonConstants.fileSeparator
+					+ info.getSrc();
+			String originalTarget = target;
 
-		ArtifactInstaller installer = new ArtifactInstaller(project,
-				this.modelpackage, this.entityClassName, getOutputDirectory(),
-				this.destinationDirectory, this.genericcore, this.templateHome);
-		installer.setLog(getLog());
-		installer.setMainPjtDirectory(this.projectHome);
-		installer.setDomainPjtDirectory(this.domainPjtDirectory);
+			if (isMerge) {
+				// merge type template backup original target file name make
+				// temp file
+				target = tempTarget;
+				File originalTargetFile = new File(originalTarget);
+				originalTargetFile.getParentFile().mkdirs();
+			}
 
-		installer.executeConf();
+			File targetFile = new File(target);
+			targetFile.getParentFile().mkdirs();
 
-		// for test
-		if (StringUtils.isEmpty(this.webDestinationDirectory)) {
-			this.webDestinationDirectory = this.projectHome;
-		}
+			try {
+				VelocityUtil.mergeTemplate(velocity, context, template, new File(target), "UTF-8");
+			} catch (Exception e) {
+				getLog().warn("Merging of " + target + " with template" + " is skipped. The reason is a '" + e.getMessage() + "'.");
+			}
 
-		if (!this.scope.equals("service")) {
-			installer.setWebDestinationDirectory(this.webDestinationDirectory);
-			installer.webExecuteConf();
+			if (isMerge) {
+				// temp file copy, replace
+				try {
+					AnyframeCodeMergeHelper helper = new AnyframeCodeMergeHelper();
+					helper.merge(info, targetDomain.getName(), originalTarget, target, templateType);
+				} catch (Exception e) {
+					// TODO merge fail
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
 	public void insertInitialSampleData() throws Exception {
-		File sampleDataFile = new File(this.projectHome,
-				"/src/test/resources/sample-data.xml");
+		File sampleDataFile = new File(this.projectHome, "/src/test/resources/sample-data.xml");
 
 		if (sampleDataFile.exists()) {
 			try {
-				AntUtil.executeDbUnitTask(this.dbType.toLowerCase(), this.url,
-						this.driverClass, this.userName, this.password,
-						this.dbSchema, sampleDataFile, this.projectHome);
+				AntUtil.executeDbUnitTask(this.jdbcOption.getDbType().toLowerCase(), this.jdbcOption.getUrl(), this.jdbcOption.getDriverClassName(),
+						this.jdbcOption.getUserName(), this.jdbcOption.getPassword(), this.jdbcOption.getSchema(), sampleDataFile, this.projectHome);
 			} catch (Exception e) {
-				getLog().warn(
-						"Inserting sample data using DBUnit is skipped. The reason is '"
-								+ e.getMessage() + "'.");
+				getLog().warn("Inserting sample data using DBUnit is skipped. The reason is '" + e.getMessage() + "'.");
 			}
 		}
 	}
 
 	public void postExecute() throws Exception {
-		String genLocation = this.projectHome + CommonConstants.fileSeparator
-				+ ".temp";
+		String genLocation = this.projectHome + CommonConstants.fileSeparator + ".temp";
 		FileUtil.deleteDir(new File(genLocation));
-	}
-
-	/**
-	 * Instantiates a org.appfuse.tool.AppFuseExporter object.
-	 * 
-	 * @return POJOExporter
-	 */
-	protected Exporter createExporter() {
-		AnyframeExporter exporter = new AnyframeExporter();
-		exporter.setTemplateType(this.templateType);
-		exporter.setTemplateHome(this.templateHome);
-		exporter.setPackageName(this.packageName);
-		exporter.setProjectType(this.projectType);
-
-		return exporter;
-	}
-
-	/**
-	 * Returns the ComponentConfiguration for this maven goal.
-	 */
-	protected ComponentConfiguration getComponentConfiguration(String name)
-			throws MojoExecutionException {
-		for (Iterator<ComponentConfiguration> it = componentConfigurations
-				.iterator(); it.hasNext();) {
-			ComponentConfiguration componentConfiguration = it.next();
-			if (componentConfiguration.getName().equals(name)) {
-				return componentConfiguration;
-			}
-		}
-		throw new MojoExecutionException(
-				"Could not get Component Configuration.");
-	}
-
-	private void setMavenProject() {
-		// 1. set maven project
-		project.setGroupId(this.basePackage);
-		project.setFile(new File(this.projectHome + "/temp"));
-		project.setBuild(new Build());
-
-		// for test
-		if (StringUtils.isEmpty(this.outputDirectory)) {
-			this.outputDirectory = this.projectHome + "/target/classes";
-		}
-		project.getBuild().setOutputDirectory(this.outputDirectory);
-		project.getBuild().setTestOutputDirectory("./test");
-		project.setPackaging(this.packaging);
-		setPrivateField(HibernateExporterMojo.class, "project", this, project);
-
-		// 2. set maven project's properties
-		Properties projectProps = new Properties();
-		projectProps.setProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE,
-				this.daoframework);
-		projectProps.setProperty(CommonConstants.WEB_FRAMEWORK,
-				this.webframework);
-		projectProps.setProperty("packaging", this.packaging);
-		projectProps.setProperty("genericcore",
-				new Boolean(this.genericcore).toString());
-		projectProps.setProperty("pjt.name", this.projectName);
-		projectProps.setProperty("template.type", this.templateType);
-		setProjectProperties(projectProps);
-
-		// 3. set maven component's properties
-		Properties componentProps = new Properties();
-
-		if (StringUtils.isEmpty(hibernateCfgFilePath)) {
-			this.hibernateCfgFilePath = "/src/main/resources/hibernate/hibernate.cfg.xml";
-			this.hibernateCfgFile = new File(baseDir, hibernateCfgFilePath);
-		} else {
-			this.hibernateCfgFile = new File(hibernateCfgFilePath);
-			this.hibernateCfgFilePath = "/src/main/resources/hibernate/hibernate.cfg.xml";
-		}
-
-		componentProps.setProperty("configurationfile",
-				this.hibernateCfgFilePath);
-		componentProps.setProperty("uuid",
-				new Long(System.currentTimeMillis()).toString());
-		componentProps.setProperty("servicepackage", this.packageName);
-		componentProps.setProperty("modelpackage", this.modelpackage);
-
-		// for impala test cases
-		componentProps.setProperty("modulemain", this.projectName);
-		componentProps.setProperty("moduledomain", this.projectName);
-		componentProps.setProperty("module", this.projectName);
-		componentProps.setProperty("pojoNameLower", entity == null ? ""
-				: entity.toLowerCase().charAt(0) + entity.substring(1));
-		componentProps.setProperty("templatedirectory", templateHome + "/"
-				+ templateType + "/source/");
-		if (this.scope.equals("service"))
-			componentProps.setProperty("generate-core", "true");
-
-		setComponentProperties(componentProps);
-	}
-
-	private void addAllEntitiesToHibernateCfgXml() throws MojoFailureException {
-		ClassLoader old = Thread.currentThread().getContextClassLoader();
-		try {
-
-			String domainPath = project.getBuild().getOutputDirectory() + "/"
-					+ (modelpackage.replace(".", "/"));
-			String classFileName = domainPath + "/" + this.entityClassName
-					+ ".class";
-
-			URL[] newUrls = new URL[1];
-			newUrls[0] = new File(project.getBuild().getOutputDirectory())
-					.toURI().toURL();
-
-			Thread.currentThread().setContextClassLoader(
-					new URLClassLoader(newUrls, this.getClass()
-							.getClassLoader()));
-
-			File classFile = new File(classFileName);
-			if (!classFile.exists()) {
-				throw new MojoFailureException(this.entityClassName
-						+ ".class is not found in " + domainPath + ".");
-			}
-
-			File files = new File(domainPath);
-			String[] fileList = files.list(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".class");
-				}
-			});
-
-			if (fileList != null && fileList.length != 0) {
-				String hibernateCfgXml = null;
-				if (this.hibernateCfgFile.exists()) {
-					FileUtil.removeFileContent(this.hibernateCfgFile,
-							"mapping class", "", true);
-					FileUtil.addFileContent(this.hibernateCfgFile,
-							"</session-factory>",
-							"<!--mapping class-START-->\n"
-									+ "<!--mapping class-END-->\n"
-									+ "</session-factory>\n", true);
-
-					hibernateCfgXml = FileUtils
-							.readFileToString(this.hibernateCfgFile);
-				} else {
-					hibernateCfgXml = getHibernateCfgXml();
-
-					String metadataDialect = "";
-					if (this.dbType.equalsIgnoreCase("sybase"))
-						metadataDialect = "<property name=\"hibernatetool.metadatadialect\">org.anyframe.ide.command.maven.mojo.codegen.dialect.SybaseMetaDataDialect</property>\n";
-
-					String replaceString = "<!--hibernate jdbc configuration here-->\n"
-							+ "<!--hibernate jdbc configuration-START-->\n"
-							+ "<property name=\"hibernate.dialect\">"
-							+ this.dialect
-							+ "</property>\n"
-							+ metadataDialect
-							+ "<property name=\"hibernate.connection.driver_class\">"
-							+ this.driverClass
-							+ "</property>\n"
-							+ "<property name=\"hibernate.connection.username\">"
-							+ this.userName
-							+ "</property>\n"
-							+ "<property name=\"hibernate.connection.password\">"
-							+ this.password
-							+ "</property>\n"
-							+ "<property name=\"hibernate.connection.url\">"
-							+ this.url
-							+ "</property>\n"
-							+ "<!--hibernate jdbc configuration-END-->";
-
-					hibernateCfgXml = hibernateCfgXml.replace(
-							"<!--hibernate jdbc configuration here-->",
-							replaceString);
-
-					getLog().info(
-							(new StringBuilder(
-									"Hibernate.cfg.xml is generated to project"))
-									.toString());
-				}
-
-				for (int i = 0; i < fileList.length; i++) {
-					String pojoName = fileList[i].replace(".class", "");
-					String className = pojoName;
-					if (modelpackage.length() > 0)
-						className = modelpackage + "." + pojoName;
-
-					try {
-						Class clazz = classForName(className);
-
-						ClassLoader loader = clazz.getClassLoader();
-
-						if (!hibernateCfgXml.contains("\"" + className + "\"")
-								&& clazz.isAnnotationPresent(Entity.class)) {
-							hibernateCfgXml = hibernateCfgXml.replace(
-									"<!--mapping class-END-->",
-									" <mapping class=\"" + className + "\"/>"
-											+ "\n <!--mapping class-END-->");
-						}
-					} catch (ClassNotFoundException ignore) {
-					}
-				}
-
-				File xmlFile = new File(this.projectHome, getComponentProperty(
-						"configurationfile",
-						"src/main/resources/hibernate/hibernate.cfg.xml"));
-				FileUtils.writeStringToFile(xmlFile, hibernateCfgXml);
-
-				XMLPrettyPrinter.prettyPrintFile(
-						PrettyPrinter.getDefaultTidy(), xmlFile, xmlFile, true);
-
-			}
-
-		} catch (IOException io) {
-			throw new MojoFailureException(io.getMessage());
-		} catch (Exception e) {
-			throw new MojoFailureException(
-					e,
-					"Fail to add All Entities to Hibernate.cfg.xml in /src/main/resources/hibernate/.",
-					e.getMessage());
-		} finally {
-			Thread.currentThread().setContextClassLoader(old);
-		}
-
 	}
 
 	public Class classForName(String name) throws ClassNotFoundException {
 		try {
-			ClassLoader contextClassLoader = Thread.currentThread()
-					.getContextClassLoader();
+			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 			if (contextClassLoader != null) {
 				return contextClassLoader.loadClass(name);
 			}
@@ -627,19 +306,14 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	}
 
 	private void checkTemporaryDirectory() {
-		String temp = this.projectHome + CommonConstants.fileSeparator
-				+ ".temp";
+		String temp = this.projectHome + CommonConstants.fileSeparator + ".temp";
 		File tempFolder = new File(temp);
 		try {
 			if (!tempFolder.exists()) {
 				if (tempFolder.mkdir())
-					getLog().debug(
-							"Temporary directory to generate source codes is created in "
-									+ tempFolder.getAbsolutePath());
+					getLog().debug("Temporary directory to generate source codes is created in " + tempFolder.getAbsolutePath());
 				else
-					getLog().debug(
-							"Temporary directory to generate source codes is not created in "
-									+ tempFolder.getAbsolutePath());
+					getLog().debug("Temporary directory to generate source codes is not created in " + tempFolder.getAbsolutePath());
 			} else {
 				FileUtil.deleteDir(tempFolder);
 			}
@@ -654,11 +328,9 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 	 * @throws Exception
 	 */
 	protected void checkInstalledPlugins(String[] pluginNames) throws Exception {
-		Map<String, PluginInfo> installedPlugins = pluginInfoManager
-				.getInstalledPlugins(baseDir.getAbsolutePath());
+		Map<String, PluginInfo> installedPlugins = pluginInfoManager.getInstalledPlugins(baseDir.getAbsolutePath());
 		if (installedPlugins.size() == 0) {
-			throw new CommandException(
-					"Can not find any installed plugin information. Please install any plugin at the very first.");
+			throw new CommandException("Can not find any installed plugin information. Please install any plugin at the very first.");
 		}
 
 		boolean isInstalled = false;
@@ -673,111 +345,15 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 		}
 
 		if (!isInstalled) {
-			throw new CommandException(
-					"Can not find installed plugin ["
-							+ uninstallPluginsNames.toString()
-									.substring(
-											0,
-											uninstallPluginsNames.toString()
-													.length() - 1)
-							+ "] information. Please install those plugins at the very first.");
+			throw new CommandException("Can not find installed plugin ["
+					+ uninstallPluginsNames.toString().substring(0, uninstallPluginsNames.toString().length() - 1)
+					+ "] information. Please install those plugins at the very first.");
 		}
-	}
-
-	private void setGenLocation(String location) {
-		addDefaultComponent(location, "configuration", false);
-		addDefaultComponent(location, "jdbcconfiguration", true);
-		addDefaultComponent(location, "annotationconfiguration", true);
-	}
-
-	private void setPrivateField(Class<?> clazz, String field, Object object,
-			Object value) {
-		try {
-			Field prompterField = clazz.getDeclaredField(field);
-			prompterField.setAccessible(true);
-			prompterField.set(object, value);
-		} catch (Exception e) {
-			getLog().warn(
-					"Setting the maven project's properties is skipped.: The reason is a '"
-							+ e.getMessage() + "'.");
-		}
-	}
-
-	private void setComponentProperties(Properties properties) {
-		Map<String, String> componentProperties = this.getComponentProperties();
-
-		Iterator<Object> itr = properties.keySet().iterator();
-		while (itr.hasNext()) {
-			String key = (String) itr.next();
-			componentProperties.put(key, (String) properties.get(key));
-		}
-	}
-
-	private String getHibernateCfgXml() throws MojoFailureException,
-			FileNotFoundException {
-		InputStream in = new FileInputStream(new File(
-				getComponentProperty("templatedirectory")
-						+ "model/hibernate.cfg.ftl"));
-		StringBuffer configFile = new StringBuffer();
-		try {
-			InputStreamReader isr = new InputStreamReader(in);
-			BufferedReader reader = new BufferedReader(isr);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				configFile.append(line).append("\n");
-			}
-			reader.close();
-		} catch (IOException io) {
-			throw new MojoFailureException(io.getMessage());
-		}
-		return configFile.toString();
-	}
-
-	private String getOutputDirectory() {
-		String temp = this.projectHome + CommonConstants.fileSeparator
-				+ ".temp";
-		File tempFolder = new File(temp);
-		try {
-			if (!tempFolder.exists()) {
-				if (tempFolder.mkdir())
-					getLog().debug(
-							"Temporary directory to generate source codes is created in "
-									+ tempFolder.getAbsolutePath());
-				else
-					getLog().debug(
-							"Temporary directory to generate source codes is not created in "
-									+ tempFolder.getAbsolutePath());
-			}
-		} catch (Exception e) {
-			getLog().warn(
-					"Output directory is not found. The reason is '"
-							+ e.getMessage() + "'.");
-		}
-
-		return temp;
-	}
-
-	private void setProjectProperties(Properties properties) {
-		Properties mavenProperties = this.project.getProperties();
-		Iterator<Object> itr = properties.keySet().iterator();
-
-		while (itr.hasNext()) {
-			String key = (String) itr.next();
-			mavenProperties.setProperty(key, (String) properties.get(key));
-		}
-	}
-
-	public MavenProject getProject() {
-		return project;
 	}
 
 	// getter, setter for ANT Task
 	public void setEntity(String entity) {
 		this.entity = entity;
-	}
-
-	public void setMavenProject(MavenProject project) {
-		this.project = project;
 	}
 
 	public void setProjectHome(String projectHome) {
@@ -808,37 +384,12 @@ public class GenerateCodeMojo extends AnyframeGeneratorMojo {
 		this.isCLIMode = isCLIMode;
 	}
 
-	public void setDaoframework(String daoframework) {
-		this.daoframework = daoframework;
-	}
-
 	public void setTemplateType(String templateType) {
 		this.templateType = templateType;
 	}
 
 	public void setBasePackage(String basePackage) {
 		this.basePackage = basePackage;
-	}
-
-	// for test
-	public void setOutputDirectory(String outputDirectory) {
-		this.outputDirectory = outputDirectory;
-	}
-
-	public void setDestinationDirectory(String destinationDirectory) {
-		this.destinationDirectory = destinationDirectory;
-	}
-
-	public void setWebDestinationDirectory(String webDestinationDirectory) {
-		this.webDestinationDirectory = webDestinationDirectory;
-	}
-
-	public void setDomainPjtDirectory(String domainPjtDirectory) {
-		this.domainPjtDirectory = domainPjtDirectory;
-	}
-
-	public void setHibernateCfgFilePath(String hibernateCfgFilePath) {
-		this.hibernateCfgFilePath = hibernateCfgFilePath;
 	}
 
 	public void setTemplateHome(String templateHome) {

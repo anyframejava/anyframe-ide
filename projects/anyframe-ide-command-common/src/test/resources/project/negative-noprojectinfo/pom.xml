@@ -5,7 +5,7 @@
     <artifactId>anyframe-remoting-pi</artifactId>
     <packaging>war</packaging>
     <version>1.0.0</version>
-    <name>remoting plugin project</name>
+    <name>remoting</name>
    <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

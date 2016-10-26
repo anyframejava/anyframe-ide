@@ -63,7 +63,7 @@ public class Messages implements Serializable {
 
 	public static final String WRONG_DIR_PATH = "\nYou used wrong argument value. You should use directory path.\n";
 
-	public static final String WELCOME = "\nWelcome to Anyframe IDE 2.1.0 - http://anyframejava.org\n"
+	public static final String WELCOME = "\nWelcome to Anyframe IDE - http://anyframejava.org\n"
 			+ "Licensed under Apache Standard License 2.0\n"
 			+ "ANYFRAME_HOME is set to: ";
 
@@ -292,4 +292,18 @@ public class Messages implements Serializable {
 		MAVEN_HELP_MESSAGES_BY_COMMAND.put(CommandUtil.CMD_DEPLOY_PLUGINFILE,
 				MAVEN_HELP_PACKAGE_PLUGIN);
 	}
+	
+	public static String fileSeparator = System.getProperty("file.separator");
+	
+	public static String COMMON_CONFIG_PREFS_FILE = "org.anyframe.ide.common.prefs";
+	public static String COMMON_CONFIG_XML_FILE = "org.anyframe.ide.common.config.xml";
+	
+	public static String PREFS_FILE = ".settings" + fileSeparator + COMMON_CONFIG_PREFS_FILE;
+	public static String SETTING_HOME = ".settings" + fileSeparator + "anyframe";
+	
+	public static String COMMON_CONFIG_PREFS_KEY = "COMMON_CONFIG_PATH";
+	
+	public static String PROJECT_HOME = "pjthome";
+	public static String PACKAGE_NAME = "package";
+	public static String PROJECT_NAME = "pjtname";
 }

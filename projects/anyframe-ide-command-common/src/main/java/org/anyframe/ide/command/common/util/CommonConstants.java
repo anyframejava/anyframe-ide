@@ -56,10 +56,14 @@ public interface CommonConstants {
 	String PLUGIN_INSTALLED_FILE = "plugin-installed.xml";
 	String PLUGIN_BUILD_FILE = "plugin-build.xml";
 
+	String COMMON_CONFIG_PREFS_FILE = "org.anyframe.ide.common.prefs";
+	String COMMON_CONFIG_XML_FILE = "org.anyframe.ide.common.config.xml";
+	String JDBC_CONFIG_XML_FILE = "org.anyframe.ide.common.jdbcdriver.config.xml";
+	String DATABASE_CONFIG_XML_FILE = "org.anyframe.ide.common.databases.config.xml";
+
 	String CONFIG_TX_FILE = "context-transaction.xml";
 	String CONTEXT_PROPERTIES = "context.properties";
 	String HIBERNATE_CFG_XML_FILE = "hibernate.cfg.xml";
-	String METADATA_FILE = "project.mf";
 	String SAMPLE_DATA_XML_FILE = "sample-data.xml";
 	String TILES_XML_FILE = "tiles-views.xml";
 	String WEB_XML_FILE = "web.xml";
@@ -81,38 +85,30 @@ public interface CommonConstants {
 	String ARCHETYPE_NAME_VERSION = " %-3s %-40s %-15s";
 	String INSTALL_PLUGINS = " %-8s  %-20s %-35s";
 
-	// 5. sample project - project.mf
-	String ANYFRAME_HOME = "anyframe.home";
+	// 5. sample project - project configuration
+	String COMMON_CONFIG_PREFS_KEY = "COMMON_CONFIG_PATH";
 
 	String APP_DAOFRAMEWORK_TYPE = "project.daoframework";
 	String APP_TEMPLATE_TYPE = "project.template";
-
-	String DB_ARTIFACTID = "db.artifactId";
-	String DB_DIALECT = "db.dialect";
-	String DB_DRIVER_CLASS = "db.driver";
-	String DB_DRIVER_PATH = "db.lib";
-	String DB_GROUPID = "db.groupId";
-	String DB_PASSWORD = "db.password";
-	String DB_SCHEMA = "db.schema";
-	String DB_SCHEMA_USE = "db.schema.use";
-	String DB_TYPE = "db.type";
-	String DB_URL = "db.url";
-	String DB_USERNAME = "db.userId";
-	String DB_VERSION = "db.version";
-	String DB_NAME = "db.name";
-	String DB_SERVER = "db.server";
-	String DB_PORT = "db.port";
-
-	String PACKAGE_NAME = "package.name";
+	
+	String CONFIG_ROOT = "anyframe";
+	String ANYFRAME_HOME = "anyframe-home";
+	String PROJECT_HOME = "pjthome";
+	String PACKAGE_NAME = "package";
+	String PROJECT_NAME = "pjtname";
+	String PROJECT_BUILD_TYPE_ANT = "ant";
+	String CONFIG_PATH = "path";
+	
 	String WEB_FRAMEWORK = "web.framework";
 	String TEMPLATE_TYPE = "template.type";
 	String PROJECT_BUILD_TYPE = "project.build";
-	String PROJECT_BUILD_TYPE_ANT = "ant";
 	String PROJECT_BUILD_TYPE_MAVEN = "maven";
-
-	String PROJECT_HOME = "project.home";
-	String PROJECT_NAME = "project.name";
-	String PROJECT_TEMPLATE_HOME = "project.template.home";
+	String CONTEXT_ROOT = "context-root";
+	
+	String XML_TAG_TEMPLATE = "template";
+	String XML_TAG_JDBCDRIVERS = "jdbcdrivers";
+	String XML_TAG_DATABASES = "databases";
+	
 
 	String PROJECT_TYPE = "project.type";
 	String PROJECT_TYPE_SERVICE = "service";
@@ -130,7 +126,8 @@ public interface CommonConstants {
 	// 8. sample project - directories
 	String METAINF = fileSeparator + "META-INF" + fileSeparator;
 	String METAINF_ANYFRAME = METAINF + "anyframe" + fileSeparator;
-
+	String PLUGIN_INSTALLED_FILE_PATH = METAINF + PLUGIN_INSTALLED_FILE;
+	
 	String SRC_MAIN_JAVA = fileSeparator + "src" + fileSeparator + "main"
 			+ fileSeparator + "java" + fileSeparator;
 	String SRC_MAIN_RESOURCES = fileSeparator + "src" + fileSeparator + "main"
@@ -153,14 +150,43 @@ public interface CommonConstants {
 	String SRC_MAIN_WEBAPP_SAMPLE = SRC_MAIN_WEBAPP + "sample" + fileSeparator;
 
 	String DB_SCRIPTS = fileSeparator + "db" + fileSeparator + "scripts";
-	String DB_RESOURCES = PLUGIN_RESOURCES + fileSeparator + "db"
-			+ fileSeparator + "resources" + fileSeparator;
+	String DB_RESOURCES = PLUGIN_RESOURCES + "/db/resources/";
 	
 	String PLUGIN_ASPECT_PACKAGE = "common" + fileSeparator + "aspect" + fileSeparator;
 	String ORIGIN_PLUGIN_ASPECT_PACKAGE = "org"+ fileSeparator 
 			+ "anyframe" + fileSeparator + "plugin" + fileSeparator+ PLUGIN_ASPECT_PACKAGE;
+	
+	String TEMPLATE_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "templates";
+	String INSPECTION_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "inspection";
 
-	// 9. others
+	String PREFS_FILE = ".settings" + fileSeparator + COMMON_CONFIG_PREFS_FILE;
+	String SETTING_HOME = ".settings" + fileSeparator + "anyframe";
+	
+	// 9. database
+	// db settings
+	String XML_CONFIG_ROOT_PATH = "dbexplorer";
+	String XML_TAG_DATASOURCE = "dataSource";
+	String XML_TAG_TYPE = "type";
+	String XML_TAG_NAME = "name";
+	String XML_TAG_DRIVER_PATH = "driverJar";
+	String XML_TAG_DRIVER_CLASS_NAME = "driverClassName";
+	String XML_TAG_URL = "url";
+	String XML_TAG_USERNAME = "username";
+	String XML_TAG_PASSWORD = "password";
+	String XML_TAG_SCHEMA = "schema";
+
+	// community maven info
+	String XML_TAG_DIALECT = "dialect";
+	String XML_TAG_DRIVER_GROUPID = "driverGroupId";
+	String XML_TAG_DRIVER_ARTIFACTID = "driverArtifactId";
+	String XML_TAG_DRIVER_VERSION = "driverVersion";
+
+	// optional
+	String XML_TAG_USE_DB_SPECIFIC = "useDbSpecific";
+	String XML_TAG_RUN_EXPLAIN_PLAN = "runExplainPlan";
+	String XML_TAG_DEFAULT = "isDefault";
+	
+	// 10. others
 	String EXT_JAR = "jar";
 	String EXT_JAVA = "java";
 	String EXT_XML = "xml";
@@ -196,4 +222,28 @@ public interface CommonConstants {
 	String LOG_LEVEL_INFO = "INFO";
 	
 	String UNINSTALLED_FOLDER = CommonConstants.fileSeparator + ".uninstalled";
+	
+	String PROJECT_NAME_CODE_GENERATOR = "codegenerator";
+	String PROJECT_NAME_DAO_MANAGER = "daomanager";
+	String PROJECT_NAME_VO_MANAGER = "vomanager";
+	String PROJECT_NAME_UNITTEST_MANAGER = "unittestmanager";
+	
+	//for temp
+	String METADATA_FILE = "project.mf";
+	String PROJECT_TEMPLATE_HOME = "project.template.home";
+	String DB_ARTIFACTID = "db.artifactId";
+	String DB_DIALECT = "db.dialect";
+	String DB_DRIVER_CLASS = "db.driver";
+	String DB_DRIVER_PATH = "db.lib";
+	String DB_GROUPID = "db.groupId";
+	String DB_PASSWORD = "db.password";
+	String DB_SCHEMA = "db.schema";
+	String DB_SCHEMA_USE = "db.schema.use";
+	String DB_TYPE = "db.type";
+	String DB_URL = "db.url";
+	String DB_USERNAME = "db.userId";
+	String DB_VERSION = "db.version";
+	String DB_NAME = "db.name";
+	String DB_SERVER = "db.server";
+	String DB_PORT = "db.port";
 }

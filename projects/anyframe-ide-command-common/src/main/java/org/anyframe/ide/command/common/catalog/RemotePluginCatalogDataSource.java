@@ -40,6 +40,7 @@ import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
+import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.IOUtil;
@@ -108,14 +109,16 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 
 		try {
 			List<Server> servers = request.getServers();
-			Map<String, Server> serverMap = new HashMap();
+			Map<String, Server> serverMap = new HashMap<String, Server>();
 			for (Server server : servers) {
 				serverMap.put(server.getId(), server);
 			}
 
+			Proxy proxy = request.getActiveProxy();
+			
 			Map<String, PluginInfo> plugins = getPluginsFromRemotePluginCatalog(
-					remoteRepositories, serverMap, catalogFileName.substring(0,
-							catalogFileName.length() - 4));
+					remoteRepositories, serverMap, proxy,
+					catalogFileName.substring(0, catalogFileName.length() - 4));
 
 			makePluginCatalogFile(catalogFileName, plugins);
 
@@ -145,6 +148,10 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 	 *            user name to connect to remote repository
 	 * @param password
 	 *            password to connect to remote repository
+	 * @param proxyHost
+	 *            proxy host to connect to remote repository
+	 * @param proxyPort
+	 *            proxy port to connect to remote repository
 	 * @param isEssential
 	 *            whether the plugin is essential
 	 * @param isLatest
@@ -155,8 +162,8 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 	@SuppressWarnings("unchecked")
 	public void updatePluginCatalog(ArchetypeGenerationRequest request,
 			File baseDir, String url, String userName, String password,
-			boolean isEssential, boolean isLatest, PluginInfo pluginInfo)
-			throws Exception {
+			String proxyHost, int proxyPort, boolean isEssential,
+			boolean isLatest, PluginInfo pluginInfo) throws Exception {
 		String catalogFileName = (isEssential) ? CommonConstants.PLUGIN_CATALOG_ESSENTIAL_FILE
 				: CommonConstants.PLUGIN_CATALOG_OPTIONAL_FILE;
 
@@ -168,7 +175,7 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 
 			// get plugin catalog from remote repository
 			is = getResourceFromRemoteRepository(url, remoteCatalogFileName,
-					userName, password);
+					userName, password, proxyHost, proxyPort);
 
 			Map<String, PluginInfo> plugins = (Map<String, PluginInfo>) FileUtil
 					.getObjectFromXML(is);
@@ -244,11 +251,14 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 	@SuppressWarnings("unchecked")
 	private Map<String, PluginInfo> getPluginsFromRemotePluginCatalog(
 			List<ArtifactRepository> remoteRepositories,
-			Map<String, Server> servers, String fileName) throws Exception {
+			Map<String, Server> servers, Proxy proxy, String fileName)
+			throws Exception {
 		Map<String, PluginInfo> plugins = new ListOrderedMap();
 		InputStream is = null;
 		String username = null;
 		String password = null;
+		String proxyHost = null;
+		int proxyPort = -1;
 
 		for (ArtifactRepository remoteRepository : remoteRepositories) {
 			try {
@@ -261,10 +271,21 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 				if (server != null) {
 					username = server.getUsername();
 					password = server.getPassword();
+					getLogger().debug(
+							"credentials [username=" + username + ", password="
+									+ password + "]");
+				}
+
+				if (proxy != null) {
+					proxyHost = proxy.getHost();
+					proxyPort = proxy.getPort();
+					getLogger().debug(
+							"proxy credentials [proxyHost=" + proxyHost
+									+ ", proxyPort=" + proxyPort + "]");
 				}
 
 				is = getResourceFromRemoteRepository(remoteRepository.getUrl(),
-						fileName, username, password);
+						fileName, username, password, proxyHost, proxyPort);
 
 				if (is != null)
 					plugins.putAll((Map<String, PluginInfo>) FileUtil
@@ -292,10 +313,15 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 	 *            user name to connect remote repository
 	 * @param password
 	 *            password to connect remote repository
+	 * @param proxyHost
+	 *            proxy host to connect to remote repository
+	 * @param proxyPort
+	 *            proxy port to connect to remote repository
 	 * @return input stream of resource in remote repository
 	 */
 	private InputStream getResourceFromRemoteRepository(String url,
-			String remoteResource, String userName, String password) {
+			String remoteResource, String userName, String password,
+			String proxyHost, int proxyPort) {
 		getLogger().debug(
 				"Ready to get a resource from a remote repository. [location="
 						+ url + "]");
@@ -303,8 +329,12 @@ public class RemotePluginCatalogDataSource extends AbstractLogEnabled {
 		Credentials creds = null;
 		if (userName != null && password != null) {
 			creds = new UsernamePasswordCredentials(userName, password);
+			client.getState().setCredentials(AuthScope.ANY, creds);
 		}
-		client.getState().setCredentials(AuthScope.ANY, creds);
+
+		if (proxyHost != null && proxyPort != -1) {
+			client.getHostConfiguration().setProxy(proxyHost, proxyPort);
+		}
 
 		GetMethod getMethod = new GetMethod(url + "/" + remoteResource + "."
 				+ CommonConstants.EXT_XML);

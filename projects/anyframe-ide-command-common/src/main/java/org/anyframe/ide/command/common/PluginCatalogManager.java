@@ -127,6 +127,10 @@ public interface PluginCatalogManager {
 	 *            user name to connect to remote repository
 	 * @param password
 	 *            password to connect to remote repository
+	 * @param proxyHost
+	 *            proxy host to connect to remote repository
+	 * @param proxyPort
+	 *            proxy port to connect to remote repository
 	 * @param isEssential
 	 *            whether the plugin is essential
 	 * @param isLatest
@@ -135,6 +139,6 @@ public interface PluginCatalogManager {
 	 *            information about plugin
 	 */
 	void updatePluginCatalog(ArchetypeGenerationRequest request, File baseDir,
-			String url, String userName, String password, boolean isEssential,
+			String url, String userName, String password, String proxyHost, int proxyPort, boolean isEssential,
 			boolean isLatest, PluginInfo pluginInfo) throws Exception;
 }

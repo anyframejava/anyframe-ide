@@ -58,6 +58,7 @@ public class GenerateArchetypeTest extends AbstractTaskTest {
 		generateArchetypeTask.setArchetypeGroupId("org.anyframe.archetype");
 		generateArchetypeTask
 				.setArchetypeArtifactId("anyframe-basic-archetype");
+		generateArchetypeTask.setOffline("true");
 	}
 
 	/**

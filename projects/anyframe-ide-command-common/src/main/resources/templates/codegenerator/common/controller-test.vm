@@ -1,0 +1,156 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+#macro( getFieldNameUpper $fieldName )### START getFieldNameUpper
+${fieldName.substring(0,1).toUpperCase()}${fieldName.substring(1)}##
+#end#### END getFieldNameUpper
+package ${package}.web;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.support.SimpleSessionStatus;
+
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+import ${domain.packageName}.${domain.name};
+
+import ${package}.service.${domain.name}Service;
+
+@RunWith(JMock.class)
+public class ${domain.name}ControllerTest {
+
+    private ${domain.name}Controller controller;
+    private String SUCCESS_CREATEVIEW = "generation/#getDomainNameLower(${domain.name})/form";
+    private String SUCCESS_CREATE = "redirect:/#getDomainNameLower(${domain.name}).do?method=list";
+    private String SUCCESS_GET = "generation/#getDomainNameLower(${domain.name})/form";
+    private String SUCCESS_UPDATE = "redirect:/#getDomainNameLower(${domain.name}).do?method=list";
+    private String SUCCESS_LIST = "generation/#getDomainNameLower(${domain.name})/list";
+    private String SUCCESS_REMOVE = "redirect:/#getDomainNameLower(${domain.name}).do?method=list";
+    private Mockery context = new JUnit4Mockery();
+    private ${domain.name}Service mockService = null;
+	
+    @Before   
+    public void setUp() throws Exception {
+        System.setProperty("log4j.configuration", "log4j-test.xml");
+
+        this.mockService = context.mock(${domain.name}Service.class);                
+        this.controller = new ${domain.name}Controller();
+        this.controller.set${domain.name}Service(this.mockService);       
+    }
+    
+    public void set${domain.name}Controller(${domain.name}Controller controller) {
+        this.controller = controller;
+    }
+        
+    @Test
+    public void testCreateView() throws Exception{
+        String viewName = this.controller.createView(new ExtendedModelMap());
+        
+        assertEquals("returned correct view name", SUCCESS_CREATEVIEW, viewName);
+   }
+   
+   @Test     
+   public void testCreate() throws Exception{
+		${domain.name} #getDomainNameLower(${domain.name}) = get${domain.name}();
+        
+        context.checking(new Expectations() {{
+			allowing(any(${domain.name}Service.class)).method("create");
+		}});
+  		        
+        String viewName = this.controller.create(#getDomainNameLower(${domain.name}), new BeanPropertyBindingResult(#getDomainNameLower(${domain.name}),"#getDomainNameLower(${domain.name})"),new SimpleSessionStatus());               
+        assertEquals("returned correct view name", SUCCESS_CREATE, viewName);
+   }
+   
+   @Test
+   public void testGet() throws Exception{
+        final ${domain.name} #getDomainNameLower(${domain.name}) = get${domain.name}();
+
+        context.checking(new Expectations() {{
+			allowing(any(${domain.name}Service.class)).method("get");
+			will(returnValue(#getDomainNameLower(${domain.name})));
+		}});
+
+        String viewName = this.controller.get(#getDomainNameLower(${domain.name}), new ExtendedModelMap());               
+        assertEquals("returned correct view name", SUCCESS_GET, viewName);
+    }
+    
+    @Test      
+    public void testList() throws Exception{
+        SearchVO searchVO = new SearchVO(); 
+        
+        // create ${domain.name} List
+        final Page page = new Page();
+        List<${domain.name}> #getDomainNameLower(${domain.name})List = new ArrayList<${domain.name}>();
+        #getDomainNameLower(${domain.name})List.add(new ${domain.name}());
+        #getDomainNameLower(${domain.name})List.add(new ${domain.name}());
+        page.setObjects(#getDomainNameLower(${domain.name})List);
+        page.setTotalCount(2);
+
+        context.checking(new Expectations() {{
+			allowing(any(${domain.name}Service.class)).method("getPagingList");
+			will(returnValue(page));
+		}});
+
+        String viewName = this.controller.list(searchVO, new ExtendedModelMap());        
+               
+        assertEquals("returned correct view name", SUCCESS_LIST, viewName);
+    }
+
+    @Test
+    public void testUpdate() throws Exception{
+        ${domain.name} #getDomainNameLower(${domain.name}) = get${domain.name}();
+	       
+        context.checking(new Expectations() {{
+			allowing(any(${domain.name}Service.class)).method("update");
+		}});
+		
+        String viewName = this.controller.update(#getDomainNameLower(${domain.name}), new BeanPropertyBindingResult(#getDomainNameLower(${domain.name}),"#getDomainNameLower(${domain.name})"),new SimpleSessionStatus());               
+        assertEquals("returned correct view name", SUCCESS_UPDATE, viewName);
+   }
+   
+    @Test
+    public void testRemove() throws Exception{
+        ${domain.name} #getDomainNameLower(${domain.name}) = get${domain.name}(); 
+        
+        context.checking(new Expectations() {{
+			allowing(any(${domain.name}Service.class)).method("remove");
+		}});
+		
+        String viewName = this.controller.remove(#getDomainNameLower(${domain.name}));               
+        assertEquals("returned correct view name", SUCCESS_REMOVE, viewName); 
+   }
+    
+	private ${domain.name} get${domain.name}(){
+		${domain.name} #getDomainNameLower(${domain.name}) = new ${domain.name}();  
+		
+#******##foreach($column in $domain.columns)
+#******##if($column.isKey || $column.notNull)##		
+#******##if($column.columnType == "DATE")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new Date(${column.sampleDataArray.get(1)}));
+#******##elseif($column.columnType == "TIME")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new TIME(${column.sampleDataArray.get(1)}));
+#******##elseif($column.columnType == "DATETIME" || $column.columnType == "TIMESTAMP")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(new Timestamp(${column.sampleDataArray.get(1)}));
+#******##elseif($column.fieldType == "java.lang.String")##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})("${column.sampleDataArray.get(1)}");
+#******##else##
+		#getDomainNameLower(${domain.name}).set#getFieldNameUpper(${column.fieldName})(${column.sampleDataArray.get(1)});
+#******##end##
+#******##end##
+#******##end
+
+		return #getDomainNameLower(${domain.name});
+	}
+}

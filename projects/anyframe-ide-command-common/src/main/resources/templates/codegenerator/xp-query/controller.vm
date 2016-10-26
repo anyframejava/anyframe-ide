@@ -1,0 +1,35 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.web;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import ${package}.service.${domain.name}XPService;
+import org.anyframe.xp.query.web.controller.AbstractXPDispatchController;
+
+import com.tobesoft.xplatform.tx.HttpPlatformRequest;
+import com.tobesoft.xplatform.data.DataSetList;
+import com.tobesoft.xplatform.data.VariableList;
+
+public class ${domain.name}XPController extends AbstractXPDispatchController {
+
+	@Inject
+	@Named("#getDomainNameLower(${domain.name})XPService")
+	private ${domain.name}XPService #getDomainNameLower(${domain.name})XPService;
+    
+    public void getPagingList(HttpPlatformRequest platformRequest,
+                    VariableList inVl, DataSetList inDl, VariableList outVl,
+                    DataSetList outDl) throws Exception {
+            #getDomainNameLower(${domain.name})XPService.getPagingList(inVl, inDl, outVl, outDl);
+    }
+
+    public void saveAll(HttpPlatformRequest platformRequest, VariableList inVl,
+                    DataSetList inDl, VariableList outVl, DataSetList outDl)
+                    throws Exception {
+            #getDomainNameLower(${domain.name})XPService.saveAll(inVl, inDl, outVl, outDl);
+    }
+
+}
+

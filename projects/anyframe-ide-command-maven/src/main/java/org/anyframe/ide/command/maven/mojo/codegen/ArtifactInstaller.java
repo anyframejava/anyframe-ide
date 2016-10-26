@@ -153,10 +153,8 @@ public class ArtifactInstaller {
 		return domainPjtDirectory;
 	}
 
-	public ArtifactInstaller(MavenProject project, String modelpackage,
-			String pojoName, String sourceDirectory,
-			String destinationDirectory, boolean genericCore,
-			String templateHome) throws JDOMException, IOException {
+	public ArtifactInstaller(MavenProject project, String modelpackage, String pojoName, String sourceDirectory, String destinationDirectory,
+			boolean genericCore, String templateHome) throws JDOMException, IOException {
 		this.project = project;
 		this.pjtName = project.getProperties().getProperty("pjt.name");
 		this.pojoName = pojoName;
@@ -179,134 +177,75 @@ public class ArtifactInstaller {
 
 		SAXBuilder reader = new SAXBuilder();
 
-		String templateType = project.getProperties().getProperty(
-				"template.type");
+		String templateType = project.getProperties().getProperty("template.type");
 
 		try {
-			Document docDefault = reader.build(new File(templateHome + "/"
-					+ templateType + "/source/" + "template.config"));
-			singleFilePath.put(
-					"dynamic-hibernate.xml",
-					getSingleFilePath(docDefault,
-							"dao/hibernate/dynamic-hibernate.ftl"));
-			singleFilePath
-					.put("mapping-query.xml",
-							getSingleFilePath(docDefault,
-									"dao/query/mapping-query.ftl"));
-			singleFilePath.put(
-					"mapping-ibatis2.xml",
-					getSingleFilePath(docDefault,
-							"dao/ibatis2/mapping-ibatis2.ftl"));
-			singleFilePath.put(
-					"mapper-mybatis.xml",
-					getSingleFilePath(docDefault,
-							"dao/mybatis/mapper-mybatis.ftl"));
+			Document docDefault = reader.build(new File(templateHome + "/" + templateType + "/source/" + "template.config"));
+			singleFilePath.put("dynamic-hibernate.xml", getSingleFilePath(docDefault, "dao/hibernate/dynamic-hibernate.ftl"));
+			singleFilePath.put("mapping-query.xml", getSingleFilePath(docDefault, "dao/query/mapping-query.ftl"));
+			singleFilePath.put("mapping-ibatis2.xml", getSingleFilePath(docDefault, "dao/ibatis2/mapping-ibatis2.ftl"));
+			singleFilePath.put("mapper-mybatis.xml", getSingleFilePath(docDefault, "dao/mybatis/mapper-mybatis.ftl"));
 
-			singleFilePath
-					.put("mapping-query-miplatform.xml",
-							getSingleFilePath(docDefault,
-									"dao/query/mapping-query.ftl"));
-			singleFilePath.put("grid_list.xml",
-					getSingleFilePath(docDefault, "web/mip-grid-list.ftl"));
-			singleFilePath.put("xp_grid_list.xml",
-					getSingleFilePath(docDefault, "web/xp-grid-list.ftl"));
+			singleFilePath.put("mapping-query-miplatform.xml", getSingleFilePath(docDefault, "dao/query/mapping-query.ftl"));
+			singleFilePath.put("grid_list.xml", getSingleFilePath(docDefault, "web/mip-grid-list.ftl"));
+			singleFilePath.put("xp_grid_list.xml", getSingleFilePath(docDefault, "web/xp-grid-list.ftl"));
 
 		} catch (Exception e) {
-			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '"
-					+ e.getMessage() + "'.");
+			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '" + e.getMessage() + "'.");
 		}
 
 		try {
-			Document docDefault = reader.build(new File(templateHome + "/"
-					+ templateType + "/source/" + "template.config"));
-			singleFilePathForMerge.put("sample-data.xml",
-					getSingleFilePath(docDefault, "dao/sample-data.ftl"));
-			singleFilePathForMerge.put(
-					"message-generation.properties",
-					getSingleFilePath(docDefault,
-							"web/ApplicationResources.ftl"));
-			singleFilePathForMerge.put("left-gen.jsp",
-					getSingleFilePath(docDefault, "web/menu.ftl"));
-			singleFilePathForMerge.put("tilesviews.xml",
-					getSingleFilePath(docDefault, "web/tiles-menu.ftl"));
-			singleFilePathForMerge.put(
-					"mip-query-generation-servlet.xml",
-					getSingleFilePath(docDefault,
-							"web/spring/controller-beans.ftl"));
-			singleFilePathForMerge.put(
-					"xp-query-generation-servlet.xml",
-					getSingleFilePath(docDefault,
-							"web/spring/controller-beans.ftl"));
+			Document docDefault = reader.build(new File(templateHome + "/" + templateType + "/source/" + "template.config"));
+			singleFilePathForMerge.put("sample-data.xml", getSingleFilePath(docDefault, "dao/sample-data.ftl"));
+			singleFilePathForMerge.put("message-generation.properties", getSingleFilePath(docDefault, "web/ApplicationResources.ftl"));
+			singleFilePathForMerge.put("left-gen.jsp", getSingleFilePath(docDefault, "web/menu.ftl"));
+			singleFilePathForMerge.put("tilesviews.xml", getSingleFilePath(docDefault, "web/tiles-menu.ftl"));
+			singleFilePathForMerge.put("mip-query-generation-servlet.xml", getSingleFilePath(docDefault, "web/spring/controller-beans.ftl"));
+			singleFilePathForMerge.put("xp-query-generation-servlet.xml", getSingleFilePath(docDefault, "web/spring/controller-beans.ftl"));
 
-			singleFilePathForMerge.put(
-					"mybatis-generation-config.xml",
-					getSingleFilePath(docDefault,
-							"dao/mybatis/mybatis-config.ftl"));
+			singleFilePathForMerge.put("mybatis-generation-config.xml", getSingleFilePath(docDefault, "dao/mybatis/mybatis-config.ftl"));
 
 		} catch (Exception e) {
-			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '"
-					+ e.getMessage() + "'.");
+			log.error("Configuration file path handling is skipped in loadMergeFilePath(). The reason is '" + e.getMessage() + "'.");
 		}
 
 		try {
-			Document docDefault = reader.build(new File(templateHome + "/"
-					+ templateType + "/source/" + "template.config"));
-			mergeFilePath.put("sample-data.xml",
-					getMergeFilePath(docDefault, "dao/sample-data.ftl"));
-			mergeFilePath
-					.put("message-generation.properties",
-							getMergeFilePath(docDefault,
-									"web/ApplicationResources.ftl"));
-			mergeFilePath.put("left-gen.jsp",
-					getMergeFilePath(docDefault, "web/menu.ftl"));
-			mergeFilePath.put("tilesviews.xml",
-					getMergeFilePath(docDefault, "web/tiles-menu.ftl"));
+			Document docDefault = reader.build(new File(templateHome + "/" + templateType + "/source/" + "template.config"));
+			mergeFilePath.put("sample-data.xml", getMergeFilePath(docDefault, "dao/sample-data.ftl"));
+			mergeFilePath.put("message-generation.properties", getMergeFilePath(docDefault, "web/ApplicationResources.ftl"));
+			mergeFilePath.put("left-gen.jsp", getMergeFilePath(docDefault, "web/menu.ftl"));
+			mergeFilePath.put("tilesviews.xml", getMergeFilePath(docDefault, "web/tiles-menu.ftl"));
 
-			mergeFilePath.put(
-					"mybatis-generation-config.xml",
-					getMergeFilePath(docDefault,
-							"dao/mybatis/mybatis-config.ftl"));
+			mergeFilePath.put("mybatis-generation-config.xml", getMergeFilePath(docDefault, "dao/mybatis/mybatis-config.ftl"));
 
 		} catch (Exception e) {
-			log.error("Target Configuration file path handling for merging is skipped in loadMergeFilePath(). The reason is '"
-					+ e.getMessage() + "'.");
+			log.error("Target Configuration file path handling for merging is skipped in loadMergeFilePath(). The reason is '" + e.getMessage()
+					+ "'.");
 		}
 
 		try {
-			Document docDefault = reader.build(new File(templateHome + "/"
-					+ templateType + "/source/" + "template.config"));
-			mergeFilePath.put(
-					"mip-query-generation-servlet.xml",
-					getMergeFilePath(docDefault,
-							"web/spring/controller-beans.ftl"));
-			mergeFilePath.put(
-					"xp-query-generation-servlet.xml",
-					getMergeFilePath(docDefault,
-							"web/spring/controller-beans.ftl"));
+			Document docDefault = reader.build(new File(templateHome + "/" + templateType + "/source/" + "template.config"));
+			mergeFilePath.put("mip-query-generation-servlet.xml", getMergeFilePath(docDefault, "web/spring/controller-beans.ftl"));
+			mergeFilePath.put("xp-query-generation-servlet.xml", getMergeFilePath(docDefault, "web/spring/controller-beans.ftl"));
 
 		} catch (Exception e) {
-			log.error("Target Configuration file path handling for merging is skipped in loadMergeFilePath(). The reason is '"
-					+ e.getMessage() + "'.");
+			log.error("Target Configuration file path handling for merging is skipped in loadMergeFilePath(). The reason is '" + e.getMessage()
+					+ "'.");
 		}
 	}
 
-	private String getSingleFilePath(Document docDefault, String ftlName)
-			throws Exception {
+	private String getSingleFilePath(Document docDefault, String ftlName) throws Exception {
 		String ret = "";
-		List<Element> children = docDefault.getRootElement().getChildren(
-				"template");
+		List<Element> children = docDefault.getRootElement().getChildren("template");
 		for (int i = 0; i < children.size(); i++) {
 			Element child = children.get(i);
 			if (ftlName.equals(child.getChildText("ftl"))) {
 				ret = child.getChildText("src");
 				if (ret.indexOf("{basepkg-name}") != -1) {
-					throw new Exception(
-							"Variable {basepkg-name} is not allowed to use. Check tagname <"
-									+ child.getName() + ">");
+					throw new Exception("Variable {basepkg-name} is not allowed to use. Check tagname <" + child.getName() + ">");
 				}
 				ret = StringHelper.replace(ret, "{class-name}", pojoName);
-				ret = StringHelper.replace(ret, "{class-name-lower}",
-						pojoNameLower);
+				ret = StringHelper.replace(ret, "{class-name-lower}", pojoNameLower);
 			}
 		}
 		return ret;
@@ -315,8 +254,7 @@ public class ArtifactInstaller {
 	@SuppressWarnings("unchecked")
 	private String getMergeFilePath(Document docDefault, String ftlName) {
 		String ret = "";
-		List<Element> children = docDefault.getRootElement().getChildren(
-				"template");
+		List<Element> children = docDefault.getRootElement().getChildren("template");
 		for (int i = 0; i < children.size(); i++) {
 			Element child = children.get(i);
 			if (ftlName.equals(child.getChildText("ftl"))) {
@@ -339,10 +277,8 @@ public class ArtifactInstaller {
 	}
 
 	public void execute() {
-		copyGeneratedObjects(this.sourceDirectory, this.destinationDirectory,
-				"**/dao/**/*.java");
-		copyGeneratedObjects(this.sourceDirectory, this.destinationDirectory,
-				"**/service/**/*.java");
+		copyGeneratedObjects(this.sourceDirectory, this.destinationDirectory, "**/dao/**/*.java");
+		copyGeneratedObjects(this.sourceDirectory, this.destinationDirectory, "**/service/**/*.java");
 
 		log.info("Installing sample data for DbUnit...");
 		installSampleData();
@@ -378,25 +314,17 @@ public class ArtifactInstaller {
 	}
 
 	private void addEntityToSpringHibernateXml() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-				.equals(CommonConstants.DAO_HIBERNATE)) {
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_HIBERNATE)) {
 			String className = this.modelpackage + "." + pojoName;
 
-			File existingFile = new File(this.domainPjtDirectory
-					+ "/src/main/resources/spring/context-hibernate.xml");
+			File existingFile = new File(this.domainPjtDirectory + "/src/main/resources/spring/context-hibernate.xml");
 
 			try {
-				FileUtil.replaceStringXMLFilePretty(existingFile,
-						"<!--Add new Entities here-->", "<value>" + className
-								+ "</value>");
+				FileUtil.replaceStringXMLFilePretty(existingFile, "<!--Add new Entities here-->", "<value>" + className + "</value>");
 
-				log.info("Adding '" + pojoName
-						+ "' to spring hibernate xml(context-hibernate.xml)...");
+				log.info("Adding '" + pojoName + "' to spring hibernate xml(context-hibernate.xml)...");
 			} catch (Exception e) {
-				if (project.getProperties()
-						.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-						.equals("hibernate")) {
+				if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals("hibernate")) {
 					// ignore Exception
 					if (e instanceof FileNotFoundException)
 						log.warn("The process of adding new entities information in context-hibernate.xml is skipped.\n"
@@ -411,13 +339,11 @@ public class ArtifactInstaller {
 	}
 
 	public void webExecute() {
-		copyGeneratedObjects(this.sourceDirectory,
-				this.webDestinationDirectory, "**/web/**/*.java");
+		copyGeneratedObjects(this.sourceDirectory, this.webDestinationDirectory, "**/web/**/*.java");
 	}
 
 	public void webExecuteConf() {
-		String webFramework = project.getProperties().getProperty(
-				CommonConstants.WEB_FRAMEWORK);
+		String webFramework = project.getProperties().getProperty(CommonConstants.WEB_FRAMEWORK);
 		if ("spring".equalsIgnoreCase(webFramework)) {
 			log.info("Installing Spring views and configuring...");
 			installSpringControllerBeanDefinitions();
@@ -443,10 +369,8 @@ public class ArtifactInstaller {
 	 * @param inPattern
 	 *            The file pattern to match to locate files to copy.
 	 */
-	protected void copyGeneratedObjects(final String inSourceDirectory,
-			final String inDestinationDirectory, final String inPattern) {
-		AntUtil.executeCopyTask(antProject, inSourceDirectory,
-				inDestinationDirectory, inPattern, true);
+	protected void copyGeneratedObjects(final String inSourceDirectory, final String inDestinationDirectory, final String inPattern) {
+		AntUtil.executeCopyTask(antProject, inSourceDirectory, inDestinationDirectory, inPattern, true);
 	}
 
 	private String pojoLowerCase(String name) {
@@ -458,20 +382,15 @@ public class ArtifactInstaller {
 	 */
 	private void installSampleData() {
 
-		File existingFile = new File(destinationDirectory
-				+ mergeFilePath.get("sample-data.xml"));
+		File existingFile = new File(destinationDirectory + mergeFilePath.get("sample-data.xml"));
 
 		try {
 			// 1. clear previous sample data
-			String replaceString = "<!--sample data-START-->\n" + "<dataset>\n"
-					+ "</dataset>\n" + "<!--sample data-END-->";
-			FileUtil.replaceStringXMLFilePretty(existingFile, "sample data",
-					"<!--sample data here-->", "<!--sample data here-->\n"
-							+ replaceString);
+			String replaceString = "<!--sample data-START-->\n" + "<dataset>\n" + "</dataset>\n" + "<!--sample data-END-->";
+			FileUtil.replaceStringXMLFilePretty(existingFile, "sample data", "<!--sample data here-->", "<!--sample data here-->\n" + replaceString);
 
 			// 2. add new sample data
-			executeLoadFileTask(singleFilePathForMerge.get("sample-data.xml"),
-					"sample.data");
+			executeLoadFileTask(singleFilePathForMerge.get("sample-data.xml"), "sample.data");
 			parseXMLFile(existingFile, null, "</dataset>", "sample.data");
 		} catch (Exception e) {
 			// ignore exception
@@ -486,48 +405,33 @@ public class ArtifactInstaller {
 	}
 
 	private void installHibernateFiles() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-				.equals(CommonConstants.DAO_HIBERNATE)) {
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_HIBERNATE)) {
 			log.info("Installing Hibernate xml...");
 			// 1. create dynamic-hibernate-pojo.xml
 			// file
-			executeLoadFileTask(
-					"src/main/resources/hibernate/dynamic-hibernate-"
-							+ pojoNameLower + ".xml", "hibernate.dynamic.hql");
+			executeLoadFileTask("src/main/resources/hibernate/dynamic-hibernate-" + pojoNameLower + ".xml", "hibernate.dynamic.hql");
 
-			File dynamicHqlDir = new File(this.domainPjtDirectory
-					+ "/src/main/resources/hibernate");
+			File dynamicHqlDir = new File(this.domainPjtDirectory + "/src/main/resources/hibernate");
 
 			try {
 				if (!dynamicHqlDir.exists()) {
 					dynamicHqlDir.mkdirs();
 				}
 
-				AntUtil.executeCopyTask(
-						antProject,
-						sourceDirectory + "/"
-								+ singleFilePath.get("dynamic-hibernate.xml"),
-						this.domainPjtDirectory + "/"
-								+ singleFilePath.get("dynamic-hibernate.xml"));
+				AntUtil.executeCopyTask(antProject, sourceDirectory + "/" + singleFilePath.get("dynamic-hibernate.xml"), this.domainPjtDirectory
+						+ "/" + singleFilePath.get("dynamic-hibernate.xml"));
 			} catch (Exception e) {
 				// ignore Exception
-				log.warn("Generating "
-						+ singleFilePath.get("dynamic-hibernate.xml")
-						+ " is skipped. The reason is '" + e.getMessage()
-						+ "'.");
+				log.warn("Generating " + singleFilePath.get("dynamic-hibernate.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 			}
 
 			// 2. add xml file name to
 			// context-hibernate.xml file
-			File existingFile = new File(this.domainPjtDirectory
-					+ "/src/main/resources/spring/context-hibernate.xml");
+			File existingFile = new File(this.domainPjtDirectory + "/src/main/resources/spring/context-hibernate.xml");
 
 			try {
-				FileUtil.replaceStringXMLFilePretty(existingFile,
-						"<!--Add new file name here-->",
-						"<value>classpath:hibernate/dynamic-hibernate-"
-								+ this.pojoNameLower + ".xml</value>");
+				FileUtil.replaceStringXMLFilePretty(existingFile, "<!--Add new file name here-->", "<value>classpath:hibernate/dynamic-hibernate-"
+						+ this.pojoNameLower + ".xml</value>");
 			} catch (Exception e) {
 				// ignore Exception
 				if (e instanceof FileNotFoundException)
@@ -541,42 +445,24 @@ public class ArtifactInstaller {
 	}
 
 	private void installQueryFiles() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-				.equals(CommonConstants.DAO_QUERY)) {
-			if (project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
-					.startsWith("miplatform")) {
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_QUERY)) {
+			if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE).startsWith("miplatform")) {
 				log.info("Installing MiPlatform Query xml...");
 				// 1. create mapping-query-pojo.xml file
-				executeLoadFileTask(
-						"src/main/resources/sql/mip-query/mapping-mip-query-"
-								+ pojoNameLower + ".xml", "query.mapping.sql");
+				executeLoadFileTask("src/main/resources/sql/mip-query/mapping-mip-query-" + pojoNameLower + ".xml", "query.mapping.sql");
 
-				File mappingSqlDir = new File(this.domainPjtDirectory
-						+ "/src/main/resources/sql/mip-query");
+				File mappingSqlDir = new File(this.domainPjtDirectory + "/src/main/resources/sql/mip-query");
 
 				try {
 					if (!mappingSqlDir.exists()) {
 						mappingSqlDir.mkdirs();
 					}
 
-					AntUtil.executeCopyTask(
-							antProject,
-							sourceDirectory
-									+ "/"
-									+ singleFilePath
-											.get("mapping-query-miplatform.xml"),
-							this.domainPjtDirectory
-									+ "/"
-									+ singleFilePath
-											.get("mapping-query-miplatform.xml"));
+					AntUtil.executeCopyTask(antProject, sourceDirectory + "/" + singleFilePath.get("mapping-query-miplatform.xml"),
+							this.domainPjtDirectory + "/" + singleFilePath.get("mapping-query-miplatform.xml"));
 				} catch (Exception e) {
 					// ignore Exception
-					log.warn("Generating "
-							+ singleFilePath
-									.get("mapping-query-miplatform.xml")
-							+ " is skipped. The reason is '" + e.getMessage()
+					log.warn("Generating " + singleFilePath.get("mapping-query-miplatform.xml") + " is skipped. The reason is '" + e.getMessage()
 							+ "'.");
 				}
 
@@ -585,81 +471,54 @@ public class ArtifactInstaller {
 			} else {
 				log.info("Installing Query xml...");
 				// 1. create mapping-query-pojo.xml file
-				executeLoadFileTask(
-						"src/main/resources/sql/query/mapping-query-"
-								+ pojoNameLower + ".xml", "query.mapping.sql");
+				executeLoadFileTask("src/main/resources/sql/query/mapping-query-" + pojoNameLower + ".xml", "query.mapping.sql");
 
-				File mappingSqlDir = new File(this.domainPjtDirectory
-						+ "/src/main/resources/sql/query");
+				File mappingSqlDir = new File(this.domainPjtDirectory + "/src/main/resources/sql/query");
 
 				try {
 					if (!mappingSqlDir.exists()) {
 						mappingSqlDir.mkdirs();
 					}
 
-					AntUtil.executeCopyTask(
-							antProject,
-							sourceDirectory + "/"
-									+ singleFilePath.get("mapping-query.xml"),
-							this.domainPjtDirectory + "/"
-									+ singleFilePath.get("mapping-query.xml"));
+					AntUtil.executeCopyTask(antProject, sourceDirectory + "/" + singleFilePath.get("mapping-query.xml"), this.domainPjtDirectory
+							+ "/" + singleFilePath.get("mapping-query.xml"));
 				} catch (Exception e) {
 					// ignore Exception
-					log.warn("Generating "
-							+ singleFilePath.get("mapping-query.xml")
-							+ " is skipped. The reason is '" + e.getMessage()
-							+ "'.");
+					log.warn("Generating " + singleFilePath.get("mapping-query.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 				}
 			}
 		}
 	}
 
 	private void installIBatis2Files() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-				.equals(CommonConstants.DAO_IBATIS2)) {
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_IBATIS2)) {
 			log.info("Installing iBatis2 xml...");
 			// 1. create pojo.xml file for ibatis2
-			executeLoadFileTask("src/main/resources/sql/ibatis2/" + pojoName
-					+ ".xml", "query.mapping.sql");
+			executeLoadFileTask("src/main/resources/sql/ibatis2/" + pojoName + ".xml", "query.mapping.sql");
 
-			File mappingiBatis2SqlDir = new File(this.domainPjtDirectory
-					+ "/src/main/resources/sql/ibatis2");
+			File mappingiBatis2SqlDir = new File(this.domainPjtDirectory + "/src/main/resources/sql/ibatis2");
 
 			try {
 				if (!mappingiBatis2SqlDir.exists()) {
 					mappingiBatis2SqlDir.mkdirs();
 				}
 
-				AntUtil.executeCopyTask(
-						antProject,
-						sourceDirectory + "/"
-								+ singleFilePath.get("mapping-ibatis2.xml"),
-						this.domainPjtDirectory + "/"
-								+ singleFilePath.get("mapping-ibatis2.xml"));
+				AntUtil.executeCopyTask(antProject, sourceDirectory + "/" + singleFilePath.get("mapping-ibatis2.xml"), this.domainPjtDirectory + "/"
+						+ singleFilePath.get("mapping-ibatis2.xml"));
 			} catch (Exception e) {
 				// ignore Exception
-				log.warn("Generating "
-						+ singleFilePath.get("mapping-ibatis2.xml")
-						+ " is skipped. The reason is '" + e.getMessage()
-						+ "'.");
+				log.warn("Generating " + singleFilePath.get("mapping-ibatis2.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 			}
 
 			// 2. add xml file name to SqlMapConfig.xml file
-			File existingFile = new File(this.domainPjtDirectory
-					+ "/src/main/resources/sql/ibatis2/SqlMapConfig.xml");
+			File existingFile = new File(this.domainPjtDirectory + "/src/main/resources/sql/ibatis2/SqlMapConfig.xml");
 
 			try {
-				FileUtil.removeFileContent(existingFile, this.pojoName, "",
-						true);
+				FileUtil.removeFileContent(existingFile, this.pojoName, "", true);
 
-				String replaceString = "<!--" + this.pojoName + "-START-->\n"
-						+ "<sqlMap resource=\"sql/ibatis2/mapping-ibatis2-"
-						+ this.pojoNameLower + ".xml\"/>\n" + "<!--"
-						+ this.pojoName + "-END-->";
-				FileUtil.addFileContent(existingFile,
-						"<!--Add new file name here-->",
-						"<!--Add new file name here-->\n" + replaceString, true);
+				String replaceString = "<!--" + this.pojoName + "-START-->\n" + "<sqlMap resource=\"sql/ibatis2/mapping-ibatis2-"
+						+ this.pojoNameLower + ".xml\"/>\n" + "<!--" + this.pojoName + "-END-->";
+				FileUtil.addFileContent(existingFile, "<!--Add new file name here-->", "<!--Add new file name here-->\n" + replaceString, true);
 
 			} catch (Exception e) {
 				// ignore Exception
@@ -675,48 +534,32 @@ public class ArtifactInstaller {
 
 	// TODO
 	private void installMyBatisFiles() {
-		if (project.getProperties()
-				.getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE)
-				.equals(CommonConstants.DAO_MYBATIS)) {
+		if (project.getProperties().getProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_MYBATIS)) {
 			log.info("Installing MyBatis xml...");
 			// 1. create pojo.xml file for mybatis
-			executeLoadFileTask("src/main/resources/sql/mybatis/" + pojoName
-					+ ".xml", "query.mapping.sql");
+			executeLoadFileTask("src/main/resources/sql/mybatis/" + pojoName + ".xml", "query.mapping.sql");
 
-			File mappingMyBatisSqlDir = new File(this.domainPjtDirectory
-					+ "/src/main/resources/sql/mybatis");
+			File mappingMyBatisSqlDir = new File(this.domainPjtDirectory + "/src/main/resources/sql/mybatis");
 
 			try {
 				if (!mappingMyBatisSqlDir.exists()) {
 					mappingMyBatisSqlDir.mkdirs();
 				}
 
-				AntUtil.executeCopyTask(
-						antProject,
-						sourceDirectory + "/"
-								+ singleFilePath.get("mapper-mybatis.xml"),
-						this.domainPjtDirectory + "/"
-								+ singleFilePath.get("mapper-mybatis.xml"));
+				AntUtil.executeCopyTask(antProject, sourceDirectory + "/" + singleFilePath.get("mapper-mybatis.xml"), this.domainPjtDirectory + "/"
+						+ singleFilePath.get("mapper-mybatis.xml"));
 			} catch (Exception e) {
 				// ignore Exception
-				log.warn("Generating "
-						+ singleFilePath.get("mapper-mybatis.xml")
-						+ " is skipped. The reason is '" + e.getMessage()
-						+ "'.");
+				log.warn("Generating " + singleFilePath.get("mapper-mybatis.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 			}
 
 			// 2. if identifierProperty is Component, add typeAlias tag to
 			// mybatis-config.xml.
 			try {
-				executeLoadFileTask(
-						singleFilePathForMerge
-								.get("mybatis-generation-config.xml"),
-						"mybatis.config");
-				File existingFileForConfig = new File(this.destinationDirectory
-						+ mergeFilePath.get("mybatis-generation-config.xml"));
+				executeLoadFileTask(singleFilePathForMerge.get("mybatis-generation-config.xml"), "mybatis.config");
+				File existingFileForConfig = new File(this.destinationDirectory + mergeFilePath.get("mybatis-generation-config.xml"));
 
-				parseXMLFile(existingFileForConfig, pojoName,
-						"<!--Add new alias here-->", "mybatis.config");
+				parseXMLFile(existingFileForConfig, pojoName, "<!--Add new alias here-->", "mybatis.config");
 			} catch (Exception e) {
 				e.printStackTrace();
 				// ignore exception
@@ -735,58 +578,36 @@ public class ArtifactInstaller {
 		String projectType = "";
 
 		try {
-			if (project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
-					.startsWith("miplatform")) {
+			if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE).startsWith("miplatform")) {
 				projectType = "mip";
 
-				executeLoadWebFileTask(
-						singleFilePathForMerge
-								.get("mip-query-generation-servlet.xml"),
-						"dispatcher.servlet");
+				executeLoadWebFileTask(singleFilePathForMerge.get("mip-query-generation-servlet.xml"), "dispatcher.servlet");
 
-				String controllerFilePath = this.webDestinationDirectory
-						+ mergeFilePath.get("mip-query-generation-servlet.xml");
+				String controllerFilePath = this.webDestinationDirectory + mergeFilePath.get("mip-query-generation-servlet.xml");
 
 				File generatedFile = new File(controllerFilePath);
 
-				parseXMLFile(generatedFile, pojoName,
-						"<!--Add additional controller beans here-->",
-						"dispatcher.servlet");
+				parseXMLFile(generatedFile, pojoName, "<!--Add additional controller beans here-->", "dispatcher.servlet");
 
-			} else if (project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
-					.startsWith("xplatform")) {
+			} else if (project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE).startsWith("xplatform")) {
 
 				projectType = "xp";
-				executeLoadWebFileTask(
-						singleFilePathForMerge
-								.get("xp-query-generation-servlet.xml"),
-						"dispatcher.servlet");
+				executeLoadWebFileTask(singleFilePathForMerge.get("xp-query-generation-servlet.xml"), "dispatcher.servlet");
 
-				String controllerFilePath = this.webDestinationDirectory
-						+ mergeFilePath.get("xp-query-generation-servlet.xml");
+				String controllerFilePath = this.webDestinationDirectory + mergeFilePath.get("xp-query-generation-servlet.xml");
 
 				File generatedFile = new File(controllerFilePath);
 
-				parseXMLFile(generatedFile, pojoName,
-						"<!--Add additional controller beans here-->",
-						"dispatcher.servlet");
+				parseXMLFile(generatedFile, pojoName, "<!--Add additional controller beans here-->", "dispatcher.servlet");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			// ignore exception
 			if (e instanceof FileNotFoundException)
-				log.warn("The process of adding additional controller bean in "
-						+ projectType
-						+ "-query-generation-servlet.xml is skipped.\n"
-						+ "       Reason: "
-						+ projectType
-						+ "-query-generation-servlet.xml is not found in /src/main/resources/spring/.");
+				log.warn("The process of adding additional controller bean in " + projectType + "-query-generation-servlet.xml is skipped.\n"
+						+ "       Reason: " + projectType + "-query-generation-servlet.xml is not found in /src/main/resources/spring/.");
 			else
-				log.warn("The process of adding additional controller bean in "
-						+ projectType
-						+ "-query-generation-servlet.xml is skipped.\n"
+				log.warn("The process of adding additional controller bean in " + projectType + "-query-generation-servlet.xml is skipped.\n"
 						+ "       Reason: <!--Add additional controller beans here--> token is not found in /src/main/resources/spring/"
 						+ projectType + "-query-generation-servlet.xml");
 		}
@@ -797,61 +618,39 @@ public class ArtifactInstaller {
 	private void installSpringViews() {
 
 		try {
-			if (!project.getProperties()
-					.getProperty(CommonConstants.TEMPLATE_TYPE)
-					.startsWith("miplatform")) {
-				copyGeneratedObjects(this.sourceDirectory,
-						this.webDestinationDirectory,
-						"src/main/webapp/**/*.jsp");
+			if (!project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE).startsWith("miplatform")) {
+				copyGeneratedObjects(this.sourceDirectory, this.webDestinationDirectory, "src/main/webapp/**/*.jsp");
 			}
 
 		} catch (Exception e) {
 			// ignore exception
-			log.warn("Jsp file generating is skipped. (form.jsp / list.jsp). The reason is '"
-					+ e.getMessage() + "'.");
+			log.warn("Jsp file generating is skipped. (form.jsp / list.jsp). The reason is '" + e.getMessage() + "'.");
 		}
 	}
 
 	private void installMipViews() {
-		String templateType = project.getProperties().getProperty(
-				CommonConstants.TEMPLATE_TYPE);
+		String templateType = project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE);
 
 		if (templateType.startsWith("miplatform")) {
 			try {
-				AntUtil.executeCopyTask(
-						antProject,
-						this.sourceDirectory + "/"
-								+ singleFilePath.get("grid_list.xml"),
-						this.webDestinationDirectory + "/"
-								+ singleFilePath.get("grid_list.xml"));
+				AntUtil.executeCopyTask(antProject, this.sourceDirectory + "/" + singleFilePath.get("grid_list.xml"), this.webDestinationDirectory
+						+ "/" + singleFilePath.get("grid_list.xml"));
 			} catch (Exception e) {
 				// ignore Exception
-				log.warn("Generating " + singleFilePath.get("grid_list.xml")
-						+ " is skipped. The reason is '" + e.getMessage()
-						+ "'.");
+				log.warn("Generating " + singleFilePath.get("grid_list.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 
 			}
 
-			File generatedFile = new File(this.webDestinationDirectory
-					+ "/src/main/webapp/mip-query/extends/mip_query_sdi.xml");
+			File generatedFile = new File(this.webDestinationDirectory + "/src/main/webapp/mip-query/extends/mip_query_sdi.xml");
 
 			try {
-				String replaceString = "<!--Miplatform "
-						+ this.pojoNameLower
-						+ "Service-START-->\n"
-						+ "<AppGroup CodePage=\"utf-8\" Language=\"0\" Prefix=\""
-						+ this.pojoNameLower
-						+ "\" Type=\"form\" Version=\"1.0\">\n"
-						+ "<script Baseurl=\"./" + this.pojoNameLower
-						+ "/\" ScriptUrl=\"./" + this.pojoNameLower + "/\"/>\n"
-						+ "</AppGroup>\n" + "<!--Miplatform "
-						+ this.pojoNameLower + "Service-END-->";
+				String replaceString = "<!--Miplatform " + this.pojoNameLower + "Service-START-->\n"
+						+ "<AppGroup CodePage=\"utf-8\" Language=\"0\" Prefix=\"" + this.pojoNameLower + "\" Type=\"form\" Version=\"1.0\">\n"
+						+ "<script Baseurl=\"./" + this.pojoNameLower + "/\" ScriptUrl=\"./" + this.pojoNameLower + "/\"/>\n" + "</AppGroup>\n"
+						+ "<!--Miplatform " + this.pojoNameLower + "Service-END-->";
 
-				FileUtil.replaceStringXMLFilePretty(generatedFile,
-						"Miplatform " + this.pojoNameLower + "Service",
-						"<!--new miplatform service group xml here-->",
-						"<!--new miplatform service group xml here-->"
-								+ replaceString);
+				FileUtil.replaceStringXMLFilePretty(generatedFile, "Miplatform " + this.pojoNameLower + "Service",
+						"<!--new miplatform service group xml here-->", "<!--new miplatform service group xml here-->" + replaceString);
 
 			} catch (Exception e) {
 				// ignore exception
@@ -866,42 +665,27 @@ public class ArtifactInstaller {
 	}
 
 	private void installXpViews() {
-		String templateType = project.getProperties().getProperty(
-				CommonConstants.TEMPLATE_TYPE);
+		String templateType = project.getProperties().getProperty(CommonConstants.TEMPLATE_TYPE);
 
 		if (templateType.startsWith("xplatform")) {
 			try {
-				AntUtil.executeCopyTask(
-						antProject,
-						this.sourceDirectory + "/"
-								+ singleFilePath.get("xp_grid_list.xml"),
-						this.webDestinationDirectory + "/"
-								+ singleFilePath.get("xp_grid_list.xml"));
+				AntUtil.executeCopyTask(antProject, this.sourceDirectory + "/" + singleFilePath.get("xp_grid_list.xml"), this.webDestinationDirectory
+						+ "/" + singleFilePath.get("xp_grid_list.xml"));
 			} catch (Exception e) {
 				// ignore Exception
-				log.warn("Generating " + singleFilePath.get("xp_grid_list.xml")
-						+ " is skipped. The reason is '" + e.getMessage()
-						+ "'.");
+				log.warn("Generating " + singleFilePath.get("xp_grid_list.xml") + " is skipped. The reason is '" + e.getMessage() + "'.");
 
 			}
 
-			File generatedFile = new File(this.webDestinationDirectory
-					+ "/src/main/webapp/xp-query/extends/default_typedef.xml");
+			File generatedFile = new File(this.webDestinationDirectory + "/src/main/webapp/xp-query/extends/default_typedef.xml");
 
 			try {
-				String replaceString = "<!--XPlatform " + this.pojoNameLower
-						+ "Service-START-->\n" + "<Service prefixid=\""
-						+ this.pojoNameLower + "\" type=\"form\" url=\"./"
-						+ this.pojoNameLower
-						+ "/\" version=\"0\" communicationversion=\"0\"/>\n"
-						+ "<!--XPlatform " + this.pojoNameLower
-						+ "Service-END-->";
+				String replaceString = "<!--XPlatform " + this.pojoNameLower + "Service-START-->\n" + "<Service prefixid=\"" + this.pojoNameLower
+						+ "\" type=\"form\" url=\"./" + this.pojoNameLower + "/\" version=\"0\" communicationversion=\"0\"/>\n" + "<!--XPlatform "
+						+ this.pojoNameLower + "Service-END-->";
 
-				FileUtil.replaceStringXMLFilePretty(generatedFile, "Xplatform "
-						+ this.pojoNameLower + "Service",
-						"<!--new xplatform service group xml here-->",
-						"<!--new xplatform service group xml here-->"
-								+ replaceString);
+				FileUtil.replaceStringXMLFilePretty(generatedFile, "Xplatform " + this.pojoNameLower + "Service",
+						"<!--new xplatform service group xml here-->", "<!--new xplatform service group xml here-->" + replaceString);
 
 			} catch (Exception e) {
 				// ignore exception
@@ -920,13 +704,10 @@ public class ArtifactInstaller {
 
 	private void installMenu() {
 		try {
-			executeLoadWebFileTask(singleFilePathForMerge.get("left-gen.jsp"),
-					"menu.jsp");
-			File existingFile = new File(this.webDestinationDirectory
-					+ mergeFilePath.get("left-gen.jsp"));
+			executeLoadWebFileTask(singleFilePathForMerge.get("left-gen.jsp"), "menu.jsp");
+			File existingFile = new File(this.webDestinationDirectory + mergeFilePath.get("left-gen.jsp"));
 
-			parseXMLFile(existingFile, pojoName,
-					"<!--Add new crud generation menu here-->", "menu.jsp");
+			parseXMLFile(existingFile, pojoName, "<!--Add new crud generation menu here-->", "menu.jsp");
 
 		} catch (Exception e) {
 			// ignore exception
@@ -962,11 +743,8 @@ public class ArtifactInstaller {
 		try {
 			log.info("Installing i18n messages...");
 
-			executeLoadWebFileTask(
-					singleFilePathForMerge.get("message-generation.properties"),
-					"i18n.file");
-			File existingFile = new File(this.mainPjtDirectory
-					+ mergeFilePath.get("message-generation.properties"));
+			executeLoadWebFileTask(singleFilePathForMerge.get("message-generation.properties"), "i18n.file");
+			File existingFile = new File(this.mainPjtDirectory + mergeFilePath.get("message-generation.properties"));
 
 			if (!existingFile.exists())
 				throw new FileNotFoundException();
@@ -999,8 +777,7 @@ public class ArtifactInstaller {
 	protected void executeLoadFileTask(String inFile, String propName) {
 		inFile = sourceDirectory + CommonConstants.fileSeparator + inFile;
 
-		AntUtil.executeLoadFileTask(antProject, this.sourceDirectory, inFile,
-				propName);
+		AntUtil.executeLoadFileTask(antProject, inFile, propName);
 	}
 
 	/**
@@ -1017,12 +794,10 @@ public class ArtifactInstaller {
 	protected void executeLoadWebFileTask(String inFile, String propName) {
 		inFile = this.sourceDirectory + CommonConstants.fileSeparator + inFile;
 
-		AntUtil.executeLoadFileTask(antProject, this.sourceDirectory, inFile,
-				propName);
+		AntUtil.executeLoadFileTask(antProject, inFile, propName);
 	}
 
-	private void parseXMLFile(File existingFile, String beanName,
-			String newToken, String fileVariable) throws Exception {
+	private void parseXMLFile(File existingFile, String beanName, String newToken, String fileVariable) throws Exception {
 
 		if (!existingFile.exists())
 			throw new FileNotFoundException();
@@ -1033,13 +808,10 @@ public class ArtifactInstaller {
 		}
 
 		try {
-			AntUtil.executeReplaceRegExpTask(antProject, existingFile, "<!--"
-					+ nameInComment + "-START-->", "<!--" + nameInComment
-					+ "-END-->", "", newToken,
-					antProject.getProperty(fileVariable));
+			AntUtil.executeReplaceRegExpTask(antProject, existingFile, "<!--" + nameInComment + "-START-->", "<!--" + nameInComment + "-END-->", "",
+					newToken, antProject.getProperty(fileVariable));
 		} catch (Exception e) {
-			log.warn("Replacing comment tag in XML is skipped. The reason is '"
-					+ e.getMessage() + "'.");
+			log.warn("Replacing comment tag in XML is skipped. The reason is '" + e.getMessage() + "'.");
 		}
 	}
 
@@ -1052,16 +824,13 @@ public class ArtifactInstaller {
 	 * @param beanName
 	 *            name of placeholder string that goes in comment
 	 */
-	private void parsePropertiesFile(File existingFile, String beanName)
-			throws Exception {
+	private void parsePropertiesFile(File existingFile, String beanName) throws Exception {
 		String nameInComment = beanName;
 		if (beanName == null) {
 			nameInComment = pojoName;
 		}
 
-		AntUtil.executeReplaceRegExpTask(antProject, existingFile, "# -- "
-				+ nameInComment + "-START", "# -- " + nameInComment + "-END",
-				"");
+		AntUtil.executeReplaceRegExpTask(antProject, existingFile, "# -- " + nameInComment + "-START", "# -- " + nameInComment + "-END", "");
 	}
 
 	public Log getLog() {

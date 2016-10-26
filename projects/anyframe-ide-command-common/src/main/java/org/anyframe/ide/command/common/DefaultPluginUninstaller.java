@@ -37,10 +37,12 @@ import org.anyframe.ide.command.common.plugin.Include;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginResource;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.DBUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
+import org.anyframe.ide.command.common.util.JdbcOption;
 import org.anyframe.ide.command.common.util.ObjectUtil;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
@@ -59,8 +61,7 @@ import org.codehaus.plexus.util.IOUtil;
  *                   role="org.anyframe.ide.command.common.DefaultPluginUninstaller"
  * @author Jeryeon Kim
  */
-public class DefaultPluginUninstaller extends AbstractLogEnabled implements
-		PluginUninstaller {
+public class DefaultPluginUninstaller extends AbstractLogEnabled implements PluginUninstaller {
 	/**
 	 * @plexus.requirement 
 	 *                     role="org.anyframe.ide.command.common.DefaultPluginPomManager"
@@ -102,11 +103,9 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            whether to handle pom file
 	 * @throws CommandException
 	 */
-	public void uninstall(ArchetypeGenerationRequest request, String baseDir,
-			String pluginName, String excludes, String encoding,
-			boolean pomHandling) throws CommandException {
-		uninstall(request, baseDir, pluginName, excludes, encoding,
-				pomHandling, false);
+	public void uninstall(ArchetypeGenerationRequest request, String baseDir, String pluginName, String excludes, String encoding, boolean pomHandling)
+			throws CommandException {
+		uninstall(request, baseDir, pluginName, excludes, encoding, pomHandling, false);
 	}
 
 	/**
@@ -128,18 +127,15 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            ignore dependency plugins
 	 * @throws CommandException
 	 */
-	public void uninstall(ArchetypeGenerationRequest request, String baseDir,
-			String pluginName, String excludes, String encoding,
-			boolean pomHandling, boolean ignoreDependency)
-			throws CommandException {
-		getLogger().debug(
-				DefaultPluginUninstaller.class.getName() + " execution start.");
+	public void uninstall(ArchetypeGenerationRequest request, String baseDir, String pluginName, String excludes, String encoding,
+			boolean pomHandling, boolean ignoreDependency) throws CommandException {
+		getLogger().debug(DefaultPluginUninstaller.class.getName() + " execution start.");
 
 		ClassLoader old = Thread.currentThread().getContextClassLoader();
 
 		try {
 			// 1. check validation about current project
-			PropertiesIO pio = checkProject(baseDir);
+			ProjectConfig projectConfig = checkProject(baseDir);
 
 			// 2. process comma-separator.
 			String[] pluginNames = handleCommaSeparatedPluginNames(pluginName);
@@ -152,31 +148,20 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				uninstallPluginName = uninstallPluginName.trim();
 
 				try {
-					PluginInfo pluginInfo = pluginInfoManager
-							.getInstalledPluginInfo(request, baseDir,
-									uninstallPluginName);
+					PluginInfo pluginInfo = pluginInfoManager.getInstalledPluginInfo(request, baseDir, uninstallPluginName);
 
 					if (pluginInfo != null) {
-						uninstallPlugin(request, baseDir, pluginInfo, excludes,
-								encoding, pomHandling, pio, backupDirectory,
-								ignoreDependency);
+						uninstallPlugin(request, baseDir, pluginInfo, excludes, encoding, pomHandling, projectConfig, backupDirectory, ignoreDependency);
 					} else {
-						throw new CommandException(
-								"Can't uninstall the '"
-										+ uninstallPluginName
-										+ "' plugin. The reason is '"
-										+ uninstallPluginName
-										+ "' plugin maybe not installed or already uninstalled.");
+						throw new CommandException("Can't uninstall the '" + uninstallPluginName + "' plugin. The reason is '" + uninstallPluginName
+								+ "' plugin maybe not installed or already uninstalled.");
 					}
 				} catch (Exception e) {
 					// can't stop uninstalling other plugins.
 					if (e instanceof CommandException) {
 						getLogger().error(e.getMessage());
 					} else {
-						getLogger().error(
-								"Can't uninstall the '" + uninstallPluginName
-										+ "' plugin. The reason is a '"
-										+ e.getMessage() + "'.");
+						getLogger().error("Can't uninstall the '" + uninstallPluginName + "' plugin. The reason is a '" + e.getMessage() + "'.");
 					}
 				}
 			}
@@ -184,9 +169,7 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 			if (e instanceof CommandException)
 				throw (CommandException) e;
 
-			throw new CommandException("Error occurred in uninstalling '"
-					+ pluginName + "' plugin. The reason is a '"
-					+ e.getMessage() + "'.");
+			throw new CommandException("Error occurred in uninstalling '" + pluginName + "' plugin. The reason is a '" + e.getMessage() + "'.");
 		} finally {
 			Thread.currentThread().setContextClassLoader(old);
 		}
@@ -207,8 +190,8 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            file encoding style
 	 * @param pomHandling
 	 *            whether to handle pom file
-	 * @param pio
-	 *            properties in project.mf
+	 * @param projectConfig
+	 *            project configuration
 	 * @param backupDir
 	 *            directory for backup
 	 * @param ignoreDependency
@@ -216,46 +199,36 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private void uninstallPlugin(ArchetypeGenerationRequest request,
-			String baseDir, PluginInfo pluginInfo, String excludes,
-			String encoding, boolean pomHandling, PropertiesIO pio,
-			File backupDir, boolean ignoreDependency) throws Exception {
+	private void uninstallPlugin(ArchetypeGenerationRequest request, String baseDir, PluginInfo pluginInfo, String excludes, String encoding,
+			boolean pomHandling, ProjectConfig projectConfig, File backupDir, boolean ignoreDependency) throws Exception {
 
 		// 1. check validation about selected plugin
 		checkPlugin(request, baseDir, pluginInfo, ignoreDependency);
 
 		// 2. get jar files of installed plugins
-		Map<String, File> installedPluginJars = pluginInfoManager
-				.getInstalledPluginJars(request, baseDir);
+		Map<String, File> installedPluginJars = pluginInfoManager.getInstalledPluginJars(request, baseDir);
 
 		// 3. get a plugin jar file to remove
 		File pluginJar = (File) installedPluginJars.get(pluginInfo.getName());
 
 		// 4. set classloader for VelocityComponent can load templates inside
 		// plugin library
-		ClassLoader pluginJarLoader = pluginArtifactManager
-				.getArchetypeJarLoader(pluginJar);
+		ClassLoader pluginJarLoader = pluginArtifactManager.getArchetypeJarLoader(pluginJar);
 		Thread.currentThread().setContextClassLoader(pluginJarLoader);
 
 		// 5. get interceptor of plugin
-		Class interceptor = getInterceptor(request, pluginJarLoader, pluginJar,
-				pluginInfo);
+		Class interceptor = getInterceptor(request, pluginJarLoader, pluginJar, pluginInfo);
 
 		// 6. invokeInterceptor
-		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar,
-				interceptor, "preUninstall");
+		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar, interceptor, "preUninstall");
 
 		// 7. uninstall
-		process(request, baseDir, pluginInfo, installedPluginJars, pluginJar,
-				excludes, encoding, pomHandling, pio, backupDir);
+		process(request, baseDir, pluginInfo, installedPluginJars, pluginJar, excludes, encoding, pomHandling, projectConfig, backupDir);
 
 		// 8. invokeInterceptor
-		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar,
-				interceptor, "postUninstall");
+		invokeInterceptor(baseDir, pluginInfo.getName(), pluginJar, interceptor, "postUninstall");
 
-		System.out.println("'" + pluginInfo.getName() + " "
-				+ pluginInfo.getVersion()
-				+ "' plugin is uninstalled successfully.");
+		System.out.println("'" + pluginInfo.getName() + " " + pluginInfo.getVersion() + "' plugin is uninstalled successfully.");
 	}
 
 	/**
@@ -267,8 +240,7 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @return the array of plugin name
 	 * @throws Exception
 	 */
-	private String[] handleCommaSeparatedPluginNames(String pluginName)
-			throws Exception {
+	private String[] handleCommaSeparatedPluginNames(String pluginName) throws Exception {
 
 		// 1. process comma-separator.
 		String[] pluginNames = new String[] { pluginName };
@@ -284,39 +256,28 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * 
 	 * @param baseDir
 	 *            the path of current project
-	 * @return the PropertiesIO
+	 * @return the ProjectConfig
 	 * @throws Exception
 	 */
-	private PropertiesIO checkProject(String baseDir) throws Exception {
+	private ProjectConfig checkProject(String baseDir) throws Exception {
 		getLogger().debug("Call checkProject() of DefaultPluginUninstaller");
 
-		// 1. get a metadata file
-		File metadataFile = new File(new File(baseDir)
-				+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-		if (!metadataFile.exists()) {
-			throw new CommandException("Can not find a '"
-					+ metadataFile.getAbsolutePath()
-					+ "' file. Please check a location of your project.");
-		}
-
-		PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
+		// 1. get a project Configuration
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+		ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
 		// 2. get a plugin-installed.xml file which includes installation
 		// information
-		File pluginsXMLFile = new File(new File(baseDir)
-				+ CommonConstants.METAINF,
-				CommonConstants.PLUGIN_INSTALLED_FILE);
+		File pluginsXMLFile = new File(new File(baseDir) + CommonConstants.METAINF, CommonConstants.PLUGIN_INSTALLED_FILE);
 
 		// 3. if plugin-installed.xml file doesn't exist, can't proceed
 		if (!pluginsXMLFile.exists()) {
-			throw new CommandException("Can not find a '"
-					+ pluginsXMLFile.getAbsolutePath()
-					+ "' file. Please check a location of your project.");
+			throw new CommandException("Can not find a '" + pluginsXMLFile.getAbsolutePath() + "' file. Please check a location of your project.");
 		}
 
 		getLogger().debug("Current target directory is a " + baseDir);
 
-		return pio;
+		return projectConfig;
 	}
 
 	/**
@@ -332,28 +293,20 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            ignore dependency plugins
 	 * @throws Exception
 	 */
-	private void checkPlugin(ArchetypeGenerationRequest request,
-			String baseDir, PluginInfo pluginInfo, boolean ignoreDependency)
-			throws Exception {
+	private void checkPlugin(ArchetypeGenerationRequest request, String baseDir, PluginInfo pluginInfo, boolean ignoreDependency) throws Exception {
 		String pluginName = pluginInfo.getName();
 		String pluginVersion = pluginInfo.getVersion();
-		getLogger().debug(
-				"Call checkPlugin() of DefaultPluginUninstaller - pluginName : "
-						+ pluginName + ", pluginVersion : " + pluginVersion);
+		getLogger().debug("Call checkPlugin() of DefaultPluginUninstaller - pluginName : " + pluginName + ", pluginVersion : " + pluginVersion);
 
 		// 1. check if plugin is installed.
-		Map<String, PluginInfo> installedPlugins = pluginInfoManager
-				.getInstalledPlugins(baseDir);
+		Map<String, PluginInfo> installedPlugins = pluginInfoManager.getInstalledPlugins(baseDir);
 
 		if (!installedPlugins.containsKey(pluginInfo.getName())) {
-			throw new CommandException("Can't uninstall the '" + pluginName
-					+ " " + pluginVersion + "' plugin. The reason is '"
-					+ pluginName + " " + pluginVersion
-					+ "' plugin maybe not installed or already uninstalled.");
+			throw new CommandException("Can't uninstall the '" + pluginName + " " + pluginVersion + "' plugin. The reason is '" + pluginName + " "
+					+ pluginVersion + "' plugin maybe not installed or already uninstalled.");
 		}
 
-		Map<String, String> dependedPlugins = pluginInfoManager
-				.getDependedPlugins(request, baseDir, pluginInfo);
+		Map<String, String> dependedPlugins = pluginInfoManager.getDependedPlugins(request, baseDir, pluginInfo);
 
 		// 2. is there a plugin that uses this plugin?
 		if (!ignoreDependency && !dependedPlugins.isEmpty()) {
@@ -365,15 +318,9 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				pluginNames.append(dependedPluginName);
 				i++;
 			}
-			throw new CommandException(
-					"Can't uninstall the '"
-							+ pluginName
-							+ " "
-							+ pluginVersion
-							+ "' plugin. The reason is there are plugins which depends on a '"
-							+ pluginName + " " + pluginVersion
-							+ "' plugin. Please try uninstall '"
-							+ pluginNames.toString() + "' plugins before.");
+			throw new CommandException("Can't uninstall the '" + pluginName + " " + pluginVersion
+					+ "' plugin. The reason is there are plugins which depends on a '" + pluginName + " " + pluginVersion
+					+ "' plugin. Please try uninstall '" + pluginNames.toString() + "' plugins before.");
 		}
 	}
 
@@ -393,27 +340,23 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private Class getInterceptor(ArchetypeGenerationRequest request,
-			ClassLoader pluginJarLoader, File pluginJar, PluginInfo pluginInfo)
+	private Class getInterceptor(ArchetypeGenerationRequest request, ClassLoader pluginJarLoader, File pluginJar, PluginInfo pluginInfo)
 			throws Exception {
 
 		Class interceptor = null;
 
 		// 1. get zipfile from plugin jar file
-		ZipFile pluginZip = pluginArtifactManager
-				.getArchetypeZipFile(pluginJar);
+		ZipFile pluginZip = pluginArtifactManager.getArchetypeZipFile(pluginJar);
 
 		if (pluginInfo.getInterceptor() != null) {
 
 			URL[] originalUrls = ((URLClassLoader) pluginJarLoader).getURLs();
 			Model model = pluginPomManager.readPom(pluginZip);
 
-			URLClassLoader interceptorLoader = pluginArtifactManager
-					.makeArtifactClassLoader(request, model.getGroupId(), model
-							.getArtifactId(), model.getVersion(), originalUrls);
+			URLClassLoader interceptorLoader = pluginArtifactManager.makeArtifactClassLoader(request, model.getGroupId(), model.getArtifactId(),
+					model.getVersion(), originalUrls);
 
-			interceptor = ObjectUtil.loadClass(interceptorLoader, pluginJar,
-					pluginInfo.getInterceptor().getClassName().trim());
+			interceptor = ObjectUtil.loadClass(interceptorLoader, pluginJar, pluginInfo.getInterceptor().getClassName().trim());
 		}
 
 		return interceptor;
@@ -438,16 +381,13 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            file encoding style
 	 * @param pomHandling
 	 *            whether to handle pom file
-	 * @param pio
-	 *            properties in project.mf
+	 * @param projectConfig
+	 *            project configuration
 	 * @param backupDir
 	 *            directory for backup
 	 */
-	public void process(ArchetypeGenerationRequest request, String baseDir,
-			PluginInfo pluginInfo, Map<String, File> installedPluginJars,
-			File pluginJar, String excludes, String encoding,
-			boolean pomHandling, PropertiesIO pio, File backupDir)
-			throws Exception {
+	public void process(ArchetypeGenerationRequest request, String baseDir, PluginInfo pluginInfo, Map<String, File> installedPluginJars,
+			File pluginJar, String excludes, String encoding, boolean pomHandling, ProjectConfig projectConfig, File backupDir) throws Exception {
 
 		// remove a plugin to be removed from installed plugins
 		installedPluginJars.remove(pluginInfo.getName());
@@ -457,17 +397,13 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		Properties springProperties = null;
 
 		// get spring plugin's pom properties to handle '${spring.version}'
-		Map<String, PluginInfo> installedPlugins = pluginInfoManager
-				.getInstalledPlugins(baseDir);
+		Map<String, PluginInfo> installedPlugins = pluginInfoManager.getInstalledPlugins(baseDir);
 
-		if (installedPlugins != null
-				&& installedPlugins.containsKey(CommonConstants.SPRING_PLUGIN)) {
+		if (installedPlugins != null && installedPlugins.containsKey(CommonConstants.SPRING_PLUGIN)) {
 			springPlugin = installedPlugins.get(CommonConstants.SPRING_PLUGIN);
 			if (springPlugin != null)
-				springPluginJar = pluginInfoManager
-						.getPluginFile(request, springPlugin.getGroupId(),
-								springPlugin.getArtifactId(), springPlugin
-										.getVersion());
+				springPluginJar = pluginInfoManager.getPluginFile(request, springPlugin.getGroupId(), springPlugin.getArtifactId(),
+						springPlugin.getVersion());
 
 			Model model = pluginPomManager.getPluginPom(springPluginJar);
 			springProperties = model.getProperties();
@@ -477,76 +413,61 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 
 		if (pomHandling) {
 			// process pom file
-			processPom(baseDir, installedPluginJars, pluginJar, backupDir,
-					springProperties);
+			processPom(baseDir, installedPluginJars, pluginJar, backupDir, springProperties);
 			addProcessPom(baseDir, pluginJar);
-		}else{
+		} else {
 			// remove dependent libraries
-			processDependencyLibs(baseDir, pio
-					.readValue(CommonConstants.PROJECT_TYPE), pluginInfo.getName(),
-					installedPluginJars, pluginJar, springProperties, backupDir);
-			addDependencyLibs(request, pio
-					.readValue(CommonConstants.PROJECT_TYPE), baseDir, pluginJar);
-		}
-		if (!pomHandling
-				&& pio.readValue(CommonConstants.PROJECT_TYPE)
-						.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			// update .classpath file for service type project
-			processClasspathFile(installedPluginJars, baseDir);
+			processDependencyLibs(baseDir, pluginInfo.getName(), installedPluginJars, pluginJar,
+					springProperties, backupDir);
+			addDependencyLibs(request, baseDir, pluginJar);
 		}
 
-		if (pio.readValue(CommonConstants.PROJECT_TYPE).equalsIgnoreCase(
-				CommonConstants.PROJECT_TYPE_WEB)) {
-			// remove generated folder, generated xml files
-			ArrayList<String> excludeList = new ArrayList<String>();
+		// remove generated folder, generated xml files
+		ArrayList<String> excludeList = new ArrayList<String>();
 
-			String[] exclude = excludes.split(",");
-			for (int i = 0; i < exclude.length; i++) {
-				excludeList.add(exclude[i]);
-			}
+		String[] exclude = excludes.split(",");
+		for (int i = 0; i < exclude.length; i++) {
+			excludeList.add(exclude[i]);
+		}
 
-			if (pluginInfo.getName().equals(CommonConstants.HIBERNATE_PLUGIN)) {
-				excludeList.add(CommonConstants.HIBERNATE_CFG_XML_FILE);
-			}
+		if (pluginInfo.getName().equals(CommonConstants.HIBERNATE_PLUGIN)) {
+			excludeList.add(CommonConstants.HIBERNATE_CFG_XML_FILE);
+		}
 
-			// get plugin names to protect resources of other plugins
-			// (cxf-jaxws, cxf-jaxrs, simpleweb-vo, simpleweb-map, query-ria...)
-			List<String> pluginNames = new ArrayList<String>();
-			Map<String, PluginInfo> pluginsMap = pluginCatalogManager
-					.getPlugins(request);
+		// get plugin names to protect resources of other plugins
+		// (cxf-jaxws, cxf-jaxrs, simpleweb-vo, simpleweb-map, query-ria...)
+		List<String> pluginNames = new ArrayList<String>();
+		Map<String, PluginInfo> pluginsMap = pluginCatalogManager.getPlugins(request);
 
-			if (pluginsMap != null) {
-				Collection<PluginInfo> plugins = pluginsMap.values();
+		if (pluginsMap != null) {
+			Collection<PluginInfo> plugins = pluginsMap.values();
 
-				for (PluginInfo plugin : plugins) {
-					if (!plugin.getName().equals(pluginInfo.getName())) {
-						pluginNames.add(plugin.getName());
-					}
+			for (PluginInfo plugin : plugins) {
+				if (!plugin.getName().equals(pluginInfo.getName())) {
+					pluginNames.add(plugin.getName());
 				}
 			}
-
-			List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
-			
-			ZipFile pluginZip = pluginArtifactManager
-					.getArchetypeZipFile(pluginJar);
-			
-			processTemplates(baseDir, backupDir, fileNames, pluginInfo, pluginZip, pio);
-			
-			// remove a link from index file
-			processWelcomeFile(baseDir, pluginInfo.getName());
-			
-			// process file about transaction configuration
-			if (pluginInfo.getName().equals(CommonConstants.HIBERNATE_PLUGIN))
-				processTransactionFile(baseDir);
-			
-			// process file about messageSource configuration
-			if (pluginInfo.getName().equals(CommonConstants.I18N_PLUGIN))
-				processMessageFile(baseDir);
-
-			// drop table, delete data to DB
-			processInitialData(new File(baseDir), fileNames, pluginInfo
-					.getName(), pluginZip, encoding, pio);
 		}
+
+		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
+
+		ZipFile pluginZip = pluginArtifactManager.getArchetypeZipFile(pluginJar);
+
+		processTemplates(baseDir, backupDir, fileNames, pluginInfo, pluginZip, projectConfig);
+
+		// remove a link from index file
+		processWelcomeFile(baseDir, pluginInfo.getName());
+
+		// process file about transaction configuration
+		if (pluginInfo.getName().equals(CommonConstants.HIBERNATE_PLUGIN))
+			processTransactionFile(baseDir);
+
+		// process file about messageSource configuration
+		if (pluginInfo.getName().equals(CommonConstants.I18N_PLUGIN))
+			processMessageFile(baseDir);
+
+		// drop table, delete data to DB
+		processInitialData(new File(baseDir), fileNames, pluginInfo.getName(), pluginZip, encoding, projectConfig);
 
 		// 10. update plugin-installed.xml
 		updateInstallationInfo(baseDir, pluginInfo.getName());
@@ -568,25 +489,15 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private void invokeInterceptor(String baseDir, String pluginName,
-			File pluginJar, Class interceptor, String interceptorMethodName)
+	private void invokeInterceptor(String baseDir, String pluginName, File pluginJar, Class interceptor, String interceptorMethodName)
 			throws Exception {
 		if (interceptor != null) {
-			getLogger().debug(
-					"Before calling invokeInterceptor() of "
-							+ interceptor.getName());
+			getLogger().debug("Before calling invokeInterceptor() of " + interceptor.getName());
 			try {
-				ObjectUtil.invokeMethod(interceptor, interceptorMethodName,
-						baseDir, pluginJar);
-				getLogger().debug(
-						"Invoke " + interceptor + "." + interceptorMethodName
-								+ "() of plugin '" + pluginName
-								+ "' successfully.");
+				ObjectUtil.invokeMethod(interceptor, interceptorMethodName, baseDir, pluginJar);
+				getLogger().debug("Invoke " + interceptor + "." + interceptorMethodName + "() of plugin '" + pluginName + "' successfully.");
 			} catch (Exception e) {
-				getLogger().warn(
-						"Invoking of a " + interceptor.getName()
-								+ " is skipped. The reason is a '"
-								+ e.getMessage() + "'.");
+				getLogger().warn("Invoking of a " + interceptor.getName() + " is skipped. The reason is a '" + e.getMessage() + "'.");
 				return;
 			}
 		}
@@ -606,65 +517,53 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param properties
 	 *            properties of pom in current project
 	 */
-	public void processPom(String baseDir,
-			Map<String, File> installedPluginJars, File pluginJar,
-			File backupDir, Properties properties) {
+	public void processPom(String baseDir, Map<String, File> installedPluginJars, File pluginJar, File backupDir, Properties properties) {
 		getLogger().debug("Call processPom() of DefaultPluginUninstaller");
 
 		File pomFile = new File(new File(baseDir), Constants.ARCHETYPE_POM);
 
 		try {
 			// pom.xml
-			String targetPath = new File(baseDir, Constants.ARCHETYPE_POM)
-					.getCanonicalPath().substring(
-							new File(baseDir).getCanonicalPath().length());
+			String targetPath = new File(baseDir, Constants.ARCHETYPE_POM).getCanonicalPath()
+					.substring(new File(baseDir).getCanonicalPath().length());
 
-			FileUtils.copyFile(new File(baseDir, Constants.ARCHETYPE_POM),
-					new File(backupDir, targetPath));
+			FileUtils.copyFile(new File(baseDir, Constants.ARCHETYPE_POM), new File(backupDir, targetPath));
 			getLogger().debug("pom.xml file backup is complete.");
 
-			pluginPomManager.removePomDependencies(pomFile,
-					installedPluginJars, pluginJar, properties);
+			pluginPomManager.removePomDependencies(pomFile, installedPluginJars, pluginJar, properties);
 		} catch (Exception e) {
-			getLogger().warn(
-					"Processing a pom.xml of current project is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+			getLogger().warn("Processing a pom.xml of current project is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
-	
-	public void addProcessPom(String baseDir, File pluginJar) throws Exception{
+
+	public void addProcessPom(String baseDir, File pluginJar) throws Exception {
 		getLogger().debug("Call addProcessPom() of DefaultPluginUninstaller");
-		
+
 		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
 
-		List<String> addPomFiles = FileUtil.findFiles(fileNames,
-				CommonConstants.PLUGIN_RESOURCES, "**\\"
-						+ CommonConstants.ARCHETYPE_REMOVE_POM, null);
-		
+		List<String> addPomFiles = FileUtil.findFiles(fileNames, CommonConstants.PLUGIN_RESOURCES, "**\\" + CommonConstants.ARCHETYPE_REMOVE_POM,
+				null);
+
 		if (addPomFiles.size() > 0) {
 			try {
 				File temporaryPomFile = new File(baseDir, "remove-pom.tmp");
 				temporaryPomFile.getParentFile().mkdirs();
 
 				InputStream is = pluginInfoManager.getPluginResource(addPomFiles.get(0), pluginJar);
-				
+
 				IOUtil.copy(is, new FileOutputStream(temporaryPomFile));
-				
-				pluginPomManager.mergePom(new File(baseDir,
-						Constants.ARCHETYPE_POM), temporaryPomFile);
-				
+
+				pluginPomManager.mergePom(new File(baseDir, Constants.ARCHETYPE_POM), temporaryPomFile);
+
 				FileUtil.deleteFile(temporaryPomFile);
 			} catch (Exception e) {
-				getLogger().debug(
-						"Processing a remove-pom.xml of current project is skipped. The reason is a '"
-								+ e.getMessage() + "'.");
+				getLogger().debug("Processing a remove-pom.xml of current project is skipped. The reason is a '" + e.getMessage() + "'.");
 			}
 		} else {
-			getLogger()
-					.debug("Merging current pom file with that of plugin is skipped. The reason is a pom.xml in "
-							+ pluginJar.getName() + " doesn't exist.");
+			getLogger().debug(
+					"Merging current pom file with that of plugin is skipped. The reason is a pom.xml in " + pluginJar.getName() + " doesn't exist.");
 		}
-		
+
 	}
 
 	/**
@@ -679,38 +578,27 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @return jar file names to be removed
 	 * @throws Exception
 	 */
-	public List<String> findRemoveDependencies(
-			Map<String, File> installedPluginJars, File pluginJar,
-			Properties properties) throws Exception {
+	public List<String> findRemoveDependencies(Map<String, File> installedPluginJars, File pluginJar, Properties properties) throws Exception {
 
-		getLogger().debug(
-				"Call findRemoveDependencies() of DefaultPluginUninstaller");
+		getLogger().debug("Call findRemoveDependencies() of DefaultPluginUninstaller");
 		// 1. find dependencies to be removed
 		try {
-			List<Dependency> removes = pluginPomManager
-					.findRemovedDependencies(installedPluginJars, pluginJar,
-							properties);
+			List<Dependency> removes = pluginPomManager.findRemovedDependencies(installedPluginJars, pluginJar, properties);
 
 			// 2. make files to be removed
 			List<String> removeFileNames = new ArrayList<String>();
 
 			for (Dependency dependency : removes) {
-				removeFileNames.add(dependency.getArtifactId()
-						+ "-"
-						+ dependency.getVersion()
-						+ (StringUtils.isEmpty(dependency.getClassifier()) ? ""
-								: "-" + dependency.getClassifier()) + ".jar");
+				removeFileNames.add(dependency.getArtifactId() + "-" + dependency.getVersion()
+						+ (StringUtils.isEmpty(dependency.getClassifier()) ? "" : "-" + dependency.getClassifier()) + ".jar");
 			}
 
-			getLogger().debug(
-					removeFileNames.size() + " files will be removed.");
+			getLogger().debug(removeFileNames.size() + " files will be removed.");
 
 			return removeFileNames;
 
 		} catch (Exception e) {
-			getLogger().warn(
-					"Finding dependent libraries to be removed is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+			getLogger().warn("Finding dependent libraries to be removed is skipped. The reason is a '" + e.getMessage() + "'.");
 			return new ArrayList<String>();
 		}
 	}
@@ -724,18 +612,12 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            the path of current project
 	 * @throws Exception
 	 */
-	public void processClasspathFile(Map<String, File> installedPluginJars,
-			String baseDir) {
-		getLogger().debug(
-				"Call processClasspathFile() of DefaultPluginUninstaller");
+	public void processClasspathFile(Map<String, File> installedPluginJars, String baseDir) {
+		getLogger().debug("Call processClasspathFile() of DefaultPluginUninstaller");
 
 		File classpathFile = new File(baseDir, ".classpath");
 		if (!classpathFile.exists()) {
-			getLogger()
-					.warn(
-							"'"
-									+ classpathFile.getAbsolutePath()
-									+ "' file is not found. Please check a location of your project.");
+			getLogger().warn("'" + classpathFile.getAbsolutePath() + "' file is not found. Please check a location of your project.");
 
 			return;
 		}
@@ -746,46 +628,30 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		try {
 			for (File pluginJar : installedPluginJars.values()) {
 
-				List<Dependency> dependencyList = pluginPomManager
-						.getCompileScopeDependencies(pluginJar);
+				List<Dependency> dependencyList = pluginPomManager.getCompileScopeDependencies(pluginJar);
 
 				for (Dependency dependencyInfo : dependencyList) {
-					if (classentries.contains(dependencyInfo.getGroupId() + ","
-							+ dependencyInfo.getArtifactId() + ","
-							+ dependencyInfo.getVersion())) {
+					if (classentries.contains(dependencyInfo.getGroupId() + "," + dependencyInfo.getArtifactId() + "," + dependencyInfo.getVersion())) {
 						continue;
 					}
 
-					dependencies.append("<classpathentry kind=\"lib\" path=\""
-							+ "lib/"
-							+ dependencyInfo.getArtifactId()
-							+ "-"
-							+ dependencyInfo.getVersion()
-							+ ((dependencyInfo.getClassifier() != null) ? "-"
-									+ dependencyInfo.getClassifier() : "")
+					dependencies.append("<classpathentry kind=\"lib\" path=\"" + "lib/" + dependencyInfo.getArtifactId() + "-"
+							+ dependencyInfo.getVersion() + ((dependencyInfo.getClassifier() != null) ? "-" + dependencyInfo.getClassifier() : "")
 							+ ".jar\"/> \n");
 
-					classentries.add(dependencyInfo.getGroupId() + ","
-							+ dependencyInfo.getArtifactId() + ","
-							+ dependencyInfo.getVersion());
+					classentries.add(dependencyInfo.getGroupId() + "," + dependencyInfo.getArtifactId() + "," + dependencyInfo.getVersion());
 				}
 			}
 
-			FileUtil.replaceFileContent(classpathFile,
-					"<!--Add new classpathentry here-->", "</classpath>",
-					"<!--Add new classpathentry here-->\n</classpath>",
-					"<!--Add new classpathentry here-->",
-					"<!--Add new classpathentry here-->\n"
+			FileUtil.replaceFileContent(classpathFile, "<!--Add new classpathentry here-->", "</classpath>",
+					"<!--Add new classpathentry here-->\n</classpath>", "<!--Add new classpathentry here-->", "<!--Add new classpathentry here-->\n"
 							+ dependencies.toString());
 
 		} catch (Exception e) {
-			getLogger().warn(
-					"Processing '.classpath' file "
-							+ " is skipped. The reason is a '" + e.getMessage()
-							+ "'.");
+			getLogger().warn("Processing '.classpath' file " + " is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
-	
+
 	/**
 	 * replace plugin resources and delete files to target folder
 	 * 
@@ -799,20 +665,17 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            plugin detail information
 	 * @param pluginZip
 	 *            zip file includes plugin binary file
-	 * @param pio
-	 *            properties in project.mf
+	 * @param projectConfig
+	 *            project configuration
 	 * 
 	 */
-	private void processTemplates(String baseDir, File backupDir, List<String> fileNames,
-			PluginInfo pluginInfo, ZipFile pluginZip, PropertiesIO pio) throws Exception {
+	private void processTemplates(String baseDir, File backupDir, List<String> fileNames, PluginInfo pluginInfo, ZipFile pluginZip, ProjectConfig projectConfig)
+			throws Exception {
 		getLogger().debug("Call processTemplates() of DefaultPluginUnInstaller");
 		// 1. get resource list
 		List<PluginResource> pluginResources = pluginInfo.getResources();
 		for (PluginResource pluginResource : pluginResources) {
-			getLogger().debug(
-					"Processing resources in ["
-							+ CommonConstants.METAINF_ANYFRAME
-							+ CommonConstants.PLUGIN_FILE + "]");
+			getLogger().debug("Processing resources in [" + CommonConstants.METAINF_ANYFRAME + CommonConstants.PLUGIN_FILE + "]");
 			// 2. get file list from current resource
 			// 2.1 set include
 			List<Include> includeResources = pluginResource.getIncludes();
@@ -827,43 +690,36 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 			List<String> replaces = new ArrayList<String>();
 			for (Exclude exclude : excludeResources) {
 				excludes.add(exclude.getName());
-				if(exclude.isMerged()){
+				if (exclude.isMerged()) {
 					replaces.add(exclude.getName());
 				}
-				
+
 			}
 			// 2.3 scan resources
-			List<String> templates = FileUtil.findFiles(
-					fileNames,
-					CommonConstants.PLUGIN_RESOURCES
-							+ CommonConstants.fileSeparator
-							+ pluginResource.getDir(), includes, excludes);
-			
-			String packageName = pio.readValue("package.name");
-			
+			List<String> templates = FileUtil.findFiles(fileNames,
+					CommonConstants.PLUGIN_RESOURCES + CommonConstants.fileSeparator + pluginResource.getDir(), includes, excludes);
+
+			String packageName = projectConfig.getPackageName();
+
 			// 4. delete files to base directory
-			processTemplate(baseDir, pluginResource.getDir(), backupDir, pluginZip, pluginInfo.getName(),  
-					packageName, templates, pluginResource.isPackaged());
-			
+			processTemplate(baseDir, pluginResource.getDir(), backupDir, pluginZip, pluginInfo.getName(), packageName, templates,
+					pluginResource.isPackaged());
+
 			getLogger().debug("Remove " + templates.size() + " files");
-			
-			if(replaces.size() > 0){
-				List<String> replaceFiles = FileUtil.findFiles(fileNames, 
-						CommonConstants.PLUGIN_RESOURCES
-						+ CommonConstants.fileSeparator
-						+ pluginResource.getDir(),
-						replaces, null);
-			
+
+			if (replaces.size() > 0) {
+				List<String> replaceFiles = FileUtil.findFiles(fileNames, CommonConstants.PLUGIN_RESOURCES + CommonConstants.fileSeparator
+						+ pluginResource.getDir(), replaces, null);
+
 				// 5. remove contents of files from base directory
-				processReplace(pluginInfo.getName(), baseDir, pluginResource.getDir(), packageName,
-						replaceFiles, pluginResource.isPackaged());
-				
+				processReplace(pluginInfo.getName(), baseDir, pluginResource.getDir(), packageName, replaceFiles, pluginResource.isPackaged());
+
 				getLogger().debug("Replace " + replaces.size() + " files");
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * delete file and folder
 	 * 
@@ -882,28 +738,27 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param packaged
 	 *            whether a plugin resource has package (ex. java)
 	 */
-	private void processTemplate(String baseDir, String resourceDir, File backupDir,
-			ZipFile pluginZip, String pluginName, String packageName,
-			 List<String> templates, boolean packaged) throws Exception {
-		
-		for (String template:templates) {
-			
+	private void processTemplate(String baseDir, String resourceDir, File backupDir, ZipFile pluginZip, String pluginName, String packageName,
+			List<String> templates, boolean packaged) throws Exception {
+
+		for (String template : templates) {
+
 			File file = getOutput(baseDir, resourceDir, template, packaged, packageName);
-			
-			if(!file.exists())
+
+			if (!file.exists())
 				return;
 
 			FileUtil.moveFile(baseDir, file, backupDir);
-			
+
 			FileUtil.deleteEmptyDirectory(new File(file.getParent()), true);
 		}
 	}
-	
+
 	/**
 	 * remove contents.
 	 * 
 	 * @param plguinName
-	 * 			  plugin name
+	 *            plugin name
 	 * @param baseDir
 	 *            plugin project root folder which has plugin sample codes
 	 * @param resourceDir
@@ -915,48 +770,40 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param packaged
 	 *            whether a plugin resource has package (ex. java)
 	 */
-	private void processReplace(String pluginName, String baseDir, String resourceDir, String packageName,
-			List<String> replaceFiles, boolean packaged) throws Exception {
+	private void processReplace(String pluginName, String baseDir, String resourceDir, String packageName, List<String> replaceFiles, boolean packaged)
+			throws Exception {
 		getLogger().debug("Call processReplace() of DefaultPluginInstaller");
-		
-		try{
-			for(String replaceFile:replaceFiles){
-				
+
+		try {
+			for (String replaceFile : replaceFiles) {
+
 				File file = getOutput(baseDir, resourceDir, replaceFile, packaged, packageName);
-				
+
 				boolean isPretty = true;
 				// 2. remove configuration for current plugin
 				try {
-					if(file.getName().endsWith(CommonConstants.EXT_JAVA) || file.getName().endsWith(CommonConstants.EXT_JSP)){
+					if (file.getName().endsWith(CommonConstants.EXT_JAVA) || file.getName().endsWith(CommonConstants.EXT_JSP) || file.getName().endsWith(CommonConstants.EXT_PROPERTIES)) {
 						isPretty = false;
 					}
-					FileUtil.removeFileContent(file, pluginName
-							+ "-configuration", "", isPretty);
-					
-					if(pluginName.equals(CommonConstants.I18N_PLUGIN) && 
-							replaceFile.endsWith(CommonConstants.CONFIG_MESSAGE_FILE)){
-						FileUtil.removeFileContent(file, pluginName
-								+ "-messagesource", "", isPretty);
+					FileUtil.removeFileContent(file, pluginName + "-configuration", "", isPretty);
+
+					if (pluginName.equals(CommonConstants.I18N_PLUGIN) && replaceFile.endsWith(CommonConstants.CONFIG_MESSAGE_FILE)) {
+						FileUtil.removeFileContent(file, pluginName + "-messagesource", "", isPretty);
 					}
-					
+
 				} catch (Exception e) {
-					getLogger()
-							.warn(
-									"Removing configuration about "
-											+ pluginName
-											+ " plugin from "+ file.getName() +" is skipped. The reason is a '"
-											+ e.getMessage() + "'.");
+					getLogger().warn(
+							"Removing configuration about " + pluginName + " plugin from " + file.getName() + " is skipped. The reason is a '"
+									+ e.getMessage() + "'.");
 				}
-				
+
 			}
 		} catch (Exception e) {
-			getLogger().warn(
-					"Merging a file into current project is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+			getLogger().warn("Merging a file into current project is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
-		
+
 	}
-	
+
 	/**
 	 * remove a hyperlink from welcome file
 	 * 
@@ -965,19 +812,13 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param pluginName
 	 *            plugin name to be uninstalled
 	 */
-	public void processWelcomeFile(String baseDir, String pluginName)
-			throws Exception {
-		getLogger().debug(
-				"Call processWelcomeFile() of DefaultPluginUninstaller");
-		File indexFile = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP,
-				CommonConstants.WELCOME_FILE);
+	public void processWelcomeFile(String baseDir, String pluginName) throws Exception {
+		getLogger().debug("Call processWelcomeFile() of DefaultPluginUninstaller");
+		File indexFile = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP, CommonConstants.WELCOME_FILE);
 		try {
-			FileUtil.removeFileContent(indexFile, pluginName + "-menu", "",
-					false);
+			FileUtil.removeFileContent(indexFile, pluginName + "-menu", "", false);
 		} catch (Exception e) {
-			getLogger().warn(
-					"Removing a menu from current project is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+			getLogger().warn("Removing a menu from current project is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
 
@@ -1000,41 +841,30 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            directory for backup
 	 * @throws Exception
 	 */
-	public void processDependencyLibs(String baseDir, String projectType,
-			String pluginName, Map<String, File> installedPluginJars,
+	public void processDependencyLibs(String baseDir, String pluginName, Map<String, File> installedPluginJars,
 			File removePluginJar, Properties properties, File backupDir) {
-		getLogger().debug(
-				"Call processDependencyLibs() of DefaultPluginUninstaller");
+		getLogger().debug("Call processDependencyLibs() of DefaultPluginUninstaller");
 
 		// 1. remove generated libraries
-		File destination = null;
-		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			destination = new File(baseDir, "lib");
-		} else if (projectType
-				.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_WEB)) {
-			destination = new File(baseDir, CommonConstants.SRC_MAIN_WEBAPP_LIB);
-		}
+		File destination = new File(baseDir, CommonConstants.SRC_MAIN_WEBAPP_LIB);
 
 		if (!destination.exists()) {
 			return;
 		}
 
 		try {
-			List<String> removes = findRemoveDependencies(installedPluginJars,
-					removePluginJar, properties);
-			
+			List<String> removes = findRemoveDependencies(installedPluginJars, removePluginJar, properties);
+
 			FileUtil.moveFile(destination, baseDir, backupDir, removes, null, false);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			getLogger().warn(
-					"Deleting dependent libraries about '" + pluginName
-							+ "' plugin from " + destination
-							+ " is skipped. The reason is a '" + e.getMessage()
-							+ "'.");
+					"Deleting dependent libraries about '" + pluginName + "' plugin from " + destination + " is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
-	
+
 	/**
 	 * copy dependent libraries of plugin to target folder
 	 * 
@@ -1047,29 +877,18 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param pluginJar
 	 *            plugin binary file
 	 */
-	public void addDependencyLibs(ArchetypeGenerationRequest request,
-			String projectType, String baseDir, File pluginJar) throws Exception{
-		getLogger().debug(
-				"Call processDependencyLibs() of DefaultPluginInstaller");
+	public void addDependencyLibs(ArchetypeGenerationRequest request, String baseDir, File pluginJar) throws Exception {
+		getLogger().debug("Call processDependencyLibs() of DefaultPluginInstaller");
 
 		// 1. find a destination for copying dependent libararies
-		File destination = null;
-		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			destination = new File(baseDir, "lib");
-		} else if (projectType
-				.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_WEB)) {
-			destination = new File(baseDir,
-					CommonConstants.SRC_MAIN_WEBAPP_LIB);
-		}
+		File destination = new File(baseDir, CommonConstants.SRC_MAIN_WEBAPP_LIB);
 
 		if (!destination.exists()) {
 			destination.mkdirs();
 		}
 		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
-		
-		List<String> pomFiles = FileUtil.findFiles(fileNames,
-				CommonConstants.PLUGIN_RESOURCES, "**\\"
-						+ CommonConstants.ARCHETYPE_REMOVE_POM, null);
+
+		List<String> pomFiles = FileUtil.findFiles(fileNames, CommonConstants.PLUGIN_RESOURCES, "**\\" + CommonConstants.ARCHETYPE_REMOVE_POM, null);
 		// 2. merge dependencies of pom file with current dependencies
 		if (pomFiles.size() > 0) {
 			try {
@@ -1077,45 +896,36 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				temporaryPomFile.getParentFile().mkdirs();
 
 				InputStream is = pluginInfoManager.getPluginResource(pomFiles.get(0), pluginJar);
-				
+
 				IOUtil.copy(is, new FileOutputStream(temporaryPomFile));
-				
+
 				Model addModel = pluginPomManager.readPom(temporaryPomFile);
 				List<Dependency> dependencies = addModel.getDependencies();
-				
-				Set<Artifact> dependencyArtifacts = pluginArtifactManager
-						.downloadArtifact(request, dependencies);
-				
-				getLogger().debug(
-						"Copy " + dependencyArtifacts.size()
-								+ " dependent libraries into "
-								+ destination.getAbsolutePath());
+
+				Set<Artifact> dependencyArtifacts = pluginArtifactManager.downloadArtifact(request, dependencies);
+
+				getLogger().debug("Copy " + dependencyArtifacts.size() + " dependent libraries into " + destination.getAbsolutePath());
 				Iterator<Artifact> dependencyItr = dependencyArtifacts.iterator();
 
 				while (dependencyItr.hasNext()) {
 					Artifact dependencyArtifact = dependencyItr.next();
-					if (dependencyArtifact.getScope() == null
-							|| dependencyArtifact.getScope().equals("")
+					if (dependencyArtifact.getScope() == null || dependencyArtifact.getScope().equals("")
 							|| dependencyArtifact.getScope().equals("compile")) {
 
-						FileUtil.copyDir(dependencyArtifact.getFile()
-								.getCanonicalFile(), destination);
+						FileUtil.copyDir(dependencyArtifact.getFile().getCanonicalFile(), destination);
 					}
 				}
-				
+
 				FileUtil.deleteFile(temporaryPomFile);
 			} catch (Exception e) {
-				getLogger().debug(
-						"Processing a remove-pom.xml of current project is skipped. The reason is a '"
-								+ e.getMessage() + "'.");
+				getLogger().debug("Processing a remove-pom.xml of current project is skipped. The reason is a '" + e.getMessage() + "'.");
 			}
 		} else {
-			getLogger()
-					.debug("Removing current pom file with that of plugin is skipped. The reason is a remove-pom.xml in "
-							+ pluginJar.getName() + " doesn't exist.");
+			getLogger().debug(
+					"Removing current pom file with that of plugin is skipped. The reason is a remove-pom.xml in " + pluginJar.getName()
+							+ " doesn't exist.");
 		}
 	}
-
 
 	/**
 	 * in case of installing hibernate plugin, change transaction configuration
@@ -1126,63 +936,42 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param pluginName
 	 *            plugin name to be uninstalled
 	 */
-	public void processTransactionFile(String baseDir)
-			throws Exception {
-		getLogger().debug(
-				"Call processTransactionFile() of DefaultPluginUninstaller");
-		
+	public void processTransactionFile(String baseDir) throws Exception {
+		getLogger().debug("Call processTransactionFile() of DefaultPluginUninstaller");
+
 		// 1. get a context-transaction.xml file
-		File txFile = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES
-				+ "spring", CommonConstants.CONFIG_TX_FILE);
-		
+		File txFile = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES + "spring", CommonConstants.CONFIG_TX_FILE);
+
 		try {
-			FileUtil
-					.replaceFileContent(
-							txFile,
-							"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
-							"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
-			FileUtil
-					.replaceFileContent(
-							txFile,
-							"<property name=\"sessionFactory\" ref=\"sessionFactory\" />",
-							"<property name=\"dataSource\" ref=\"dataSource\" />");
+			FileUtil.replaceFileContent(txFile, "id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
+					"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
+			FileUtil.replaceFileContent(txFile, "<property name=\"sessionFactory\" ref=\"sessionFactory\" />",
+					"<property name=\"dataSource\" ref=\"dataSource\" />");
 		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Replace transaction configuration about hibernate"
-									+ " plugin from context-transaction.xml is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
+			getLogger().warn(
+					"Replace transaction configuration about hibernate" + " plugin from context-transaction.xml is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
-	
+
 	/**
 	 * in case of uninstalling i18n plugin, change messageSource configuration
 	 * 
 	 * @param targetDir
 	 *            target project folder to install a plugin
 	 */
-	private void processMessageFile(String baseDir)
-			throws Exception {
-		getLogger().debug(
-				"Call processMessageFile() of DefaultPluginUnInstaller");
+	private void processMessageFile(String baseDir) throws Exception {
+		getLogger().debug("Call processMessageFile() of DefaultPluginUnInstaller");
 		try {
-			
-				// 1. get a transaction configuration file
-				File file = new File(baseDir
-						+ CommonConstants.SRC_MAIN_RESOURCES + "spring",
-						CommonConstants.CONFIG_MESSAGE_FILE);
-				
-				FileUtil.replaceFileContent(
-						file,
-						"<bean id=\"fileMessageSource\"",
-						"<bean id=\"messageSource\"");
+
+			// 1. get a transaction configuration file
+			File file = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES + "spring", CommonConstants.CONFIG_MESSAGE_FILE);
+
+			FileUtil.replaceFileContent(file, "<bean id=\"fileMessageSource\"", "<bean id=\"messageSource\"");
 		} catch (Exception e) {
-			getLogger()
-					.warn("Processing a context-message.xml of current project is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+			getLogger().warn("Processing a context-message.xml of current project is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
-
 
 	/**
 	 * drop custom table, delete data to DB
@@ -1197,38 +986,27 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            plugin jar file
 	 * @param encoding
 	 *            file encoding style
-	 * @param pio
-	 *            properties in project.mf
+	 * @param projectConfig
+	 *            project configuration
 	 */
-	public void processInitialData(File baseDir, List<String> fileNameList,
-			String pluginName, ZipFile pluginZip, String encoding,
-			PropertiesIO pio) throws Exception {
-		getLogger().debug(
-				"Call processInitialData() of DefaultPluginUninstaller");
+	public void processInitialData(File baseDir, List<String> fileNameList, String pluginName, ZipFile pluginZip, String encoding, ProjectConfig projectConfig)
+			throws Exception {
+		getLogger().debug("Call processInitialData() of DefaultPluginUninstaller");
 
-		String dbType = pio.readValue(CommonConstants.DB_TYPE);
+		JdbcOption jdbc = ConfigXmlUtil.getDefaultDatabase(projectConfig);
+		String dbType = jdbc.getDbType();
 
-		List<String> dbScripts = FileUtil.findFiles(fileNameList,
-				CommonConstants.PLUGIN_RESOURCES, "**\\" + pluginName
-						+ "-delete-data-" + dbType + ".sql", null);
+		List<String> dbScripts = FileUtil.findFiles(fileNameList, CommonConstants.PLUGIN_RESOURCES, "**\\" + pluginName + "-delete-data-" + dbType
+				+ ".sql", null);
 		if (dbScripts.size() > 0) {
 			try {
-				DBUtil.runStatements(baseDir, pluginName, pluginZip, dbScripts,
-						encoding, pio.getProperties());
-				getLogger().debug(
-						"Run " + dbScripts + " dbscripts of plugin '"
-								+ pluginName + "' successfully.");
+				DBUtil.runStatements(baseDir, pluginName, pluginZip, dbScripts, encoding, jdbc);
+				getLogger().debug("Run " + dbScripts + " dbscripts of plugin '" + pluginName + "' successfully.");
 			} catch (Exception e) {
 				if (e.getCause() instanceof SQLException) {
-					getLogger().warn(
-							"Executing db script of '" + pluginName
-									+ "' plugin is skipped. The reason is "
-									+ e.getMessage());
+					getLogger().warn("Executing db script of '" + pluginName + "' plugin is skipped. The reason is " + e.getMessage());
 				} else {
-					getLogger().warn(
-							"Processing initial data for '" + pluginName
-									+ "' is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
+					getLogger().warn("Processing initial data for '" + pluginName + "' is skipped. The reason is a '" + e.getMessage() + "'.");
 				}
 			}
 		}
@@ -1243,15 +1021,10 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            plugin name to be installed
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateInstallationInfo(String baseDir, String pluginName)
-			throws Exception {
-		getLogger()
-				.debug(
-						"Call processPluginInstalledFile() of DefaultPluginUninstaller");
-		File pluginInstalledFile = new File(baseDir + CommonConstants.METAINF,
-				CommonConstants.PLUGIN_INSTALLED_FILE);
-		Map<String, PluginInfo> pluginMap = (Map<String, PluginInfo>) FileUtil
-				.getObjectFromXML(pluginInstalledFile);
+	public void updateInstallationInfo(String baseDir, String pluginName) throws Exception {
+		getLogger().debug("Call processPluginInstalledFile() of DefaultPluginUninstaller");
+		File pluginInstalledFile = new File(baseDir + CommonConstants.METAINF, CommonConstants.PLUGIN_INSTALLED_FILE);
+		Map<String, PluginInfo> pluginMap = (Map<String, PluginInfo>) FileUtil.getObjectFromXML(pluginInstalledFile);
 
 		pluginMap.remove(pluginName);
 
@@ -1272,12 +1045,11 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 
 		String backupDirName = formatter.format(date);
 
-		File file = new File(baseDir + CommonConstants.UNINSTALLED_FOLDER,
-				backupDirName);
+		File file = new File(baseDir + CommonConstants.UNINSTALLED_FOLDER, backupDirName);
 
 		return file;
 	}
-	
+
 	/**
 	 * make a output file
 	 * 
@@ -1293,19 +1065,16 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 *            project's base package name
 	 * @return output file
 	 */
-	private File getOutput(String baseDir, String resourceDir,
-			String template, boolean packaged, String packageName) {
+	private File getOutput(String baseDir, String resourceDir, String template, boolean packaged, String packageName) {
 		getLogger().debug("Call getOutput() of DefaultPluginPackager");
 
-		template = StringUtils.replaceOnce(template,
-				CommonConstants.PLUGIN_RESOURCES + "/" + resourceDir, "");
-		
-		String outputName = resourceDir + CommonConstants.fileSeparator
-			+ (packaged ? FileUtil.changePackageForDir(packageName) : "")
-			+ CommonConstants.fileSeparator + template;
-		
+		template = StringUtils.replaceOnce(template, CommonConstants.PLUGIN_RESOURCES + "/" + resourceDir, "");
+
+		String outputName = resourceDir + CommonConstants.fileSeparator + (packaged ? FileUtil.changePackageForDir(packageName) : "")
+				+ CommonConstants.fileSeparator + template;
+
 		File output = new File(baseDir, outputName);
-		
+
 		return output;
 	}
 }

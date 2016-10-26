@@ -15,7 +15,11 @@
  */
 package org.anyframe.ide.command.common;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.anyframe.ide.command.common.util.CommonConstants;
@@ -72,14 +76,10 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		pluginInstaller = (PluginInstaller) lookup(DefaultPluginInstaller.class
-				.getName());
-		pluginUninstaller = (PluginUninstaller) lookup(DefaultPluginUninstaller.class
-				.getName());
-		pluginInfoManager = (PluginInfoManager) lookup(DefaultPluginInfoManager.class
-				.getName());
-		pluginPomManager = (DefaultPluginPomManager) lookup(DefaultPluginPomManager.class
-				.getName());
+		pluginInstaller = (PluginInstaller) lookup(DefaultPluginInstaller.class.getName());
+		pluginUninstaller = (PluginUninstaller) lookup(DefaultPluginUninstaller.class.getName());
+		pluginInfoManager = (PluginInfoManager) lookup(DefaultPluginInfoManager.class.getName());
+		pluginPomManager = (DefaultPluginPomManager) lookup(DefaultPluginPomManager.class.getName());
 
 		if (baseDir.exists()) {
 			FileUtil.deleteDir(baseDir);
@@ -93,27 +93,21 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 	public void testInstallQuery100() throws Exception {
 		boolean excludeSrc = true;
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"query", null, null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query", null, null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "1.0.0"));
-		assertTrue("fail to install 'datasource' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"datasource", "1.0.0"));
-		assertTrue("fail to install 'logging' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"logging", "1.0.0"));
-		assertTrue("fail to install 'query' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"query", "1.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0"));
+		assertTrue("fail to install 'datasource' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "datasource", "1.0.0"));
+		assertTrue("fail to install 'logging' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "logging", "1.0.0"));
+		assertTrue("fail to install 'query' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query", "1.0.0"));
 	}
 
 	/**
@@ -124,32 +118,25 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"query", null, null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query", null, null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "1.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0"));
 
-		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES,
-				"/user.home/2.0.0");
+		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/2.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"core", null, null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", null, null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "2.0.0"));
-		assertTrue("fail to install 'query' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"query", "2.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0"));
+		assertTrue("fail to install 'query' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query", "2.0.0"));
 	}
 
 	/**
@@ -160,31 +147,24 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"core", "1.0.0", null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "1.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0"));
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"struts", "1.0.0", null, encoding, pomHandling, excludeSrc,
-				null, null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "struts", "1.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'struts' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"struts", "1.0.0"));
-		assertTrue("fail to install 'query' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"query", "1.0.0"));
-		assertTrue("fail to install 'fileupload' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"fileupload", "1.0.0"));
+		assertTrue("fail to install 'struts' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "struts", "1.0.0"));
+		assertTrue("fail to install 'query' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query", "1.0.0"));
+		assertTrue("fail to install 'fileupload' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "fileupload", "1.0.0"));
 	}
 
 	/**
@@ -192,34 +172,27 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 	 * 3.0.0 plugin. version of core plugn is mismatched to eache other because
 	 * struts 3.0.0 plugin depends on query 2.0.0 and fileupload 1.0.0
 	 */
-	public void testInstallQuyerRia100InstallStruts300() throws Exception {
+	public void testInstallQueryRia100InstallStruts300() throws Exception {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"query-ria", "1.0.0", null, encoding, pomHandling, excludeSrc,
-				null, null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query-ria", "1.0.0", null, encoding,
+				pomHandling, excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'query-ria' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"query-ria", "1.0.0"));
+		assertTrue("fail to install 'query-ria' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "query-ria", "1.0.0"));
 
-		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES,
-				"/user.home/3.0.0");
+		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/3.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
 		try {
-			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-					"struts", "3.0.0", null, encoding, pomHandling, excludeSrc,
-					null, null, false);
-			fail("fail to stop installing struts 3.0.0");
+			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "struts", "3.0.0", null, encoding,
+					pomHandling, excludeSrc, null, null, false);
 		} catch (Exception e) {
-			assertTrue("fail to catch an exception",
-					e instanceof CommandException);
+			assertTrue("fail to catch an exception", e instanceof CommandException);
 		}
 	}
 
@@ -232,18 +205,15 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/3.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/3.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
 		try {
-			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-					"struts", "3.0.0", null, encoding, pomHandling, excludeSrc,
-					null, null, false);
+			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "struts", "3.0.0", null, encoding,
+					pomHandling, excludeSrc, null, null, false);
 			fail("fail to stop installing struts 3.0.0");
 		} catch (Exception e) {
-			assertTrue("fail to catch an exception",
-					e instanceof CommandException);
+			assertTrue("fail to catch an exception", e instanceof CommandException);
 		}
 	}
 
@@ -255,30 +225,24 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"tiles", "1.0.0", null, encoding, pomHandling, excludeSrc,
-				null, null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "tiles", "1.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'tiles' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"tiles", "1.0.0"));
+		assertTrue("fail to install 'tiles' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "tiles", "1.0.0"));
 
-		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES,
-				"/user.home/2.0.0");
+		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/2.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
 		try {
-			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-					"core", "2.0.0", null, encoding, pomHandling, excludeSrc,
-					null, null, false);
+			pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0", null, encoding,
+					pomHandling, excludeSrc, null, null, false);
 			fail("fail to stop installing core 2.0.0");
 		} catch (Exception e) {
-			assertTrue("fail to catch an exception",
-					e instanceof CommandException);
+			assertTrue("fail to catch an exception", e instanceof CommandException);
 		}
 
 	}
@@ -293,55 +257,43 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = true;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/1.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"core", "1.0.0", null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "1.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "1.0.0"));
 
-		Model currentModel = pluginPomManager.readPom(new File(baseDir,
-				Constants.ARCHETYPE_POM));
+		Model currentModel = pluginPomManager.readPom(new File(baseDir, Constants.ARCHETYPE_POM));
 		List<Dependency> currentDependencies = currentModel.getDependencies();
 		for (Dependency currentDependency : currentDependencies) {
 			if (currentDependency.getArtifactId().equals("commons-dbcp")) {
-				assertEquals("fail to process dependencies.", "1.0",
-						currentDependency.getVersion());
+				assertEquals("fail to process dependencies.", "1.0", currentDependency.getVersion());
 			}
 			if (currentDependency.getArtifactId().equals("commons-pool")) {
-				assertEquals("fail to process dependencies.", "1.0.1",
-						currentDependency.getVersion());
+				assertEquals("fail to process dependencies.", "1.0.1", currentDependency.getVersion());
 			}
 		}
 
-		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES,
-				"/user.home/2.0.0");
+		userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/2.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"core", "2.0.0", null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "2.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0"));
 
-		currentModel = pluginPomManager.readPom(new File(baseDir,
-				Constants.ARCHETYPE_POM));
+		currentModel = pluginPomManager.readPom(new File(baseDir, Constants.ARCHETYPE_POM));
 		currentDependencies = currentModel.getDependencies();
 		for (Dependency currentDependency : currentDependencies) {
 			if (currentDependency.getArtifactId().equals("commons-dbcp")) {
-				assertEquals("fail to process dependencies.", "1.2.2",
-						currentDependency.getVersion());
+				assertEquals("fail to process dependencies.", "1.2.2", currentDependency.getVersion());
 			}
 			if (currentDependency.getArtifactId().equals("commons-pool")) {
-				assertEquals("fail to process dependencies.", "1.5.3",
-						currentDependency.getVersion());
+				assertEquals("fail to process dependencies.", "1.5.3", currentDependency.getVersion());
 			}
 		}
 	}
@@ -354,23 +306,17 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		boolean excludeSrc = false;
 		((DefaultPluginInstaller) pluginInstaller).setTest(true);
 
-		File userHome = new File(currentPath
-				+ CommonConstants.SRC_TEST_RESOURCES, "/user.home/2.0.0");
+		File userHome = new File(currentPath + CommonConstants.SRC_TEST_RESOURCES, "/user.home/2.0.0");
 		System.setProperty("user.home", userHome.getAbsolutePath());
 
-		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-				"core", "2.0.0", null, encoding, pomHandling, excludeSrc, null,
-				null, false);
+		pluginInstaller.install(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0", null, encoding, pomHandling,
+				excludeSrc, null, null, false);
 
-		assertTrue("fail to install 'core' plugin", pluginInfoManager
-				.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(),
-						"core", "2.0.0"));
+		assertTrue("fail to install 'core' plugin",
+				pluginInfoManager.isInstalled(createRequest(baseDir.getAbsolutePath()), baseDir.getAbsolutePath(), "core", "2.0.0"));
 
-		assertTrue(
-				"fail to install 'core' plugin resources",
-				new File(
-						"./temp/myproject/src/main/java/org/anyframe/plugin/org/anyframe/plugin/core/moviefinder/MovieFinder.java")
-						.exists());
+		assertTrue("fail to install 'core' plugin resources", new File(
+				"./temp/myproject/src/main/java/org/anyframe/plugin/org/anyframe/plugin/core/moviefinder/MovieFinder.java").exists());
 	}
 
 	/**
@@ -379,17 +325,16 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 	private void prepareProject(String baseDir) throws Exception {
 		File sampleDir = new File("./src/test/resources/project/installsample");
 
+		makeConfigFile(new File("./src/test/resources/project/installsample").getAbsolutePath());
+		
 		File metadataDir = new File(baseDir, "META-INF");
 		metadataDir.mkdirs();
 
-		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/",
-				CommonConstants.PLUGIN_INSTALLED_FILE), metadataDir);
+		File settingsDir = new File(baseDir, ".settings");
+		settingsDir.mkdirs();
 
-		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/",
-				CommonConstants.METADATA_FILE), metadataDir);
-
-		FileUtil.copyDir(new File(sampleDir, Constants.ARCHETYPE_POM),
-				new File(baseDir));
+		File anyframeDir = new File(settingsDir, "anyframe");
+		anyframeDir.mkdirs();
 
 		File webDir = new File(baseDir, "/src/main/webapp/WEB-INF/");
 		webDir.mkdirs();
@@ -399,5 +344,39 @@ public class DefaultPluginInstallTest extends AbstractCommandTest {
 		new File(baseDir, "src/test/java").mkdirs();
 		new File(baseDir, "src/test/resources").mkdirs();
 		new File(baseDir, "src/main/webapp/WEB-INF/jsp").mkdirs();
+
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/META-INF/", CommonConstants.PLUGIN_INSTALLED_FILE), metadataDir);
+
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/", CommonConstants.COMMON_CONFIG_PREFS_FILE), settingsDir);
+
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/anyframe/", CommonConstants.COMMON_CONFIG_XML_FILE), anyframeDir);
+
+		FileUtil.copyDir(new File(sampleDir.getAbsolutePath() + "/.settings/anyframe/", CommonConstants.DATABASE_CONFIG_XML_FILE), anyframeDir);
+
+		FileUtil.copyDir(new File(sampleDir, Constants.ARCHETYPE_POM), new File(baseDir));
+	}
+	
+	private void makeConfigFile(String baseDir) throws Exception {
+		File file = new File(baseDir + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME + CommonConstants.fileSeparator
+				+ CommonConstants.COMMON_CONFIG_XML_FILE);
+
+		List<String> lines = new ArrayList<String>();
+
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String line = in.readLine();
+		while (line != null) {
+			if (line.indexOf("<databases>") > 0) {
+				line = "\t\t<databases>" + baseDir + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME + "</databases>";
+			}
+			lines.add(line);
+			line = in.readLine();
+		}
+		in.close();
+
+		// now, write the file again with the changes
+		PrintWriter out = new PrintWriter(file);
+		for (String l : lines)
+			out.println(l);
+		out.close();
 	}
 }

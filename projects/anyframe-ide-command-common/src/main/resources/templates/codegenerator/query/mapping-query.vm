@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryservice xmlns="http://www.anyframejava.org/schema/query/mapping" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.anyframejava.org/schema/query/mapping http://www.anyframejava.org/schema/query/mapping/anyframe-query-mapping-1.0.xsd ">
+
+  <queries>
+	<query id="create${domain.name}">
+		<statement>
+		<![CDATA[
+			INSERT INTO ${domain.table} (
+				#foreach($column in $domain.columns)
+#**************#${column.columnName}#if($velocityHasNext), #end
+#**************##end#**#
+			)
+			VALUES (
+				#foreach($column in $domain.columns)
+#**************#:vo.${column.fieldName}#if($velocityHasNext), #end
+#**************##end#**#
+			)
+		]]>
+		</statement>
+	</query>
+		
+	<query id="update${domain.name}">
+		<statement>
+		<![CDATA[
+			UPDATE ${domain.table}
+			SET 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName} = :vo.${column.fieldName}#if($velocityHasNext), #end
+#**************##end#**#
+			WHERE 
+				#foreach($column in $domain.columns)
+#**************##if($column.isKey)
+#**************##if($velocityCount > 1)AND #end${column.columnName} = :vo.${column.fieldName} #end
+#**************##end#**#
+		]]>
+		</statement>
+	</query>
+	
+	<query id="remove${domain.name}">
+		<statement>
+		<![CDATA[
+			DELETE FROM ${domain.table}
+			WHERE 
+				#set($keyCount = '0')
+#**************##foreach($column in $domain.columns)
+#****************##if($column.isKey)
+#******************##if($keyCount=="0")${column.columnName} = :vo.${column.fieldName} 
+#**********************##set($keyCount='1')
+#******************##elseif($keyCount=="1")AND ${column.columnName} = :vo.${column.fieldName} 
+#******************##end
+#****************##end
+#**************##end});
+		]]>
+		</statement>
+	</query>
+	
+	<query id="find${domain.name}ByPk">
+		<statement>
+		<![CDATA[
+			SELECT 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName}#if($velocityHasNext), #end
+#**************##end#**#
+			FROM ${domain.table}
+			WHERE 
+#**************##set($keyCount = '0')
+				#foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") AND ##
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end ${column.columnName} = :vo.${column.fieldName} #end
+#**************##end#**#
+		]]>
+		</statement>
+		<result class="${domain.packageName}.${domain.name}" />											
+	</query>
+
+	<query id="find${domain.name}List" isDynamic="true">
+		<statement>
+		<![CDATA[
+			SELECT 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName}#if($velocityHasNext), #end
+#**************##end#**#
+			FROM ${domain.table} 
+			\#if (${keywordNum} != "")			
+			WHERE 		
+				\#if ($condition == "All" || $condition == "")
+#**************##set($keyCount = '0')
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") #**#
+					OR #**#
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end##
+					\#if ($isNumeric == "true")
+						${column.columnName} = {{keywordNum}}
+					\#else
+						${column.columnName} LIKE '{{keywordStr}}'
+					\#end##
+#******************##end
+#**************##end
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)#**#
+				\#elseif ($condition == "${column.fieldName}")
+					\#if ($isNumeric == "true")
+						${column.columnName} = {{keywordNum}}
+					\#else
+						${column.columnName} LIKE '{{keywordStr}}'
+					\#end
+#******************##end
+#**************##end
+				\#end
+			\#end
+		]]>
+		</statement>
+		<result class="${domain.packageName}.${domain.name}" />		
+	</query>
+  </queries>
+</queryservice>

@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: anyframe-ide-eclipse-hudson
-Bundle-SymbolicName: anyframe-ide-eclipse-hudson
-Bundle-Version: 1.0.0
-Bundle-Vendor: Samsung SDS
-

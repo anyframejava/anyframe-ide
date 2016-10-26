@@ -17,11 +17,11 @@ package org.anyframe.ide.command.ant.task;
 
 import java.io.File;
 
-import org.anyframe.ide.command.cli.util.PropertiesIO;
-import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.DefaultPluginInstaller;
 import org.anyframe.ide.command.common.PluginInstaller;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
@@ -49,24 +49,12 @@ public class InstallPluginTask extends AbstractPluginTask {
 	 */
 	public void doExecute() throws BuildException {
 		try {
-			File metadataFile = new File(new File(getTarget())
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(getTarget());
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
-			if (!metadataFile.exists()) {
-				throw new CommandException("Can not find a '"
-						+ metadataFile.getAbsolutePath()
-						+ "' file. Please check a location of your project.");
-			}
+			String templateHome = projectConfig.getTemplateHomePath();
 
-			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-			String templateHome = pio.readValue(CommonConstants.ANYFRAME_HOME)
-					+ CommonConstants.fileSeparator + "templates";
-
-			String inspectionHome = pio
-					.readValue(CommonConstants.ANYFRAME_HOME)
-					+ CommonConstants.fileSeparator
-					+ "ide"
-					+ CommonConstants.fileSeparator + "inspection";
+			String inspectionHome = getTarget() + CommonConstants.INSPECTION_HOME;
 
 			if (isEmpty("version", this.version)) {
 				this.version = null;
@@ -85,10 +73,8 @@ public class InstallPluginTask extends AbstractPluginTask {
 				this.isCLIMode = "true";
 			}
 
-			pluginInstaller.install(getRequest(), getTarget(), getName(),
-					version, pluginJar, getEncoding(), false, new Boolean(
-							excludeSrc).booleanValue(), templateHome,
-					inspectionHome, new Boolean(this.isCLIMode).booleanValue());
+			pluginInstaller.install(getRequest(), getTarget(), getName(), version, pluginJar, getEncoding(), false,
+					new Boolean(excludeSrc).booleanValue(), templateHome, inspectionHome, new Boolean(this.isCLIMode).booleanValue());
 		} catch (Exception e) {
 			log("Fail to execute InstallPluginTask", e, Project.MSG_ERR);
 			throw new BuildException(e.getMessage());
@@ -99,8 +85,7 @@ public class InstallPluginTask extends AbstractPluginTask {
 	 * look up essential components which can install, uninstall, etc.
 	 */
 	public void lookupComponents() {
-		pluginInstaller = (PluginInstaller) getPluginContainer().lookup(
-				DefaultPluginInstaller.class.getName());
+		pluginInstaller = (PluginInstaller) getPluginContainer().lookup(DefaultPluginInstaller.class.getName());
 	}
 
 	public void setExcludeSrc(String excludeSrc) {
@@ -110,7 +95,7 @@ public class InstallPluginTask extends AbstractPluginTask {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	
+
 	public void setIsCLIMode(String isCLIMode) {
 		this.isCLIMode = isCLIMode;
 	}

@@ -1,0 +1,96 @@
+<section id="workingwithqueries_openfilesbyusingcontextmenu">
+	<title>Open Files by Using Context Menu</title>
+
+	<para>
+		Anyframe Query Manager provides function to easily find DAO-related Query statement or Query-related VO through Context Menu.		
+		<itemizedlist>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_openfilesbyusingcontextmenu_contextDAO">Opening specific Query statement used at DAO</link>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_openfilesbyusingcontextmenu_contextQuery">Opening DAO class where Query is used</link>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<section id="workingwithqueries_openfilesbyusingcontextmenu_contextDAO">
+		<title>Opening specific Query statement used in DAO through Context Menu</title>
+
+		<para>
+			When you want to check the contents of a specific Query statement used in DAO, if there are too many Query Mapping XML files or Query statements,
+			it can be difficult to find the Query statement. To solve this issue, Anyframe Query Manager provides directly opening the Query statement
+			through Context Menu.
+		</para>
+
+		<para>
+			How to use this function is as the following.	
+			<orderedlist numeration="Arabic" inheritnum="inherit">
+				<listitem>
+					<para>
+						Among Query statements used in DAO, double-click and highlight the Query ID that you want to open immediately,
+						then select "Open Query in Query Manager
+						Editor" on Context Menu.					
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="../image/WorkingWithQueries/openbycontext-openquerystep1.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</listitem>
+				<listitem>
+					<para>
+						You can see that the Query ID you want to open immediately is opened through Query Manager Editor,
+						and the Query ID is highlighted. 					
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="../image/WorkingWithQueries/openbycontext-openquerystep2.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</listitem>
+			</orderedlist>
+		</para>
+	</section>
+
+	<section id="workingwithqueries_openfilesbyusingcontextmenu_contextQuery">
+		<title>Opening DAO class where Query is used</title>
+
+		<para>
+			When trying to check in which DAO Query used in Query statement is used, it may be troublesome to search the DAO.
+			To solve this issue, Anyframe Query Manager provides directly opening of the DAO through Context Menu.		
+		</para>
+
+		<para>
+			How to utilize this function is as the following.
+			<orderedlist numeration="Arabic" inheritnum="inherit">
+				<listitem>
+					<para>
+						Double-click and highlight VO utilized in Query statement
+						then select "Open Query in Java
+						Editor" on Context Menu.			
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						The Query ID you want to open immediately is opened through Java Editor.					
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								fileref="../image/WorkingWithQueries/openbycontext-openvostep2.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</listitem>
+			</orderedlist>
+		</para>
+	</section>
+</section>

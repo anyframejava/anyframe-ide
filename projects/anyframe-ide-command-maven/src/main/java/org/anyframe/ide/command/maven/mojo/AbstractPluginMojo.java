@@ -134,6 +134,8 @@ public abstract class AbstractPluginMojo extends AbstractMojo {
 		request.setRemoteArtifactRepositories(remoteArtifactRepositories);
 
 		List<Server> servers = settings.getServers();
+		
+		request.setActiveProxy(settings.getActiveProxy());
 
 		for (Server server : servers) {
 			request.addMirror(server);

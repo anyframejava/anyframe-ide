@@ -115,8 +115,8 @@ public class DefaultPluginCatalogManagerTest extends AbstractCommandTest {
 		Map<String, PluginInfo> plugins = pluginCatalogManager
 				.getPlugins(createRequest(""));
 
-		// 2. assert (essential 1, optional 8)
-		assertThat("Fail to get plugins", plugins.size(), is(9));
+		// 2. assert (essential 1, optional 7)
+		assertThat("Fail to get plugins", plugins.size(), is(8));
 	}
 
 	/**

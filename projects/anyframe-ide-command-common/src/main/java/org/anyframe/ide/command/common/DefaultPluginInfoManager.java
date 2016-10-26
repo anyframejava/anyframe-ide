@@ -103,10 +103,11 @@ public class DefaultPluginInfoManager implements PluginInfoManager {
 		PluginInfo pluginSummary = pluginCatalogManager.getPlugin(request,
 				pluginName, pluginVersion);
 
+		
 		if (pluginSummary != null) {
 			File pluginJar = getPluginFile(request, pluginSummary.getGroupId(),
 					pluginSummary.getArtifactId(), pluginSummary.getVersion());
-
+			
 			PluginInfo pluginInfo = getPluginInfo(pluginJar);
 			pluginInfo.setDescription(pluginSummary.getDescription());
 			pluginInfo.setLatestVersion(pluginSummary.getLatestVersion());

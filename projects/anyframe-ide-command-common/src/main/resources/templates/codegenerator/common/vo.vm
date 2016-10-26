@@ -1,0 +1,76 @@
+#macro( getSimpleType $fieldType )### START getSimpleType
+#set($lastDot=$fieldType.lastIndexOf("."))
+#set($indexSimpleField=$lastDot + 1)
+#if($lastDot > 0)$fieldType.substring($indexSimpleField)##
+#else$fieldType##
+#end##
+#end##### END getSimpleType
+#macro( getFieldNameUpper $fieldName )### START getFieldNameUpper
+${fieldName.substring(0,1).toUpperCase()}${fieldName.substring(1)}##
+#end#### END getFieldNameUpper
+#if(${domain.packageName} == "")
+#else
+package ${domain.packageName};
+#end
+
+import java.io.Serializable;
+
+#foreach($importStatement in $importList)
+import ${importStatement};
+#end
+
+/**
+ * @table ${domain.table}
+ * @author $author
+ */
+public class ${domain.name} implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+#**### START : declare column field
+#**##foreach($column in $domain.columns)
+	/**
+	 * @ColumnName ${column.columnName}
+	 * @ColumnType ${column.columnType}
+	 * @Length(${column.length})
+#**##if($column.isKey == "true")
+	 * @PK
+#**##end
+#**##if($column.isFkey)
+	 * @FK ${column.fkTable}
+#**##end
+#**##if(!$column.notNull)
+	 * @NotNull
+#**##end
+	 */
+	private #getSimpleType(${column.fieldType}) ${column.fieldName};
+	
+#**##end
+#**### END : declare column field
+	
+#**### START : declare column getter / setter##
+#**##foreach($column in $domain.columns)
+	public #getSimpleType(${column.fieldType}) get#getFieldNameUpper(${column.fieldName})(){
+		return ${column.fieldName};
+	}
+	
+	public void set#getFieldNameUpper(${column.fieldName})(#getSimpleType(${column.fieldType}) ${column.fieldName}){
+		this.${column.fieldName} = ${column.fieldName};
+	}
+	
+#**##end
+#**### END : declare column getter / setter
+
+#**### START : declare toString	
+	public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+        sb.append(" [");
+#**##foreach($column in $domain.columns)
+		sb.append("${column.fieldName}").append("='").append(get#getFieldNameUpper(${column.fieldName})()).append("'#if($foreach.hasNext), #end");
+#**##end
+		sb.append("] ");
+        return sb.toString();
+    }
+#**### END : declare toString
+	
+}

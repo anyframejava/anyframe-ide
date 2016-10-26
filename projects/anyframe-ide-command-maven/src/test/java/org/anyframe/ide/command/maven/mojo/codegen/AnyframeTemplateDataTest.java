@@ -43,18 +43,23 @@ public class AnyframeTemplateDataTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testLoadTemplateData() throws Exception {
-		XStream xstream = new XStream();
-		Annotations.configureAliases(xstream, AnyframeTemplateData.class);
-		xstream.setMode(XStream.NO_REFERENCES);
+		try {
+			XStream xstream = new XStream();
+			Annotations.configureAliases(xstream, AnyframeTemplateData.class);
+			xstream.setMode(XStream.NO_REFERENCES);
 
-		String templateHome = new File(".").getAbsolutePath()
-				+ "/src/test/resources/templates/";
-		List<AnyframeTemplateData> templates = (java.util.List<AnyframeTemplateData>) xstream
-				.fromXML(new FileInputStream(templateHome
-						+ "default/source/template.config"));
+			String templateHome = new File(".").getAbsolutePath()
+					+ "/src/test/resources/templates/";
+			List<AnyframeTemplateData> templates = (java.util.List<AnyframeTemplateData>) xstream
+					.fromXML(new FileInputStream(templateHome
+							+ "query/template.config"));
 
-		for (AnyframeTemplateData template : templates) {
-			System.out.println(template.getFtl());
+			for (AnyframeTemplateData template : templates) {
+				System.out.println(template.getVm());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

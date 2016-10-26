@@ -19,10 +19,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.FileUtil;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -57,25 +55,8 @@ public class PlacePluginDependenciesMojo extends AbstractPluginMojo {
 			ArchetypeGenerationRequest request = new ArchetypeGenerationRequest();
 			setRepository(request);
 
-			File metadataFile = new File(baseDir.getAbsolutePath()
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-
-			if (!metadataFile.exists()) {
-				throw new CommandException("Can not find a '"
-						+ metadataFile.getAbsolutePath()
-						+ "' file. Please check a location of your project.");
-			}
-
-			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-			String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
-
-			File destination = null;
-			if (projectType.equals(CommonConstants.PROJECT_TYPE_WEB)) {
-				destination = new File(baseDir,
+			File destination = new File(baseDir,
 						CommonConstants.SRC_MAIN_WEBAPP_LIB);
-			} else {
-				destination = new File(baseDir, "lib");
-			}
 
 			if (!destination.exists()) {
 				destination.mkdirs();

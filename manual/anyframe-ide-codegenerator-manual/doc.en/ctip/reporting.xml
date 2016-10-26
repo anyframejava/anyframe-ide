@@ -1,0 +1,73 @@
+<chapter id="ctip_reporting">
+	<title>Build Result</title>
+	<para>
+		The projects registered in Hudson Server are marked in green (success) or red (failure) icons in the Hudson Server home page after the build is finished. 
+		Let us check the details on the result of executing build.  
+	</para>
+	 <itemizedlist>
+        <listitem>
+          <para>[project name]_report type project</para>
+          <para>If the project name is clicked in Hudson server home page, Build History is shown at the bottom left. 
+          The bulid list is shown under this item. To check the result of reporting the project built most recently, click time link. 
+          Then five types of reporting results can be checked through the menu item on the left.</para>
+          <orderedlist numeration="arabic" inheritnum="inherit">
+			<listitem>
+    			<para>Duplicate Code</para>
+    			<para>Shows the list of duplicate source codes and displays the parts of duplicate codes in the source codes in orange so that they can be visually checked.</para>
+			</listitem>
+			<listitem>
+    			<para>PMD Warnings</para>
+    			<para>Analyzes potential problems by analyzing java source codes using PMD tool. 
+    			Finds unused parameters, catch blocks not processed, and unnecessary objects generated. 
+    			By displaying the parts that have potential bugs in the relevant source codes in orange so that they can be visually checked, 
+    			and also shows the priority of the potential problems.</para>
+			</listitem>		
+			<listitem>
+    			<para>Test Result</para>
+    			<para>Shows the result of executing JUnit test case. 
+    			Test case executing time, success or failure and the error message information can be checked through Hudson server.</para>
+			</listitem>		
+			<listitem>
+    			<para>Coverage Report</para>
+    			<para>Shows in figures how much the test case covers the original source codes, using Emma tool. 
+    			Coverage for each class, method, block and line can be checked.</para>
+			</listitem>	
+			<listitem>
+    			<para>Checkstyle Warnings</para>
+    			<para>Naming and compliance with development standards of source codes can be checked using Checkstyle tool. 
+    			The codes against Checkstyle among the source codes are displayed in orange so that they can be visually checked.</para>
+			</listitem>	
+		  </orderedlist>
+		  <para>
+		  	Related files and configuration of the reporting tool for quality check of each source code, and rule sets can be checked in [Anyframe installation folder]/ide/inspection folder in the Anyframe development environment based on Ant. 
+		  	Thus, when there are changes, they should be reflected here. 
+		  	
+		  	They can be checked in [user home folder]/.anyframe/inspection folder in the Anyframe development environment based on Maven. 
+		  </para>
+		</listitem>
+        <listitem>
+          <para>[project name]_build type project</para>
+          <para>
+          	If the relevant project name is clicked in the Hudson server home page, Workspace menu will be shown at the center right, 
+          	and when it is clicked, the result of executing build can be checked on the page. 
+          </para>
+          <itemizedlist>
+        	<listitem>
+          	<para>Maven build result</para>
+          	<para>When the target folder under Workspace is clicked, the result file of packaging the project will be shown,  
+          	and there is also the folder where the relevant packaging file is extracted. 
+          	Thus, when the file is deployed in the development server using the web application server, 
+          	the web application folder here should be recognized.  
+          	</para>
+        	</listitem>
+        	<listitem>
+          	<para>Ant build result</para>
+          	<para>When dist folder is clicked under Workspace, the result file of packaging the project will be shown, 
+          	and there is also the folder where the relevant packaging file is extracted.  
+          	Thus, when the file is deployed in the development server using the web application server, 
+          	the web application folder here should be recognized.</para>
+        	</listitem>        	
+          </itemizedlist>	
+         </listitem>	
+	</itemizedlist>
+</chapter>

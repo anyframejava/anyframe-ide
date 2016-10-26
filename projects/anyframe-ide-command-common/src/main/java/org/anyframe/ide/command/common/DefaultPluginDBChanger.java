@@ -29,9 +29,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.anyframe.ide.command.common.plugin.PluginInfo;
+import org.anyframe.ide.command.common.plugin.PluginResource;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.DBUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
+import org.anyframe.ide.command.common.util.JdbcOption;
+import org.anyframe.ide.command.common.util.ProjectConfig;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.Constants;
@@ -39,6 +43,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * This is an DefaultPluginDBChanger class. This class is for changing all db
@@ -48,8 +53,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  *                   role="org.anyframe.ide.command.common.DefaultPluginDBChanger"
  * @author Sooyeon Park
  */
-public class DefaultPluginDBChanger extends AbstractLogEnabled implements
-		PluginDBChanger {
+public class DefaultPluginDBChanger extends AbstractLogEnabled implements PluginDBChanger {
 	String ROLE = DefaultPluginDBChanger.class.getName();
 
 	/**
@@ -80,43 +84,38 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param encoding
 	 *            file encoding style
 	 */
-	public void change(ArchetypeGenerationRequest request, String baseDir,
-			String encoding) throws Exception {
-		getLogger().debug(
-				DefaultPluginDBChanger.class.getName() + " execution start.");
+	public void change(ArchetypeGenerationRequest request, String baseDir, String encoding) throws Exception {
+		getLogger().debug(DefaultPluginDBChanger.class.getName() + " execution start.");
 		try {
-			File metadataFile = new File(new File(baseDir)
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-
-			if (!metadataFile.exists()) {
-				throw new CommandException("Can not find a '"
-						+ metadataFile.getAbsolutePath()
-						+ "' file. Please check a location of your project.");
-			}
+			String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 
 			checkProject(baseDir);
 
-			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
+			JdbcOption jdbcOption = ConfigXmlUtil.getDefaultDatabase(projectConfig);
 
-			String dbType = pio.readValue(CommonConstants.DB_TYPE);
-			String buildType = pio
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-			String templateHome = pio
-					.readValue(CommonConstants.PROJECT_TEMPLATE_HOME);
+			String dbType = jdbcOption.getDbType();
+
+			String anyframeHome = projectConfig.getAnyframeHome();
+			String buildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			if (anyframeHome != null && !"".equals(anyframeHome)) {
+				buildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			}
+
+			String templateHome = projectConfig.getTemplatePath(CommonConstants.PROJECT_NAME_CODE_GENERATOR);
 
 			// 1. process hibernate.cfg.xml of current project
-			processHibernateCfgFile(pio, baseDir);
+			//processHibernateCfgFile(jdbcOption, baseDir);
 
 			// 2. process hibernate.reveng.ftl
-			processHibernateReverseEngTemplate(pio, templateHome);
+			//processHibernateReverseEngTemplate(jdbcOption, templateHome);
 
 			// 3. process context.properties
-			processDBProperties(pio, baseDir);
+			processDBProperties(jdbcOption, baseDir);
 
 			// 4. process plugin xml files related to db properties and db
 			// scripts
-			Map<String, PluginInfo> installedPluginMap = pluginInfoManager
-					.getInstalledPlugins(baseDir);
+			Map<String, PluginInfo> installedPluginMap = pluginInfoManager.getInstalledPlugins(baseDir);
 
 			Set<String> installedPluginSet = installedPluginMap.keySet();
 			Iterator<String> instlledPluginItr = installedPluginSet.iterator();
@@ -125,37 +124,29 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 				String pluginName = instlledPluginItr.next();
 				PluginInfo pluginInfo = installedPluginMap.get(pluginName);
 
-				File pluginJar = pluginInfoManager.getPluginFile(request,
-						pluginInfo.getGroupId(), pluginInfo.getArtifactId(),
+				File pluginJar = pluginInfoManager.getPluginFile(request, pluginInfo.getGroupId(), pluginInfo.getArtifactId(),
 						pluginInfo.getVersion());
 
-				ZipFile pluginZip = pluginArtifactManager
-						.getArchetypeZipFile(pluginJar);
+				ZipFile pluginZip = pluginArtifactManager.getArchetypeZipFile(pluginJar);
 
 				// 4.1 process plugin xml files related to db properties
-				processXMLFile(baseDir, pluginName, pluginJar, pluginZip,
-						dbType);
+				processDbResources(projectConfig, baseDir, pluginName, pluginJar, pluginZip, dbType);
 
 				// 4.2 create custom table, insert data to DB
-				processInitialData(pio, baseDir, pluginName, pluginJar,
-						pluginZip, dbType, encoding);
+				processInitialData(jdbcOption, baseDir, pluginName, pluginJar, pluginZip, dbType, encoding);
 			}
 
 			// 5. copy jdbc jar file and add classpath information
-			processDBLibs(pio, buildType, dbType, baseDir);
+			processDBLibs(projectConfig, jdbcOption, buildType, dbType, baseDir);
 
-			// 6. process project.mf
-			processMetadata(pio, buildType);
+			// 6. process project database configuration
+			// processMetadata(jdbcOption, baseDir, buildType);
 
-			System.out
-					.println("Current project is changed to be appropriate for '"
-							+ dbType + "' successfully.");
+			getLogger().info("Current project is changed to be appropriate for '" + dbType + "' successfully.");
 		} catch (Exception e) {
 			if (e instanceof CommandException)
 				throw e;
-			throw new CommandException(
-					"Error occurred in changing db. The reason is a '"
-							+ e.getMessage() + "'.");
+			throw new CommandException("Error occurred in changing db. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
 
@@ -167,43 +158,33 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 */
 	private void checkProject(String baseDir) throws Exception {
 		getLogger().debug("Call checkProject() of DefaultPluginDBChanger");
-		Map<String, PluginInfo> installedPlugins = pluginInfoManager
-				.getInstalledPlugins(baseDir);
+		Map<String, PluginInfo> installedPlugins = pluginInfoManager.getInstalledPlugins(baseDir);
 
 		if (installedPlugins.size() == 0) {
-			throw new CommandException(
-					"Can not find any installed plugin information. Please install any plugin at the very first.");
+			throw new CommandException("Can not find any installed plugin information. Please install any plugin at the very first.");
 		}
 
 		if (!installedPlugins.containsKey(CommonConstants.CORE_PLUGIN)) {
-			throw new CommandException(
-					"Can not find installed plugin ['core'] information. Please install 'core' plugin at the very first.");
+			throw new CommandException("Can not find installed plugin ['core'] information. Please install 'core' plugin at the very first.");
 		}
 	}
 
 	/**
 	 * change hibernate.cfg.xml file
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param baseDir
 	 *            current project folder
 	 */
-	private void processHibernateCfgFile(PropertiesIO pio, String baseDir)
-			throws Exception {
-		getLogger().debug(
-				"Call processHibernateCfgFile() of DefaultPluginDBChanger");
+	private void processHibernateCfgFile(JdbcOption jdbcOption, String baseDir) throws Exception {
+		getLogger().debug("Call processHibernateCfgFile() of DefaultPluginDBChanger");
 
-		File hibernateCfgFile = new File(baseDir
-				+ CommonConstants.SRC_MAIN_RESOURCES + "hibernate"
-				+ CommonConstants.fileSeparator + "hibernate.cfg.xml");
+		File hibernateCfgFile = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES + "hibernate" + CommonConstants.fileSeparator
+				+ "hibernate.cfg.xml");
 
 		if (!hibernateCfgFile.exists()) {
-			getLogger()
-					.warn(
-							"'"
-									+ hibernateCfgFile.getAbsolutePath()
-									+ "' file is not found. Please check a location of your project.");
+			getLogger().warn("'" + hibernateCfgFile.getAbsolutePath() + "' file is not found. Please check a location of your project.");
 			return;
 		}
 
@@ -211,83 +192,54 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 
 		try {
 			String metadataDialect = "";
-			if (pio.readValue(CommonConstants.DB_TYPE).equalsIgnoreCase(
-					"sybase")) {
+			if (jdbcOption.getDbType().equalsIgnoreCase("sybase")) {
 				metadataDialect = "<property name=\"hibernatetool.metadatadialect\">org.anyframe.ide.command.maven.mojo.codegen.dialect.SybaseMetaDataDialect</property>\n";
 			}
 
-			FileUtil.removeFileContent(hibernateCfgFile,
-					"hibernate jdbc configuration", "", true);
+			FileUtil.removeFileContent(hibernateCfgFile, "hibernate jdbc configuration", "", true);
 
-			replaceString = "<!--hibernate jdbc configuration-START-->\n"
-					+ "<property name=\"hibernate.dialect\">"
-					+ pio.readValue(CommonConstants.DB_DIALECT)
-					+ "</property>\n" + metadataDialect
-					+ "<property name=\"hibernate.connection.driver_class\">"
-					+ pio.readValue(CommonConstants.DB_DRIVER_CLASS)
-					+ "</property>\n"
-					+ "<property name=\"hibernate.connection.username\">"
-					+ pio.readValue(CommonConstants.DB_USERNAME)
-					+ "</property>\n"
-					+ "<property name=\"hibernate.connection.password\">"
-					+ pio.readValue(CommonConstants.DB_PASSWORD)
-					+ "</property>\n"
-					+ "<property name=\"hibernate.connection.url\">"
-					+ pio.readValue(CommonConstants.DB_URL) + "</property>\n"
+			replaceString = "<!--hibernate jdbc configuration-START-->\n" + "<property name=\"hibernate.dialect\">" + jdbcOption.getDialect()
+					+ "</property>\n" + metadataDialect + "<property name=\"hibernate.connection.driver_class\">" + jdbcOption.getDriverClassName()
+					+ "</property>\n" + "<property name=\"hibernate.connection.username\">" + jdbcOption.getUserName() + "</property>\n"
+					+ "<property name=\"hibernate.connection.password\">" + jdbcOption.getPassword() + "</property>\n"
+					+ "<property name=\"hibernate.connection.url\">" + jdbcOption.getUrl() + "</property>\n"
 					+ "<!--hibernate jdbc configuration-END-->";
-			FileUtil.addFileContent(hibernateCfgFile,
-					"<!--hibernate jdbc configuration here-->",
-					"<!--hibernate jdbc configuration here-->\n"
-							+ replaceString, true);
+			FileUtil.addFileContent(hibernateCfgFile, "<!--hibernate jdbc configuration here-->", "<!--hibernate jdbc configuration here-->\n"
+					+ replaceString, true);
 		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Replacing hibernate jdbc configuration in hibernate.cfg.xml of current project is skipped."
-									+ ". The reason is a '"
-									+ e.getMessage()
-									+ "'.");
+			getLogger().warn(
+					"Replacing hibernate jdbc configuration in hibernate.cfg.xml of current project is skipped." + ". The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
 
 	/**
 	 * change hibernate.reveng.ftl template
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param templateHome
 	 *            folder which have templates
 	 */
-	private void processHibernateReverseEngTemplate(PropertiesIO pio,
-			String templateHome) throws Exception {
-		getLogger()
-				.debug(
-						"Call processHibernateReverseEngTemplate() of DefaultPluginDBChanger");
+	private void processHibernateReverseEngTemplate(JdbcOption jdbcOption, String templateHome) throws Exception {
+		getLogger().debug("Call processHibernateReverseEngTemplate() of DefaultPluginDBChanger");
 		// 1. find templates directory
 		File templateHomeDir = new File(templateHome);
 
 		if (!templateHomeDir.exists()) {
-			getLogger()
-					.warn(
-							"'"
-									+ templateHomeDir.getAbsolutePath()
-									+ "' folder is not found. Please check a location of template home directory.");
+			getLogger().warn("'" + templateHomeDir.getAbsolutePath() + "' folder is not found. Please check a location of template home directory.");
 
 			return;
 		}
 
 		// 2. find hibernate.reveng.ftl file
-		File hibernateReverseEngTemplateFile = new File(templateHomeDir
-				.getAbsolutePath(), "default" + CommonConstants.fileSeparator
-				+ "source" + CommonConstants.fileSeparator + "model"
-				+ CommonConstants.fileSeparator + "hibernate.reveng.ftl");
+		File hibernateReverseEngTemplateFile = new File(templateHomeDir.getAbsolutePath(), "default" + CommonConstants.fileSeparator + "source"
+				+ CommonConstants.fileSeparator + "model" + CommonConstants.fileSeparator + "hibernate.reveng.ftl");
 
 		if (!hibernateReverseEngTemplateFile.exists()) {
-			getLogger()
-					.warn(
-							"'"
-									+ hibernateReverseEngTemplateFile
-											.getAbsolutePath()
-									+ "' is not found. Please check a location of hibernate.reveng.ftl in default template directory(default/source/model).");
+			getLogger().warn(
+					"'" + hibernateReverseEngTemplateFile.getAbsolutePath()
+							+ "' is not found. Please check a location of hibernate.reveng.ftl in default template directory(default/source/model).");
 
 			return;
 		}
@@ -296,89 +248,64 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 
 		try {
 			// 3. replace
-			if (pio.readValue(CommonConstants.DB_TYPE).equalsIgnoreCase(
-					"sybase")) {
-				replaceString = "<!--schema-selection-START-->\n"
-						+ "<!--schema-selection-END-->";
+			if (jdbcOption.getDbType().equalsIgnoreCase("sybase")) {
+				replaceString = "<!--schema-selection-START-->\n" + "<!--schema-selection-END-->";
 
-				FileUtil.replaceStringXMLFilePretty(
-						hibernateReverseEngTemplateFile, "schema-selection",
-						"<!--schema-selection here-->",
+				FileUtil.replaceStringXMLFilePretty(hibernateReverseEngTemplateFile, "schema-selection", "<!--schema-selection here-->",
 						"<!--schema-selection here-->\n" + replaceString);
 			} else {
-				replaceString = "<!--schema-selection-START-->\n"
-						+ "<schema-selection match-schema=\"${schema}\"/>"
-						+ "<!--schema-selection-END-->";
+				replaceString = "<!--schema-selection-START-->\n" + "<schema-selection match-schema=\"${schema}\"/>" + "<!--schema-selection-END-->";
 
-				FileUtil.replaceStringXMLFilePretty(
-						hibernateReverseEngTemplateFile, "schema-selection",
-						"<!--schema-selection here-->",
+				FileUtil.replaceStringXMLFilePretty(hibernateReverseEngTemplateFile, "schema-selection", "<!--schema-selection here-->",
 						"<!--schema-selection here-->\n" + replaceString);
 			}
 		} catch (Exception e) {
 			getLogger().warn(
-					"Replacing schema-selection in "
-							+ hibernateReverseEngTemplateFile.getAbsolutePath()
-							+ " is skipped. The reason is a '" + e.getMessage()
-							+ "'.");
+					"Replacing schema-selection in " + hibernateReverseEngTemplateFile.getAbsolutePath() + " is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
 
 	/**
 	 * change context.properties file
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param baseDir
 	 *            current project folder
 	 */
-	private void processDBProperties(PropertiesIO pio, String baseDir)
-		throws Exception {
-		getLogger().debug(
-				"Call processDBProperties() of DefaultPluginDBChanger");
-		
+	private void processDBProperties(JdbcOption jdbcOption, String baseDir) throws Exception {
+		getLogger().debug("Call processDBProperties() of DefaultPluginDBChanger");
+
 		File dbPropertiesFile = null;
 		try {
-			dbPropertiesFile = new File(baseDir,
-					CommonConstants.SRC_MAIN_RESOURCES
-							+ CommonConstants.CONTEXT_PROPERTIES);
-		
+			dbPropertiesFile = new File(baseDir, CommonConstants.SRC_MAIN_RESOURCES + CommonConstants.CONTEXT_PROPERTIES);
+
 			if (!dbPropertiesFile.exists()) {
-				getLogger()
-						.warn(
-								"'"
-										+ dbPropertiesFile.getAbsolutePath()
-										+ "' is not found. Please check a location of your project.");
-		
+				getLogger().warn("'" + dbPropertiesFile.getAbsolutePath() + "' is not found. Please check a location of your project.");
+
 				return;
 			}
-		
-			PropertiesIO contextPio = new PropertiesIO(baseDir
-					+ CommonConstants.SRC_MAIN_RESOURCES
-					+ CommonConstants.CONTEXT_PROPERTIES);
-		
-			contextPio.setProperty(CommonConstants.APP_DB_DRIVER_CLASS, pio
-					.readValue(CommonConstants.DB_DRIVER_CLASS));
-			contextPio.setProperty(CommonConstants.APP_DB_URL, pio
-					.readValue(CommonConstants.DB_URL));
-			contextPio.setProperty(CommonConstants.APP_DB_USERNAME, pio
-					.readValue(CommonConstants.DB_USERNAME));
-			contextPio.setProperty(CommonConstants.APP_DB_PASSWORD, pio
-					.readValue(CommonConstants.DB_PASSWORD));
-		
+
+			PropertiesIO contextPio = new PropertiesIO(baseDir + CommonConstants.SRC_MAIN_RESOURCES + CommonConstants.CONTEXT_PROPERTIES);
+
+			contextPio.setProperty(CommonConstants.APP_DB_DRIVER_CLASS, jdbcOption.getDriverClassName());
+			contextPio.setProperty(CommonConstants.APP_DB_URL, jdbcOption.getUrl());
+			contextPio.setProperty(CommonConstants.APP_DB_USERNAME, jdbcOption.getUserName());
+			contextPio.setProperty(CommonConstants.APP_DB_PASSWORD, jdbcOption.getPassword());
+
 			contextPio.write();
 		} catch (Exception e) {
 			getLogger().warn(
-					"Replacing db properties in "
-							+ dbPropertiesFile.getAbsolutePath()
-							+ " is skipped. The reason is a '" + e.getMessage()
-							+ "'.");
+					"Replacing db properties in " + dbPropertiesFile.getAbsolutePath() + " is skipped. The reason is a '" + e.getMessage() + "'.");
 		}
 	}
 
 	/**
 	 * change all xml files (ex. spring xml, mapping xml, ...)
 	 * 
+	 * @param projectConfig
+	 *            project configuration
 	 * @param baseDir
 	 *            current project folder
 	 * @param pluginName
@@ -391,49 +318,58 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param dbType
 	 *            db type
 	 */
-	private void processXMLFile(String baseDir, String pluginName,
-			File pluginJar, ZipFile pluginZip, String dbType) throws Exception {
-		getLogger().debug(
-				"Call processXMLFile() of DefaultPluginDBChanger, pluginName is "
-						+ pluginName);
+	private void processDbResources(ProjectConfig projectConfig, String baseDir, String pluginName, File pluginJar, ZipFile pluginZip, String dbType)
+			throws Exception {
+		getLogger().debug("Call processXMLFile() of DefaultPluginDBChanger, pluginName is " + pluginName);
 
 		try {
-			String path = CommonConstants.DB_RESOURCES
-					+ CommonConstants.fileSeparator + dbType;
+			// 1. find db resource templates
+			String path = CommonConstants.DB_RESOURCES + CommonConstants.fileSeparator + dbType;
 
-			List<String> dbResources = findPluginResources(pluginJar, path,
-					"**");
+			List<String> dbResources = findPluginResources(pluginJar, path, "**");
 
 			getLogger().debug("dbResources size : " + dbResources.size());
 
+			List<PluginResource> pluginResources = pluginInfoManager.getPluginInfo(pluginJar).getResources();
+
 			for (int i = 0; i < dbResources.size(); i++) {
 				String dbResourceTemplate = (String) dbResources.get(i);
-				File dbResourceFile = new File(baseDir, dbResourceTemplate
-						.substring(path.length()));
 
-				getLogger().debug("dbResourceTemplate : " + dbResourceTemplate);
-				getLogger().debug("dbResourceFile : " + dbResourceFile);
+				// 2. find real file(xml, java) equals to db resource template
+				for (int j = 0; j < pluginResources.size(); j++) {
+					PluginResource pluginResource = pluginResources.get(j);
 
-				// 3. replace
-				replaceDBResource(pluginName, pluginZip, dbResourceFile,
-						dbResourceTemplate);
+					String resourceDir = pluginResource.getDir();
+					String packageName = projectConfig.getPackageName().trim();
 
-				getLogger().debug(
-						"Change " + dbResourceFile.getAbsolutePath()
-								+ " file of current project successfully.");
+					String dbResourceTemplateName = StringUtils.replaceOnce(dbResourceTemplate, CommonConstants.DB_RESOURCES + dbType + "/"
+							+ resourceDir, "");
+
+					File dbResourceFile = new File(baseDir, resourceDir + CommonConstants.fileSeparator
+							+ (pluginResource.isPackaged() ? FileUtil.changePackageForDir(packageName) : "") + CommonConstants.fileSeparator
+							+ dbResourceTemplateName);
+
+					if (dbResourceFile.exists()) {
+						getLogger().debug("dbResourceTemplate : " + dbResourceTemplate);
+						getLogger().debug("dbResourceFile : " + dbResourceFile);
+
+						// 3. replace
+						replaceDBResource(pluginName, pluginZip, dbResourceFile, dbResourceTemplate);
+
+						getLogger().debug("Change " + dbResourceFile.getAbsolutePath() + " file of current project successfully.");
+					}
+				}
 			}
 		} catch (Exception e) {
-			getLogger().warn(
-					"Replacing db configuration in xml file is skipped."
-							+ ". The reason is a '" + e.getMessage() + "'.");
+			getLogger().warn("Replacing db configuration in xml file is skipped." + ". The reason is a '" + e.getMessage() + "'.");
 		}
 	}
 
 	/**
 	 * create custom table, insert data to DB
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param baseDir
 	 *            target folder
 	 * @param pluginName
@@ -448,31 +384,21 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 *            file encoding style
 	 * 
 	 */
-	public void processInitialData(PropertiesIO pio, String baseDir,
-			String pluginName, File pluginJar, ZipFile pluginZip,
-			String dbType, String encoding) throws Exception {
-		getLogger()
-				.debug("Call processInitialData() of DefaultPluginDBChanger");
-		List<String> dbScripts = findPluginResources(pluginJar,
-				CommonConstants.PLUGIN_RESOURCES, "**\\" + pluginName
-						+ "-insert-data-" + dbType + ".sql");
+	public void processInitialData(JdbcOption jdbcOption, String baseDir, String pluginName, File pluginJar, ZipFile pluginZip, String dbType,
+			String encoding) throws Exception {
+		getLogger().debug("Call processInitialData() of DefaultPluginDBChanger");
+		List<String> dbScripts = findPluginResources(pluginJar, CommonConstants.PLUGIN_RESOURCES, "**\\" + pluginName + "-insert-data-" + dbType
+				+ ".sql");
 
 		if (dbScripts.size() > 0) {
 			try {
-				DBUtil.runStatements(new File(baseDir), pluginName, pluginZip,
-						dbScripts, encoding, pio.getProperties());
-				getLogger().debug("Run " + dbScripts
-						+ " dbscripts of plugin [" + pluginName
-						+ "] successfully.");
+				DBUtil.runStatements(new File(baseDir), pluginName, pluginZip, dbScripts, encoding, jdbcOption);
+				getLogger().debug("Run " + dbScripts + " dbscripts of plugin [" + pluginName + "] successfully.");
 			} catch (Exception e) {
 				if (e.getCause() instanceof SQLException) {
-					getLogger().warn("Executing db script of " + pluginName
-							+ " plugin is skipped. The reason is '"
-							+ e.getMessage() + "'.");
+					getLogger().warn("Executing db script of " + pluginName + " plugin is skipped. The reason is '" + e.getMessage() + "'.");
 				} else {
-					getLogger().warn("Processing initial data for "
-							+ pluginName + " is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
+					getLogger().warn("Processing initial data for " + pluginName + " is skipped. The reason is a '" + e.getMessage() + "'.");
 				}
 			}
 		}
@@ -489,8 +415,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 *            pattern for file name
 	 * @return plugin resources
 	 */
-	private List<String> findPluginResources(File pluginJar, String path,
-			String pattern) throws Exception {
+	private List<String> findPluginResources(File pluginJar, String path, String pattern) throws Exception {
 		List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
 		return FileUtil.findFiles(fileNames, path, pattern, null);
 	}
@@ -507,48 +432,55 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param dbResourceTemplate
 	 *            plugin resource related to db
 	 */
-	private void replaceDBResource(String pluginName, ZipFile pluginZip,
-			File dbResource, String dbResourceTemplate) throws Exception {
-		if (dbResource.exists()) {
-			// 1. find map includes replace string
-			ZipEntry zipEntry = pluginZip.getEntry(dbResourceTemplate);
-			InputStream templateInputStream = pluginZip
-					.getInputStream(zipEntry);
-			Map<String, String> replaceStringMap = FileUtil.findReplaceRegion(
-					templateInputStream, pluginName);
+	private void replaceDBResource(String pluginName, ZipFile pluginZip, File dbResource, String dbResourceTemplate) throws Exception {
+		// if (dbResource.exists()) {
+		// 1. find map includes replace string
+		ZipEntry zipEntry = pluginZip.getEntry(dbResourceTemplate);
+		InputStream templateInputStream = pluginZip.getInputStream(zipEntry);
+
+		Map<String, String> replaceStringMap = null;
+		Map<String, String> tokenMap = null;
+
+		if (dbResource.getName().endsWith(CommonConstants.EXT_JAVA)) {
+			replaceStringMap = FileUtil.findReplaceRegionOfClass(templateInputStream, pluginName);
+			tokenMap = FileUtil.findReplaceRegionOfClass(new FileInputStream(dbResource), pluginName);
+		}
+
+		if (dbResource.getName().endsWith(CommonConstants.EXT_XML)) {
+			replaceStringMap = FileUtil.findReplaceRegion(templateInputStream, pluginName);
 
 			// 2. find token to be replaced
-			Map<String, String> tokenMap = FileUtil.findReplaceRegion(
-					new FileInputStream(dbResource), pluginName);
+			tokenMap = FileUtil.findReplaceRegion(new FileInputStream(dbResource), pluginName);
+		}
 
-			getLogger().debug("token size : " + tokenMap.size());
-			getLogger()
-					.debug("replaceString size : " + replaceStringMap.size());
+		getLogger().debug("token size : " + tokenMap.size());
+		getLogger().debug("replaceString size : " + replaceStringMap.size());
 
-			// 3. replace
-			if (tokenMap.size() > 0) {
-				Set<String> commentKeySet = tokenMap.keySet();
-				Iterator<String> commentKeyItr = commentKeySet.iterator();
+		// 3. replace
+		if (tokenMap.size() > 0) {
+			Set<String> commentKeySet = tokenMap.keySet();
+			Iterator<String> commentKeyItr = commentKeySet.iterator();
 
-				while (commentKeyItr.hasNext()) {
-					String commentKey = commentKeyItr.next();
-					getLogger().debug("commentKey : " + commentKey);
+			while (commentKeyItr.hasNext()) {
+				String commentKey = commentKeyItr.next();
+				getLogger().debug("commentKey : " + commentKey);
 
-					if (replaceStringMap.containsKey(commentKey)) {
-						String startToken = "<!--" + pluginName + "-"
-								+ commentKey + "-START-->";
-						String endToken = "<!--" + pluginName + "-"
-								+ commentKey + "-END-->";
+				if (replaceStringMap.containsKey(commentKey)) {
 
-						String value = startToken + "\n"
-								+ replaceStringMap.get(commentKey) + "\n"
-								+ endToken;
-						FileUtil.replaceFileContent(dbResource, startToken,
-								endToken, startToken + endToken, value, false);
+					String startToken = "<!--" + pluginName + "-" + commentKey + "-START-->";
+					String endToken = "<!--" + pluginName + "-" + commentKey + "-END-->";
+
+					if (dbResource.getName().endsWith(CommonConstants.EXT_JAVA)) {
+						startToken = "//" + pluginName + "-" + commentKey + "-START";
+						endToken = "//" + pluginName + "-" + commentKey + "-END";
 					}
+
+					String value = startToken + "\n" + replaceStringMap.get(commentKey) + "\n" + endToken;
+					FileUtil.replaceFileContent(dbResource, startToken, endToken, startToken + endToken, value, false);
 				}
 			}
 		}
+		// }
 	}
 
 	/**
@@ -556,8 +488,8 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * on maven, change pom.xml file. if current project is based on ant, copy
 	 * library to specific target
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param buildType
 	 *            build type of project ('maven' or 'ant')
 	 * @param dbType
@@ -565,53 +497,40 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param baseDir
 	 *            current project folder
 	 */
-	private void processDBLibs(PropertiesIO pio, String buildType,
-			String dbType, String baseDir) throws Exception {
+	private void processDBLibs(ProjectConfig projectConfig, JdbcOption jdbcOption, String buildType, String dbType, String baseDir) throws Exception {
 		// 1. maven --> pom.xml, .classpath (maven)
-		if (buildType
-				.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-			String groupId = pio.readValue(CommonConstants.DB_GROUPID);
-			String artifactId = pio.readValue(CommonConstants.DB_ARTIFACTID);
-			String version = pio.readValue(CommonConstants.DB_VERSION);
+		if (buildType.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
+			String groupId = jdbcOption.getMvnGroupId();
+			String artifactId = jdbcOption.getMvnArtifactId();
+			String version = jdbcOption.getMvnVersion();
 			processPom(baseDir, groupId, artifactId, version);
 
 			return;
 		}
 		// 2. ant --> .classpath, copy
-		String driverPath = pio.readValue(CommonConstants.DB_DRIVER_PATH);
-		copyDBLibs(pio, baseDir, driverPath);
-
-		String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
-		if (projectType.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
-			changeClasspath(pio, baseDir, dbType, getDBDriverPath(baseDir,
-					driverPath));
-		}
+		String driverPath = jdbcOption.getDriverJar();
+		copyDBLibs(projectConfig, jdbcOption, baseDir, driverPath);
 	}
 
 	/**
-	 * change project.mf file
-	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param buildType
 	 *            build type of project ('maven' or 'ant')
 	 */
-	private void processMetadata(PropertiesIO pio, String buildType)
-			throws Exception {
+	private void processMetadata(JdbcOption jdbcOption, String baseDir, String buildType) throws Exception {
 		if (buildType.equalsIgnoreCase(CommonConstants.PROJECT_BUILD_TYPE_ANT)) {
-			pio.setProperty(CommonConstants.DB_GROUPID, "");
-			pio.setProperty(CommonConstants.DB_ARTIFACTID, "");
-			pio.setProperty(CommonConstants.DB_VERSION, "");
-
-			pio.write();
+			jdbcOption.setMvnGroupId("");
+			jdbcOption.setMvnArtifactId("");
+			jdbcOption.setMvnVersion("");
 		}
 
 		// in case of sybase
-		if (pio.readValue(CommonConstants.DB_TYPE).equalsIgnoreCase("sybase")) {
-			pio.setProperty(CommonConstants.DB_SCHEMA_USE, "false");
-
-			pio.write();
+		if (jdbcOption.getDbType().equalsIgnoreCase("sybase")) {
+			jdbcOption.setSchema("");
 		}
+		
+		ConfigXmlUtil.saveDatabase(baseDir, jdbcOption);
 	}
 
 	/**
@@ -627,8 +546,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 *            version of db library
 	 */
 	@SuppressWarnings("unchecked")
-	private void processPom(String baseDir, String groupId, String artifactId,
-			String version) throws Exception {
+	private void processPom(String baseDir, String groupId, String artifactId, String version) throws Exception {
 		// 1. get pom file
 		File pomFile = new File(baseDir, Constants.ARCHETYPE_POM);
 
@@ -643,8 +561,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 				boolean isDefined = false;
 				for (int i = 0; i < dependencies.size(); i++) {
 					Dependency dependency = dependencies.get(i);
-					if (dependency.getGroupId().equals(groupId)
-							&& dependency.getArtifactId().equals(artifactId)
+					if (dependency.getGroupId().equals(groupId) && dependency.getArtifactId().equals(artifactId)
 							&& dependency.getVersion().equals(version)) {
 						isDefined = true;
 						break;
@@ -661,8 +578,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 				}
 
 				// 2.2 process build-plugin dependencies
-				Map<String, Plugin> buildPluginMap = model.getBuild()
-						.getPluginsAsMap();
+				Map<String, Plugin> buildPluginMap = model.getBuild().getPluginsAsMap();
 
 				String anyframePlugin = "org.codehaus.mojo:anyframe-maven-plugin";
 
@@ -676,9 +592,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 
 				pluginPomManager.writePom(model, pomFile, pomFile);
 			} catch (Exception e) {
-				getLogger().warn(
-						"Processing a pom.xml of current project is skipped. The reason is a '"
-								+ e.getMessage() + "'.");
+				getLogger().warn("Processing a pom.xml of current project is skipped. The reason is a '" + e.getMessage() + "'.");
 			}
 		}
 	}
@@ -688,15 +602,16 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * baseDir/src/main/webapp/WEB-INF/lib, 'service' type project ->
 	 * baseDir/lib)
 	 * 
-	 * @param pio
-	 *            properties includes db information
+	 * @param projectConfig
+	 *            project configuration
+	 * @param jdbcOption
+	 *            project database configuration
 	 * @param baseDir
 	 *            current project folder
 	 * @param driverPath
 	 *            path includes db library
 	 */
-	private void copyDBLibs(PropertiesIO pio, String baseDir, String driverPath)
-			throws Exception {
+	private void copyDBLibs(ProjectConfig projectConfig, JdbcOption jdbcOption, String baseDir, String driverPath) throws Exception {
 		driverPath = driverPath.trim();
 
 		File dbLibFile = new File(driverPath);
@@ -708,40 +623,15 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 			return;
 		}
 
-		String projectType = pio.readValue(CommonConstants.PROJECT_TYPE);
-
-		// 1. if project.type is web, then copy jdbc jar into WEB-INF/lib folder
-		if (projectType.equals(CommonConstants.PROJECT_TYPE_WEB)) {
-			String projectName = pio.readValue(CommonConstants.PROJECT_NAME);
-			if (projectName != null && projectName.trim().length() > 0) {
-				try {
-					String inDestinationDirectory = baseDir
-							+ CommonConstants.SRC_MAIN_WEBAPP_LIB;
-					FileUtil.copyJars(pio
-							.readValue(CommonConstants.DB_DRIVER_PATH),
-							inDestinationDirectory, false);
-				} catch (Exception e) {
-					getLogger()
-							.warn(
-									"Copying jdbc jar file into /src/main/webapp/WEB-INF/lib is skipped. The reason is jdbc jar file is not found in "
-											+ driverPath + ".");
-				}
-			}
-			// 2. if project.type is service, then copy jdbc jar into [project
-			// home]/lib folder
-		} else if (projectType.equals(CommonConstants.PROJECT_TYPE_SERVICE)) {
+		String projectName = projectConfig.getPjtName();
+		if (projectName != null && projectName.trim().length() > 0) {
 			try {
-				String inDestinationDirectory = baseDir
-						+ CommonConstants.fileSeparator + "lib";
-				FileUtil.copyJars(
-						pio.readValue(CommonConstants.DB_DRIVER_PATH),
-						inDestinationDirectory, false);
+				String inDestinationDirectory = baseDir + CommonConstants.SRC_MAIN_WEBAPP_LIB;
+				FileUtil.copyJars(jdbcOption.getDriverJar(), inDestinationDirectory, false);
 			} catch (Exception e) {
-				// ignore Exception
-				getLogger()
-						.warn(
-								"Copying jdbc jar file into /lib is skipped. The reason is jdbc jar file is not found in "
-										+ driverPath + ".");
+				getLogger().warn(
+						"Copying jdbc jar file into /src/main/webapp/WEB-INF/lib is skipped. The reason is jdbc jar file is not found in "
+								+ driverPath + ".");
 			}
 		}
 	}
@@ -755,8 +645,7 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 *            path includes db library
 	 * @return db library path
 	 */
-	private String getDBDriverPath(String baseDir, String driverPath)
-			throws Exception {
+	private String getDBDriverPath(String baseDir, String driverPath) throws Exception {
 		int idx = driverPath.lastIndexOf("/");
 		if (idx == -1) {
 			idx = driverPath.lastIndexOf("\\");
@@ -774,8 +663,6 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	/**
 	 * change .classpath file
 	 * 
-	 * @param pio
-	 *            properties includes db information
 	 * @param baseDir
 	 *            current project folder
 	 * @param dbType
@@ -783,23 +670,18 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param dbDriverPath
 	 *            path includes db library
 	 */
-	private void changeClasspath(PropertiesIO pio, String baseDir,
-			String dbType, String dbDriverPath) throws Exception {
+	private void changeClasspath(String baseDir, String dbType, String dbDriverPath) throws Exception {
 		try {
 			// 1. find .classpath file
 			File classpathFile = new File(baseDir, ".classpath");
 
 			// 2. remove previous driver jar path
-			FileUtil.removeFileContent(classpathFile, "Driver jar path", "",
-					true);
+			FileUtil.removeFileContent(classpathFile, "Driver jar path", "", true);
 
 			if (dbType.equalsIgnoreCase("hsqldb")) {
 				// 3. add current driver jar path
-				String replaceString = "<!--Driver jar path-START-->\n"
-						+ "<!--Driver jar path-END-->";
-				FileUtil.addFileContent(classpathFile,
-						"<!--Driver jar path here-->",
-						"<!--Driver jar path here-->\n" + replaceString, true);
+				String replaceString = "<!--Driver jar path-START-->\n" + "<!--Driver jar path-END-->";
+				FileUtil.addFileContent(classpathFile, "<!--Driver jar path here-->", "<!--Driver jar path here-->\n" + replaceString, true);
 
 				return;
 			}
@@ -812,16 +694,12 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 			String dbLibFileName = dbDriverPath.substring(idx + 1);
 
 			// 3. add current driver jar path
-			String replaceString = "<!--Driver jar path-START-->\n"
-					+ "<classpathentry kind=\"lib\" path=\"lib/"
-					+ dbLibFileName + "\"/>\n" + "<!--Driver jar path-END-->";
-			FileUtil.addFileContent(classpathFile,
-					"<!--Driver jar path here-->",
-					"<!--Driver jar path here-->\n" + replaceString, true);
+			String replaceString = "<!--Driver jar path-START-->\n" + "<classpathentry kind=\"lib\" path=\"lib/" + dbLibFileName + "\"/>\n"
+					+ "<!--Driver jar path-END-->";
+			FileUtil.addFileContent(classpathFile, "<!--Driver jar path here-->", "<!--Driver jar path here-->\n" + replaceString, true);
 		} catch (Exception e) {
 			// ignore Exception
-			catchMsg(e, "Replacing driver jar path", "/.classpath",
-					"<!--Driver jar path here-->", baseDir);
+			catchMsg(e, "Replacing driver jar path", "/.classpath", "<!--Driver jar path here-->", baseDir);
 		}
 	}
 
@@ -837,20 +715,12 @@ public class DefaultPluginDBChanger extends AbstractLogEnabled implements
 	 * @param tokenName
 	 * @param path
 	 */
-	public void catchMsg(Exception e, String exceptionMsg, String fileName,
-			String tokenName, String path) {
+	public void catchMsg(Exception e, String exceptionMsg, String fileName, String tokenName, String path) {
 		if (e instanceof FileNotFoundException)
-			getLogger().warn(
-					exceptionMsg + " in " + fileName
-							+ " is skipped. The reason is " + fileName
-							+ " is not found in " + path + ".");
+			getLogger().warn(exceptionMsg + " in " + fileName + " is skipped. The reason is " + fileName + " is not found in " + path + ".");
 		else
-			getLogger()
-					.warn(
-							exceptionMsg + " in " + fileName
-									+ " is skipped. The reason is " + tokenName
-									+ " token is not found in " + path
-									+ fileName + ".");
+			getLogger().warn(
+					exceptionMsg + " in " + fileName + " is skipped. The reason is " + tokenName + " token is not found in " + path + fileName + ".");
 
 	}
 }

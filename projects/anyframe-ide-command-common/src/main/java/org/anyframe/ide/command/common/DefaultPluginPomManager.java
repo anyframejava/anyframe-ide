@@ -211,8 +211,8 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 			}
 
 			if (!buffer.toString().equals("")) {
-				duplicateDependencyMap.put(baseDependencyMap.get(key), buffer
-						.toString());
+				duplicateDependencyMap.put(baseDependencyMap.get(key),
+						buffer.toString());
 			}
 		}
 
@@ -362,7 +362,7 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 		return readPom(stream);
 
 	}
-	
+
 	/**
 	 * get a pom information about a specified plugin
 	 * 
@@ -372,9 +372,10 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 	 */
 	public Model getPluginRemovePom(File pluginJar) throws Exception {
 		// 1. return a pom information about a specified plugin
-		
+
 		InputStream stream = pluginInfoManager.getPluginResource(
-				"plugin-resources/" + CommonConstants.ARCHETYPE_REMOVE_POM, pluginJar);
+				"plugin-resources/" + CommonConstants.ARCHETYPE_REMOVE_POM,
+				pluginJar);
 		if (stream == null)
 			stream = pluginInfoManager.getPluginResource("archetype-resources/"
 					+ CommonConstants.ARCHETYPE_REMOVE_POM, pluginJar);
@@ -497,8 +498,29 @@ public class DefaultPluginPomManager extends DefaultPomManager {
 		Map<String, Dependency> dependencyMap = new HashMap<String, Dependency>();
 
 		for (Dependency dependency : dependencies) {
-			dependencyMap.put(dependency.getGroupId() + ":"
-					+ dependency.getArtifactId(), dependency);
+			dependencyMap.put(
+					dependency.getGroupId() + ":" + dependency.getArtifactId(),
+					dependency);
+		}
+		return dependencyMap;
+	}
+
+	/**
+	 * convert dependency list to dependency map
+	 * 
+	 * @param dependencies
+	 *            a list of depdendency list
+	 * @return dependency map (key is groupId:artifactId:version)
+	 */
+	public Map<String, Dependency> convertDependencyListWithVersion(
+			List<Dependency> dependencies) {
+
+		Map<String, Dependency> dependencyMap = new HashMap<String, Dependency>();
+
+		for (Dependency dependency : dependencies) {
+			dependencyMap.put(
+					dependency.getGroupId() + ":" + dependency.getArtifactId()
+							+ ":" + dependency.getVersion(), dependency);
 		}
 		return dependencyMap;
 	}

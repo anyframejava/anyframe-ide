@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.command.common.util.ConfigXmlUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.apache.maven.archetype.common.Constants;
 import org.apache.maven.model.Model;
@@ -36,7 +37,7 @@ import org.apache.maven.model.Model;
  * <li>#-3 Negative Case : fail to package a remoting plugin without a plugin
  * build script(plugin-build.xml) file.</li>
  * <li>#-4 Negative Case : fail to package a remoting plugin without a project
- * information(project.mf) file.</li>
+ * information file.</li>
  * <li>#-5 Negative Case : fail to package a remoting plugin with mismatched
  * dependent plugin version.</li>
  * </ul>
@@ -213,7 +214,7 @@ public class DefaultPluginPackagerTest extends AbstractCommandTest {
 
 	/**
 	 * [Flow #-4] Negative Case : fail to package a remoting plugin without a
-	 * project information(project.mf) file.
+	 * project information file.
 	 */
 	public void testPackagePluginWithoutProjectInfo() throws Exception {
 		// 1. set input arguments for packaging a remoting plugin
@@ -224,9 +225,8 @@ public class DefaultPluginPackagerTest extends AbstractCommandTest {
 		try {
 			pluginPackager.packagePlugin(createRequest(""), baseDir);
 		} catch (CommandException e) {
-			File metadataFile = new File(new File(baseDir)
-					+ CommonConstants.METAINF, CommonConstants.METADATA_FILE);
-			assertEquals("Can not find a '" + metadataFile.getAbsolutePath()
+			String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+			assertEquals("Can not find a '" + configFile
 					+ "' file. Please check a location of your project.",
 					e.getMessage());
 		}

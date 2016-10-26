@@ -1,0 +1,131 @@
+<section id="workingwithqueries_addingaquery">
+	<title>Adding a Query</title>
+
+	<para>
+		There are two ways of adding Query to Query Mapping XML file.	
+		<itemizedlist>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_addingaquery_querytesteditor">Setting through Query Test Editor</link>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_addingaquery_queryeditor">Setting through Query Manager Editor</link>
+				</para>
+			</listitem>
+		</itemizedlist>
+		For skilled users, setting Query at Query Manager Editor can be more convenient and faster, but there errors may occur
+		as related items must be checked case by case and test also must be run.
+		When using Query Test Editor, as it is needed to execute Query Test Editor every time Query is set, it can be troublesome sooner or later.
+		Therefore, when using Anyframe Query Manager it is recommended to use Query
+		Test Editor until setting Query statement in the beginning part of development, then 
+		directly set it when it seems to no problem to copy and past the existing query after Query setting is set in pattern.	
+	</para>
+
+	<note>
+		<title>Note : In an environment where Proxy server is used, it is needed to register Proxy  server to Eclipse to use Query Test Editor.	 </title>
+	</note>
+
+	<section id="workingwithqueries_addingaquery_querytesteditor">
+		<title>Setting through Query Test Editor</title>
+
+		<para>
+			The benefit of setting Query statement through Query Test Editor is that it is possible to enter database/table/column information 
+			with mouse through GUI, and that you can test the query statement you are setting  without closing Query Test Editor.		
+		</para>
+
+		<para>
+			The process of setting Query statement by using  Query Test Editor is as the following.	
+		</para>
+
+		<note>
+			<title>Note : Setting Query statement using Query Test Editor supports Dynamic Query statement in Named Parameter only.</title>
+		</note>
+
+		<orderedlist numeration="Arabic" inheritnum="inherit">
+			<listitem>
+				<para>
+					<emphasis role="bold">Query Test Editor run</emphasis>
+				</para>
+				<para>
+					You can open Query Test Editor at <link linkend="gettingstarted_queryexplorerview_open">Query Explorer View</link> through
+					Context Menu of Query Mapping XML file.					
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							Running Add query at Context Menu
+						</para>
+						<mediaobject>
+							<imageobject>
+								<imagedata
+									fileref="../image/WorkingWithQueries/addquery-editorstep1.png"
+									align="center" />
+							</imageobject>
+						</mediaobject>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Query statement setting and test</emphasis>
+				</para>
+				<para>
+					To set Query, enter Query ID, Query statement,etc., and test the created Query statement and click Ctrl + S 
+					or Save button of Eclipse toolbar, then add Query statement to Query Mapping XML file.				
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../image/WorkingWithQueries/addquery-editorstep2.png"
+							align="center" />
+					</imageobject>
+				</mediaobject>
+				<para>
+					When assigning Query ID, it must be unique. Otherwise, Query Test
+					Editor provides error message. When setting Query statement, set Query statement at "Query Statement"  text field.
+					Double-click table name or column name of "Database Browser" on the right, then table name or column name is automatically entered
+					to Query statement setting box.			
+				</para>
+				<para>
+					When setting Dynamic Query, click "Get
+					Parameters" button of "Input Parameter Information" to synchronize the variable of Query statement,
+					In the case of Dynamic Query utilizing Velocity grammar, "Dynamic Query" is automatically checked.					
+				</para>
+				<para>
+					When Query statement setting is completed, set proper test value and test Query statement.
+					For test, click Test Query button or Ctrl + Enter.
+					The test result is shown at <link linkend="gettingstarted_queryresultview">Query
+						Results
+						View</link>, and when there are multiple data, you can control the number of data by modifying the value of "Row Limit".				
+				</para>
+			</listitem>
+			<listitem>
+				<emphasis role="bold">Checking created Query</emphasis>
+				<para>
+					Through Query Test Editor, Query Mapping XML is added to the Query statement and users can check it easily.					
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="../image/WorkingWithQueries/addquery-editorfinished.png"
+							align="center" />
+					</imageobject>
+				</mediaobject>
+			</listitem>
+		</orderedlist>
+	</section>
+
+	<section id="workingwithqueries_addingaquery_queryeditor">
+		<title>Through Query Manager Editor</title>
+		<para>
+			Although you can't get the benefits of GUI environment, if you are a skilled user of if there is certain amount of Query statement accumulated,
+			direct setting of Query statement through Query Manager Editor can enhance the efficiency of task.
+			In addition, as Query Manager Editor provides various tags and attributes to the defined DTD of Query Mapping XML through Content Assist,
+			it is easy to apply or improved the existing Query statement.			
+		</para>
+		<para>
+			For details on Query Mapping XML structure, each tag and attribute, refer to Query Service in Anyframe manual.		
+		</para>
+	</section>
+</section>

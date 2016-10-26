@@ -283,6 +283,10 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	 *            user name to connect to remote repository
 	 * @param password
 	 *            password to connect to remote repository
+	 * @param proxyHost
+	 *            proxy host to connect to remote repository
+	 * @param proxyPort
+	 *            proxy port to connect to remote repository
 	 * @param isEssential
 	 *            whether the plugin is essential
 	 * @param isLatest
@@ -292,9 +296,9 @@ public class DefaultPluginCatalogManager implements PluginCatalogManager {
 	 */
 	public void updatePluginCatalog(ArchetypeGenerationRequest request,
 			File baseDir, String url, String userName, String password,
-			boolean isEssential, boolean isLatest, PluginInfo pluginInfo)
-			throws Exception {
+			String proxyHost, int proxyPort, boolean isEssential,
+			boolean isLatest, PluginInfo pluginInfo) throws Exception {
 		remotePluginCatalogDataSource.updatePluginCatalog(request, baseDir,
-				url, userName, password, isEssential, isLatest, pluginInfo);
+				url, userName, password, proxyHost, proxyPort, isEssential, isLatest, pluginInfo);
 	}
 }
