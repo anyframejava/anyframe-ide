@@ -20,15 +20,15 @@ import hudson.scheduler.CronTab;
 import java.util.List;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.CtipDetailList;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.Context;
@@ -54,8 +54,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Soungmin Joo
  */
 public class CtipAddJobPopup extends Dialog {
-	public static final String ID = CodeGeneratorActivator.PLUGIN_ID
-			+ ".views.CtipView";
+	public static final String ID = CodeGeneratorActivator.PLUGIN_ID + ".views.CtipView";
 
 	private final CtipView view;
 
@@ -82,8 +81,7 @@ public class CtipAddJobPopup extends Dialog {
 
 	private final String ctipUrl;
 
-	public CtipAddJobPopup(Shell parent, CtipView view,
-			List<String> jobNameList, String ctipUrl) {
+	public CtipAddJobPopup(Shell parent, CtipView view, List<String> jobNameList, String ctipUrl) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
@@ -93,8 +91,7 @@ public class CtipAddJobPopup extends Dialog {
 		this.ctipUrl = ctipUrl;
 	}
 
-	public CtipAddJobPopup(Shell parent, CtipView view,
-			List<String> jobNameList, CtipDetailList detailList, String ctipUrl) {
+	public CtipAddJobPopup(Shell parent, CtipView view, List<String> jobNameList, CtipDetailList detailList, String ctipUrl) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
@@ -111,13 +108,12 @@ public class CtipAddJobPopup extends Dialog {
 		int screenWidth = shell.getDisplay().getPrimaryMonitor().getBounds().width;
 		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
 
-		if(isModify){
+		if (isModify) {
 			shell.setText(Message.view_ctip_modifyctipjob);
-		}else{
+		} else {
 			shell.setText(Message.view_ctip_addnewjob);
 		}
-		shell.setBounds((screenWidth - 450) / 2, (screenHeight - 350) / 3, 450,
-				300);
+		shell.setBounds((screenWidth - 450) / 2, (screenHeight - 350) / 3, 450, 300);
 	}
 
 	protected Control createDialogArea(Composite parent) {
@@ -157,13 +153,11 @@ public class CtipAddJobPopup extends Dialog {
 		buttonGridData.grabExcessHorizontalSpace = true;
 
 		buildTypeCheck = new Button(composite, SWT.CHECK);
-		buildTypeCheck
-				.setText(Message.view_ctip_addjobpopup_taskdetail_type_build);
+		buildTypeCheck.setText(Message.view_ctip_addjobpopup_taskdetail_type_build);
 		buildTypeCheck.setLayoutData(buttonGridData);
 
 		reportTypeCheck = new Button(composite, SWT.CHECK);
-		reportTypeCheck
-				.setText(Message.view_ctip_addjobpopup_taskdetail_type_report);
+		reportTypeCheck.setText(Message.view_ctip_addjobpopup_taskdetail_type_report);
 		reportTypeCheck.setLayoutData(buttonGridData);
 	}
 
@@ -190,8 +184,7 @@ public class CtipAddJobPopup extends Dialog {
 		workspaceText.setLayoutData(layoutData);
 
 		Label scmServerType = new Label(composite, SWT.NONE);
-		scmServerType
-				.setText(Message.view_ctip_addjobpopup_taskdetail_scm_type);
+		scmServerType.setText(Message.view_ctip_addjobpopup_taskdetail_scm_type);
 
 		scmSeverTypeCombo = new Combo(composite, SWT.SINGLE | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -220,8 +213,7 @@ public class CtipAddJobPopup extends Dialog {
 		scmScheduleText.setLayoutData(layoutData);
 
 		Label otherProject = new Label(composite, SWT.NONE);
-		otherProject
-				.setText(Message.view_ctip_addjobpopup_taskdetail_childproject);
+		otherProject.setText(Message.view_ctip_addjobpopup_taskdetail_childproject);
 
 		otherProjectText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -261,33 +253,31 @@ public class CtipAddJobPopup extends Dialog {
 		buildTypeCheck.setSelection(true);
 		reportTypeCheck.setSelection(true);
 
-		PropertiesIO appProps = view.getAppProps();
-		projectBuild = appProps.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-
-		if (appProps == null)
+		ProjectConfig projectConfig = view.getProjectConfig();
+		if (projectConfig == null)
 			return;
-		String projectName = appProps.readValue(CommonConstants.PROJECT_NAME);
+		if (projectConfig.getAnyframeHome() != null && !"".equals(projectConfig.getAnyframeHome())) {
+			projectBuild = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+		} else {
+			projectBuild = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+		}
+		String projectName = projectConfig.getPjtName();
 		jobNameText.setText(projectName);
 
-		String applicationHome = Message.view_ctip_addjobpopup_apphome_prefix
-				+ ProjectUtil.SLASH + ProjectUtil.SLASH
+		String applicationHome = Message.view_ctip_addjobpopup_apphome_prefix + ProjectUtil.SLASH + ProjectUtil.SLASH
 				+ Message.view_ctip_addjobpopup_anyframe_postfix;
 		if (projectBuild.equals(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-			applicationHome = Message.view_ctip_addjobpopup_apphome_prefix
-					+ ProjectUtil.SLASH
-					+ Message.view_ctip_addjobpopup_anyframe_postfix;
+			applicationHome = Message.view_ctip_addjobpopup_apphome_prefix + ProjectUtil.SLASH + Message.view_ctip_addjobpopup_anyframe_postfix;
 		}
 		workspaceText.setText(applicationHome);
 		scmSeverTypeCombo.select(0);
 
-		scmSeverUrlText.setText(Message.view_ctip_addjobpopup_scmurl_init
-				+ projectName);
+		scmSeverUrlText.setText(Message.view_ctip_addjobpopup_scmurl_init + projectName);
 
 		scmSeverUrlText.setEnabled(true);
 
 		scmScheduleText.setText(Message.view_ctip_addjobpopup_schedule_init);
-		otherProjectText.setText(projectName
-				+ Message.view_ctip_addjobpopup_taskname_build_postfix);
+		otherProjectText.setText(projectName + Message.view_ctip_addjobpopup_taskname_build_postfix);
 	}
 
 	private void enableFieldsIfReportType() {
@@ -316,91 +306,57 @@ public class CtipAddJobPopup extends Dialog {
 
 		if (!isEditMode()) {
 			// create job
-			if (!buildTypeCheck.getSelection()
-					&& !reportTypeCheck.getSelection()) {
-				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						Message.view_ctip_addjobpopup_taskdetail_type_check,
+			if (!buildTypeCheck.getSelection() && !reportTypeCheck.getSelection()) {
+				MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_type_check,
 						MessageDialog.WARNING);
 				return false;
 			} else {
 				if ("".equals(jobName)) {
-					MessageDialogUtil
-							.openMessageDialog(
-									Message.ide_message_title,
-									Message.view_ctip_addjobpopup_taskdetail_taskname_check,
-									MessageDialog.WARNING);
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_check,
+							MessageDialog.WARNING);
 					return false;
 				} else if (!ProjectUtil.validateName(jobName)) {
-					MessageDialogUtil
-							.openMessageDialog(
-									Message.ide_message_title,
-									Message.view_ctip_addjobpopup_taskdetail_taskname_valid,
-									MessageDialog.WARNING);
-					return false;
-				}
-
-				if (reportTypeCheck.getSelection()) {
-					if (jobNameList
-							.contains(jobName
-									+ Message.view_ctip_addjobpopup_taskname_report_postfix)) {
-						MessageDialogUtil
-								.openMessageDialog(
-										Message.ide_message_title,
-										Message.view_ctip_addjobpopup_taskdetail_taskname_duplicated,
-										MessageDialog.WARNING);
-						return false;
-					}
-				}
-				if (buildTypeCheck.getSelection()) {
-					if (jobNameList
-							.contains(jobName
-									+ Message.view_ctip_addjobpopup_taskname_build_postfix)) {
-						MessageDialogUtil
-								.openMessageDialog(
-										Message.ide_message_title,
-										Message.view_ctip_addjobpopup_taskdetail_taskname_duplicated,
-										MessageDialog.WARNING);
-						return false;
-					}
-				}
-
-				if (workspaceText.getText().indexOf(
-						Message.view_ctip_addjobpopup_apphome_prefix) != -1) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.view_ctip_addjobpopup_apphome_warn_change,
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_valid,
 							MessageDialog.WARNING);
 					return false;
 				}
 
-				if (buildTypeCheck.getSelection()
-						&& reportTypeCheck.getSelection()) {
+				if (reportTypeCheck.getSelection()) {
+					if (jobNameList.contains(jobName + Message.view_ctip_addjobpopup_taskname_report_postfix)) {
+						MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_duplicated,
+								MessageDialog.WARNING);
+						return false;
+					}
+				}
+				if (buildTypeCheck.getSelection()) {
+					if (jobNameList.contains(jobName + Message.view_ctip_addjobpopup_taskname_build_postfix)) {
+						MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_duplicated,
+								MessageDialog.WARNING);
+						return false;
+					}
+				}
 
-					if (!otherProjectText
-							.getText()
-							.equals(jobName
-									+ Message.view_ctip_addjobpopup_taskname_build_postfix)) {
+				if (workspaceText.getText().indexOf(Message.view_ctip_addjobpopup_apphome_prefix) != -1) {
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_apphome_warn_change,
+							MessageDialog.WARNING);
+					return false;
+				}
+
+				if (buildTypeCheck.getSelection() && reportTypeCheck.getSelection()) {
+
+					if (!otherProjectText.getText().equals(jobName + Message.view_ctip_addjobpopup_taskname_build_postfix)) {
 						if (!jobNameList.contains(otherProjectText.getText())) {
-							MessageDialogUtil
-									.openMessageDialog(
-											Message.ide_message_title,
-											Message.view_ctip_addjobpopup_new_warn_notexistpjt,
-											MessageDialog.WARNING);
+							MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_notexistpjt,
+									MessageDialog.WARNING);
 							return false;
 						}
 
 					}
 				} else {
-					if (otherProjectText
-							.getText()
-							.equals(jobName
-									+ Message.view_ctip_addjobpopup_taskname_build_postfix)) {
+					if (otherProjectText.getText().equals(jobName + Message.view_ctip_addjobpopup_taskname_build_postfix)) {
 						if (!jobNameList.contains(otherProjectText.getText())) {
-							MessageDialogUtil
-									.openMessageDialog(
-											Message.ide_message_title,
-											Message.view_ctip_addjobpopup_new_warn_notexistpjt,
-											MessageDialog.WARNING);
+							MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_notexistpjt,
+									MessageDialog.WARNING);
 							return false;
 						}
 					}
@@ -409,9 +365,7 @@ public class CtipAddJobPopup extends Dialog {
 
 			if (!scmSeverTypeCombo.getText().equals("none")) {
 				if (StringUtils.isEmpty(scmSeverUrlText.getText())) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.view_ctip_addjobpopup_new_warn_emptyscmurl,
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_emptyscmurl,
 							MessageDialog.WARNING);
 					return false;
 				}
@@ -423,36 +377,23 @@ public class CtipAddJobPopup extends Dialog {
 					try {
 						new CronTab(scmSchedule);
 					} catch (Exception e) {
-						MessageDialogUtil
-								.openDetailMessageDialog(
-										ID,
-										Message.ide_message_title,
-										Message.view_ctip_addjobpopup_new_warn_invalidschedule,
-										e.getClass().getCanonicalName() + ": "
-												+ e.getMessage(),
-										MessageDialog.WARNING);
+						MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title,
+								Message.view_ctip_addjobpopup_new_warn_invalidschedule, e.getClass().getCanonicalName() + ": " + e.getMessage(),
+								MessageDialog.WARNING);
 
-						PluginLoggerUtil
-								.error(ID,
-										Message.view_ctip_addjobpopup_new_warn_invalidschedule,
-										e);
+						PluginLoggerUtil.error(ID, Message.view_ctip_addjobpopup_new_warn_invalidschedule, e);
 
 						return false;
 					}
 				} else {
-					MessageDialogUtil
-							.openMessageDialog(
-									Message.ide_message_title,
-									Message.view_ctip_addjobpopup_new_warn_invalidscmurl,
-									MessageDialog.WARNING);
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_invalidscmurl,
+							MessageDialog.WARNING);
 					return false;
 				}
 			}
 
-			if (!MessageDialogUtil.confirmMessageDialog(
-					Message.ide_message_title,
-					Message.view_ctip_addjobpopup_save_warn_confirm + " \""
-							+ jobName + "\"?")) {
+			if (!MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_save_warn_confirm + " \"" + jobName
+					+ "\"?")) {
 				return false;
 			}
 
@@ -470,19 +411,14 @@ public class CtipAddJobPopup extends Dialog {
 			if (!otherProjectText.getText().equals("")) {
 				if (buildTypeCheck.getSelection()) {
 					if (otherProjectText.getText().equals(jobName)) {
-						MessageDialogUtil
-								.openMessageDialog(
-										Message.ide_message_title,
-										Message.view_ctip_addjobpopup_new_warn_notexistpjt,
-										MessageDialog.WARNING);
+						MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_notexistpjt,
+								MessageDialog.WARNING);
 						return false;
 					}
 				}
 
 				if (!jobNameList.contains(otherProjectText.getText())) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.view_ctip_addjobpopup_new_warn_notexistpjt,
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_notexistpjt,
 							MessageDialog.WARNING);
 					return false;
 				}
@@ -490,9 +426,7 @@ public class CtipAddJobPopup extends Dialog {
 
 			if (!scmSeverTypeCombo.getText().equals("none")) {
 				if (StringUtils.isEmpty(scmSeverUrlText.getText())) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.view_ctip_addjobpopup_new_warn_emptyscmurl,
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_emptyscmurl,
 							MessageDialog.WARNING);
 					return false;
 				}
@@ -504,34 +438,21 @@ public class CtipAddJobPopup extends Dialog {
 					try {
 						new CronTab(scmSchedule);
 					} catch (Exception e) {
-						MessageDialogUtil
-								.openDetailMessageDialog(
-										ID,
-										Message.ide_message_title,
-										Message.view_ctip_addjobpopup_new_warn_invalidschedule,
-										e.getClass().getCanonicalName() + ": "
-												+ e.getMessage(),
-										MessageDialog.WARNING);
-						PluginLoggerUtil
-								.error(ID,
-										Message.view_ctip_addjobpopup_new_warn_invalidschedule,
-										e);
+						MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title,
+								Message.view_ctip_addjobpopup_new_warn_invalidschedule, e.getClass().getCanonicalName() + ": " + e.getMessage(),
+								MessageDialog.WARNING);
+						PluginLoggerUtil.error(ID, Message.view_ctip_addjobpopup_new_warn_invalidschedule, e);
 						return false;
 					}
 				} else {
-					MessageDialogUtil
-							.openMessageDialog(
-									Message.ide_message_title,
-									Message.view_ctip_addjobpopup_new_warn_invalidscmurl,
-									MessageDialog.WARNING);
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_new_warn_invalidscmurl,
+							MessageDialog.WARNING);
 					return false;
 				}
 			}
 
-			if (!MessageDialogUtil.confirmMessageDialog(
-					Message.ide_message_title,
-					Message.view_ctip_addjobpopup_save_warn_confirm + " \""
-							+ jobName + "\"?")) {
+			if (!MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_save_warn_confirm + " \"" + jobName
+					+ "\"?")) {
 				return false;
 			}
 
@@ -540,8 +461,7 @@ public class CtipAddJobPopup extends Dialog {
 		if (result) {
 			view.refreshPlugin();
 
-			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-					Message.view_ctip_addjobpopup_taskdetail_taskname_success,
+			MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_success,
 					MessageDialog.INFORMATION);
 		}
 
@@ -553,10 +473,7 @@ public class CtipAddJobPopup extends Dialog {
 			Context context = getParamContext();
 
 			if (reportTypeCheck.getSelection()) {
-				hudson.createJob(
-						jobName
-								+ Message.view_ctip_addjobpopup_taskname_report_postfix,
-						"report", context);
+				hudson.createJob(jobName + Message.view_ctip_addjobpopup_taskname_report_postfix, "report", context);
 			}
 
 			if (buildTypeCheck.getSelection()) {
@@ -566,26 +483,18 @@ public class CtipAddJobPopup extends Dialog {
 					type = "build";
 
 					if (!scmSeverTypeCombo.getText().equals("none")) {
-						context.put("customWorkspace",
-								context.get("customWorkspace") + "/" + jobName);
+						context.put("customWorkspace", context.get("customWorkspace") + "/" + jobName);
 					}
 				}
 
-				hudson.createJob(jobName
-						+ Message.view_ctip_addjobpopup_taskname_build_postfix,
-						type, context);
+				hudson.createJob(jobName + Message.view_ctip_addjobpopup_taskname_build_postfix, type, context);
 			}
 
 			return true;
 
 		} catch (Exception e) {
-			MessageDialogUtil
-					.openDetailMessageDialog(
-							ID,
-							Message.ide_message_title,
-							Message.view_ctip_addjobpopup_taskdetail_taskname_fail,
-							Message.view_ctip_addjobpopup_taskdetail_taskname_fail_detail,
-							MessageDialog.WARNING);
+			MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title, Message.view_ctip_addjobpopup_taskdetail_taskname_fail,
+					Message.view_ctip_addjobpopup_taskdetail_taskname_fail_detail, MessageDialog.WARNING);
 			return false;
 		}
 	}
@@ -597,11 +506,8 @@ public class CtipAddJobPopup extends Dialog {
 
 			return true;
 		} catch (Exception e) {
-			MessageDialogUtil.openDetailMessageDialog(ID,
-					Message.ide_message_title,
-					Message.view_ctip_addjobpopup_update_warn,
-					Message.view_ctip_addjobpopup_update_warn_detail,
-					MessageDialog.WARNING);
+			MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title, Message.view_ctip_addjobpopup_update_warn,
+					Message.view_ctip_addjobpopup_update_warn_detail, MessageDialog.WARNING);
 			return false;
 		}
 	}
@@ -609,8 +515,7 @@ public class CtipAddJobPopup extends Dialog {
 	private Context getParamContext() {
 		Context context = new VelocityContext();
 		context.put("customWorkspace", workspaceText.getText().trim());
-		context.put("scmType", scmSeverTypeCombo.getItem(scmSeverTypeCombo
-				.getSelectionIndex()));
+		context.put("scmType", scmSeverTypeCombo.getItem(scmSeverTypeCombo.getSelectionIndex()));
 		context.put("scmUrl", scmSeverUrlText.getText().trim());
 		context.put("triggerSchedule", scmScheduleText.getText().trim());
 		context.put("childProject", otherProjectText.getText().trim());

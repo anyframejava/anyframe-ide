@@ -1,41 +1,24 @@
 Anyframe 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 
 아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
 
-1) AOP Alliance (Java/J2EE AOP standard) 1.0 : http://sourceforge.net/projects/aopalliance/, Public Domain
-2) Apache Derby aka Cloudscape  : http://db.apache.org/derby/, Apache License Version 2.0
-3) Apache Jakarta Commons Collections 3.2 : http://commons.apache.org/collections/, Apache License Version 2.0
-4) Apache Jakarta Commons Logging 1.0.4 : http://commons.apache.org/logging/, Apache License Version 2.0
-5) Apache Jakarta DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache License Version 2.0
-6) Apache Jakarta Lang 2.4 : http://commons.apache.org/lang/index.html, Apache License Version 2.0
-7) Apache Jakarta Log4j 1.2.15 : http://logging.apache.org/log4j/2.x/, Apache License Version 2.0
-8) Apache Jakarta Velocity 1.4 : http://velocity.apache.org/, Apache License Version 2.0
-9) Apache log4j  : http://logging.apache.org/log4j/2.x/, Apache 1.1
-10) Apache POI 3.0.1-FINAL-20070705 : http://poi.apache.org/index.html, Apache License Version 2.0
-11) Apache-Jakarta Collections 3.2.1 : http://commons.apache.org/collections/, Apache License Version 2.0
-12) Apache-Jakarta Lang 2.6 : http://commons.apache.org/lang/index.html, Apache License Version 2.0
-13) Apache-Jakarta Pool 1.5.3 : http://commons.apache.org/pool/, Apache License Version 2.0
-14) Derby aka Cloudscape 10.8.1.2 : http://db.apache.org/derby/, Apache License Version 2.0
-15) Eclipse AspectJ 1.6.8 : http://www.eclipse.org/aspectj/, Common Public License
-16) Eclipse Standard Widget Toolkit 3.5.1 : http://www.eclipse.org/swt/, Eclipse Public License - v 1.0
-17) Flow4J-Eclipse 0.9.4 : http://flow4jeclipse.sourceforge.net/docs/index.html, BSD 2.0
-18) GSP  : http://sqlparser.com/, LGPL 2.1
-19) IBM DB2 Driver for JDBC and SQLJ  : http://www-01.ibm.com/software/data/db2/express-c/download.html, IBM DB2 Driver for JDBC and SQLJ License
-20) jasypt: java simplified encryption 1.7 : http://www.jasypt.org/, Apache License Version 2.0
-21) jaxen  : http://sourceforge.net/projects/jaxen/, Jaxen License
-22) JDOM  : http://www.jdom.org/, Jdom License
-23) jTDS - SQL Server and Sybase JDBC driver 1.2.4 : http://jtds.sourceforge.net/, LGPL 2.1
-24) JUnit 3.8.1 : http://www.junit.org/, Common Public License
-25) JUnit 4.4 : http://www.junit.org/, Common Public License
-26) log4jdbc 3-1.2alpha2 : http://log4jdbc.sourceforge.net, Apache License Version 2.0
-27) MySQL Connector/ODBC up to 2.5 5.1.7 : http://www.mysql.com/, Public Domain
-28) Oracle JDBC Drivers 14 : http://www.oracle.com/technetwork/indexes/downloads/index.html, Oracle Technology Network Development and Distribution 01-2009 License
-29) Petra REV  : http://petrarev.sourceforge.net/, Unspecified
-30) Rhino Components 1.7R2 : https://developer.mozilla.org/en-US/docs/Rhino, Mozilla Public License 1.1
-31) slf4j v_1.6.4 : http://www.slf4j.org, MIT License V2
-32) Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-framework, Apache License Version 2.0
-33) Spring Framework - springframework-2 2.5.5 : http://www.springsource.org/, Apache License Version 2.0
-34) svnClientAdapter  : http://subclipse.tigris.org/svnClientAdapter.html, Apache License Version 2.0
-35) svnjava  : http://code.google.com/p/svnjava/, Eclipse Public License - v 1.0
-36) SVNKit  : http://tmate.org/svn/, TMate License
-37) Sybase jConnect for JDBC 3, 4 : http://www.sybase.com/products/allproductsa-z/softwaredeveloperkit/jconnect, Unspecified
+1)Apache Jakarta Commons Collections 3.2 : http://jakarta.apache.org/commons/collections/, Apache License Version 2.0
+2)Apache log4j 1.2.16 : http://logging.apache.org/log4j/docs/, Apache License Version 2.0
+3)Apache POI 3.0.1-FINAL-20070705 : http://jakarta.apache.org/poi/index.html, Apache License Version 2.0
+4)Apache Velocity 1.6.2 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License Version 2.0
+5)Apache Velocity 1.7 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License Version 2.0
+6)Apache-Jakarta Lang 2.6 : http://jakarta.apache.org/commons/lang/index.html, Apache License Version 2.0
+7)Eclipse Standard Widget Toolkit 3.5.1 : http://www.eclipse.org/swt/, Mozilla Public License 1.1
+8)Flow4J-Eclipse 0.9.4 : http://sourceforge.net/projects/flow4jeclipse/, BSD 2.0
+9)GSP  : https://gsp.dev.java.net/, LGPL 2.1
+10)ibatis-sqlmap 2.3.4.726 : http://repo1.maven.org/maven2/org/apache/ibatis/ibatis-sqlmap/, Apache License Version 2.0
+11)jasypt: java simplified encryption 1.7 : http://sourceforge.net/projects/jasypt/, Apache License Version 2.0
+12)jdom 1.1.2 : http://github.com/hunterhacker/jdom/, Jdom License
+13)JUnit 3.8.1 : http://www.junit.org/., Common Public License
+14)Oracle JDBC Drivers  : http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/index.html, Oracle Technology Network Development and Distribution 01-2009 License
+15)Petra REV  : http://sourceforge.net/projects/petrarev/, Unspecified
+16)reallhy  : http://code.google.com/p/reallhy/, Apache License Version 2.0
+17)Rhino Components 1.7R2 : http://sourceforge.net/projects/rhinocomponents/, Mozilla Public License 1.1
+18)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-framework, Apache License Version 2.0
+19)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-core, Apache License Version 2.0
+20)svnClientAdapter  : http://subclipse.tigris.org/svnClientAdapter.html, Apache License Version 2.0
 

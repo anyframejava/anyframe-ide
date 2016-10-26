@@ -22,6 +22,7 @@ import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.messages.Message;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.anyframe.ide.common.util.ProjectUtil;
 import org.anyframe.ide.common.util.PropertyUtil;
 import org.eclipse.core.resources.IProject;
@@ -97,7 +98,7 @@ public class ConfigPropertyPage extends org.eclipse.ui.dialogs.PropertyPage impl
 	public boolean performOk() {
 		if (isChangedConfig) {
 			// temp - project.mf
-			saveProperties();
+			//saveProperties();
 			saveSettings();
 		}
 		return super.performOk();
@@ -259,10 +260,11 @@ public class ConfigPropertyPage extends org.eclipse.ui.dialogs.PropertyPage impl
 	private void saveSettings() {
 		String projectLocation = project.getLocation().toOSString();
 		
-		CommonPropertiesVO vo = new CommonPropertiesVO();
-		vo.setTemplateLoc(templateLocText.getText());
-		vo.setJdbcdriversLoc(jdbcdriversLogText.getText());
-		vo.setDatabasesLoc(databasesLocText.getText());
+		ProjectConfig vo = new ProjectConfig();
+		vo.setPjtHome(projectLocation);
+		vo.setTemplateHomePath(templateLocText.getText());
+		vo.setJdbcdriverPath(jdbcdriversLogText.getText());
+		vo.setDatabasesPath(databasesLocText.getText());
 
 		if(!PropertiesSettingUtil.save(projectLocation, vo)){
 			PluginLoggerUtil.error(CommonActivator.PLUGIN_ID,

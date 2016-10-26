@@ -24,17 +24,18 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.tree.ITreeModel;
 import org.anyframe.ide.codegenerator.model.tree.SimpleTreeNode;
 import org.anyframe.ide.codegenerator.model.tree.TreeContentProvider;
 import org.anyframe.ide.codegenerator.model.tree.TreeLabelProvider;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
-import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.databases.JdbcOption;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.EDPUtil;
 import org.anyframe.ide.common.util.ImageUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -71,7 +72,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 	public static final String ID = CodeGeneratorActivator.PLUGIN_ID;
 
 	private IProject project;
-	private PropertiesIO pjtProps = null;
+	private ProjectConfig projectConfig = null;
 
 	private Text packageText;
 	private Button refreshButton;
@@ -111,16 +112,15 @@ public class DomainGenerationWizardPage extends WizardPage {
 
 	private void init() {
 		try {
-			pjtProps = ProjectUtil.getProjectProperties(project);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 		} catch (Exception e) {
-			PluginLoggerUtil.warning(ID,
-					Message.wizard_error_properties);
+			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 	}
 
 	private void createPackageFields(Composite parent) {
-		final String basePackage = pjtProps
-				.readValue(CommonConstants.PACKAGE_NAME);
+		final String basePackage = projectConfig.getPackageName();
 
 		final Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(3, false));
@@ -159,8 +159,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 					e.printStackTrace();
 				}
 
-				ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-						comp.getShell(), new PackageLabelProvider());
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(comp.getShell(), new PackageLabelProvider());
 				dialog.setElements(packageSet.toArray());
 				dialog.setTitle(Message.wizard_crud_gen_packageselection);
 				dialog.open();
@@ -193,11 +192,10 @@ public class DomainGenerationWizardPage extends WizardPage {
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
 						try {
-							pjtProps = ProjectUtil
-									.getProjectProperties(project);
+							String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+							projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 						} catch (Exception e) {
-							PluginLoggerUtil.warning(ID,
-									Message.wizard_error_properties);
+							PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 						}
 						tableTreeViewer.setInput(getTableModel());
 						tableTreeViewer.expandAll();
@@ -225,12 +223,13 @@ public class DomainGenerationWizardPage extends WizardPage {
 	}
 
 	private ITreeModel getDefaultTableModel() {
-		String schemaName = pjtProps.readValue(CommonConstants.DB_SCHEMA);
-		SimpleTreeNode model = new SimpleTreeNode("catalog", schemaName);
+		String schemaName = "";
+		SimpleTreeNode model = null;
 		try {
+			schemaName = ConfigXmlUtil.getDefaultDatabase(projectConfig).getSchema();
+			model = new SimpleTreeNode("catalog", schemaName);
 			String rootName = Message.wizard_domain_init_message;
-			SimpleTreeNode schemaModel = new SimpleTreeNode(rootName,
-					schemaName);
+			SimpleTreeNode schemaModel = new SimpleTreeNode(rootName, schemaName);
 			model.addChild(schemaModel);
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_loadconfig, e);
@@ -239,27 +238,23 @@ public class DomainGenerationWizardPage extends WizardPage {
 	}
 
 	private ITreeModel getTableModel() {
-		String schemaName = pjtProps.readValue(CommonConstants.DB_SCHEMA);
-		SimpleTreeNode model = new SimpleTreeNode("catalog", schemaName);
+		String schemaName = "";
+		SimpleTreeNode model = null;
 		if (schemaName != null) {
 			try {
-				String rootName = schemaName.length() == 0 ? "Tables(No Schema)"
-						: schemaName;
-				SimpleTreeNode schemaModel = new SimpleTreeNode(rootName,
-						schemaName);
+				JdbcOption jdbcOption = ConfigXmlUtil.getDefaultDatabase(projectConfig);
+				schemaName = jdbcOption.getSchema();
+				model = new SimpleTreeNode("catalog", schemaName);
+				String rootName = schemaName.length() == 0 ? "Tables(No Schema)" : schemaName;
+				SimpleTreeNode schemaModel = new SimpleTreeNode(rootName, schemaName);
 				model.addChild(schemaModel);
-				String[] tables = getTables(project,
-						pjtProps.readValue(CommonConstants.DB_NAME),
-						pjtProps.readValue(CommonConstants.DB_SCHEMA),
-						pjtProps.readValue(CommonConstants.DB_TYPE));
+				String[] tables = getTables(project, jdbcOption.getDbName(), jdbcOption.getSchema(), jdbcOption.getDbType());
 				for (int i = 0; i < tables.length; i++) {
-					SimpleTreeNode tableModel = new SimpleTreeNode(tables[i],
-							null);
+					SimpleTreeNode tableModel = new SimpleTreeNode(tables[i], null);
 					schemaModel.addChild(tableModel);
 				}
 			} catch (Exception e) {
-				PluginLoggerUtil
-						.error(ID, Message.view_exception_loadconfig, e);
+				PluginLoggerUtil.error(ID, Message.view_exception_loadconfig, e);
 			}
 		} else
 			return getProblemNode(schemaName);
@@ -268,10 +263,8 @@ public class DomainGenerationWizardPage extends WizardPage {
 	}
 
 	private ITreeModel getProblemNode(String schemaName) {
-		SimpleTreeNode problemNode = new SimpleTreeNode("problem message",
-				schemaName);
-		problemNode.addChild(new SimpleTreeNode(
-				Message.wizard_problem_connection, schemaName));
+		SimpleTreeNode problemNode = new SimpleTreeNode("problem message", schemaName);
+		problemNode.addChild(new SimpleTreeNode(Message.wizard_problem_connection, schemaName));
 
 		return problemNode;
 	}
@@ -291,13 +284,12 @@ public class DomainGenerationWizardPage extends WizardPage {
 					tableTreeViewer.setChecked(model.getParent(), false);
 				}
 			}
-			
+
 			setPageComplete(isPageComplete());
 		}
 	};
 
-	public synchronized String[] getTables(IProject project, String dbName,
-			String schemaName, String dbType) throws Exception {
+	public synchronized String[] getTables(IProject project, String dbName, String schemaName, String dbType) throws Exception {
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
@@ -306,8 +298,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 			String tableNamePattern = null;
 			if (dbType.equals("sybase"))
 				schemaName = null;
-			rs = conn.getMetaData().getTables(conn.getCatalog(), schemaName,
-					tableNamePattern, new String[] { "TABLE" });
+			rs = conn.getMetaData().getTables(conn.getCatalog(), schemaName, tableNamePattern, new String[] { "TABLE" });
 			return getRsList(rs, "TABLE_NAME");
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_gettable, e);
@@ -319,8 +310,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 		}
 	}
 
-	private synchronized String[] getRsList(ResultSet rs, String columnName)
-			throws SQLException {
+	private synchronized String[] getRsList(ResultSet rs, String columnName) throws SQLException {
 		final ArrayList<String> list = new ArrayList<String>();
 		try {
 			if (rs != null) {
@@ -345,8 +335,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 		List<String> tableNames = new ArrayList<String>();
 		boolean isSelectAll = false;
 
-		if (tables.length > 0
-				&& ((ITreeModel) tables[0]).getParent().getParent() == null) {
+		if (tables.length > 0 && ((ITreeModel) tables[0]).getParent().getParent() == null) {
 			isSelectAll = true;
 		}
 
@@ -364,16 +353,12 @@ public class DomainGenerationWizardPage extends WizardPage {
 		Object[] tables = tableTreeViewer.getCheckedElements();
 
 		String tableName = "*";
-		if (tables.length > 0
-				&& ((ITreeModel) tables[0]).getParent().getParent() == null) {
+		if (tables.length > 0 && ((ITreeModel) tables[0]).getParent().getParent() == null) {
 			tableName = "*";
-		} else if (tables.length > 0
-				&& ((ITreeModel) tables[0]).getParent().getParent() == null
-				&& ((ITreeModel) tables[0]).getName().equals(
-						Message.wizard_domain_init_message)) {
+		} else if (tables.length > 0 && ((ITreeModel) tables[0]).getParent().getParent() == null
+				&& ((ITreeModel) tables[0]).getName().equals(Message.wizard_domain_init_message)) {
 			tableName = "";
-		} else if (tables.length == 1
-				&& ((ITreeModel) tables[0]).getParent().getParent() != null) {
+		} else if (tables.length == 1 && ((ITreeModel) tables[0]).getParent().getParent() != null) {
 			tableName = ((ITreeModel) tables[0]).getName();
 		} else {
 			String tableNameTemp = "";
@@ -392,9 +377,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 	class PackageLabelProvider implements ILabelProvider {
 
 		public Image getImage(Object element) {
-			return ImageUtil.getImageDescriptor(
-					CodeGeneratorActivator.PLUGIN_ID, Message.image_package)
-					.createImage();
+			return ImageUtil.getImageDescriptor(CodeGeneratorActivator.PLUGIN_ID, Message.image_package).createImage();
 		}
 
 		public String getText(Object element) {
@@ -416,17 +399,16 @@ public class DomainGenerationWizardPage extends WizardPage {
 	}
 
 	public boolean isPageComplete() {
-		if (getPackageText().getText().length() > 0
-				&& !ProjectUtil.validatePkgName(getPackageText().getText())) {
+		if (getPackageText().getText().length() > 0 && !ProjectUtil.validatePkgName(getPackageText().getText())) {
 			setErrorMessage(Message.wizard_application_validation_pkgname);
 			return false;
 		}
-		
+
 		Object[] tables = tableTreeViewer.getCheckedElements();
-		if(tables.length < 1){
+		if (tables.length < 1) {
 			return false;
 		}
-		
+
 		setErrorMessage(null);
 		setMessage(null);
 		return true;

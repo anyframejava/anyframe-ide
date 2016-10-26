@@ -71,7 +71,10 @@
         
         <para>다음은 생성된 build.xml 의 일부분이다. </para>
 		<programlisting language="xml"><![CDATA[<project name="Build module" default="default" basedir=".">		
-    <property file = "./META-INF/project.mf"/>
+    <property name="version" value="1.0-SNAPSHOT"/>
+    
+    <xmlproperty file = ".../.settings/anyframe/org.anyframe.ide.common.config.xml"/>
+    
     <import file = "${anyframe.home}/ide/cli/scripts/project-build.xml"/>
 	
     <target name="clean" depends = "shared:clean" />

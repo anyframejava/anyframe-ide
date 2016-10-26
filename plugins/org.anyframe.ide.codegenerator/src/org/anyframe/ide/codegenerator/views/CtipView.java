@@ -16,6 +16,7 @@
  */
 package org.anyframe.ide.codegenerator.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +28,7 @@ import org.anyframe.ide.codegenerator.action.CtipViewActionGroup;
 import org.anyframe.ide.codegenerator.action.RefreshCtipViewAction;
 import org.anyframe.ide.codegenerator.action.ServerConfigureCtipViewAction;
 import org.anyframe.ide.codegenerator.config.AnyframeConfig;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.CtipDetailList;
 import org.anyframe.ide.codegenerator.model.table.CtipInfoContentProvider;
 import org.anyframe.ide.codegenerator.model.table.CtipInfoLabelProvider;
@@ -35,12 +37,12 @@ import org.anyframe.ide.codegenerator.popups.CtipAddJobPopup;
 import org.anyframe.ide.codegenerator.popups.CtipConfigurationPopup;
 import org.anyframe.ide.codegenerator.popups.CtipManageUrlPopup;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.commons.collections.map.LinkedMap;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -131,12 +133,12 @@ public class CtipView extends ViewPart {
 
 	private String projectBuild;
 
-	private PropertiesIO appProps;
+	private ProjectConfig projectConfig = null;
 
 	private IMenuManager mgr;
 
-	public PropertiesIO getAppProps() {
-		return appProps;
+	public ProjectConfig getProjectConfig() {
+		return projectConfig;
 	}
 
 	public String getProjectBuild() {
@@ -486,9 +488,14 @@ public class CtipView extends ViewPart {
 
 	private void loadBuildPropertiesFile() {
 		try {
-			appProps = ProjectUtil.getProjectProperties(selectedProject);
-			projectBuild = appProps
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(selectedProject.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+
+			if (projectConfig.getAnyframeHome() != null && !"".equals(projectConfig.getAnyframeHome())) {
+				projectBuild = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			}else{
+				projectBuild = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			}
 		} catch (Exception e) {
 			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
 					Message.wizard_error_properties, MessageDialog.WARNING);
@@ -753,12 +760,11 @@ public class CtipView extends ViewPart {
 
 	private boolean existProject() {
 		try {
-			PropertiesIO check = ProjectUtil
-					.getProjectProperties(selectedProject);
-			if (check != null)
+			String configFile = ConfigXmlUtil.getCommonConfigFile(selectedProject.getLocation().toOSString());
+
+			if (new File(configFile).exists())
 				return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			return false;
 		}
 

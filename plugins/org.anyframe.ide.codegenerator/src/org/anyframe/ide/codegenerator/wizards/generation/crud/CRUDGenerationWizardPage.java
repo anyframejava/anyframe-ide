@@ -15,25 +15,40 @@
  */
 package org.anyframe.ide.codegenerator.wizards.generation.crud;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
+import org.anyframe.ide.codegenerator.model.table.PluginInfoList;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.util.SearchUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.command.common.util.FileUtil;
+import org.anyframe.ide.command.maven.mojo.codegen.Domain;
+import org.anyframe.ide.common.Constants;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.ImageUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Javadoc;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.internal.core.ResolvedSourceType;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -48,10 +63,12 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -72,11 +89,13 @@ public class CRUDGenerationWizardPage extends WizardPage {
 	public static final String ID = CodeGeneratorActivator.PLUGIN_ID;
 
 	private IProject project;
-	private PropertiesIO pjtProps = null;
-	
+
+	private ProjectConfig projectConfig = null;
+
 	private String selectedDomain;
 
 	private Text packageText;
+	private Combo templateTypeCombo;
 
 	private Button genWebSourceButton;
 	private Button genSampleDataButton;
@@ -91,7 +110,10 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		return packageText.getText();
 	}
 
-	
+	public String getTemplateType() {
+		return templateTypeCombo.getText();
+	}
+
 	public boolean getGenWebSource() {
 		return genWebSourceButton.getSelection();
 	}
@@ -118,6 +140,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		createInfoSelectAllField(composite);
 		createTables(composite);
 		createPackageFields(composite);
+		createTemplateTypeCombo(composite);
 		createOptions(composite);
 
 		setPageComplete(isPageComplete());
@@ -141,6 +164,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		data.horizontalAlignment = GridData.FILL;
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalSpan = 3;
+		data.heightHint = 10 * modelTable.getItemHeight(); // maximum 10 line
 		modelTableViewer.getTable().setLayoutData(data);
 
 		TableLayout layout = new TableLayout();
@@ -153,38 +177,28 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		modelTableViewer.setContentProvider(new ArrayContentProvider());
 		modelTableViewer.setLabelProvider(new LabelProvider() {
 			public Image getImage(Object o) {
-				return ImageUtil.getImageDescriptor(
-						CodeGeneratorActivator.PLUGIN_ID,
-						Message.image_java_class).createImage();
+				return ImageUtil.getImageDescriptor(CodeGeneratorActivator.PLUGIN_ID, Message.image_java_class).createImage();
 			}
 
 			public String getText(Object o) {
 				return o.toString();
 			}
 		});
-		modelTableViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(
-							final SelectionChangedEvent event) {
-						IStructuredSelection selection = (IStructuredSelection) event
-								.getSelection();
-						selectedDomain = selection.getFirstElement()
-								.toString();
-						String domainNameWithDot = selectedDomain.substring(
-								selectedDomain.lastIndexOf(".")).toLowerCase();
-						packageText.setText(pjtProps
-								.readValue(CommonConstants.PACKAGE_NAME)
-								+ domainNameWithDot);
-								
-						setPageComplete(isPageComplete());
-					}
-				});
+		modelTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(final SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				selectedDomain = selection.getFirstElement().toString();
+				String domainNameWithDot = selectedDomain.substring(selectedDomain.lastIndexOf(".")).toLowerCase();
+				packageText.setText(projectConfig.getPackageName() + domainNameWithDot);
+
+				setPageComplete(isPageComplete());
+			}
+		});
 		modelTableViewer.setInput(getDomainList());
 	}
 
 	private void createPackageFields(Composite parent) {
-		final String basePackage = pjtProps
-				.readValue(CommonConstants.PACKAGE_NAME);
+		final String basePackage = projectConfig.getPackageName();
 
 		final Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(3, false));
@@ -196,7 +210,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 		new Label(comp, SWT.NONE).setText(Message.wizard_crud_gen_basepackage);
 
 		packageText = new Text(comp, SWT.BORDER);
-		
+
 		packageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		packageText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event event) {
@@ -226,8 +240,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 					e.printStackTrace();
 				}
 
-				ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-						comp.getShell(), new PackageLabelProvider());
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(comp.getShell(), new PackageLabelProvider());
 				dialog.setElements(packageSet.toArray());
 				dialog.setTitle(Message.wizard_crud_gen_packageselection);
 				dialog.open();
@@ -239,6 +252,59 @@ public class CRUDGenerationWizardPage extends WizardPage {
 			}
 		});
 
+	}
+
+	private void createTemplateTypeCombo(Composite parent) {
+		Group templateGroup = new Group(parent, SWT.NULL);
+
+		templateGroup.setText(Message.wizard_templatetype_group);
+		templateGroup.setLayout(new GridLayout(2, false));
+		templateGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		new Label(templateGroup, SWT.NONE).setText(Message.wizard_templatetype_name);
+
+		templateTypeCombo = new Combo(templateGroup, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
+		templateTypeCombo.setLayoutData(new GridData(SWT.NULL));
+		templateTypeCombo.removeAll();
+
+		File[] templateTypes = FileUtil.dirListByAscAlphabet(new File(projectConfig.getTemplatePath(Constants.PROJECT_NAME_CODE_GENERATOR)));
+
+		PluginInfoList pluginInfoList = new PluginInfoList(projectConfig);
+		List<String> installedPluginList = pluginInfoList.getInstalledPluginTypeList();
+
+		List<String> enableTemplates = new ArrayList<String>();
+		List<String> disableTemplates = new ArrayList<String>();
+		for (File templateType : templateTypes) {
+			String templateTypeName = templateType.getName();
+			if (!templateTypeName.equals("common") && !templateTypeName.equals("online")) {
+				if (installedPluginList.contains(templateTypeName) && !templateTypeName.equals(CommonConstants.DAO_SPRINGJDBC)) {
+					enableTemplates.add(templateTypeName);
+				} else if (templateTypeName.equals(CommonConstants.DAO_SPRINGJDBC)) {
+					enableTemplates.add(CommonConstants.DAO_SPRINGJDBC);
+				} else {
+					disableTemplates.add(templateTypeName + Constants.TEMPLATE_TYPE_DISABLE_POSTFIX);
+				}
+			}
+		}
+
+		for(String template : enableTemplates){
+			templateTypeCombo.add(template);
+		}
+		
+		for(String template : disableTemplates){
+			templateTypeCombo.add(template);
+		}
+		
+		templateTypeCombo.select(0);
+
+		templateTypeCombo.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent arg0) {
+				setPageComplete(isPageComplete());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 	}
 
 	private void createOptions(Composite parent) {
@@ -269,37 +335,75 @@ public class CRUDGenerationWizardPage extends WizardPage {
 	private Object[] getExistDomainList() {
 		ArrayList<String> result = new ArrayList<String>();
 
-		ArrayList<String> listAnnotations = new ArrayList<String>();
-		listAnnotations.add("javax.persistence.Entity");
-		ArrayList<ResolvedSourceType> listClassFile = SearchUtil.search("*",
-				listAnnotations, project);
+		try {
+			IJavaProject javaProject = JavaCore.create(project);
+			IPackageFragment[] packages = javaProject.getPackageFragments();
+			for (IPackageFragment mypackage : packages) {
+				if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
+					for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+						ASTParser parser = ASTParser.newParser(AST.JLS3);
+						parser.setResolveBindings(true);
+						parser.setSource(unit);
+						CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+						List typelist = cu.types();
+						if (typelist.size() == 0)
+							return result.toArray();
+						TypeDeclaration td = (TypeDeclaration) typelist.get(0);
+						Javadoc jdoc = td.getJavadoc();
 
-		for (ResolvedSourceType classFile : listClassFile) {
-			result.add(classFile.getFullyQualifiedName());
+						if (jdoc != null) {
+							List tags = jdoc.tags();
+							for (int i = 0; i < tags.size(); i++) {
+								String tag = String.valueOf(tags.get(i));
+								if (tag.contains(Domain.TABLE)) {
+									result.add(td.resolveBinding().getQualifiedName());
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (JavaModelException e) {
+			e.printStackTrace();
 		}
+
 		return result.toArray();
+		// ArrayList<String> listAnnotations = new ArrayList<String>();
+		// listAnnotations.add("@table");
+		// ArrayList<ResolvedSourceType> listClassFile = SearchUtil.search("*",
+		// listAnnotations, project);
+		//
+		// for (ResolvedSourceType classFile : listClassFile) {
+		// result.add(classFile.getFullyQualifiedName());
+		// }
+		// return result.toArray();
 	}
 
 	private void init() {
 		try {
-			pjtProps = ProjectUtil.getProjectProperties(project);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 		} catch (Exception e) {
 			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 	}
 
 	public boolean isPageComplete() {
-		if (getPackage().length() > 0
-				&& !ProjectUtil.validatePkgName(getPackage())) {
+		if (getPackage().length() > 0 && !ProjectUtil.validatePkgName(getPackage())) {
 			setErrorMessage(Message.wizard_application_validation_pkgname);
 			return false;
 		}
-		
+
 		String selected = getSelectedDomain();
-		if(selected == null || "".equals(selected)){
+		if (selected == null || "".equals(selected)) {
 			return false;
 		}
-		
+
+		if ("".equals(templateTypeCombo.getText()) || templateTypeCombo.getText().endsWith(Constants.TEMPLATE_TYPE_DISABLE_POSTFIX)) {
+			setErrorMessage(Message.wizard_application_validation_templatetype);
+			return false;
+		}
+
 		setErrorMessage(null);
 		setMessage(null);
 		return true;
@@ -308,9 +412,7 @@ public class CRUDGenerationWizardPage extends WizardPage {
 	class PackageLabelProvider implements ILabelProvider {
 
 		public Image getImage(Object element) {
-			return ImageUtil.getImageDescriptor(
-					CodeGeneratorActivator.PLUGIN_ID, Message.image_package)
-					.createImage();
+			return ImageUtil.getImageDescriptor(CodeGeneratorActivator.PLUGIN_ID, Message.image_package).createImage();
 		}
 
 		public String getText(Object element) {

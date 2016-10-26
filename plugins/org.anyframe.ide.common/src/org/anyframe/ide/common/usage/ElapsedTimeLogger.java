@@ -52,11 +52,21 @@ public class ElapsedTimeLogger {
 	}
 
 	public static void start(){
-		getInstance().startWatch();
+		try{
+			getInstance().startWatch();
+		}catch(Exception e){
+			//무시
+			e.printStackTrace();
+		}
 	}
 	
 	public static void stop(){
-		getInstance().stopWatch();
+		try{
+			getInstance().stopWatch();
+		}catch(Exception e){
+			//무시
+			e.printStackTrace();
+		}
 	}
 	
 	private void startWatch(){
@@ -70,7 +80,9 @@ public class ElapsedTimeLogger {
 		info.setSouceId(title);
 		info.setStartTime(System.currentTimeMillis());
 		
-		watchBox.put(pluginId + "-" + title, info);
+		if(watchBox.get(pluginId + "-" + title)==null){
+			watchBox.put(pluginId + "-" + title, info);
+		}
 	}
 	
 	private void stopWatch(){
@@ -86,6 +98,8 @@ public class ElapsedTimeLogger {
 		info.setElapsedTime(System.currentTimeMillis() - startTime);
 		
 		write(info);
+		
+		watchBox.remove(pluginId + "-" + title);
 	}
 	
 	private void write(ElapsedTimeInfo info) {
@@ -94,7 +108,6 @@ public class ElapsedTimeLogger {
 			String filePath = baseDir + LoggerCommon.getCurrentFileName(info.getPluginId(), baseDir);
 			File file = FileUtils.getFile(filePath);
 			FileUtils.writeStringToFile(file, createLog(info) + "\n", true);
-			System.out.println(createLog(info));
 		} catch (Exception ex) {
 			// Exception 발생하면 그냥 무시.
 			PluginLogger.error(ex);
@@ -113,14 +126,13 @@ public class ElapsedTimeLogger {
 		*/
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("[ELAPSED]");
 		sb.append(info.getPluginId());
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		sb.append(info.getSouceId());
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		sb.append(info.getElapsedTime());
 		sb.append(LoggerCommon.LOG_SEPARATOR);
-		sb.append(DateFormatUtils.format(Calendar.getInstance().getTime(), "yyyyMMddHHmmss"));
+		sb.append(DateFormatUtils.format(Calendar.getInstance().getTime(), "yyyyMMddHHmmssSS"));
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		String hostAddress = "";
 		try {

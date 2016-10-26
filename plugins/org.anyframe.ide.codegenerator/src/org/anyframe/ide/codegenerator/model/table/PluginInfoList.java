@@ -25,8 +25,8 @@ import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.PluginUtil;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.commons.collections.map.ListOrderedMap;
 
 /**
@@ -41,22 +41,14 @@ public class PluginInfoList {
 			+ ".views.InstallationView";
 
 	private final Map<String, PluginInfo> pInfoList = new ListOrderedMap();
-	private final PropertiesIO projectMF;
+	private final ProjectConfig projectConfig;
 
-	public PluginInfoList(PropertiesIO pio) {
-		this.projectMF = pio;
+	public PluginInfoList(ProjectConfig projectConfig) {
+		this.projectConfig = projectConfig;
 		try {
 			Map<String, PluginInfo> pluginList = PluginUtil.getPluginList(
 					getPjtBuild(), getAnyframeHome(), getBaseDir());
 			pInfoList.putAll(pluginList);
-			// Iterator<String> itr =
-			// pluginList.keySet().iterator();
-			// while (itr.hasNext()) {
-			// String pluginName = (String) itr.next();
-			// PluginInfo info =
-			// pluginList.get(pluginName);
-			// addPluginInfo(info);
-			// }
 		} catch (Exception exception) {
 			PluginLoggerUtil.error(ID, Message.view_exception_getpluginlist,
 					exception);
@@ -64,23 +56,19 @@ public class PluginInfoList {
 	}
 
 	private String getBaseDir() throws Exception {
-		String baseDir = this.projectMF.readValue(CommonConstants.PROJECT_HOME);
-
-		return baseDir;
+		return this.projectConfig.getPjtHome();
 	}
 
 	private String getAnyframeHome() throws Exception {
-		String anyframeHome = this.projectMF
-				.readValue(CommonConstants.ANYFRAME_HOME);
-
-		return anyframeHome;
+		return projectConfig.getAnyframeHome();
 	}
 
 	private String getPjtBuild() throws Exception {
-		String pjtBuild = this.projectMF
-				.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-
-		return pjtBuild;
+		if (projectConfig.getAnyframeHome() != null && !"".equals(projectConfig.getAnyframeHome())) {
+			return CommonConstants.PROJECT_BUILD_TYPE_ANT;
+		}else{
+			return CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+		}
 	}
 
 	public void addPluginInfo(PluginInfo pluginInfo) {

@@ -22,8 +22,11 @@ import org.anyframe.ide.codegenerator.util.PostProcess;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.databases.JdbcOption;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
+import org.anyframe.ide.common.util.EncryptUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -98,45 +101,45 @@ public class ProjectCreationPostProcess implements PostProcess {
 
 	public void doAfterProjectCreation(String projectHome) {
 
-		// 2. modify /.metadata/project.mf file
+		// 2. modify common configuration file
 		try {
-			PropertiesIO appProps = new PropertiesIO(projectHome
-					+ CommonConstants.METAINF + CommonConstants.METADATA_FILE);
-			appProps.setProperty(CommonConstants.PROJECT_TEMPLATE_HOME,
-					vo.getTemplateHome());
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectHome);
+			
+			// common config file
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			projectConfig.setAnyframeHome(vo.getAnyframeHome());
+			projectConfig.setOffline(String.valueOf(vo.isOffline()));
+			projectConfig.setPackageName(vo.getPackageName());
+			projectConfig.setPjtHome(projectHome);
+			projectConfig.setPjtName(vo.getProjectName());
+			projectConfig.setTemplateHomePath(vo.getTemplateHome());
+			projectConfig.setDatabasesPath(projectHome + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME);
+			projectConfig.setJdbcdriverPath(projectHome + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME);
 
-			// save jdbc information
-			appProps.setProperty(CommonConstants.DB_DRIVER_PATH,
-					vo.getDatabaseDriverPath());
-			appProps.setProperty(CommonConstants.DB_TYPE, vo.getDatabaseType());
-			appProps.setProperty(CommonConstants.DB_NAME, vo.getDatabaseName());
-			appProps.setProperty(CommonConstants.DB_SCHEMA,
-					vo.getDatabaseSchema());
-			appProps.setProperty(CommonConstants.DB_USERNAME,
-					vo.getDatabaseUserId());
-			appProps.setProperty(CommonConstants.DB_PASSWORD,
-					vo.getDatabasePassword());
-			appProps.setProperty(CommonConstants.DB_SERVER,
-					vo.getDatabaseServer());
-			appProps.setProperty(CommonConstants.DB_PORT, vo.getDatabasePort());
-			appProps.setProperty(CommonConstants.DB_DIALECT,
-					vo.getDatabaseDialect());
-			appProps.setProperty(CommonConstants.DB_DRIVER_CLASS,
-					vo.getDatabaseDriver());
+			ConfigXmlUtil.saveProjectConfig(projectConfig);
+			
+			// default databaase
+			JdbcOption jdbcOption = ConfigXmlUtil.getDefaultDatabase(projectConfig);
+			jdbcOption.setDbName(vo.getDatabaseName());
+			jdbcOption.setDbType(vo.getDatabaseType());
+			jdbcOption.setDefault(true);
+			jdbcOption.setDialect(vo.getDatabaseDialect());
+			jdbcOption.setDriverClassName(vo.getDatabaseDriver());
+			jdbcOption.setDriverJar(vo.getDatabaseDriverPath());
+			jdbcOption.setMvnArtifactId(vo.getDatabaseArtifactId());
+			jdbcOption.setMvnGroupId(vo.getDatabaseGroupId());
+			jdbcOption.setMvnVersion(vo.getDatabaseVersion());
+			jdbcOption.setPassword(EncryptUtil.encrypt(vo.getDatabasePassword()));
+			jdbcOption.setProjectName(vo.getProjectName());
+			jdbcOption.setSchema(vo.getDatabaseSchema());
+			jdbcOption.setUrl(vo.getDatabaseUrl());
+			jdbcOption.setUserName(vo.getDatabaseUserId());
 
-			appProps.setProperty(CommonConstants.DB_URL, vo.getDatabaseUrl());
-
-			if (appProps.readValue(CommonConstants.PROJECT_BUILD_TYPE).equals(
-					CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-				appProps.setProperty(CommonConstants.DB_GROUPID,
-						vo.getDatabaseGroupId());
-				appProps.setProperty(CommonConstants.DB_ARTIFACTID,
-						vo.getDatabaseArtifactId());
-				appProps.setProperty(CommonConstants.DB_VERSION,
-						vo.getDatabaseVersion());
-			}
-
-			appProps.write();
+			jdbcOption.setRunExplainPaln(false);//default
+			jdbcOption.setUseDbSpecific(false);//default
+			
+			ConfigXmlUtil.saveDatabase(projectHome, jdbcOption);
+			
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_request, e);
 		}

@@ -16,8 +16,8 @@
 package org.anyframe.ide.codegenerator.popups;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.messages.Message;
+import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.command.common.util.CommonConstants;

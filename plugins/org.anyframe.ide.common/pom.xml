@@ -12,7 +12,7 @@
 	
 	<groupId>org.anyframe.ide</groupId>
 	<artifactId>org.anyframe.ide.common</artifactId>
-	<version>2.9.0</version>
+	<version>3.0.0</version>
 	<name>Anyframe Java IDE Common Project</name>
 
 	<packaging>eclipse-plugin</packaging>

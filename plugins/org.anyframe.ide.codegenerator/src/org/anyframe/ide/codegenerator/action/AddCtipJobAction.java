@@ -22,6 +22,8 @@ import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.views.CtipView;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.jdom.Element;
@@ -50,6 +52,8 @@ public class AddCtipJobAction extends AbstractlViewAction {
 	 * Run this Action with message box
 	 */
 	public void run() {
+		new UsageCheckAdapter(EventSourceID.CD_ADD_CTIP);
+		
 		// Open Pop Up window
 		CtipView view = CodeGeneratorActivator.getDefault().getCtipView();
 		TreeSelection selection = (TreeSelection) view.getSelectedId();

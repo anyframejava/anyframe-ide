@@ -19,6 +19,8 @@ package org.anyframe.ide.codegenerator.action;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.CtipView;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 import org.eclipse.jface.viewers.TreeSelection;
 
 /**
@@ -44,6 +46,8 @@ public class RemoveCtipJobAction extends AbstractlViewAction {
 	 * Run this Action with message box
 	 */
 	public void run() {
+		new UsageCheckAdapter(EventSourceID.CD_DELETE_CTIP);
+		
 		// remove job action
 		CtipView view = CodeGeneratorActivator.getDefault().getCtipView();
 		TreeSelection selection = (TreeSelection) view.getSelectedId();

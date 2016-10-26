@@ -38,12 +38,14 @@ import org.anyframe.ide.common.table.TableViewContentProvider;
 import org.anyframe.ide.common.table.TableViewLabelProvider;
 import org.anyframe.ide.common.util.ButtonUtil;
 import org.anyframe.ide.common.util.ComponentUtil;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.ImageUtil;
 import org.anyframe.ide.common.util.ListUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.MessageUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.ProjectUtil;
+import org.anyframe.ide.common.util.StringUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
@@ -103,8 +105,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 	public static final String PROGRAM_NAME = "Databases";
 
 	public DataBasesPropertyPage() {
-		this.dbSettingDialog = CommonActivator.getInstance()
-				.getDBSettingDialog();
+		this.dbSettingDialog = CommonActivator.getInstance().getDBSettingDialog();
 
 		noDefaultAndApplyButton();
 	}
@@ -124,15 +125,12 @@ public class DataBasesPropertyPage extends PropertyPage {
 	private void createActionAndMenu() {
 		addAction = new Action() {
 			public void run() {
-				IProject project = (IProject) getElement().getAdapter(
-						IProject.class);
-				DbSettingDialog dialog = new DbSettingDialog(Display
-						.getCurrent().getActiveShell(), project, null);
+				IProject project = (IProject) getElement().getAdapter(IProject.class);
+				DbSettingDialog dialog = new DbSettingDialog(Display.getCurrent().getActiveShell(), project, null);
 				if (dialog.open() == Dialog.OK) {
 					JdbcOption newJdbc = dialog.getJdbcOption();
 					if (newJdbc != null) {
-						List<JdbcOption> input = (List<JdbcOption>) viewer
-								.getInput();
+						List<JdbcOption> input = (List<JdbcOption>) viewer.getInput();
 						if (input == null) {
 							input = new ArrayList<JdbcOption>();
 						}
@@ -151,18 +149,14 @@ public class DataBasesPropertyPage extends PropertyPage {
 				if (viewer.getSelection().isEmpty()) {
 					return;
 				}
-				JdbcOption selectedItem = (JdbcOption) ((IStructuredSelection) viewer
-						.getSelection()).getFirstElement();
+				JdbcOption selectedItem = (JdbcOption) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
-				IProject project = (IProject) getElement().getAdapter(
-						IProject.class);
-				DbSettingDialog dialog = new DbSettingDialog(Display
-						.getCurrent().getActiveShell(), project, selectedItem);
+				IProject project = (IProject) getElement().getAdapter(IProject.class);
+				DbSettingDialog dialog = new DbSettingDialog(Display.getCurrent().getActiveShell(), project, selectedItem);
 				if (dialog.open() == Dialog.OK) {
 					JdbcOption newJdbc = dialog.getJdbcOption();
 					if (newJdbc != null) {
-						List<JdbcOption> input = (List<JdbcOption>) viewer
-								.getInput();
+						List<JdbcOption> input = (List<JdbcOption>) viewer.getInput();
 						if (input == null) {
 							input = new ArrayList<JdbcOption>();
 						}
@@ -178,13 +172,9 @@ public class DataBasesPropertyPage extends PropertyPage {
 		deleteAction = new Action() {
 			public void run() {
 				if (viewer.getTable().getSelectionIndex() > -1) {
-					if (viewer.getTable().getSelection()[0].getText().endsWith(
-							Constants.DB_SETTING_DEFAULT_POSTFIX)) {
-						MessageDialogUtil
-								.openMessageDialog(
-										Message.ide_message_title,
-										Message.properties_database_error_delete_default,
-										MessageDialog.ERROR);
+					if (viewer.getTable().getSelection()[0].getText().endsWith(Constants.DB_SETTING_DEFAULT_POSTFIX)) {
+						MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.properties_database_error_delete_default,
+								MessageDialog.ERROR);
 						return;
 					} else {
 						ComponentUtil.deleteTableViewerSelectedItem(viewer);
@@ -255,25 +245,19 @@ public class DataBasesPropertyPage extends PropertyPage {
 
 		File jdbcConfigFile = new File(PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 		if (!jdbcConfigFile.exists()) {
-			URL fileLocation = this.getClass().getProtectionDomain()
-					.getCodeSource().getLocation();
+			URL fileLocation = this.getClass().getProtectionDomain().getCodeSource().getLocation();
 			File jarFile = new File(fileLocation.getFile());
 
 			try {
 				if (jarFile.isDirectory()) {
-					File configFile = new File(fileLocation.getFile()
-							+ Constants.FILE_SEPERATOR
-							+ Constants.DRIVER_SETTING_XML_FILE);
+					File configFile = new File(fileLocation.getFile() + Constants.FILE_SEPERATOR + Constants.DRIVER_SETTING_XML_FILE);
 					if (!configFile.exists()) {
-						throw new Exception(
-								Message.properties_jdbc_configuration_notfound);
+						throw new Exception(Message.properties_jdbc_configuration_notfound);
 					}
-					copyFile(configFile.getAbsolutePath(),
-							PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
+					copyFile(configFile.getAbsolutePath(), PropertiesSettingUtil.getJdbcdriversFile(project.getLocation().toOSString()));
 				} else {
 					ZipFile zipFile = new ZipFile(jarFile);
-					ZipEntry zipEntry = zipFile
-							.getEntry(Constants.DRIVER_SETTING_XML_FILE);
+					ZipEntry zipEntry = zipFile.getEntry(Constants.DRIVER_SETTING_XML_FILE);
 
 					InputStream inputStream = zipFile.getInputStream(zipEntry);
 
@@ -281,16 +265,13 @@ public class DataBasesPropertyPage extends PropertyPage {
 				}
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (Exception e) {
-				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, NLS.bind(
-						Message.properties_jdbc_configuration_copy_fail,
-						e.getMessage()));
+				PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, NLS.bind(Message.properties_jdbc_configuration_copy_fail, e.getMessage()));
 			}
 
 		}
 
 		List<JdbcOption> jdbcOptionList = new ArrayList();
-		List<JdbcOption> result = DatabasesSettingUtil
-				.getDatasourcesByProject(project);
+		List<JdbcOption> result = DatabasesSettingUtil.getDatasourcesByProject(project);
 		jdbcOptionList.addAll(result);
 		viewer.setInput(jdbcOptionList);
 		viewer.refresh();
@@ -301,17 +282,14 @@ public class DataBasesPropertyPage extends PropertyPage {
 			InputStream fis = new FileInputStream(input);
 			copyFile(fis, dest);
 		} catch (Exception e) {
-			PluginLoggerUtil.info(
-					CommonActivator.PLUGIN_ID,
-					NLS.bind(Message.properties_jdbc_configuration_copy_fail,
-							e.getMessage()));
+			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, NLS.bind(Message.properties_jdbc_configuration_copy_fail, e.getMessage()));
 		}
 	}
 
 	private void copyFile(InputStream input, String dest) {
 		try {
 			File file = new File(dest);
-			if(!file.exists()){
+			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 			}
 			FileOutputStream fos = new FileOutputStream(dest);
@@ -323,10 +301,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 			input.close();
 			fos.close();
 		} catch (Exception e) {
-			PluginLoggerUtil.info(
-					CommonActivator.PLUGIN_ID,
-					NLS.bind(Message.properties_jdbc_configuration_copy_fail,
-							e.getMessage()));
+			PluginLoggerUtil.info(CommonActivator.PLUGIN_ID, NLS.bind(Message.properties_jdbc_configuration_copy_fail, e.getMessage()));
 		}
 	}
 
@@ -349,21 +324,18 @@ public class DataBasesPropertyPage extends PropertyPage {
 		connectionInfoGroup.setLayoutData(data);
 
 		viewer = new TableViewer(connectionInfoGroup, SWT.BORDER | SWT.SINGLE);
-		viewer.getTable().setLayoutData(
-				new GridData(GridData.FILL, GridData.FILL, true, true, 1, 10));
+		viewer.getTable().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 10));
 		// viewer.getTable().setHeaderVisible(true);
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.None);
-		column.getColumn()
-				.setText(Message.properties_database_datasource_title);
+		column.getColumn().setText(Message.properties_database_datasource_title);
 		column.getColumn().setWidth(400);
 
 		viewer.setLabelProvider(new TableViewLabelProvider() {
 
 			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
-				return ImageUtil.getImage(CommonActivator.PLUGIN_ID,
-						"icons/ball_blue.gif");
+				return ImageUtil.getImage(CommonActivator.PLUGIN_ID, "icons/ball_blue.gif");
 				// return afImageCache.getImage(dbImg);
 			}
 
@@ -371,11 +343,10 @@ public class DataBasesPropertyPage extends PropertyPage {
 			public String getColumnText(Object element, int columnIndex) {
 				JdbcOption jdbcOption = (JdbcOption) element;
 				String append = "";
-				if (jdbcOption.isDefault()) {
+				if (jdbcOption.getDefault()) {
 					append = Constants.DB_SETTING_DEFAULT_POSTFIX;
 				}
-				return jdbcOption.getDbName() + " ("
-						+ (jdbcOption.getUrl() + ")" + append);
+				return jdbcOption.getDbName() + " (" + (jdbcOption.getUrl() + ")" + append);
 			}
 		});
 		viewer.setContentProvider(new TableViewContentProvider() {
@@ -420,8 +391,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 		compositeButtonArea.setLayout(new GridLayout());
 		compositeButtonArea.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
-		Button addButton = ButtonUtil.createButton(compositeButtonArea,
-				Message.ide_button_add, "");
+		Button addButton = ButtonUtil.createButton(compositeButtonArea, Message.ide_button_add, "");
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionevent) {
@@ -430,8 +400,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 			}
 		});
 
-		editButton = ButtonUtil.createButton(compositeButtonArea,
-				Message.ide_button_edit, "");
+		editButton = ButtonUtil.createButton(compositeButtonArea, Message.ide_button_edit, "");
 		editButton.setEnabled(false);
 		editButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -441,8 +410,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 			}
 		});
 
-		deleteButton = ButtonUtil.createButton(compositeButtonArea,
-				Message.ide_button_remove, "");
+		deleteButton = ButtonUtil.createButton(compositeButtonArea, Message.ide_button_remove, "");
 		deleteButton.setEnabled(false);
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -452,22 +420,25 @@ public class DataBasesPropertyPage extends PropertyPage {
 			}
 		});
 
-		String projectLocation = ((IProject) getElement().getAdapter(
-				IProject.class)).getLocation().toOSString();
-		String metaFile = projectLocation + Constants.METAINF
-				+ Constants.METADATA_FILE;
-		File f = new File(metaFile);
-		if (f.exists()) {
-			defaultButton = ButtonUtil.createButton(compositeButtonArea,
-					Message.ide_button_setdefault, "");
-			defaultButton.setEnabled(false);
-			defaultButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent selectionevent) {
-					defaultAction.run();
-					super.widgetSelected(selectionevent);
-				}
-			});
+		defaultButton = ButtonUtil.createButton(compositeButtonArea, Message.ide_button_setdefault, "");
+
+		String projectLocation = ((IProject) getElement().getAdapter(IProject.class)).getLocation().toOSString();
+
+		try {
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+			File f = new File(configFile);
+			if (f.exists()) {
+				defaultButton.setEnabled(false);
+				defaultButton.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent selectionevent) {
+						defaultAction.run();
+						super.widgetSelected(selectionevent);
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -477,38 +448,28 @@ public class DataBasesPropertyPage extends PropertyPage {
 		if (!isModifyListConfig) {
 			return super.performOk();
 		}
-		if (!MessageDialogUtil.confirmMessageDialog(Message.ide_message_title,
-				Message.properties_confirm_jdbcconf))
+		if (!MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, Message.properties_confirm_jdbcconf))
 			return false;
 
 		if (isDuplicatedDsNames(settings)) {
 			return false;
 		}
-		for (JdbcOption jdbcOption : settings) {
-			if (jdbcOption.isDefault()) {
-				if (dbSettingDialog != null) {
-					if (DatabasesSettingUtil.validateData(
-							(IProject) getElement().getAdapter(IProject.class),
-							jdbcOption)) {
-						IProject project = (IProject) getElement().getAdapter(
-								IProject.class);
-						dbSettingDialog.saveSettings(project, jdbcOption,
-								isChangedDBConfig);
-					} else {
-						return false;
+
+		if (saveSettings(settings)) {
+			IProject project = (IProject) getElement().getAdapter(IProject.class);
+
+			for (JdbcOption jdbcOption : settings) {
+				if (jdbcOption.getDefault()) {
+					if (dbSettingDialog != null && isChangedDBConfig) {
+						dbSettingDialog.changeDb(project, jdbcOption);
+						break;
 					}
 				}
-				break;
 			}
-		}
-		if (saveSettings(settings)) {
-			IProject project = (IProject) getElement().getAdapter(
-					IProject.class);
 			ProjectUtil.refreshProject(project.getName());
 			return super.performOk();
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	private boolean saveSettings(List<JdbcOption> settings) {
@@ -528,10 +489,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 		for (JdbcOption jdbcOption : settings) {
 			String dsName = jdbcOption.getDbName();
 			if (foundDsNames.contains(dsName)) {
-				MessageUtil.showMessage(
-						NLS.bind(
-								Message.properties_validation_dbname_duplicate,
-								dsName), PROGRAM_NAME);
+				MessageUtil.showMessage(NLS.bind(Message.properties_validation_dbname_duplicate, dsName), PROGRAM_NAME);
 				return true;
 			} else {
 				foundDsNames.add(dsName);

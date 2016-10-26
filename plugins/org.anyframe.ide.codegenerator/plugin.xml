@@ -89,15 +89,4 @@
 	        name="%Views_Menu_Plugin">
 	  </view>
 	 </extension>
-  <extension
-        point="org.eclipse.ui.propertyPages">
-     <page
-           adaptable="true"
-           category="org.anyframe.ide.common.properties.anyframe"
-           class="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
-           id="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
-           name="%PropertyPage_Menu_CodeGen"
-           objectClass="org.eclipse.core.resources.IProject">
-     </page>
-  </extension>  
 </plugin>

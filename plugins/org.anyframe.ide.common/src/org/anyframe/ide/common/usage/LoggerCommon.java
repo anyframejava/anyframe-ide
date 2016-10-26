@@ -2,6 +2,8 @@ package org.anyframe.ide.common.usage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.anyframe.ide.common.CommonActivator;
+import org.anyframe.util.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -51,20 +54,27 @@ public class LoggerCommon {
 		Iterator<File> iter = files.iterator();
 		List<Integer> fileIndexes = new ArrayList<Integer>();
 		
+		String hostAddress = "";
+		try {
+			hostAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
 		while(iter.hasNext()){
 			File file = iter.next();
-			String num = file.getName().replaceAll(pluginId, "").replaceAll("-", "").replaceAll(".log", "");
+			String num = file.getName().replaceAll(pluginId, "").replaceAll(hostAddress, "").replaceAll("-", "").replaceAll(".log", "");
 			
-			fileIndexes.add(num.isEmpty() ? 0 : Integer.parseInt(num));
+			fileIndexes.add(StringUtil.isEmpty(num) ? 0 : Integer.parseInt(num));
 		}
 		
 		if(fileIndexes.isEmpty()){
-			return pluginId + "-1.log";
+			return pluginId + "-" + hostAddress + "-" + 1 + ".log";
 		}
 		
 		Integer max = Collections.max(fileIndexes, null);
 		
-		return pluginId + "-" + (max+1) + ".log";
+		return pluginId + "-" + hostAddress + "-" + (max+1) + ".log";
 		
 	}
 

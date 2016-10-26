@@ -45,7 +45,7 @@ public class CreatePJTVO extends CommandVO {
 	private String databaseServer = "";
 
 	private String databasePort = "";
-	
+
 	private String databaseUrl = "";
 
 	private String databaseDialect = "";
@@ -63,6 +63,8 @@ public class CreatePJTVO extends CommandVO {
 	private String inspectionHome = "";
 
 	private boolean isOffline = false;
+
+	private String pluginName = "";
 
 	public boolean isOffline() {
 		return isOffline;
@@ -111,7 +113,7 @@ public class CreatePJTVO extends CommandVO {
 	public void setDatabasePort(String databasePort) {
 		this.databasePort = databasePort;
 	}
-	
+
 	public String getDatabaseUrl() {
 		return databaseUrl;
 	}
@@ -232,6 +234,14 @@ public class CreatePJTVO extends CommandVO {
 
 	public void setProjectVersion(String projectVersion) {
 		this.projectVersion = projectVersion;
+	}
+
+	public String getPluginName() {
+		return pluginName;
+	}
+
+	public void setPluginName(String pluginName) {
+		this.pluginName = pluginName;
 	}
 
 }

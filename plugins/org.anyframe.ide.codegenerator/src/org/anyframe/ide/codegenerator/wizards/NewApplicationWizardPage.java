@@ -15,16 +15,19 @@
  */
 package org.anyframe.ide.codegenerator.wizards;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
-import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.messages.Message;
+import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.util.PluginUtil;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.StringUtil;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -36,6 +39,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
@@ -73,11 +77,11 @@ public class NewApplicationWizardPage extends WizardPage {
 	private boolean isAntProject;
 	private String anyframeHome;
 
-	private Set<String> pluginNameList;
-
 	private Button templateHome;
 	private Text templateHomeText;
 	private Button browseTemplateHomeLoc;
+
+	private Combo pluginCombo;
 
 	protected NewApplicationWizardPage(String pageName) {
 		super(pageName);
@@ -88,11 +92,10 @@ public class NewApplicationWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
-		buildType = (store.getString(IdePreferencesPage.BUILD_TYPE).equals("") ? IdePreferencesPage.ANT_BUILD_TYPE
-				: store.getString(IdePreferencesPage.BUILD_TYPE)).toLowerCase();
+		buildType = (store.getString(IdePreferencesPage.BUILD_TYPE).equals("") ? IdePreferencesPage.ANT_BUILD_TYPE : store
+				.getString(IdePreferencesPage.BUILD_TYPE)).toLowerCase();
 
-		isAntProject = buildType.equals(CommonConstants.PROJECT_BUILD_TYPE_ANT) ? true
-				: false;
+		isAntProject = buildType.equals(CommonConstants.PROJECT_BUILD_TYPE_ANT) ? true : false;
 
 		if (isAntProject) {
 			anyframeHome = store.getString(IdePreferencesPage.ANYFRAME_HOME);
@@ -112,6 +115,9 @@ public class NewApplicationWizardPage extends WizardPage {
 		} else {
 			createPjtArtifactGroup(composite);
 		}
+
+		// add install plugin 6/26 by junghwan.hong
+		createInstallPlugin(composite);
 
 		setPageComplete(false);
 		setErrorMessage(null);
@@ -148,8 +154,7 @@ public class NewApplicationWizardPage extends WizardPage {
 		if (isAntProject) {
 			locText.setText(anyframeHome + ProjectUtil.SLASH + "applications");
 		} else {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			locText.setText(workspaceRoot.getLocation().toOSString());
 		}
 
@@ -188,8 +193,7 @@ public class NewApplicationWizardPage extends WizardPage {
 		});
 
 		// Template home location
-		new Label(group, SWT.NONE)
-				.setText(Message.wizard_templatehome_location);
+		new Label(group, SWT.NONE).setText(Message.wizard_templatehome_location);
 		templateHomeText = new Text(group, SWT.BORDER);
 		templateHomeText.addListener(SWT.Modify, textModifyListener);
 		GridData templateHomegridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -209,8 +213,7 @@ public class NewApplicationWizardPage extends WizardPage {
 		browseTemplateHomeLoc.setEnabled(false);
 
 		// Package
-		new Label(group, SWT.NONE)
-				.setText(Message.wizard_application_packagename);
+		new Label(group, SWT.NONE).setText(Message.wizard_application_packagename);
 		packageNameText = new Text(group, SWT.BORDER);
 		packageNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		packageNameText.addListener(SWT.KeyDown, packageModifyListener);
@@ -244,6 +247,38 @@ public class NewApplicationWizardPage extends WizardPage {
 		pjtVersionText.setText(Message.wizard_maven_version_default);
 		pjtVersionText.addListener(SWT.Modify, textModifyListener);
 
+	}
+
+	private void createInstallPlugin(Composite parent) {
+		// Install plugin Group
+		Group group = new Group(parent, SWT.SHADOW_NONE);
+
+		group.setText(Message.wizard_plugin_group);
+		group.setLayout(new GridLayout(2, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		new Label(group, SWT.NONE).setText(Message.wizard_plugin_name);
+
+		pluginCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+		pluginCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		pluginCombo.addListener(SWT.DROP_DOWN, new Listener() {
+			public void handleEvent(Event e) {
+				setPluginNames();
+				pluginCombo.select(0);
+			}
+		});
+		
+		pluginCombo.select(0);
+		
+		pluginCombo.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent arg0) {
+				setPageComplete(isPageComplete());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 	}
 
 	private Listener textModifyListener = new Listener() {
@@ -286,8 +321,7 @@ public class NewApplicationWizardPage extends WizardPage {
 	}
 
 	private void handleDirBrowseTemplateHomeLocation() {
-		DirectoryDialog dialog = new DirectoryDialog(
-				templateHomeText.getShell());
+		DirectoryDialog dialog = new DirectoryDialog(templateHomeText.getShell());
 
 		String selected = dialog.open();
 		if (selected != null) {
@@ -298,10 +332,19 @@ public class NewApplicationWizardPage extends WizardPage {
 		setPageComplete(isPageComplete());
 	}
 
-	private void getPluginNameListForValidation() {
+	private void setPluginNames() {
 		try {
-			pluginNameList = PluginUtil.getPluginNameSet(this.buildType,
-					anyframeHome, isOfflineChecked());
+			pluginCombo.removeAll();
+			
+			Set<String> pluginNameList = PluginUtil.getPluginNameSet(this.buildType, anyframeHome, isOfflineChecked());
+
+			List<String> comboNames = Arrays.asList(Constants.TEMPLATE_TYPE_CORE, Constants.TEMPLATE_TYPE_QUERY, Constants.TEMPLATE_TYPE_ONLINE);
+			
+			for(String comboName : comboNames){
+				if(pluginNameList.contains(comboName)){
+					pluginCombo.add(comboName);
+				}
+			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_getpluginlist, e);
 		}
@@ -335,6 +378,10 @@ public class NewApplicationWizardPage extends WizardPage {
 		return pjtVersionText.getText();
 	}
 
+	public String getPluginName() {
+		return pluginCombo.getText();
+	}
+
 	public boolean isAntProject() {
 		return isAntProject;
 	}
@@ -348,8 +395,7 @@ public class NewApplicationWizardPage extends WizardPage {
 	}
 
 	public boolean isOfflineChecked() {
-		IPreferenceStore store = CodeGeneratorActivator.getDefault()
-				.getPreferenceStore();
+		IPreferenceStore store = CodeGeneratorActivator.getDefault().getPreferenceStore();
 		return store.getBoolean(IdePreferencesPage.OFFLINE_MODE);
 	}
 
@@ -367,14 +413,12 @@ public class NewApplicationWizardPage extends WizardPage {
 		if (getLocation() == null || getLocation().length() == 0) {
 			setErrorMessage(Message.wizard_application_error_apploc);
 			return false;
-		} else if (!ProjectUtil.existPath(getLocation())
-				|| !ProjectUtil.validatePath(getLocation())) {
+		} else if (!ProjectUtil.existPath(getLocation()) || !ProjectUtil.validatePath(getLocation())) {
 			setErrorMessage(Message.wizard_application_validation_apploc);
 			return false;
 		}
 
-		if (ProjectUtil.existPath(getLocation() + ProjectUtil.SLASH
-				+ getPjtName())) {
+		if (ProjectUtil.existPath(getLocation() + ProjectUtil.SLASH + getPjtName())) {
 			setErrorMessage(Message.wizard_application_validation_duplicatedpjtname);
 			return false;
 		}
@@ -387,12 +431,14 @@ public class NewApplicationWizardPage extends WizardPage {
 			return false;
 		}
 
+		if (StringUtil.isEmptyOrNull(getPluginName())){
+			setErrorMessage(Message.wizard_application_validation_pi);
+			return false;
+		}
+		
 		if (!isAntProject) {
-			if (!templateHome.getSelection()
-					&& !getTemplateHomeLocation().equals(
-							Constants.DFAULT_TEMPLATE_HOME)) {
-				if (getTemplateHomeLocation() == null
-						|| getTemplateHomeLocation().length() == 0) {
+			if (!templateHome.getSelection() && !getTemplateHomeLocation().equals(Constants.DFAULT_TEMPLATE_HOME)) {
+				if (getTemplateHomeLocation() == null || getTemplateHomeLocation().length() == 0) {
 					setErrorMessage(Message.wizard_application_error_templatehome);
 					return false;
 				} else if (!ProjectUtil.validatePath(getTemplateHomeLocation())) {
@@ -428,12 +474,20 @@ public class NewApplicationWizardPage extends WizardPage {
 		return true;
 	}
 
+	@Override
 	public boolean canFlipToNextPage() {
-		boolean isNext = super.canFlipToNextPage();
-
-		if (isNext)
+		
+		if (StringUtil.isEmptyOrNull(getPluginName())){
+			return false;
+		}else{
 			return true;
-		return false;
+		}
+		
+//		boolean isNext = super.canFlipToNextPage();
+//
+//		if (isNext)
+//			return true;
+//		return false;
 	}
 
 }

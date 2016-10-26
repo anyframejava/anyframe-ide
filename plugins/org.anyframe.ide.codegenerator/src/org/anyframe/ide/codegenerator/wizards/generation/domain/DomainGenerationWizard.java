@@ -21,13 +21,14 @@ import java.sql.SQLException;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.CommandExecution;
 import org.anyframe.ide.codegenerator.messages.Message;
-import org.anyframe.ide.codegenerator.util.ProjectUtil;
-import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.command.maven.mojo.codegen.SourceCodeChecker;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.EDPUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -53,7 +54,7 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 	public static final String ID = CodeGeneratorActivator.PLUGIN_ID;
 
 	private IProject project;
-	private PropertiesIO pjtProps = null;
+	private ProjectConfig projectConfig = null;
 	private IStructuredSelection selection;
 
 	private DomainGenerationWizardPage domainGenPage;
@@ -68,24 +69,21 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 		project = getProject();
 
 		try {
-			pjtProps = ProjectUtil.getProjectProperties(project);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 		} catch (Exception e) {
 			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 	}
 
 	public void addPages() {
-		domainGenPage = new DomainGenerationWizardPage(project,
-				Message.wizard_generation_domain_title);
+		domainGenPage = new DomainGenerationWizardPage(project, Message.wizard_generation_domain_title);
 		addPage(domainGenPage);
 	}
 
 	public IWizardPage getStartingPage() {
 		if (selection.isEmpty() || project == null) {
-			MessageDialogUtil
-					.openMessageDialog(Message.ide_message_title,
-							Message.wizard_error_load_properties,
-							MessageDialog.WARNING);
+			MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.wizard_error_load_properties, MessageDialog.WARNING);
 
 			return null;
 		}
@@ -95,10 +93,11 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
+		new UsageCheckAdapter(EventSourceID.CD_GENERATE_DOMAIN);
+		
 		commandExecution = new CommandExecution();
 
-		DomainGenerationWizardPage page = (DomainGenerationWizardPage) this
-				.getPage(Message.wizard_generation_domain_title);
+		DomainGenerationWizardPage page = (DomainGenerationWizardPage) this.getPage(Message.wizard_generation_domain_title);
 		String domainGen_basePackage = page.getPackageText().getText();
 		String domainGen_tablesWithComma = page.getTableNamesWithComma();
 
@@ -106,71 +105,52 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 			return false;
 		}
 
-		if (MessageDialogUtil.confirmMessageDialog(Message.ide_message_title,
-				Message.wizard_generation_domain_confirm)) {
-			generateDomainClasses(domainGen_basePackage,
-					domainGen_tablesWithComma);
+		if (MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, Message.wizard_generation_domain_confirm)) {
+			generateDomainClasses(domainGen_basePackage, domainGen_tablesWithComma);
 			return true;
 		}
 
 		return false;
 	}
 
-	private void generateDomainClasses(String domainGen_basePackage,
-			String domainGen_tablesWithComma) {
+	private void generateDomainClasses(String domainGen_basePackage, String domainGen_tablesWithComma) {
 		Connection conn = null;
 		try {
-			conn = EDPUtil.getConnection(project,
-					pjtProps.readValue(CommonConstants.DB_NAME));
+			conn = EDPUtil.getConnection(project, ConfigXmlUtil.getDefaultDatabase(project.getLocation().toOSString()).getDbName());
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_getconnection, e);
 		} finally {
 			try {
 				EDPUtil.close(conn);
 			} catch (SQLException e) {
-				PluginLoggerUtil.error(ID,
-						Message.view_exception_closeconnection, e);
+				PluginLoggerUtil.error(ID, Message.view_exception_closeconnection, e);
 			}
 		}
 
 		if (!domainGen_tablesWithComma.equals("")) {
 			if (conn == null) {
-				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						Message.wizard_error_checkdb, MessageDialog.WARNING);
+				MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.wizard_error_checkdb, MessageDialog.WARNING);
 			} else {
 				try {
 					SourceCodeChecker sourceCodeChecker = new SourceCodeChecker();
 
-					String errorMessage = sourceCodeChecker.checkExistingModel(
-							false, null, pjtProps,
-							pjtProps.readValue(CommonConstants.PROJECT_HOME),
+					String errorMessage = sourceCodeChecker.checkExistingModel(false, null, convertProjectConfigForCmd(projectConfig), projectConfig.getPjtHome(),
 							domainGen_basePackage, domainGen_tablesWithComma);
 
 					if (errorMessage != null) {
-						if (!MessageDialogUtil
-								.confirmMessageDialog(
-										Message.ide_message_title,
-										errorMessage
-												+ "\n"
-												+ Message.wizard_confirm_domain_overwrite))
+						if (!MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, errorMessage + "\n"
+								+ Message.wizard_confirm_domain_overwrite))
 							return;
 					}
 				} catch (Exception e) {
-					PluginLoggerUtil.error(ID,
-							Message.view_exception_domain_checkoverwrite, e);
+					PluginLoggerUtil.error(ID, Message.view_exception_domain_checkoverwrite, e);
 				}
 
 				try {
-					commandExecution.createModel(domainGen_tablesWithComma,
-							domainGen_basePackage, project.getLocation()
-									.toOSString());
+					commandExecution.createModel(domainGen_tablesWithComma, domainGen_basePackage, project.getLocation().toOSString());
 				} catch (Exception e) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.wizard_error_createmodel,
-							MessageDialog.ERROR);
-					PluginLoggerUtil.error(ID,
-							Message.wizard_error_createmodel, e);
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.wizard_error_createmodel, MessageDialog.ERROR);
+					PluginLoggerUtil.error(ID, Message.wizard_error_createmodel, e);
 				}
 			}
 		}
@@ -201,6 +181,22 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 			return ((IPackageFragment) obj).getJavaProject().getProject();
 		}
 		return null;
+	}
+	
+	private org.anyframe.ide.command.common.util.ProjectConfig convertProjectConfigForCmd(ProjectConfig projectConfig){
+		org.anyframe.ide.command.common.util.ProjectConfig result = new org.anyframe.ide.command.common.util.ProjectConfig();
+		
+		result.setAnyframeHome(projectConfig.getAnyframeHome());
+		result.setContextRoot(projectConfig.getContextRoot());
+		result.setDatabasesPath(projectConfig.getDatabasesPath());
+		result.setJdbcdriverPath(projectConfig.getJdbcdriverPath());
+		result.setOffline(projectConfig.getOffline());
+		result.setPackageName(projectConfig.getPackageName());
+		result.setPjtHome(projectConfig.getPjtHome());
+		result.setPjtName(projectConfig.getPjtName());
+		result.setTemplateHomePath(projectConfig.getTemplateHomePath());
+		
+		return result;
 	}
 
 }

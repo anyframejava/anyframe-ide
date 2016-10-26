@@ -26,9 +26,11 @@ import org.anyframe.ide.command.common.DefaultPluginInstaller;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.TargetPluginInfo;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.artifact.manager.WagonManager;
+import org.apache.maven.settings.Proxy;
 
 /**
  * This is an PluginUtil class.
@@ -63,8 +65,9 @@ public class PluginUtil {
 			
 			return antCollector.getPlugins(baseDir);
 		} else {
+			Proxy proxy = ProxyUtil.getProxy(); 
 			mavenCollector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					baseDir);
+					baseDir, proxy);
 
 			return mavenCollector.getPlugins(baseDir);
 		}
@@ -85,8 +88,9 @@ public class PluginUtil {
 			
 			return antCollector.getLatestArchetypeVersion(archetypeArtifactId);
 		} else {
+			Proxy proxy = ProxyUtil.getProxy(); 
 			mavenCollector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					null);
+					null, proxy);
 
 			return mavenCollector
 					.getLatestArchetypeVersion(archetypeArtifactId);
@@ -109,8 +113,9 @@ public class PluginUtil {
 			return antCollector.getArchetypeVersions(groupId,
 					archetypeArtifactId);
 		} else {
+			Proxy proxy = ProxyUtil.getProxy(); 
 			mavenCollector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					null);
+					null, proxy);
 
 			return mavenCollector.getArchetypeVersions(groupId,
 					archetypeArtifactId);
@@ -136,9 +141,9 @@ public class PluginUtil {
 					.lookup(WagonManager.class.getName());
 			
 		} else {
-
+			Proxy proxy = ProxyUtil.getProxy(); 
 			mavenCollector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					baseDir);
+					baseDir, proxy);
 
 			org.anyframe.ide.command.maven.mojo.container.PluginContainer container = mavenCollector
 					.getContainer();
@@ -169,9 +174,9 @@ public class PluginUtil {
 					.lookup(WagonManager.class.getName());
 			return antCollector.getInstalledPlugins(baseDir);
 		} else {
-
+			Proxy proxy = ProxyUtil.getProxy(); 
 			mavenCollector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					baseDir);
+					baseDir, proxy);
 
 			return mavenCollector.getInstalledPlugins(baseDir);
 		}
@@ -184,20 +189,17 @@ public class PluginUtil {
 					anyframeHome, null, isOffline);
 			return collector.getPluginNames();
 		} else {
+			Proxy proxy = ProxyUtil.getProxy(); 
 			org.anyframe.ide.command.maven.mojo.collector.PluginCollector collector = new org.anyframe.ide.command.maven.mojo.collector.PluginCollector(
-					null);
+					null, proxy);
 			return collector.getPluginNames();
 		}
 	}
 
 	private static boolean isOffline(String baseDir) throws Exception {
 		// get offline option
-		String properties = baseDir + CommonConstants.METAINF
-				+ CommonConstants.METADATA_FILE;
-		PropertiesIO appProps = new PropertiesIO(properties);
-		boolean offlineValue = new Boolean(
-				appProps.readValue(CommonConstants.OFFLINE)).booleanValue();
-
-		return offlineValue;
+		String configFile = ConfigXmlUtil.getCommonConfigFile(baseDir);
+		ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+		return Boolean.valueOf(projectConfig.getOffline());
 	}
 }

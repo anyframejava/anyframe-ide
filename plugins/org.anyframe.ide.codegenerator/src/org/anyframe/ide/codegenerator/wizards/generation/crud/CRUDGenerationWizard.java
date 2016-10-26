@@ -18,13 +18,15 @@ package org.anyframe.ide.codegenerator.wizards.generation.crud;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.CommandExecution;
 import org.anyframe.ide.codegenerator.messages.Message;
-import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.command.maven.mojo.codegen.SourceCodeChecker;
 import org.anyframe.ide.common.Constants;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -50,7 +52,7 @@ public class CRUDGenerationWizard extends Wizard implements INewWizard {
 	public static final String ID = CodeGeneratorActivator.PLUGIN_ID;
 
 	private IProject project;
-	private PropertiesIO pjtProps = null;
+	private ProjectConfig projectConfig = null;
 	private IStructuredSelection selection;
 
 	private CRUDGenerationWizardPage crudGenPage;
@@ -65,38 +67,23 @@ public class CRUDGenerationWizard extends Wizard implements INewWizard {
 		project = getProject();
 
 		try {
-			pjtProps = ProjectUtil.getProjectProperties(project);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 		} catch (Exception e) {
 			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 	}
 
 	public void addPages() {
-		crudGenPage = new CRUDGenerationWizardPage(project,
-				Message.wizard_generation_crud_title);
+		crudGenPage = new CRUDGenerationWizardPage(project, Message.wizard_generation_crud_title);
 		addPage(crudGenPage);
 	}
 
 	public IWizardPage getStartingPage() {
 		if (selection.isEmpty() || project == null) {
-			MessageDialogUtil
-					.openMessageDialog(Message.ide_message_title,
-							Message.wizard_error_load_properties,
-							MessageDialog.WARNING);
+			MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.wizard_error_load_properties, MessageDialog.WARNING);
 
 			return null;
-		}
-
-		try {
-			if (Constants.TEMPLATE_TYPE_ONLINE.equals(pjtProps.getProperties().get(
-					Constants.APP_TEMPLATE_TYPE))) {
-				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						Message.wizard_crud_gen_template_valid_error,
-						MessageDialog.ERROR);
-				return null;
-			}
-		} catch (Exception e) {
-			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 
 		return (IWizardPage) this.getPages()[0];
@@ -104,55 +91,43 @@ public class CRUDGenerationWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
+		new UsageCheckAdapter(EventSourceID.CD_GENERATE_CRUD);
+		
 		commandExecution = new CommandExecution();
 
 		return generateCRUDCodes();
 	}
-
+	
 	private boolean generateCRUDCodes() {
 
-		CRUDGenerationWizardPage page = (CRUDGenerationWizardPage) this
-				.getPage(Message.wizard_generation_crud_title);
+		CRUDGenerationWizardPage page = (CRUDGenerationWizardPage) this.getPage(Message.wizard_generation_crud_title);
 		String selectedDomain = page.getSelectedDomain();
 		String selectedPackage = page.getPackage();
+		String selectedTemplateType = page.getTemplateType();
 
 		if (selectedDomain == null || "".equals(selectedDomain)) {
 			return false;
 		}
 
-		if (MessageDialogUtil.confirmMessageDialog(Message.ide_message_title,
-				Message.wizard_generation_crud_confirm)) {
+		if (MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, Message.wizard_generation_crud_confirm)) {
 
 			SourceCodeChecker sourceCodeChecker = new SourceCodeChecker();
 
-			String projectHome = pjtProps
-					.readValue(CommonConstants.PROJECT_HOME);
-			String templateType = pjtProps
-					.readValue(CommonConstants.APP_TEMPLATE_TYPE);
-			String basePackage = pjtProps
-					.readValue(CommonConstants.PACKAGE_NAME);
-			String daoframework = pjtProps
-					.readValue(CommonConstants.APP_DAOFRAMEWORK_TYPE);
-			String templateHome = pjtProps
-					.readValue(CommonConstants.PROJECT_TEMPLATE_HOME);
-			String scope = page.getGenWebSource() ? "all"
-					: CommonConstants.PROJECT_TYPE_SERVICE;
+			String projectHome = projectConfig.getPjtHome();
+			String basePackage = projectConfig.getPackageName();
+			String templateHome = projectConfig.getTemplatePath(Constants.PROJECT_NAME_CODE_GENERATOR);
+			String scope = page.getGenWebSource() ? "all" : CommonConstants.PROJECT_TYPE_SERVICE;
 
-			String domainName = selectedDomain.substring(selectedDomain
-					.lastIndexOf(".") + 1);
+			String domainName = selectedDomain.substring(selectedDomain.lastIndexOf(".") + 1);
 
 			boolean isContinue = true;
 
 			try {
-				String errorMessage = sourceCodeChecker.checkExistingCrud(
-						false, null, templateType, templateHome, projectHome,
-						basePackage, selectedPackage, domainName, scope,
-						daoframework);
+				String errorMessage = sourceCodeChecker.checkExistingCrud(false, null, selectedTemplateType, templateHome, projectHome, basePackage,
+						selectedPackage, domainName, scope);
 				// If existing file has found.
 				if (errorMessage != null) {
-					if (MessageDialogUtil.confirmMessageDialog(
-							Message.ide_message_title, errorMessage + "\n"
-									+ Message.wizard_confirm_overwrite)) {
+					if (MessageDialogUtil.confirmMessageDialog(Message.ide_message_title, errorMessage + "\n" + Message.wizard_confirm_overwrite)) {
 						isContinue = true;
 					} else {
 						isContinue = false;
@@ -161,23 +136,16 @@ public class CRUDGenerationWizard extends Wizard implements INewWizard {
 					isContinue = true;
 				}
 			} catch (Exception e) {
-				PluginLoggerUtil.error(ID,
-						Message.view_exception_checkoverwrite, e);
+				PluginLoggerUtil.error(ID, Message.view_exception_checkoverwrite, e);
 			}
 
 			if (isContinue) {
 				try {
-					commandExecution.createCRUD(selectedDomain,
-							selectedPackage, project.getName(),
-							page.getGenWebSource(), page.getSampleData(),
+					commandExecution.createCRUD(selectedDomain, selectedPackage, project.getName(), selectedTemplateType, page.getGenWebSource(), page.getSampleData(),
 							project.getLocation().toOSString());
 				} catch (Exception e) {
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.wizard_codegen_createcode,
-							MessageDialog.ERROR);
-					PluginLoggerUtil.error(ID,
-							Message.wizard_codegen_createcode, e);
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.wizard_codegen_createcode, MessageDialog.ERROR);
+					PluginLoggerUtil.error(ID, Message.wizard_codegen_createcode, e);
 				}
 				return true;
 			} else {

@@ -17,8 +17,8 @@ package org.anyframe.ide.codegenerator.popups;
 
 import java.util.List;
 
-import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.messages.Message;
+import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.common.util.ButtonUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;

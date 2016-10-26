@@ -113,50 +113,28 @@ public class ProjectUtil {
 		return project;
 	}
 
-	//	public static void enableNature(String projectName) {
-//		try {
-//			IProject project = findProject(projectName);
-//			MavenPlugin plugin = MavenPlugin.getDefault();
-//			IProgressMonitor monitor = new NullProgressMonitor();
-//
-//			ResolverConfiguration configuration = new ResolverConfiguration();
-//			// default : false
-//			// configuration.setIncludeModules(false);
-//			configuration.setActiveProfiles("");
-//
-//			IProjectConfigurationManager configurationManager = plugin
-//					.getProjectConfigurationManager();
-//			configurationManager.enableMavenNature(project, configuration,
-//					monitor);
-//
-//		} catch (CoreException ex) {
-//			PluginLoggerUtil.error(ID, ex.getMessage(), ex);
-//		}
-//	}
+	// public static void enableNature(String projectName) {
+	// try {
+	// IProject project = findProject(projectName);
+	// MavenPlugin plugin = MavenPlugin.getDefault();
+	// IProgressMonitor monitor = new NullProgressMonitor();
+	//
+	// ResolverConfiguration configuration = new ResolverConfiguration();
+	// // default : false
+	// // configuration.setIncludeModules(false);
+	// configuration.setActiveProfiles("");
+	//
+	// IProjectConfigurationManager configurationManager = plugin
+	// .getProjectConfigurationManager();
+	// configurationManager.enableMavenNature(project, configuration,
+	// monitor);
+	//
+	// } catch (CoreException ex) {
+	// PluginLoggerUtil.error(ID, ex.getMessage(), ex);
+	// }
+	// }
 
-	public static PropertiesIO getProjectProperties(IProject currentProject)
-			throws Exception {
-		// get application location
-		String projectLocation = currentProject.getLocation().toOSString();
-		return getProjectProperties(projectLocation);
-	}
-
-	public static PropertiesIO getProjectProperties(String projectLocation)
-			throws Exception {
-		PropertiesIO appProps = new PropertiesIO(projectLocation
-				+ CommonConstants.METAINF + CommonConstants.METADATA_FILE);
-		return appProps;
-	}
-
-	public static String getProjectLocation(String projectLocation)
-			throws Exception {
-		PropertiesIO appProps = getProjectProperties(projectLocation);
-
-		return appProps.readValue(CommonConstants.PROJECT_HOME);
-	}
-
-	public static List<String> getWizardProjectList(PropertiesIO appProps,
-			boolean isAll) throws Exception {
+	public static List<String> getWizardProjectList(PropertiesIO appProps, boolean isAll) throws Exception {
 		String projectName = appProps.readValue(CommonConstants.PROJECT_NAME);
 
 		List<String> modules = new ArrayList<String>();
@@ -182,13 +160,11 @@ public class ProjectUtil {
 		}
 	}
 
-	public static boolean importProject(final String path,
-			final String projectName) {
+	public static boolean importProject(final String path, final String projectName) {
 		File projectDir = new File(path + SLASH + projectName);
 		final ProjectRecord record = new ProjectRecord(projectDir, projectName);
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IPath locationPath = new Path(record.getProjectSystemFile()
-				.getAbsolutePath());
+		IPath locationPath = new Path(record.getProjectSystemFile().getAbsolutePath());
 		record.setDescription(workspace.newProjectDescription(projectName));
 		if (Platform.getLocation().isPrefixOf(locationPath)) {
 			record.getDescription().setLocation(null);
@@ -196,15 +172,13 @@ public class ProjectUtil {
 			record.getDescription().setLocation(locationPath);
 		}
 		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+			protected void execute(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					monitor.beginTask("CreateExistingProjectTask", 1);
 					if (monitor.isCanceled()) {
 						throw new OperationCanceledException();
 					}
-					createExistingProject(record, new SubProgressMonitor(
-							monitor, 1));
+					createExistingProject(record, new SubProgressMonitor(monitor, 1));
 					// createExistingProject(record);
 				} finally {
 					monitor.done();
@@ -224,8 +198,7 @@ public class ProjectUtil {
 		return true;
 	}
 
-	private static boolean createExistingProject(final ProjectRecord record,
-			IProgressMonitor monitor) throws InvocationTargetException,
+	private static boolean createExistingProject(final ProjectRecord record, IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
 		String projectName = record.getProjectName();
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -242,10 +215,8 @@ public class ProjectUtil {
 		record.getDescription().setName(projectName);
 		try {
 			monitor.beginTask("CreateProjectsTask", 100);
-			project.create(record.getDescription(), new SubProgressMonitor(
-					monitor, 30));
-			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(
-					monitor, 70));
+			project.create(record.getDescription(), new SubProgressMonitor(monitor, 30));
+			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 70));
 		} catch (CoreException e) {
 			PluginLoggerUtil.error(ID, Message.exception_log_openpjt, e);
 			throw new InvocationTargetException(e);
@@ -263,29 +234,23 @@ public class ProjectUtil {
 		try {
 			// batching changes ensures that autobuild
 			// runs after cleaning
-			PlatformUI.getWorkbench().getProgressService()
-					.busyCursorWhile(new WorkspaceModifyOperation() {
-						protected void execute(IProgressMonitor monitor)
-								throws CoreException {
-							if (cleanAll)
-								ResourcesPlugin.getWorkspace().build(
-										IncrementalProjectBuilder.CLEAN_BUILD,
-										monitor);
-						}
-					});
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new WorkspaceModifyOperation() {
+				protected void execute(IProgressMonitor monitor) throws CoreException {
+					if (cleanAll)
+						ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
+				}
+			});
 			// see if a build was requested
 			if (buildAll) {
 				// start an immediate workspace build
-				GlobalBuildAction build = new GlobalBuildAction(PlatformUI
-						.getWorkbench().getActiveWorkbenchWindow(),
+				GlobalBuildAction build = new GlobalBuildAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(),
 						IncrementalProjectBuilder.INCREMENTAL_BUILD);
 				build.run();
 			}
 		} catch (InvocationTargetException e) {
 			Throwable target = e.getTargetException();
 			if (target instanceof CoreException)
-				MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-						target.getMessage(), MessageDialog.ERROR);
+				MessageDialogUtil.openMessageDialog(Message.ide_message_title, target.getMessage(), MessageDialog.ERROR);
 
 			// message key is not exist
 			// ExceptionUtil.showException(Message.view_dialog_error_build,
@@ -298,22 +263,15 @@ public class ProjectUtil {
 	}
 
 	@SuppressWarnings({ "unchecked", "restriction" })
-	public static ILaunchConfiguration createDefaultLaunchConfiguration(
-			IPath filePath, Properties antProps, String target) {
+	public static ILaunchConfiguration createDefaultLaunchConfiguration(IPath filePath, Properties antProps, String target) {
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType type = manager
-				.getLaunchConfigurationType("org.eclipse.ant.AntLaunchConfigurationType");
+		ILaunchConfigurationType type = manager.getLaunchConfigurationType("org.eclipse.ant.AntLaunchConfigurationType");
 
-		String name = AntLaunchShortcut.getNewLaunchConfigurationName(filePath,
-				null, null);
+		String name = AntLaunchShortcut.getNewLaunchConfigurationName(filePath, null, null);
 		try {
-			ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(
-					null, name);
-			workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION,
-					filePath.toString());
-			workingCopy.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,
-					"org.eclipse.ant.ui.AntClasspathProvider");
+			ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(null, name);
+			workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, filePath.toString());
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider");
 			// // set log level
 			// IPreferenceStore store =
 			// AnyframeIDEPlugin.getDefault().getPreferenceStore();
@@ -337,22 +295,15 @@ public class ProjectUtil {
 			workingCopy.setMappedResources(new IResource[] { file });
 
 			// add attributes to workingCopy
-			workingCopy.setAttribute(
-					IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, false);
-			Map properties = workingCopy.getAttribute(
-					IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES,
-					new HashMap<Object, Object>());
+			workingCopy.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, false);
+			Map properties = workingCopy.getAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES, new HashMap<Object, Object>());
 			properties.putAll(antProps);
-			workingCopy.setAttribute(
-					IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES,
-					properties);
-			workingCopy.setAttribute(
-					IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS, target);
+			workingCopy.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES, properties);
+			workingCopy.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS, target);
 			return workingCopy.doSave();
 		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, MessageFormat.format(
-					AntLaunchConfigurationMessages.AntLaunchShortcut_2,
-					new Object[] { filePath.toString() }), e);
+			PluginLoggerUtil.error(ID,
+					MessageFormat.format(AntLaunchConfigurationMessages.AntLaunchShortcut_2, new Object[] { filePath.toString() }), e);
 		}
 
 		return null;
@@ -363,15 +314,10 @@ public class ProjectUtil {
 		if (throwable instanceof CoreException) {
 			status = ((CoreException) throwable).getStatus();
 		} else {
-			status = new Status(IStatus.ERROR, IAntUIConstants.PLUGIN_ID, 0,
-					message, throwable);
+			status = new Status(IStatus.ERROR, IAntUIConstants.PLUGIN_ID, 0, message, throwable);
 		}
-		ErrorDialog
-				.openError(
-						AntUIPlugin.getActiveWorkbenchWindow().getShell(),
-						AntLaunchConfigurationMessages.AntLaunchShortcut_Error_7,
-						AntLaunchConfigurationMessages.AntLaunchShortcut_Build_Failed_2,
-						status);
+		ErrorDialog.openError(AntUIPlugin.getActiveWorkbenchWindow().getShell(), AntLaunchConfigurationMessages.AntLaunchShortcut_Error_7,
+				AntLaunchConfigurationMessages.AntLaunchShortcut_Build_Failed_2, status);
 	}
 
 	public static IResource getSelectedResource(ISelection selection) {
@@ -379,8 +325,7 @@ public class ProjectUtil {
 		if (!selection.isEmpty()) {
 			resources = new ArrayList<Object>();
 			if (selection instanceof IStructuredSelection) {
-				Iterator<?> elements = ((IStructuredSelection) selection)
-						.iterator();
+				Iterator<?> elements = ((IStructuredSelection) selection).iterator();
 				while (elements.hasNext()) {
 					Object next = elements.next();
 					if (next instanceof IResource) {
@@ -419,8 +364,7 @@ public class ProjectUtil {
 	}
 
 	public static boolean validateName(String validateName) {
-		Pattern p = Pattern
-				.compile("^[a-zA-Z_0-9-]*+(\\.[a-zA-Z_0-9-][a-zA-Z_0-9-]*)*$");
+		Pattern p = Pattern.compile("^[a-zA-Z_0-9-]*+(\\.[a-zA-Z_0-9-][a-zA-Z_0-9-]*)*$");
 		Matcher m = p.matcher(validateName);
 		if (m.matches()) {
 			return true;
@@ -429,12 +373,11 @@ public class ProjectUtil {
 	}
 
 	public static boolean validatePkgName(String validatePkgName) {
-		Pattern p = Pattern
-				.compile("^[a-zA-Z_]+[a-zA-Z_0-9]*+(\\.[a-zA-Z_][a-zA-Z_0-9]*)*$");
+		Pattern p = Pattern.compile("^[a-zA-Z_]+[a-zA-Z_0-9]*+(\\.[a-zA-Z_][a-zA-Z_0-9]*)*$");
 		Matcher m = p.matcher(validatePkgName);
-		
+
 		IStatus sta = JavaConventions.validatePackageName(validatePkgName, null, null);
-		
+
 		if (m.matches() && sta.isOK()) {
 			return true;
 		}
@@ -448,10 +391,9 @@ public class ProjectUtil {
 	}
 
 	public static boolean isAnyframeProject(IProject currentProject) {
-
 		String projectLocation = currentProject.getLocation().toOSString();
-		File f = new File(projectLocation + CommonConstants.METAINF
-				+ CommonConstants.METADATA_FILE);
+		File f = new File(projectLocation + CommonConstants.fileSeparator + CommonConstants.SETTING_HOME + CommonConstants.fileSeparator
+				+ CommonConstants.COMMON_CONFIG_XML_FILE);
 		return f.exists();
 	}
 }

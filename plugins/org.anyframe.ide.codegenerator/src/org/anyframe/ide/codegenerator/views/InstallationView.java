@@ -16,6 +16,7 @@
  */
 package org.anyframe.ide.codegenerator.views;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -26,16 +27,16 @@ import org.anyframe.ide.codegenerator.action.InstallViewAction;
 import org.anyframe.ide.codegenerator.action.RefreshInstallViewAction;
 import org.anyframe.ide.codegenerator.action.UninstallViewAction;
 import org.anyframe.ide.codegenerator.action.UpdateListInstallViewAction;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoContentProvider;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoLabelProvider;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoList;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
-import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
@@ -84,8 +85,7 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class InstallationView extends ViewPart {
 
-	public static final String ID = CodeGeneratorActivator.PLUGIN_ID
-			+ ".views.InstallationView";
+	public static final String ID = CodeGeneratorActivator.PLUGIN_ID + ".views.InstallationView";
 
 	private FilteredTree fFilteredTree;
 
@@ -99,7 +99,7 @@ public class InstallationView extends ViewPart {
 	private TreeColumn fColumn6;
 	private TreeColumn fColumn7;
 
-	private PropertiesIO pio = null;
+	private ProjectConfig projectConfig = null;
 
 	private Action sampleDataAction;
 
@@ -156,12 +156,9 @@ public class InstallationView extends ViewPart {
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
-				if(selectedPjtName == null)
+				if (selectedPjtName == null)
 					selectedPjtName = "";
-				setContentDescription(Message.view_installation_description_prefix
-						+ " "
-						+ selectedPjtName
-						+ "\t"
+				setContentDescription(Message.view_installation_description_prefix + " " + selectedPjtName + "\t"
 						+ Message.view_installation_description_suffix);
 
 			}
@@ -194,8 +191,7 @@ public class InstallationView extends ViewPart {
 		fFilteredTree = new FilteredTree(parent, 65536, filter, true);
 
 		if (fFilteredTree.getFilterControl() != null) {
-			Composite filterComposite = fFilteredTree.getFilterControl()
-					.getParent();
+			Composite filterComposite = fFilteredTree.getFilterControl().getParent();
 			GridData gd = (GridData) filterComposite.getLayoutData();
 			gd.verticalIndent = 2;
 			gd.horizontalIndent = 1;
@@ -210,29 +206,25 @@ public class InstallationView extends ViewPart {
 
 		createColumns(fTree);
 		// // fFilteredTree.getViewer().setAutoExpandLevel(2);
-		fFilteredTree.getViewer().setContentProvider(
-				new PluginInfoContentProvider());
-		fFilteredTree.getViewer().setLabelProvider(
-				new PluginInfoLabelProvider());
-		fFilteredTree.getViewer().addSelectionChangedListener(
-				new ISelectionChangedListener() {
+		fFilteredTree.getViewer().setContentProvider(new PluginInfoContentProvider());
+		fFilteredTree.getViewer().setLabelProvider(new PluginInfoLabelProvider());
+		fFilteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
-					public void selectionChanged(SelectionChangedEvent e) {
-						// TODO Auto-generated method stub
-						ISelection selection = e.getSelection();
-						PluginInfo pluginInfo = (PluginInfo) ((TreeSelection) selection)
-								.getFirstElement();
-						String checked = "";
-						if(pluginInfo != null) {
-							checked = pluginInfo.isChecked() ? "false" : "true";
-							pluginInfo.setChecked(checked);
-						}
-						
-						fFilteredTree.getViewer().refresh();
-					}
-				});
-		if(pio !=null) {
-			PluginInfoList pluginInfoList = new PluginInfoList(pio);
+			public void selectionChanged(SelectionChangedEvent e) {
+				// TODO Auto-generated method stub
+				ISelection selection = e.getSelection();
+				PluginInfo pluginInfo = (PluginInfo) ((TreeSelection) selection).getFirstElement();
+				String checked = "";
+				if (pluginInfo != null) {
+					checked = pluginInfo.isChecked() ? "false" : "true";
+					pluginInfo.setChecked(checked);
+				}
+
+				fFilteredTree.getViewer().refresh();
+			}
+		});
+		if (projectConfig != null) {
+			PluginInfoList pluginInfoList = new PluginInfoList(projectConfig);
 			fFilteredTree.getViewer().setInput(pluginInfoList);
 		}
 		fFilteredTree.redraw();
@@ -378,8 +370,7 @@ public class InstallationView extends ViewPart {
 
 	private IMenuManager createSelectProjectAction() {
 		int i = 0;
-		IMenuManager manager = new MenuManager(
-				Message.view_installation_menu_selectproject);
+		IMenuManager manager = new MenuManager(Message.view_installation_menu_selectproject);
 
 		for (String project : projectList) {
 			manager.add(new selectProjectAction(project, i));
@@ -399,7 +390,7 @@ public class InstallationView extends ViewPart {
 				// selectdPjtName, selectedProject 로직 추가
 				selectedPjtName = text;
 				selectedProject = (IProject) projectMap.get(selectedPjtName);
-				
+
 				refreshPlugin();
 			}
 		}
@@ -448,8 +439,7 @@ public class InstallationView extends ViewPart {
 				}
 			}
 		} catch (Exception exception) {
-			PluginLoggerUtil.error(ID, Message.exception_log_getprojectlist,
-					exception);
+			PluginLoggerUtil.error(ID, Message.exception_log_getprojectlist, exception);
 		}
 	}
 
@@ -459,72 +449,59 @@ public class InstallationView extends ViewPart {
 		// explorer
 		TreeSelection selection = null;
 
-		final IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage activePage = window.getActivePage();
-		
+
 		// selectedProject value initialize
-		if(! existProject()) {
+		if (!existProject()) {
 			selectedPjtName = "";
 			selectedProject = (IProject) projectMap.get(selectedPjtName);
-		
-	
+
 			if (activePage != null) {
 				IViewReference[] views = activePage.getViewReferences();
-	
+
 				for (IViewReference view : views) {
-					if (!view.getId().equals(
-							CodeGeneratorActivator.PLUGIN_ID
-									+ ".views.InstallationView")) {
+					if (!view.getId().equals(CodeGeneratorActivator.PLUGIN_ID + ".views.InstallationView")) {
 						IViewPart viewpart = view.getView(true);
-	
-						if ("org.eclipse.jdt.ui.PackageExplorer".equals(view
-								.getId()) && isActiveView(activePage, viewpart)) {
-							selection = (TreeSelection) window
-									.getSelectionService().getSelection(
-											"org.eclipse.jdt.ui.PackageExplorer");
+
+						if ("org.eclipse.jdt.ui.PackageExplorer".equals(view.getId()) && isActiveView(activePage, viewpart)) {
+							selection = (TreeSelection) window.getSelectionService().getSelection("org.eclipse.jdt.ui.PackageExplorer");
 							break;
-						} else if ("org.eclipse.ui.navigator.ProjectExplorer"
-								.equals(view.getId())
-								&& isActiveView(activePage, viewpart)) {
-							selection = (TreeSelection) window
-									.getSelectionService()
-									.getSelection(
-											"org.eclipse.ui.navigator.ProjectExplorer");
+						} else if ("org.eclipse.ui.navigator.ProjectExplorer".equals(view.getId()) && isActiveView(activePage, viewpart)) {
+							selection = (TreeSelection) window.getSelectionService().getSelection("org.eclipse.ui.navigator.ProjectExplorer");
 							break;
-	
+
 						}
 					}
 				}
 			}
-		
+
 			if (selection != null && !selection.isEmpty()) {
 				TreePath path = selection.getPaths()[0];
 				IProject project = null;
-	
+
 				if (path.getFirstSegment() instanceof IProject)
 					project = (IProject) path.getFirstSegment();
 				else if (path.getFirstSegment() instanceof JavaProject) {
 					project = ((JavaProject) path.getFirstSegment()).getProject();
 				}
-	
+
 				if (ProjectUtil.isAnyframeProject(project)) {
 					selectedPjtName = project.getName();
 					selectedProject = project.getProject();
 				} else {
 					// default setting
-	
+
 					Iterator<String> it = projectMap.keySet().iterator();
 					while (it.hasNext()) {
 						selectedPjtName = it.next();
-						selectedProject = (IProject) projectMap
-								.get(selectedPjtName);
+						selectedProject = (IProject) projectMap.get(selectedPjtName);
 						break;
 					}
 				}
 			} else {
 				// default setting
-	
+
 				Iterator<String> it = projectMap.keySet().iterator();
 				while (it.hasNext()) {
 					selectedPjtName = it.next();
@@ -534,18 +511,18 @@ public class InstallationView extends ViewPart {
 			}
 		}
 		try {
-			if(selectedProject != null)
-				pio = ProjectUtil.getProjectProperties(selectedProject);
-			else 
-				pio = null;
+			if (selectedProject != null) {
+				String configFile = ConfigXmlUtil.getCommonConfigFile(selectedProject.getLocation().toOSString());
+				projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			} else {
+				projectConfig = null;
+			}
 		} catch (Exception exception) {
-			// TODO Auto-generated catch block
 			PluginLoggerUtil.error(ID, Message.exception_log_iofile, exception);
 		}
 	}
 
-	private boolean isActiveView(final IWorkbenchPage activePage,
-			final IViewPart view) {
+	private boolean isActiveView(final IWorkbenchPage activePage, final IViewPart view) {
 		// obtain active page from WorkbenchWindow
 		final IWorkbenchPart activeView = activePage.getActivePart();
 		return activeView == null ? false : activeView.equals(view);
@@ -556,14 +533,11 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(entry1.getName(),
-								entry2.getName())
-								* NAME_ORDER;
+						return getComparator().compare(entry1.getName(), entry2.getName()) * NAME_ORDER;
 					} else {
 						return 0;
 					}
@@ -574,14 +548,11 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(entry1.getGroupId(),
-								entry2.getGroupId())
-								* GROUP_ORDER;
+						return getComparator().compare(entry1.getGroupId(), entry2.getGroupId()) * GROUP_ORDER;
 					} else {
 						return 0;
 					}
@@ -593,14 +564,11 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(entry1.getArtifactId(),
-								entry2.getArtifactId())
-								* ARTIFACT_ORDER;
+						return getComparator().compare(entry1.getArtifactId(), entry2.getArtifactId()) * ARTIFACT_ORDER;
 					} else {
 						return 0;
 					}
@@ -611,15 +579,11 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(
-								entry1.getLatestVersion(),
-								entry2.getLatestVersion())
-								* LATEST_ORDER;
+						return getComparator().compare(entry1.getLatestVersion(), entry2.getLatestVersion()) * LATEST_ORDER;
 					} else {
 						return 0;
 					}
@@ -630,16 +594,12 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(
-								entry1.isInstalled() ? entry1.getVersion()
-										: "X",
-								entry2.isInstalled() ? entry2.getVersion()
-										: "X")
+						return getComparator().compare(entry1.isInstalled() ? entry1.getVersion() : "X",
+								entry2.isInstalled() ? entry2.getVersion() : "X")
 								* INSTALL_ORDER;
 					} else {
 						return 0;
@@ -651,14 +611,11 @@ public class InstallationView extends ViewPart {
 			return new ViewerComparator() {
 
 				public int compare(Viewer viewer, Object e1, Object e2) {
-					if ((e1 instanceof PluginInfo)
-							&& (e2 instanceof PluginInfo)) {
+					if ((e1 instanceof PluginInfo) && (e2 instanceof PluginInfo)) {
 						PluginInfo entry1 = (PluginInfo) e1;
 						PluginInfo entry2 = (PluginInfo) e2;
 
-						return getComparator().compare(entry1.getDescription(),
-								entry2.getDescription())
-								* DESC_ORDER;
+						return getComparator().compare(entry1.getDescription(), entry2.getDescription()) * DESC_ORDER;
 					} else {
 						return 0;
 					}
@@ -691,8 +648,7 @@ public class InstallationView extends ViewPart {
 	 * Anyframe plug in installation Action
 	 */
 	public void installPlugin() {
-		PluginInfoList pluginInfoList = (PluginInfoList) fFilteredTree
-				.getViewer().getInput();
+		PluginInfoList pluginInfoList = (PluginInfoList) fFilteredTree.getViewer().getInput();
 
 		Map<String, PluginInfo> pList = pluginInfoList.getPluginInfoList();
 
@@ -716,28 +672,22 @@ public class InstallationView extends ViewPart {
 			return;
 
 		if (hasInstalled) {
-			if (!MessageDialogUtil.questionMessageDialog(
-					Message.ide_message_title,
-					Message.view_dialog_plugintarget_install_info))
+			if (!MessageDialogUtil.questionMessageDialog(Message.ide_message_title, Message.view_dialog_plugintarget_install_info))
 				return;
 		} else {
-			if (!MessageDialogUtil.questionMessageDialog(
-					Message.ide_message_title,
-					Message.view_dialog_plugin_confirm_install))
+			if (!MessageDialogUtil.questionMessageDialog(Message.ide_message_title, Message.view_dialog_plugin_confirm_install))
 				return;
 		}
-		commandExecution.installPlugins(pluginNames, (Boolean) isSampleCheck,
-				selectedProject.getLocation().toOSString());
+		commandExecution.installPlugins(pluginNames, (Boolean) isSampleCheck, selectedProject.getLocation().toOSString());
 
-//		refreshPlugin();
+		// refreshPlugin();
 	}
 
 	/**
 	 * Anyframe plug in uninstallation Action
 	 */
 	public void uninstallPlugin() {
-		PluginInfoList pluginInfoList = (PluginInfoList) (fFilteredTree
-				.getViewer().getInput());
+		PluginInfoList pluginInfoList = (PluginInfoList) (fFilteredTree.getViewer().getInput());
 
 		Map<String, PluginInfo> pList = pluginInfoList.getPluginInfoList();
 
@@ -757,12 +707,10 @@ public class InstallationView extends ViewPart {
 		if (!checkPluginNames(pluginNames))
 			return;
 
-		if (!MessageDialogUtil.questionMessageDialog(Message.ide_message_title,
-				Message.view_dialog_plugin_confirm_uninstall))
+		if (!MessageDialogUtil.questionMessageDialog(Message.ide_message_title, Message.view_dialog_plugin_confirm_uninstall))
 			return;
 
-		commandExecution.uninstallPlugins(pluginNames, (Boolean) isSampleCheck,
-				selectedProject.getLocation().toOSString());
+		commandExecution.uninstallPlugins(pluginNames, (Boolean) isSampleCheck, selectedProject.getLocation().toOSString());
 	}
 
 	/**
@@ -772,10 +720,10 @@ public class InstallationView extends ViewPart {
 
 		try {
 			// refresh menu action list start
-			
+
 			getProjectList();
 			getSelectedProject();
-				
+
 			mgr.removeAll();
 
 			selecProjectAction = createSelectProjectAction();
@@ -794,30 +742,26 @@ public class InstallationView extends ViewPart {
 			sampleDataAction = createSampleDataAction();
 			mgr.add(sampleDataAction);
 
-		// refresh menu action list end
-			for(String pjtName : projectList) {
-				if(pjtName.equals(selectedProject.getName()))
-					pio = ProjectUtil.getProjectProperties(selectedProject);
+			// refresh menu action list end
+			for (String pjtName : projectList) {
+				if (pjtName.equals(selectedProject.getName())) {
+					String configFile = ConfigXmlUtil.getCommonConfigFile(selectedProject.getLocation().toOSString());
+					projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+				}
 				// update list activate check
 				updateListaction.setEnabled(checkOfflineMode());
 			}
 
-			
-
 		} catch (Exception exception) {
-			PluginLoggerUtil
-					.error(ID, Message.exception_log_refresh, exception);
+			PluginLoggerUtil.error(ID, Message.exception_log_refresh, exception);
 		}
 		// title bar refresh
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
-			
+
 			public void run() {
-				if(selectedPjtName == null)
+				if (selectedPjtName == null)
 					selectedPjtName = "";
-				setContentDescription(Message.view_installation_description_prefix
-						+ " "
-						+ selectedPjtName
-						+ "\t"
+				setContentDescription(Message.view_installation_description_prefix + " " + selectedPjtName + "\t"
 						+ Message.view_installation_description_suffix);
 
 			}
@@ -825,9 +769,9 @@ public class InstallationView extends ViewPart {
 		});
 
 		fFilteredTree.setInitialText(Message.view_ctip_typepluginname);
-		
-		if (pio != null) {
-			PluginInfoList pluginInfoList = new PluginInfoList(pio);
+
+		if (projectConfig != null) {
+			PluginInfoList pluginInfoList = new PluginInfoList(projectConfig);
 			fFilteredTree.getViewer().setInput(pluginInfoList);
 		} else {
 			fFilteredTree.getViewer().setInput(null);
@@ -847,8 +791,7 @@ public class InstallationView extends ViewPart {
 		boolean checkResult = true;
 		if (StringUtils.isEmpty(pluginNames)) {
 
-			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
-					Message.view_dialog_plugin_check, MessageDialog.WARNING);
+			MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_dialog_plugin_check, MessageDialog.WARNING);
 			checkResult = false;
 		}
 		return checkResult;
@@ -856,26 +799,22 @@ public class InstallationView extends ViewPart {
 
 	public boolean checkOfflineMode() {
 		// check offline
-		boolean enabled = true;
-		if (pio != null) {
-			if (pio.readValue(CommonConstants.OFFLINE) != null) {
-				boolean isOffline = new Boolean(
-						pio.readValue(CommonConstants.OFFLINE)).booleanValue();
-				if (isOffline)
-					enabled = false;
+		boolean enabled = false;
+		if (projectConfig != null) {
+			if (Boolean.valueOf(projectConfig.getOffline())) {
+				enabled = true;
 			}
 		}
 		return enabled;
 	}
-	
+
 	private boolean existProject() {
 		try {
-			PropertiesIO check = ProjectUtil
-					.getProjectProperties(selectedProject);
-			if (check != null)
+			String configFile = ConfigXmlUtil.getCommonConfigFile(selectedProject.getLocation().toOSString());
+			
+			if (new File(configFile).exists())
 				return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			return false;
 		}
 

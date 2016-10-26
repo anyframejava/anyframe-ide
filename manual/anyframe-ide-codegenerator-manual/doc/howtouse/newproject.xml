@@ -102,7 +102,9 @@
 					<listitem>
 						<para>Version : pom.xml에 정의될 프로젝트의 version 정보.</para>
 					</listitem>
-
+					<listitem>
+						<para>Plugin Name : 프로젝트 생성 시에 설치되는 기본 Anyframe Plugin.</para>
+					</listitem>
 				</itemizedlist>
 			</listitem>
 
@@ -180,7 +182,7 @@
 					<listitem>
 						<para>Version: pom.xml에 정의될 Jdbc Driver의 version 정보.</para>
 					</listitem>
-
+					
 				</itemizedlist>
 			</listitem>
 
@@ -211,7 +213,7 @@
 							<entry align="center">hsqldb2.zip</entry>
 							<entry align="center">
 								<ulink
-									url="http://dev.anyframejava.org/docs/anyframe/ide/codegenerator/2.9.0/reference/download/sampledb/hsqldb2.zip">Download</ulink>
+									url="http://dev.anyframejava.org/docs/anyframe/ide/codegenerator/3.0.0/reference/download/sampledb/hsqldb2.zip">Download</ulink>
 							</entry>
 						</row>
 					</tbody>
@@ -258,7 +260,10 @@
 					<listitem>
 						<para>Package Name: 대표 패키지 이름.</para>
 					</listitem>
-
+					<listitem>
+						<para>Plugin Name : 프로젝트 생성 시에 설치되는 기본 Anyframe Plugin.</para>
+					</listitem>
+					
 				</itemizedlist>
 			</listitem>
 
@@ -344,9 +349,9 @@
 	</section>
 
 	<section id="howtouse_newproject_confirm">
-		<title>프로젝트 실행 및 설정 파일(project.mf) 확인 </title>
+		<title>프로젝트 실행 및 설정 파일(org.anyframe.ide.commmon-*.xml) 확인 </title>
 
-		<para>생성된 프로젝트를 실행해 보고, 프로젝트 설정 파일(project.mf) 정보도 확인해본다.</para>
+		<para>생성된 프로젝트를 실행해 보고, 프로젝트 설정 파일(org.anyframe.ide.commmon-*.xml) 정보도 확인해본다.</para>
 
 		<orderedlist>
 			<listitem>
@@ -362,7 +367,7 @@
 			</listitem>
 
 			<listitem>
-				<para>프로젝트 생성을 통해 만들어진 프로젝트 속성 파일(META-INF/project.mf)의 Property를
+				<para>프로젝트 생성을 통해 만들어진 프로젝트 속성 파일(.settings/anyframe/org.anyframe.ide.commmon-*.xml)의 Property를
 					확인해 본다.
 					변경하고 싶은 정보가 있을 경우 Property를의 값을 수정하여 수정된 설정 값을 통해 소스가 생성되도록 할 수 있다.
 				</para>
@@ -373,7 +378,7 @@
 		</orderedlist>
 
 		<informaltable>
-			<caption>project.mf - 프로젝트 정보</caption>
+			<caption>org.anyframe.ide.common.config.xml - 프로젝트 정보</caption>
 			<tgroup cols="4">
 				<colspec colnum="1" colname="col1" colwidth="3*" />
 				<colspec colnum="2" colname="col2" colwidth="4*" />
@@ -394,19 +399,7 @@
 
 				<tbody>
 					<row>
-						<entry>anyframe.home</entry>
-
-						<entry>Anyframe을 설치한 루트 폴더로, Maven 프로젝트일 경우는 사용하지 않는다.</entry>
-
-						<entry align="center">Y</entry>
-
-						<entry align="center">
-							<para>Maven일 경우 N/A</para>
-							<para>Ant일 경우 Anyframe을 설치한 루트 폴더</para>
-						</entry>
-					</row>
-					<row>
-						<entry>project.name</entry>
+						<entry>pjtname</entry>
 
 						<entry>프로젝트 명</entry>
 
@@ -414,9 +407,17 @@
 
 						<entry align="center">myproject</entry>
 					</row>
-
 					<row>
-						<entry>project.home</entry>
+						<entry>package</entry>
+
+						<entry>프로젝트 대표 패키지 명</entry>
+
+						<entry align="center">Y</entry>
+
+						<entry align="center">프로젝트명</entry>
+					</row>
+					<row>
+						<entry>pjthome</entry>
 
 						<entry>프로젝트 루트 폴더 경로</entry>
 
@@ -428,40 +429,48 @@
 							</para>
 						</entry>
 					</row>
-
+					
+					
 					<row>
-						<entry>project.version</entry>
+						<entry>anyframe-home</entry>
 
-						<entry>프로젝트 버전</entry>
+						<entry>Anyframe을 설치한 루트 폴더로, Maven 프로젝트일 경우는 사용하지 않는다.</entry>
 
-						<entry align="center">Y</entry>
+						<entry align="center">N</entry>
 
-						<entry align="center">1.0-SNAPSHOT</entry>
+						<entry align="center">
+							<para>Maven일 경우 N/A</para>
+							<para>Ant일 경우 Anyframe을 설치한 루트 폴더</para>
+						</entry>
 					</row>
-
 					<row>
-						<entry>project.type</entry>
+						<entry>context-root</entry>
 
-						<entry>프로젝트 타입</entry>
+						<entry>프로젝트 빌드도구가 Ant일 경우에만 의미있는 값으로,
+							jetty를 이용하여 web 어플리케이션을 실행할 때 사용되는 WebContext Path명</entry>
+						<entry align="center">N</entry>
 
-						<entry align="center">Y</entry>
-
-						<entry align="center">web/service</entry>
+						<entry align="center">
+							<para>Maven일 경우 N/A</para>
+							<para>프로젝트 명</para>
+						</entry>
 					</row>
-
-
 					<row>
-						<entry>project.build</entry>
+						<entry>offline</entry>
 
-						<entry>프로젝트 빌드도구</entry>
+						<entry>프로젝트 빌드도구가 Ant일 경우에만 의미있는 값으로,
+							Anyframe 라이브러리를 online 으로 연결해서 지원받을지 여부를 결정</entry>
+						<entry align="center">N</entry>
 
-						<entry align="center">Y</entry>
-
-						<entry align="center">maven/ant</entry>
+						<entry align="center">
+							<para>Maven일 경우 N/A</para>
+							<para>false</para>
+						</entry>
 					</row>
-
+										
+					
 					<row>
-						<entry>project.template.home</entry>
+						<entry>template</entry>
 
 						<entry>프로젝트 및 CRUD 소스 코드 생성 시 기반이 되는 Template 파일이 있는 루트 폴더 경로
 						</entry>
@@ -471,47 +480,23 @@
 						<entry align="center">[프로젝트 생성 위치]/.settings/anyframe/templates
 						</entry>
 					</row>
-
 					<row>
-						<entry>project.template</entry>
+						<entry>jdbcdrivers</entry>
 
-						<entry>프로젝트 및 CRUD 소스 코드 생성 시 기반이 되는 Template 형태(ex.
-							default, miplatform 등)</entry>
+						<entry>DB 연결 시에 기반이 되는 jdbc driver 목록을 정의한 파일이 있는 루트 폴더 경로</entry>
 
 						<entry align="center">Y</entry>
 
-						<entry align="center">default</entry>
+						<entry align="center">[프로젝트 생성 위치]/.settings/anyframe</entry>
 					</row>
-
 					<row>
-						<entry>project.daoframework</entry>
+						<entry>databases</entry>
 
-						<entry>DAO Framework 선택(springjdbc, query, hibernate, ibatis2,
-							mybatis 중 택일)</entry>
+						<entry>Property 설정에서 정의한 Database 정보를 정의한 파일이 있는 루트 폴더 경로</entry>
 
 						<entry align="center">Y</entry>
 
-						<entry align="center">springjdbc</entry>
-					</row>
-
-					<row>
-						<entry>package.name</entry>
-
-						<entry>프로젝트 대표 패키지 명</entry>
-
-						<entry align="center">Y</entry>
-
-						<entry align="center">프로젝트명</entry>
-					</row>
-
-					<row>
-						<entry>web.context.path</entry>
-
-						<entry>프로젝트 빌드도구가 Ant일 경우에만 의미있는 값으로,
-							jetty를 이용하여 web 어플리케이션을 실행할 때 사용되는 WebContext Path명</entry>
-						<entry align="center">Y</entry>
-
-						<entry align="center">프로젝트 명</entry>
+						<entry align="center">[프로젝트 생성 위치]/.settings/anyframe</entry>
 					</row>
 				</tbody>
 			</tgroup>
@@ -519,7 +504,7 @@
 
 
 		<informaltable>
-			<caption>project.mf - DB 정보</caption>
+			<caption>org.anyframe.ide.common.databases.config.xml - DB 정보</caption>
 			<tgroup cols="4">
 				<colspec colnum="1" colname="col1" colwidth="3*" />
 				<colspec colnum="2" colname="col2" colwidth="4*" />
@@ -540,7 +525,7 @@
 
 				<tbody>
 					<row>
-						<entry>db.type</entry>
+						<entry>type</entry>
 
 						<entry>DB 정보(hsqldb, oracle, mysql, db2, sybase, mssql)</entry>
 
@@ -548,9 +533,8 @@
 
 						<entry align="center">hsqldb</entry>
 					</row>
-
 					<row>
-						<entry>db.name</entry>
+						<entry>name</entry>
 
 						<entry>Database 명</entry>
 
@@ -558,39 +542,17 @@
 
 						<entry align="center">sampledb</entry>
 					</row>
-
 					<row>
-						<entry>db.schema</entry>
+						<entry>driverJar</entry>
 
-						<entry>schema 명</entry>
+						<entry>DB에 접근하기 위한 driver jar파일의 경로</entry>
 
 						<entry align="center">Y</entry>
 
-						<entry align="center">PUBLIC</entry>
+						<entry align="center">db/hsqldb/hsqldb-2.0.0.jar</entry>
 					</row>
-
 					<row>
-						<entry>db.server</entry>
-
-						<entry>DB에 접근하기 위한 server정보</entry>
-
-						<entry align="center">Y</entry>
-
-						<entry align="center">localhost</entry>
-					</row>
-
-					<row>
-						<entry>db.port</entry>
-
-						<entry>DB에 접근하기 위한 port</entry>
-
-						<entry align="center">Y</entry>
-
-						<entry align="center">-1</entry>
-					</row>
-
-					<row>
-						<entry>db.driver</entry>
+						<entry>driverClassName</entry>
 
 						<entry>DB의 드라이버 클래스 설정</entry>
 
@@ -599,9 +561,8 @@
 						<entry align="center">org.hsqldb.
 							jdbcDriver</entry>
 					</row>
-
 					<row>
-						<entry>db.url</entry>
+						<entry>url</entry>
 
 						<entry>DB에 접근하기 위한 Access URL</entry>
 
@@ -609,9 +570,8 @@
 
 						<entry align="center">jdbc:hsqldb:hsql://localhost/sampledb</entry>
 					</row>
-
 					<row>
-						<entry>db.userId</entry>
+						<entry>username</entry>
 
 						<entry>DB 사용자 명</entry>
 
@@ -619,40 +579,26 @@
 
 						<entry align="center">SA</entry>
 					</row>
-
 					<row>
-						<entry>db.password</entry>
+						<entry>password</entry>
 
-						<entry>DB 사용자 패스워드</entry>
-
-						<entry align="center">N</entry>
-
-						<entry align="center">N/A</entry>
-					</row>
-
-					<row>
-						<entry>db.lib</entry>
-
-						<entry>
-							DB에 접근하기 위한 driver jar파일의 경로
-
-							<para>이때, 패스 표현 방법에 주의를 기울여야 함
-								상대경로로 입력시 경로 처음에 '/'로 시작하게 될 경우 절대경로로 인식하게 됨</para>
-						</entry>
+						<entry>DB 사용자 패스워드,암호화가 기본값이며 평문으로 입력 후 DB Change 를 수행하면 자동적으로 암호화가 수행</entry>
 
 						<entry align="center">Y</entry>
 
-						<entry align="center">
-							<para>Maven일 경우 C:/Documents and Settings/[user
-								name]/.m2/repository/hsqldb/hsqldb/2.0.0/hsqldb-2.0.0.jar</para>
-							<para>Ant일 경우 [Anyframe 이 설치된 root
-								경로]/ide/db/lib/hsqldb-2.0.0.jar</para>
-
-						</entry>
+						<entry align="center">N/A</entry>
 					</row>
-
 					<row>
-						<entry>db.dialect</entry>
+						<entry>schema</entry>
+
+						<entry>schema 명</entry>
+
+						<entry align="center">Y</entry>
+
+						<entry align="center">PUBLIC</entry>
+					</row>
+					<row>
+						<entry>dialect</entry>
 
 						<entry>DB별 Hibernate Dialect 클래스 설정</entry>
 
@@ -662,9 +608,8 @@
 							dialect.
 							HSQLDialect</entry>
 					</row>
-
 					<row>
-						<entry>db.groupId</entry>
+						<entry>driverGroupId</entry>
 
 						<entry>jdbc driver group id 정보로, Maven 프로젝트 일 경우에만 사용되는 값</entry>
 
@@ -674,7 +619,7 @@
 					</row>
 
 					<row>
-						<entry>db.artifactId</entry>
+						<entry>driverArtifactId</entry>
 
 						<entry>jdbc driver artifact id 정보로, Maven 프로젝트 일 경우에만 사용되는 값
 						</entry>
@@ -685,7 +630,7 @@
 					</row>
 
 					<row>
-						<entry>db.version</entry>
+						<entry>driverVersion</entry>
 
 						<entry>jdbc driver version 정보로, Maven 프로젝트 일 경우에만 사용되는 값</entry>
 
@@ -694,16 +639,26 @@
 						<entry align="center">2.0.0</entry>
 					</row>
 					<row>
-						<entry>db.schema.use</entry>
-						<entry>해당 DB가 Sybase DB일 경우, 지정해야 하는 속성으로 User 정보 셋팅시 DB Schema
-							정보를 사용할지 여부를 정의한다.
-							단, Sybase 버전에 따라 속성값은 변경될 수 있음에 유의하도록 한다.
-					</entry>
-						<entry align="center">N</entry>
+						<entry>useDbSpecific</entry>
+						<entry>Oracle DB Function 사용 여부 이고, DB Explorer Plug in을 위한 설정 정보</entry>
+						<entry align="center">Y</entry>
 
 						<entry align="center">false</entry>
 					</row>
+					<row>
+						<entry>runExplainPlan</entry>
+						<entry>DB Plan 사용 여부 이고, DB Explorer Plug in을 위한 설정 정보</entry>
+						<entry align="center">Y</entry>
 
+						<entry align="center">false</entry>
+					</row>
+					<row>
+						<entry>isDefault</entry>
+						<entry>해당 DataSource가 Default 설정값인 경우에만 사용되는 값</entry>
+						<entry align="center">Y</entry>
+
+						<entry align="center">true</entry>
+					</row>	
 				</tbody>
 			</tgroup>
 		</informaltable>
@@ -731,25 +686,23 @@
 						한다.
 						다음은 Eclipse 3.6.0(Helios) 버전의 eclipse.ini 파일 예이다.</para>
 
-					<programlisting>
-						<emphasis role="bold">-clean</emphasis>
-						-startup
-						plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar
-						--launcher.library
-						plugins/org.eclipse.equinox.launcher.win32.win32.x86_1.0.200.v20090519
-						-product
-						org.eclipse.epp.package.jee.product
-						--launcher.XXMaxPermSize
-						256M
-						-showsplash
-						org.eclipse.platform
-						--launcher.XXMaxPermSize
-						128m
-						-vmargs
-						-Dosgi.requiredJavaVersion=1.5
-						<emphasis role="bold">-Xms400m</emphasis>
-						<emphasis role="bold">-Xmx512m</emphasis>
-					</programlisting>
+					<programlisting><![CDATA[-clean
+-startup
+plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar
+--launcher.library
+plugins/org.eclipse.equinox.launcher.win32.win32.x86_1.0.200.v20090519
+-product
+org.eclipse.epp.package.jee.product
+--launcher.XXMaxPermSize
+256M
+-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+128m
+-vmargs
+-Dosgi.requiredJavaVersion=1.5
+-Xms400m
+-Xmx512m]]></programlisting>
 				</listitem>
 			</orderedlist>
 		</section>
@@ -799,7 +752,7 @@
 					<para>프로젝트의 Classpath에 Maven Dependencies가 추가되었는지 확인한다.(Build Type이
 						Maven일 경우)</para>
 					<para>
-						m2e가 활성화되면 생성된 프로젝트에 Maven Dependencies Libraries가 Build Path로 추가되어
+						m2e가 활성화(Project명 우클릭 &gt;&gt; Configure &gt;&gt; Convert to Maven Project)되면 생성된 프로젝트에 Maven Dependencies Libraries가 Build Path로 추가되어
 						프로젝트가 정상적으로 참조라이브러리를 인식하게 된다. 
 				</para>
 				</listitem>

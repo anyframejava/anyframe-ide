@@ -19,6 +19,8 @@ package org.anyframe.ide.codegenerator.action;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.InstallationView;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 
 /**
  * This is an UninstallViewAction class.
@@ -43,6 +45,8 @@ public class UninstallViewAction extends AbstractlViewAction {
 	 * Run this Action with message box
 	 */
 	public void run() {
+		new UsageCheckAdapter(EventSourceID.CD_PLUGIN_UNINSTALL);
+		
 		InstallationView view = CodeGeneratorActivator.getDefault().getInstallationView();
 		view.uninstallPlugin();
 	}

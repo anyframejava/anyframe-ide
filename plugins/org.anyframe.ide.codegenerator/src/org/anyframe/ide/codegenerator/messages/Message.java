@@ -116,6 +116,11 @@ public class Message extends NLS {
 //	public static String wizard_maven_packaging_war ;
 //	public static String wizard_maven_packaging_jar ;
 	
+	public static String wizard_plugin_group;
+	public static String wizard_plugin_name;
+	
+	public static String wizard_templatetype_group;
+	public static String wizard_templatetype_name;
 	
 //	public static String wizard_generation_window_title ;
 	public static String wizard_generation_domain_title;
@@ -189,6 +194,7 @@ public class Message extends NLS {
 //	public static String wizard_application_validation_template_null ;
 	public static String wizard_application_error_pkgname ;
 	public static String wizard_application_validation_pkgname ;
+	public static String wizard_application_validation_templatetype ;
 //	public static String wizard_application_error_pkgname_valid ;
 	public static String wizard_application_error_pjtgroupid ;
 	public static String wizard_application_validation_pjtgroupid ;
@@ -196,6 +202,7 @@ public class Message extends NLS {
 	public static String wizard_application_validation_pjtartifactid ;
 	public static String wizard_application_error_pjtversion ;
 	public static String wizard_application_validation_pjtversion ;
+	public static String wizard_application_validation_pi ;
 
 	// [Wizard] Application :: projects;
 //	public static String wizard_module_validation_issingle;

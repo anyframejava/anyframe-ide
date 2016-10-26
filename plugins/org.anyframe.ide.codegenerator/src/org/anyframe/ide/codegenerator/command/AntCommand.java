@@ -70,58 +70,39 @@ public class AntCommand implements Command {
 
 		if (command.equals(CommandUtil.CMD_CREATE_CRUD)) {
 			CreateCRUDVO vo = (CreateCRUDVO) commandVo;
-			String[] args = { command, vo.getDomainClassName(), "-project",
-					vo.getProjectName(), "-package", vo.getPackageName(),
-					"-scope", vo.getScope(), "-insertSampleData",
-					vo.getInsertSampleData(), "-project.home",
-					vo.getProjectHome(), "-anyframeHome", vo.getAnyframeHome(),
-					"-basedir", vo.getBasedir(), "-isCLIMode", "false",
-					"-logLevel", logLevel };
-			antConfigList.add(args);
-
-		} else if (command.equals(CommandUtil.CMD_CREATE_MODEL)) {
-
-			CreateModelVO vo = (CreateModelVO) commandVo;
-			String[] args = { command, "-table", vo.getTableName(), "-package",
-					vo.getPackageName(), "-project.home", vo.getProjectHome(),
-					"-anyframeHome", vo.getAnyframeHome(), "-basedir",
-					vo.getBasedir(), "-isCLIMode", "false", "-logLevel",
+			String[] args = { command, vo.getDomainClassName(), "-project", vo.getProjectName(), "-package", vo.getPackageName(), "-templateType",
+					vo.getTemplateType(), "-scope", vo.getScope(), "-insertSampleData", vo.getInsertSampleData(), "-project.home",
+					vo.getProjectHome(), "-anyframeHome", vo.getAnyframeHome(), "-basedir", vo.getBasedir(), "-isCLIMode", "false", "-logLevel",
 					logLevel };
 			antConfigList.add(args);
 
-		} else if (command.equals(CommandUtil.CMD_CHANGE_DB)) {
+		} else if (command.equals(CommandUtil.CMD_CREATE_MODEL)) {
+			CreateModelVO vo = (CreateModelVO) commandVo;
+			String[] args = { command, "-table", vo.getTableName(), "-package", vo.getPackageName(), "-project.home", vo.getProjectHome(),
+					"-anyframeHome", vo.getAnyframeHome(), "-basedir", vo.getBasedir(), "-isCLIMode", "false", "-logLevel", logLevel };
+			antConfigList.add(args);
 
-			String[] args = { command, "-project.home",
-					commandVo.getProjectHome(), "-anyframeHome",
-					commandVo.getAnyframeHome(), "-logLevel", logLevel };
+		} else if (command.equals(CommandUtil.CMD_CHANGE_DB)) {
+			String[] args = { command, "-project.home", commandVo.getProjectHome(), "-anyframeHome", commandVo.getAnyframeHome(), "-logLevel",
+					logLevel };
 			antConfigList.add(args);
 
 		} else if (command.equals(CommandUtil.CMD_INSTALL)) {
-
 			InstallPluginVO vo = (InstallPluginVO) commandVo;
 
-			String[] args = { command, vo.getPluginNames(), "-target",
-					vo.getBasedir(), "-excludeSrc",
-					new Boolean(vo.isExcludeSrc()).toString(), "-anyframeHome",
-					commandVo.getAnyframeHome(), "-project.home",
-					commandVo.getProjectHome(), "-log4j.ignoreTCL", "true",
+			String[] args = { command, vo.getPluginNames(), "-target", vo.getBasedir(), "-excludeSrc", new Boolean(vo.isExcludeSrc()).toString(),
+					"-anyframeHome", commandVo.getAnyframeHome(), "-project.home", commandVo.getProjectHome(), "-log4j.ignoreTCL", "true",
 					"-isCLIMode", "false", "-logLevel", logLevel };
 			antConfigList.add(args);
 
 		} else if (command.equals(CommandUtil.CMD_UNINSTALL)) {
-
 			UninstallPluginVO vo = (UninstallPluginVO) commandVo;
-			String[] args = { command, vo.getPluginNames(), "-target",
-					vo.getBasedir(), "-anyframeHome",
-					commandVo.getAnyframeHome(), "-project.home",
-					commandVo.getProjectHome(), "-logLevel", logLevel };
+			String[] args = { command, vo.getPluginNames(), "-target", vo.getBasedir(), "-anyframeHome", commandVo.getAnyframeHome(),
+					"-project.home", commandVo.getProjectHome(), "-logLevel", logLevel };
 			antConfigList.add(args);
 
 		} else if (command.equals(CommandUtil.CMD_UPDATE_CATALOG)) {
-
-			String[] args = { command, "-project.home",
-					commandVo.getProjectHome(), "-anyframeHome",
-					commandVo.getAnyframeHome(), "-target",
+			String[] args = { command, "-project.home", commandVo.getProjectHome(), "-anyframeHome", commandVo.getAnyframeHome(), "-target",
 					commandVo.getBasedir(), "-logLevel", logLevel };
 			antConfigList.add(args);
 
@@ -132,38 +113,23 @@ public class AntCommand implements Command {
 				String archetypeArtifactId = CommonConstants.ARCHETYPE_BASIC_ARTIFACT_ID;
 				String archetypeVersion = "";
 
-				IPreferenceStore store = CodeGeneratorActivator.getDefault()
-						.getPreferenceStore();
-				if (vo.getProjectType().equals(
-						CommonConstants.PROJECT_TYPE_SERVICE)) {
+				IPreferenceStore store = CodeGeneratorActivator.getDefault().getPreferenceStore();
+				if (vo.getProjectType().equals(CommonConstants.PROJECT_TYPE_SERVICE)) {
 					archetypeArtifactId = CommonConstants.ARCHETYPE_SERVICE_ARTIFACT_ID;
-					archetypeVersion = store
-							.getString(IdePreferencesPage.SERVICE_ARCHETYPE);
+					archetypeVersion = store.getString(IdePreferencesPage.SERVICE_ARCHETYPE);
 					if (StringUtils.isEmpty(archetypeVersion))
-						archetypeVersion = PluginUtil
-								.getLatestArchetypeVersion(archetypeArtifactId,
-										CommonConstants.PROJECT_BUILD_TYPE_ANT,
-										vo.getAnyframeHome(), vo.isOffline());
+						archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_ANT,
+								vo.getAnyframeHome(), vo.isOffline());
 				} else {
-					archetypeVersion = store
-							.getString(IdePreferencesPage.BASIC_ARCHETYPE);
+					archetypeVersion = store.getString(IdePreferencesPage.BASIC_ARCHETYPE);
 					if (StringUtils.isEmpty(archetypeVersion))
-						archetypeVersion = PluginUtil
-								.getLatestArchetypeVersion(archetypeArtifactId,
-										CommonConstants.PROJECT_BUILD_TYPE_ANT,
-										vo.getAnyframeHome(), vo.isOffline());
+						archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_ANT,
+								vo.getAnyframeHome(), vo.isOffline());
 				}
-				String[] projectArgs = { command, "-pjttype",
-						vo.getProjectType(), "-pjtname", vo.getProjectName(),
-						"-package", vo.getPackageName(), "-anyframeHome",
-						vo.getAnyframeHome(), "-target", vo.getBasedir(),
-						"-basedir", vo.getBasedir(), "-project.home",
-						vo.getProjectHome(), "-archetypeGroudId",
-						archetypeGroudId, "-archetypeArtifactId",
-						archetypeArtifactId, "-archetypeVersion",
-						archetypeVersion, "-offline",
-						new Boolean(vo.isOffline()).toString(), "-logLevel",
-						logLevel };
+				String[] projectArgs = { command, "-pjttype", vo.getProjectType(), "-pjtname", vo.getProjectName(), "-package", vo.getPackageName(),
+						"-anyframeHome", vo.getAnyframeHome(), "-target", vo.getBasedir(), "-basedir", vo.getBasedir(), "-project.home",
+						vo.getProjectHome(), "-archetypeGroudId", archetypeGroudId, "-archetypeArtifactId", archetypeArtifactId, "-archetypeVersion",
+						archetypeVersion, "-offline", new Boolean(vo.isOffline()).toString(), "-logLevel", logLevel };
 				// for(int
 				// i=0;i<projectArgs.length;i++){
 				// ExceptionUtil.showException("[AntCommand] i="+i+" projectArgs[i]="+projectArgs[i],
@@ -171,20 +137,11 @@ public class AntCommand implements Command {
 				// }
 				antConfigList.add(projectArgs);
 
-				String[] installArgs = {
-						CommandUtil.CMD_INSTALL,
-						CommonConstants.CORE_PLUGIN,
-						"-target",
-						vo.getBasedir() + ProjectUtil.SLASH
-								+ vo.getProjectName(),
-						"-anyframeHome",
-						vo.getAnyframeHome(),
-						"-pjthome",
-						vo.getBasedir() + ProjectUtil.SLASH
-								+ vo.getProjectName(), "-package",
-						vo.getPackageName(), "-pjtname", vo.getProjectName(),
-						"-log4j.ignoreTCL", "true", "-isCLIMode", "false",
-						"-logLevel", logLevel };
+				String[] installArgs = { CommandUtil.CMD_INSTALL,
+				/* CommonConstants.CORE_PLUGIN, */
+				vo.getPluginName(), "-target", vo.getBasedir() + ProjectUtil.SLASH + vo.getProjectName(), "-anyframeHome", vo.getAnyframeHome(),
+						"-pjthome", vo.getBasedir() + ProjectUtil.SLASH + vo.getProjectName(), "-package", vo.getPackageName(), "-pjtname",
+						vo.getProjectName(), "-log4j.ignoreTCL", "true", "-isCLIMode", "false", "-logLevel", logLevel };
 				antConfigList.add(installArgs);
 
 				boolean dbChangeJobEnabled = true;
@@ -194,22 +151,15 @@ public class AntCommand implements Command {
 					File jdbcConfigFile = new File(PropertiesSettingUtil.JDBCDRIVERS_LOC);
 					if (jdbcConfigFile.exists()) {
 						try {
-							jdbcTypes = (java.util.List<JdbcType>) XmlFileUtil
-									.getObjectFromInputStream(new FileInputStream(
-											jdbcConfigFile));
+							jdbcTypes = (java.util.List<JdbcType>) XmlFileUtil.getObjectFromInputStream(new FileInputStream(jdbcConfigFile));
 						} catch (FileNotFoundException e) {
-							PluginLoggerUtil.error(ID,
-									Message.view_exception_loadjdbcconfig, e);
+							PluginLoggerUtil.error(ID, Message.view_exception_loadjdbcconfig, e);
 						}
 					} else {
 						try {
-							jdbcTypes = (java.util.List<JdbcType>) XmlFileUtil
-									.getObjectFromInputStream(XMLUtil
-											.getJdbcConfigFileInputStream());
+							jdbcTypes = (java.util.List<JdbcType>) XmlFileUtil.getObjectFromInputStream(XMLUtil.getJdbcConfigFileInputStream());
 						} catch (IOException e) {
-							PluginLoggerUtil.error(
-									CodeGeneratorActivator.PLUGIN_ID,
-									Message.wizard_application_error_cannotgetjdbcconfiguration, e);
+							PluginLoggerUtil.error(CodeGeneratorActivator.PLUGIN_ID, Message.wizard_application_error_cannotgetjdbcconfiguration, e);
 						}
 					}
 
@@ -217,18 +167,11 @@ public class AntCommand implements Command {
 						if (jdbcType.getType().equals("hsqldb")) {
 							if (vo.getDatabaseUserId().equals("SA")
 									&& vo.getDatabasePassword().equals("")
-									&& vo.getDatabaseDialect().equals(
-											jdbcType.getDialect()[0])
-									&& vo.getDatabaseDriver().equals(
-											jdbcType.getDriver())
+									&& vo.getDatabaseDialect().equals(jdbcType.getDialect()[0])
+									&& vo.getDatabaseDriver().equals(jdbcType.getDriver())
 									&& vo.getDatabaseDriverPath().equals(
-											vo.getAnyframeHome()
-													+ ProjectUtil.SLASH + "ide"
-													+ ProjectUtil.SLASH + "db"
-													+ ProjectUtil.SLASH + "lib"
-													+ ProjectUtil.SLASH
-													+ "hsqldb-2.0.0.jar")
-									&& vo.getDatabaseSchema().equals("PUBLIC")) {
+											vo.getAnyframeHome() + ProjectUtil.SLASH + "ide" + ProjectUtil.SLASH + "db" + ProjectUtil.SLASH + "lib"
+													+ ProjectUtil.SLASH + "hsqldb-2.0.0.jar") && vo.getDatabaseSchema().equals("PUBLIC")) {
 								dbChangeJobEnabled = false;
 							}
 							break;
@@ -237,18 +180,12 @@ public class AntCommand implements Command {
 				}
 
 				if (dbChangeJobEnabled) {
-					String[] changedbArgs = {
-							CommandUtil.CMD_CHANGE_DB,
-							"-pjthome",
-							vo.getBasedir() + ProjectUtil.SLASH
-									+ vo.getProjectName(), "-anyframeHome",
-							vo.getAnyframeHome(), "-logLevel", logLevel };
+					String[] changedbArgs = { CommandUtil.CMD_CHANGE_DB, "-pjthome", vo.getBasedir() + ProjectUtil.SLASH + vo.getProjectName(),
+							"-anyframeHome", vo.getAnyframeHome(), "-logLevel", logLevel };
 					antConfigList.add(changedbArgs);
 				}
 			} catch (Exception e) {
-				MessageDialogUtil.openDetailMessageDialog(ID,
-						Message.ide_message_title,
-						Message.exception_log_createproject, e.getMessage(),
+				MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title, Message.exception_log_createproject, e.getMessage(),
 						MessageDialog.ERROR);
 				PluginLoggerUtil.error(ID, e.getMessage(), e);
 			}

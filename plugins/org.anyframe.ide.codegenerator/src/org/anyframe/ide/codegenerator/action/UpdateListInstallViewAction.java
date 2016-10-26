@@ -19,6 +19,8 @@ package org.anyframe.ide.codegenerator.action;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.InstallationView;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
@@ -47,6 +49,8 @@ public class UpdateListInstallViewAction extends AbstractlViewAction {
 	 * Run this Action with message box
 	 */
 	public void run() {
+		new UsageCheckAdapter(EventSourceID.CD_UPDATE_CATALOG);
+		
 		view = CodeGeneratorActivator.getDefault().getInstallationView();
 		view.updateCatalogList();
 	}

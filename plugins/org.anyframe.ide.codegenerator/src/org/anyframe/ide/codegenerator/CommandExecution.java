@@ -24,13 +24,14 @@ import org.anyframe.ide.codegenerator.command.vo.CreatePJTVO;
 import org.anyframe.ide.codegenerator.command.vo.InstallPluginVO;
 import org.anyframe.ide.codegenerator.command.vo.UninstallPluginVO;
 import org.anyframe.ide.codegenerator.messages.Message;
-import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.wizards.ApplicationData;
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
+import org.anyframe.ide.common.util.StringUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -49,7 +50,7 @@ public class CommandExecution {
 	}
 
 	public void createProject(String pjtType, String pjtName, String appPath,
-			ApplicationData applicationData, IStructuredSelection selection) {
+			ApplicationData applicationData, IStructuredSelection selection, String pluginName) {
 
 		// 1. make arguments
 		CreatePJTVO vo = new CreatePJTVO();
@@ -80,7 +81,10 @@ public class CommandExecution {
 		vo.setDatabaseVersion(applicationData.getDriverVersion());
 		vo.setDatabaseDriver(applicationData.getDriverClassName());
 		vo.setOffline(applicationData.isOffine());
-
+		
+		// add vo into plugin name
+		vo.setPluginName(pluginName);
+		
 		// 2. run ant/maven
 		String buildType = applicationData.isAntProject() ? CommonConstants.PROJECT_BUILD_TYPE_ANT
 				: CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
@@ -89,20 +93,22 @@ public class CommandExecution {
 	}
 
 	public void createCRUD(String domainClassName, String srcPackage,
-			String serviceProjectName, boolean createWebProject,
+			String serviceProjectName, String templateType, boolean createWebProject,
 			boolean insertSampleData, String projectLocation) {
 
 		// 1. get application location
-		String pjtHomeLocation = "";
-		PropertiesIO pio = null;
 		String anyframeHomeLocation = "";
 		String projectBuildType = "";
 		try {
-			pjtHomeLocation = ProjectUtil.getProjectLocation(projectLocation);
-			pio = ProjectUtil.getProjectProperties(projectLocation);
-			anyframeHomeLocation = pio.readValue(CommonConstants.ANYFRAME_HOME);
-			projectBuildType = pio
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			anyframeHomeLocation = projectConfig.getAnyframeHome();
+
+			if(StringUtil.isEmptyOrNull(projectConfig.getAnyframeHome())){
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			}else{
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_loadconfig, e);
 			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
@@ -123,10 +129,11 @@ public class CommandExecution {
 		vo.setProjectName(serviceProjectName);
 		vo.setPackageName(srcPackage);
 		vo.setScope(scope);
-		vo.setProjectHome(pjtHomeLocation);
+		vo.setProjectHome(projectLocation);
 		vo.setAnyframeHome(anyframeHomeLocation);
-		vo.setBasedir(pjtHomeLocation);
+		vo.setBasedir(projectLocation);
 		vo.setInsertSampleData(sampleData);
+		vo.setTemplateType(templateType);
 
 		// 3. run ant/maven
 		AbstractCommandFactory factory = new CommandFactory(projectBuildType);
@@ -139,18 +146,20 @@ public class CommandExecution {
 	public void createModel(String tableName, String srcPackage,
 			String projectLocation) throws Exception {
 		// 1. get project location, package name
-		String pjtHomeLocation = "";
-		PropertiesIO pio = null;
-		String anyframeHomeLocation = "";
 		String projectBuildType = "";
 		String projectName = "";
+		String anyframeHomeLocation = "";
 		try {
-			pjtHomeLocation = ProjectUtil.getProjectLocation(projectLocation);
-			pio = ProjectUtil.getProjectProperties(projectLocation);
-			anyframeHomeLocation = pio.readValue(CommonConstants.ANYFRAME_HOME);
-			projectBuildType = pio
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-			projectName = pio.readValue(CommonConstants.PROJECT_NAME);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			projectName = projectConfig.getPjtName();
+			anyframeHomeLocation = projectConfig.getAnyframeHome();
+
+			if(StringUtil.isEmptyOrNull(anyframeHomeLocation)){
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			}else{
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_loadconfig, e);
 			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
@@ -162,9 +171,9 @@ public class CommandExecution {
 		vo.setCommand(CommandUtil.CMD_CREATE_MODEL);
 		vo.setTableName(tableName);
 		vo.setPackageName(srcPackage);
-		vo.setProjectHome(pjtHomeLocation);
+		vo.setProjectHome(projectLocation);
 		vo.setAnyframeHome(anyframeHomeLocation);
-		vo.setBasedir(pjtHomeLocation);
+		vo.setBasedir(projectLocation);
 		vo.setProjectName(projectName);
 
 		// 3. run ant
@@ -175,18 +184,20 @@ public class CommandExecution {
 	public void changeDBConfig(String projectLocation) {
 
 		// 1. get project location
-		String pjtHomeLocation = "";
-		PropertiesIO pio = null;
 		String anyframeHomeLocation = "";
 		String projectBuildType = "";
 		String projectName = "";
 		try {
-			pjtHomeLocation = ProjectUtil.getProjectLocation(projectLocation);
-			pio = ProjectUtil.getProjectProperties(projectLocation);
-			anyframeHomeLocation = pio.readValue(CommonConstants.ANYFRAME_HOME);
-			projectBuildType = pio
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-			projectName = pio.readValue(CommonConstants.PROJECT_NAME);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			anyframeHomeLocation = projectConfig.getAnyframeHome();
+			projectName = projectConfig.getPjtName();
+
+			if(StringUtil.isEmptyOrNull(projectConfig.getAnyframeHome())){
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			}else{
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(ID, Message.view_exception_loadconfig, e);
 			MessageDialogUtil.openMessageDialog(Message.ide_message_title,
@@ -196,9 +207,9 @@ public class CommandExecution {
 		// 2. make arguments
 		CommandVO vo = new CommandVO();
 		vo.setCommand(CommandUtil.CMD_CHANGE_DB);
-		vo.setProjectHome(pjtHomeLocation);
+		vo.setProjectHome(projectLocation);
 		vo.setAnyframeHome(anyframeHomeLocation);
-		vo.setBasedir(pjtHomeLocation);
+		vo.setBasedir(projectLocation);
 		vo.setProjectName(projectName);
 
 		// 3. run ant
@@ -210,20 +221,20 @@ public class CommandExecution {
 			String projectLocation) {
 		try {
 			// 1. get project location
-			String pjtHomeLocation = "";
-			PropertiesIO pio = null;
 			String anyframeHomeLocation = "";
 			String projectBuildType = "";
 			String projectName = "";
 			try {
-				pjtHomeLocation = ProjectUtil
-						.getProjectLocation(projectLocation);
-				pio = ProjectUtil.getProjectProperties(projectLocation);
-				anyframeHomeLocation = pio
-						.readValue(CommonConstants.ANYFRAME_HOME);
-				projectBuildType = pio
-						.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-				projectName = pio.readValue(CommonConstants.PROJECT_NAME);
+				String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+				ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+				anyframeHomeLocation = projectConfig.getAnyframeHome();
+				projectName = projectConfig.getPjtName();
+
+				if(StringUtil.isEmptyOrNull(projectConfig.getAnyframeHome())){
+					projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+				}else{
+					projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+				}
 			} catch (Exception e) {
 				PluginLoggerUtil
 						.error(ID, Message.view_exception_loadconfig, e);
@@ -234,9 +245,9 @@ public class CommandExecution {
 			// 2. make arguments
 			InstallPluginVO vo = new InstallPluginVO();
 			vo.setCommand(CommandUtil.CMD_INSTALL);
-			vo.setProjectHome(pjtHomeLocation);
+			vo.setProjectHome(projectLocation);
 			vo.setAnyframeHome(anyframeHomeLocation);
-			vo.setBasedir(pjtHomeLocation);
+			vo.setBasedir(projectLocation);
 			vo.setPluginNames(pluginNames);
 			vo.setExcludeSrc(!installSample);
 			vo.setProjectName(projectName);
@@ -256,20 +267,20 @@ public class CommandExecution {
 			String projectLocation) {
 		try {
 			// 1. get project location
-			String pjtHomeLocation = "";
-			PropertiesIO pio = null;
 			String anyframeHomeLocation = "";
 			String projectBuildType = "";
 			String projectName = "";
 			try {
-				pjtHomeLocation = ProjectUtil
-						.getProjectLocation(projectLocation);
-				pio = ProjectUtil.getProjectProperties(projectLocation);
-				anyframeHomeLocation = pio
-						.readValue(CommonConstants.ANYFRAME_HOME);
-				projectBuildType = pio
-						.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-				projectName = pio.readValue(CommonConstants.PROJECT_NAME);
+				String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+				ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+				anyframeHomeLocation = projectConfig.getAnyframeHome();
+				projectName = projectConfig.getPjtName();
+
+				if(StringUtil.isEmptyOrNull(projectConfig.getAnyframeHome())){
+					projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+				}else{
+					projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+				}
 			} catch (Exception e) {
 				PluginLoggerUtil
 						.error(ID, Message.view_exception_loadconfig, e);
@@ -280,9 +291,9 @@ public class CommandExecution {
 			// 2. make arguments
 			UninstallPluginVO vo = new UninstallPluginVO();
 			vo.setCommand(CommandUtil.CMD_UNINSTALL);
-			vo.setProjectHome(pjtHomeLocation);
+			vo.setProjectHome(projectLocation);
 			vo.setAnyframeHome(anyframeHomeLocation);
-			vo.setBasedir(pjtHomeLocation);
+			vo.setBasedir(projectLocation);
 			vo.setPluginNames(pluginNames);
 			vo.setProjectName(projectName);
 
@@ -300,21 +311,21 @@ public class CommandExecution {
 	public void updateCatalog(String projectLocation) {
 		try {
 			// 1. get project location
-			String pjtHomeLocation = ProjectUtil
-					.getProjectLocation(projectLocation);
-			PropertiesIO pio = ProjectUtil
-					.getProjectProperties(projectLocation);
-			String projectBuildType = pio
-					.readValue(CommonConstants.PROJECT_BUILD_TYPE);
-			String anyframeHomeLocation = pio
-					.readValue(CommonConstants.ANYFRAME_HOME);
-			String projectName = pio.readValue(CommonConstants.PROJECT_NAME);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectLocation);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			String anyframeHomeLocation = projectConfig.getAnyframeHome();
+			String projectName = projectConfig.getPjtName();
+			String projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_ANT;
+			if(StringUtil.isEmptyOrNull(projectConfig.getAnyframeHome())){
+				projectBuildType = CommonConstants.PROJECT_BUILD_TYPE_MAVEN;
+			}
+			
 			// 2. make arguments
 			CommandVO vo = new CommandVO();
 			vo.setCommand(CommandUtil.CMD_UPDATE_CATALOG);
-			vo.setProjectHome(pjtHomeLocation);
+			vo.setProjectHome(projectLocation);
 			vo.setAnyframeHome(anyframeHomeLocation);
-			vo.setBasedir(pjtHomeLocation);
+			vo.setBasedir(projectLocation);
 			vo.setProjectName(projectName);
 
 			// 3. run ant

@@ -24,16 +24,17 @@ import org.anyframe.ide.codegenerator.command.vo.CreateModelVO;
 import org.anyframe.ide.codegenerator.command.vo.CreatePJTVO;
 import org.anyframe.ide.codegenerator.command.vo.InstallPluginVO;
 import org.anyframe.ide.codegenerator.command.vo.UninstallPluginVO;
-import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.messages.Message;
+import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.util.PluginUtil;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.ArchetypeGenerationResult;
@@ -57,7 +58,7 @@ public class MavenCommand implements Command {
 	private final IPreferenceStore store;
 	private String logOption = "-q";
 	public static final String ID = CodeGeneratorActivator.PLUGIN_ID;
-	
+
 	public MavenCommand() {
 		store = CodeGeneratorActivator.getDefault().getPreferenceStore();
 		String logLevel = store.getString(IdePreferencesPage.LOG_LEVEL);
@@ -74,13 +75,15 @@ public class MavenCommand implements Command {
 
 			if (command.equals(CommandUtil.CMD_CREATE_CRUD)) {
 				CreateCRUDVO vo = (CreateCRUDVO) commandVo;
-				mvnCommand += " -Dentity=" + vo.getDomainClassName() + " -Dpackage=" + vo.getPackageName() + " -Dprojecthome=" + vo.getProjectHome() + " -Dscope=" + vo.getScope()
-						+ " -DinsertSampleData=" + vo.getInsertSampleData() + " -Dbasedir=" + vo.getBasedir() + " -DisCLIMode=false " + logOption;
+				mvnCommand += " -Dentity=" + vo.getDomainClassName() + " -Dpackage=" + vo.getPackageName() + " -Dprojecthome=" + vo.getProjectHome()
+						+ " -DtemplateType=" + vo.getTemplateType() + " -Dscope=" + vo.getScope() + " -DinsertSampleData=" + vo.getInsertSampleData()
+						+ " -Dbasedir=" + vo.getBasedir() + " -DisCLIMode=false " + logOption;
 				launchMaven(mvnCommand, vo);
 			} else if (command.equals(CommandUtil.CMD_CREATE_MODEL)) {
 
 				CreateModelVO vo = (CreateModelVO) commandVo;
-				mvnCommand += " -Dtable=" + vo.getTableName() + " -Dpackage=" + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir() + " -DisCLIMode=false " + logOption;
+				mvnCommand += " -Dtable=" + vo.getTableName() + " -Dpackage=" + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir()
+						+ " -DisCLIMode=false " + logOption;
 				launchMaven(mvnCommand, vo);
 			} else if (command.equals(CommandUtil.CMD_CHANGE_DB)) {
 
@@ -89,8 +92,8 @@ public class MavenCommand implements Command {
 			} else if (command.equals(CommandUtil.CMD_INSTALL)) {
 
 				InstallPluginVO vo = (InstallPluginVO) commandVo;
-				mvnCommand += " -Dname=" + vo.getPluginNames() + " -Dpackage=" + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir() + " -DisCLIMode=false" + " -DexcludeSrc="
-						+ new Boolean(vo.isExcludeSrc()).toString() + " " + logOption;
+				mvnCommand += " -Dname=" + vo.getPluginNames() + " -Dpackage=" + vo.getPackageName() + " -Dbasedir=" + vo.getBasedir()
+						+ " -DisCLIMode=false" + " -DexcludeSrc=" + new Boolean(vo.isExcludeSrc()).toString() + " " + logOption;
 				launchMaven(mvnCommand, vo);
 			} else if (command.equals(CommandUtil.CMD_UNINSTALL)) {
 				UninstallPluginVO vo = (UninstallPluginVO) commandVo;
@@ -129,11 +132,13 @@ public class MavenCommand implements Command {
 				archetypeArtifactId = CommonConstants.ARCHETYPE_SERVICE_ARTIFACT_ID;
 				archetypeVersion = store.getString(IdePreferencesPage.SERVICE_ARCHETYPE);
 				if (StringUtils.isEmpty(archetypeVersion))
-					archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_MAVEN, null, false);
+					archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_MAVEN, null,
+							false);
 			} else {
 				archetypeVersion = store.getString(IdePreferencesPage.BASIC_ARCHETYPE);
 				if (StringUtils.isEmpty(archetypeVersion))
-					archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_MAVEN, null, false);
+					archetypeVersion = PluginUtil.getLatestArchetypeVersion(archetypeArtifactId, CommonConstants.PROJECT_BUILD_TYPE_MAVEN, null,
+							false);
 			}
 
 			String artifactGroupdId = vo.getProjectGroupId();
@@ -145,7 +150,8 @@ public class MavenCommand implements Command {
 
 			// download archetype
 			Downloader downloader = (Downloader) container.lookup(Downloader.class.getName());
-			downloader.download(archetypeGroudId, archetypeArtifactId, archetypeVersion, null, request.getLocalRepository(), request.getRemoteArtifactRepositories());
+			downloader.download(archetypeGroudId, archetypeArtifactId, archetypeVersion, null, request.getLocalRepository(),
+					request.getRemoteArtifactRepositories());
 
 			// generate from archetype
 			request.setArchetypeGroupId(archetypeGroudId);
@@ -170,28 +176,36 @@ public class MavenCommand implements Command {
 			// 2. import project
 			ProjectUtil.importProject(basedir, artifactArtifactId);
 			// 3. add maven project nature
-//			ProjectUtil.enableNature(artifactArtifactId);
+			// ProjectUtil.enableNature(artifactArtifactId);
 
 			// 4. modify project.home, db.lib
 			String projectHome = vo.getBasedir() + ProjectUtil.SLASH + artifactArtifactId;
-			String properties = projectHome + CommonConstants.METAINF + CommonConstants.METADATA_FILE;
-			PropertiesIO appProps = new PropertiesIO(properties);
-			appProps.setProperty(CommonConstants.PROJECT_HOME, projectHome);
-			appProps.write();
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectHome);
+			ProjectConfig projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+			projectConfig.setPjtHome(projectHome);
+			ConfigXmlUtil.saveProjectConfig(projectConfig);
 
 			// 5. modify db information
 			ProjectCreationPostProcess postProcess = new ProjectCreationPostProcess(vo);
 			postProcess.doAfterProjectCreation(projectHome);
 
 			// 6. install core plugin
-			String mvnCommand = "anyframe:install -Dname=core -Dpackage=" + vo.getPackageName() + " -DisCLIMode=false -Dbasedir=" + projectHome + " -DtemplateHome=\"" + vo.getTemplateHome() + "\""
-					+ " -DinspectionHome=\"" + vo.getInspectionHome() + "\" " + logOption;
+			// String mvnCommand = "anyframe:install -Dname=core -Dpackage="
+			// + vo.getPackageName() + " -DisCLIMode=false -Dbasedir="
+			// + projectHome + " -DtemplateHome=\"" + vo.getTemplateHome()
+			// + "\"" + " -DinspectionHome=\"" + vo.getInspectionHome()
+			// + "\" " + logOption;
+			// add plug in name 13/06/26 by junghwan.hong
+			String mvnCommand = "anyframe:install -Dname=" + vo.getPluginName() + " -Dpackage=" + vo.getPackageName()
+					+ " -DisCLIMode=false -Dbasedir=" + projectHome + " -DtemplateHome=\"" + vo.getTemplateHome() + "\"" + " -DinspectionHome=\""
+					+ vo.getInspectionHome() + "\" " + logOption;
 
 			vo.setBasedir(projectHome);
 			launchMaven(mvnCommand, vo);
 
 		} catch (Exception e) {
-			MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title, Message.exception_log_createproject, e.getMessage(), MessageDialog.ERROR);
+			MessageDialogUtil.openDetailMessageDialog(ID, Message.ide_message_title, Message.exception_log_createproject, e.getMessage(),
+					MessageDialog.ERROR);
 			PluginLoggerUtil.error(ID, e.getMessage(), e);
 		}
 	}

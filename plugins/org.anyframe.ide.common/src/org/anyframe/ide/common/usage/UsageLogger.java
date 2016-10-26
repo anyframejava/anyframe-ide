@@ -37,16 +37,9 @@ public class UsageLogger {
 	private static final String USAGELOGS_BASE_DIRECTORY = "usagelogs";
 	private String baseDir;
 	
-//	private static final UsageLogger INSTANCE = new UsageLogger();
-	
-
 	public UsageLogger() {
 		baseDir = LoggerCommon.getBaseDir(USAGELOGS_BASE_DIRECTORY);
 	}
-
-//	public static UsageLogger getInstance() {
-//		return INSTANCE;
-//	}
 
 	public void write(String eventSourceId) {
 		
@@ -54,7 +47,6 @@ public class UsageLogger {
 		
 		try {
 			String filePath = baseDir + LoggerCommon.getCurrentFileName(pluginId, baseDir);
-			
 			String msg = createLog(pluginId, eventSourceId);
 			File file = FileUtils.getFile(filePath);
 			FileUtils.writeStringToFile(file, msg + "\n", true);
@@ -74,13 +66,12 @@ public class UsageLogger {
 		*/
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("[USAGE]");
 		sb.append(pluginId);
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		sb.append(eventSourceId);
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		
-		sb.append(DateFormatUtils.format(Calendar.getInstance().getTime(), "yyyyMMddHHmmss"));
+		sb.append(DateFormatUtils.format(Calendar.getInstance().getTime(), "yyyyMMddHHmmssSS"));
 		sb.append(LoggerCommon.LOG_SEPARATOR);
 		
 		String hostAddress = "";

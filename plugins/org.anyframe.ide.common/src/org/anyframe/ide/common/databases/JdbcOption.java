@@ -37,7 +37,7 @@ public class JdbcOption {
 	private boolean useDbSpecific = false;
 	private boolean runExplainPaln = false;
 
-	private boolean ynDefault;
+	private boolean isDefault;
 
 	private String dialect;
 	private String mvnGroupId;
@@ -107,9 +107,9 @@ public class JdbcOption {
 	}
 
 	public void setSchema(String schema) {
-		if(schema == null || "".equals(schema)){
-			this.schema = Constants.DB_NO_SCHEMA;
-		}else{
+		if (schema == null || "".equals(schema)) {
+			this.schema = "";
+		} else {
 			this.schema = schema;
 		}
 	}
@@ -130,12 +130,12 @@ public class JdbcOption {
 		this.runExplainPaln = runExplainPaln;
 	}
 
-	public boolean isDefault() {
-		return ynDefault;
+	public boolean getDefault() {
+		return isDefault;
 	}
 
-	public void setDefault(boolean ynDefault) {
-		this.ynDefault = ynDefault;
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	public String getDialect() {
@@ -184,15 +184,10 @@ public class JdbcOption {
 
 	@Override
 	public String toString() {
-		return "JdbcOption [dbName=" + dbName + ", dbType=" + dbType
-				+ ", dialect=" + dialect + ", driverClassName="
-				+ driverClassName + ", driverJar=" + driverJar + ", isDefault="
-				+ ynDefault + ", mvnArtifactId=" + mvnArtifactId
-				+ ", mvnGroupId=" + mvnGroupId + ", mvnVersion=" + mvnVersion
-				+ ", password=" + password + ", runExplainPaln="
-				+ runExplainPaln + ", schema=" + schema + ", url=" + url
-				+ ", useDbSpecific=" + useDbSpecific + ", userName=" + userName
-				+ "]";
+		return "JdbcOption [dbName=" + dbName + ", dbType=" + dbType + ", dialect=" + dialect + ", driverClassName=" + driverClassName
+				+ ", driverJar=" + driverJar + ", isDefault=" + isDefault + ", mvnArtifactId=" + mvnArtifactId + ", mvnGroupId=" + mvnGroupId
+				+ ", mvnVersion=" + mvnVersion + ", password=" + password + ", runExplainPaln=" + runExplainPaln + ", schema=" + schema + ", url="
+				+ url + ", useDbSpecific=" + useDbSpecific + ", userName=" + userName + "]";
 	}
 
 }

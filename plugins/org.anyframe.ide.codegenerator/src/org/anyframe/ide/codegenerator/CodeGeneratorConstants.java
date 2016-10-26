@@ -23,4 +23,5 @@ package org.anyframe.ide.codegenerator;
 public class CodeGeneratorConstants {
 
 	public static final String CONFIG_FILE = "org.anyframe.ide.codegenerator.config.xml";
+	
 }

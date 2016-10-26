@@ -24,10 +24,10 @@ import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.command.cli.CLIAntRunner;
 import org.anyframe.ide.command.cli.util.CommandUtil;
 import org.anyframe.ide.command.cli.util.Messages;
-import org.anyframe.ide.command.cli.util.PluginConstants;
 import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -53,8 +53,7 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 			// prepare ant properties
 			AntCommandUtil antcommand = new AntCommandUtil();
 			Properties antProperties = setRequiredOptions(args);
-			String projectHome = antProperties
-					.getProperty(CommonConstants.PROJECT_HOME);
+			String projectHome = antProperties.getProperty(CommonConstants.PROJECT_HOME);
 			setProjectHome(projectHome);
 
 			antcommand.prepare(args);
@@ -65,23 +64,16 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 
 			// TODO 나중에 비교로직 삭제 필요 (gen anyframe
 			// command 비교 필요없음)
-			if (!command.equals(CommandUtil.CMD_CREATE_PROJECT)
-					&& CommandUtil.containsCommand(command)) {
+			if (!command.equals(CommandUtil.CMD_CREATE_PROJECT) && CommandUtil.containsCommand(command)) {
 
-				properties = CLIAntRunner.getAntProperties(command, null, null,
-						args);
-				properties.setProperty(CommonConstants.PROJECT_HOME,
-						projectHome);
+				properties = CLIAntRunner.getAntProperties(command, null, null, args);
+				properties.setProperty(CommonConstants.PROJECT_HOME, projectHome);
 
-				buildXml = new Path(anyframeHome + SLASH + "ide" + SLASH
-						+ "cli" + SLASH + "scripts" + SLASH
-						+ "plugin-install.xml");
+				buildXml = new Path(anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH + "scripts" + SLASH + "plugin-install.xml");
 			} else {
-				properties = AntCommandUtil.getAntProperties(command, null,
-						null, args);
+				properties = AntCommandUtil.getAntProperties(command, null, null, args);
 				String buildXmlFileName = CommandUtil.getBuildXmlFile(command);
-				buildXml = new Path(anyframeHome + SLASH + "ide" + SLASH
-						+ "cli" + SLASH + "scripts" + SLASH + buildXmlFileName);
+				buildXml = new Path(anyframeHome + SLASH + "ide" + SLASH + "cli" + SLASH + "scripts" + SLASH + buildXmlFileName);
 			}
 			result.put("buildfile", buildXml);
 			result.put("antProps", properties);
@@ -115,8 +107,7 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		if (!checkCommand(command))
 			return;
 
-		if (!command.equals(CommandUtil.CMD_CREATE_PROJECT)
-				&& CommandUtil.containsCommand(command)) {
+		if (!command.equals(CommandUtil.CMD_CREATE_PROJECT) && CommandUtil.containsCommand(command)) {
 			doPrepare(args);
 		}
 	}
@@ -148,24 +139,18 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 
 	private boolean checkIsCommandNotFound(String command, String[] args) {
 
-		if (!CommandUtil.containsCommandBuildXml(command)
-				&& !CommandUtil.containsCommand(command)) {
+		if (!CommandUtil.containsCommandBuildXml(command) && !CommandUtil.containsCommand(command)) {
 
 			if (command.equals(CommandUtil.CMD_HELP)) {
 				if (args.length < 3) {
 					PluginLoggerUtil.info(ID, Messages.ANT_HELP);
 				} else {
 
-					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND
-							.containsKey(args[2].trim())) {
-						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND
-								.get(args[2].trim());
+					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND.containsKey(args[2].trim())) {
+						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND.get(args[2].trim());
 						PluginLoggerUtil.info(ID, commandMessage);
 					} else {
-						PluginLoggerUtil.info(
-								ID,
-								"No description found for name: "
-										+ args[2].trim());
+						PluginLoggerUtil.info(ID, "No description found for name: " + args[2].trim());
 					}
 				}
 			} else {
@@ -177,27 +162,17 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		return true;
 	}
 
-	private boolean checkIsValidCoreCommand(String command, String[] args)
-			throws Exception {
+	private boolean checkIsValidCoreCommand(String command, String[] args) throws Exception {
 
-		if (!CommandUtil.containsCommand(command)
-				|| command.equals(CommandUtil.CMD_CREATE_PROJECT)
-				|| command.equals(CommandUtil.CMD_LIST)) {
+		if (!CommandUtil.containsCommand(command) || command.equals(CommandUtil.CMD_CREATE_PROJECT) || command.equals(CommandUtil.CMD_LIST)) {
 			return true;
 		}
 
-		String metadataDir = projectHome + SLASH + META_INF;
-		if (projectHome.endsWith(SLASH))
-			metadataDir = projectHome + META_INF;
-		File metadata = new File(metadataDir);
-		if (!metadata.exists() || !metadata.isDirectory()) {
-			PluginLoggerUtil.error(ID, Messages.NOT_SUPPORTED_FOLDER_ERROR,
-					null);
-			return false;
-		}
+		String configFile = ConfigXmlUtil.getCommonConfigFile(projectHome);
 
-		if (!isValidProjectTypeInBuildPropertiesFile(command)) {
-			PluginLoggerUtil.error(ID, Messages.NOT_SUPPORTED_ERROR, null);
+		File config = new File(configFile);
+		if (!config.exists()) {
+			PluginLoggerUtil.error(ID, Messages.NOT_SUPPORTED_FOLDER_ERROR, null);
 			return false;
 		}
 
@@ -252,39 +227,6 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		return true;
 	}
 
-	private boolean isValidProjectTypeInBuildPropertiesFile(String command) {
-		PropertiesIO pio = getProjectManifest();
-
-		if (pio == null
-				|| pio.readValue(PluginConstants.PROJECT_TYPE).equals(
-						PluginConstants.PROJECT_TYPE_SERVICE)) {
-			if (command.equals(CommandUtil.CMD_RUN)) {
-				PluginLoggerUtil
-						.error(ID, Messages.NOT_SUPPORTED_COMMAND, null);
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private static PropertiesIO getProjectManifest() {
-		String fileFolderPath = projectHome;
-		if (!projectHome.endsWith(SLASH)) {
-			fileFolderPath += SLASH;
-		}
-
-		PropertiesIO pio = null;
-		try {
-			pio = new PropertiesIO(fileFolderPath + "META-INF" + SLASH
-					+ "project.mf");
-		} catch (Exception e) {
-			// ignore exception
-			PluginLoggerUtil.info(CodeGeneratorActivator.PLUGIN_ID, e.getMessage());
-		}
-		return pio;
-	}
-
 	private static boolean checkCommand(String[] args) {
 		// in case, args[0] doesn't exist or args[0] is
 		// '-help'
@@ -294,16 +236,11 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 				if (args.length < 3) {
 					PluginLoggerUtil.info(ID, Messages.ANT_HELP);
 				} else {
-					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND
-							.containsKey(args[2].trim())) {
-						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND
-								.get(args[2].trim());
+					if (Messages.ANT_HELP_MESSAGES_BY_COMMAND.containsKey(args[2].trim())) {
+						String commandMessage = Messages.ANT_HELP_MESSAGES_BY_COMMAND.get(args[2].trim());
 						PluginLoggerUtil.info(ID, commandMessage);
 					} else {
-						PluginLoggerUtil.info(
-								ID,
-								"No description found for name: "
-										+ args[2].trim());
+						PluginLoggerUtil.info(ID, "No description found for name: " + args[2].trim());
 					}
 				}
 			} else {
@@ -325,19 +262,14 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		return true;
 	}
 
-	private boolean checkIsValidGenCommand(String command, String[] args)
-			throws Exception {
+	private boolean checkIsValidGenCommand(String command, String[] args) throws Exception {
 
-		if (CommandUtil.containsCommandBuildXml(command)
-				&& !command.equals(CommandUtil.CMD_CREATE_PROJECT)) {
+		if (CommandUtil.containsCommandBuildXml(command) && !command.equals(CommandUtil.CMD_CREATE_PROJECT)) {
 
-			String projectmf = projectHome + SLASH + META_INF + SLASH
-					+ PROJECT_MF;
-			if (projectHome.endsWith(SLASH))
-				projectmf = projectHome + META_INF + SLASH + PROJECT_MF;
+			String configFile = ConfigXmlUtil.getCommonConfigFile(projectHome);
 
-			File appPropertiesFile = new File(projectmf);
-			if (!appPropertiesFile.exists()) {
+			File config = new File(configFile);
+			if (!config.exists()) {
 				PluginLoggerUtil.error(ID, Messages.INSIDE_PROJECT, null);
 				return false;
 			}
@@ -377,8 +309,7 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 	private static boolean checkCommand(String command) {
 		// in case, command doesn't exist or command is
 		// '-help'
-		if (!CommandUtil.containsCommand(command)
-				&& !CommandUtil.containsCommandBuildXml(command)) {
+		if (!CommandUtil.containsCommand(command) && !CommandUtil.containsCommandBuildXml(command)) {
 			if (!command.equals(CommandUtil.CMD_HELP))
 				PluginLoggerUtil.info(ID, Messages.WRONG_ARGS);
 
@@ -387,8 +318,7 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		return true;
 	}
 
-	public static Properties getAntProperties(String target, String buildXml,
-			String[] properties, String[] args) throws Exception {
+	public static Properties getAntProperties(String target, String buildXml, String[] properties, String[] args) throws Exception {
 		Properties antProperties = setRequiredOptions(args);
 
 		// check entity property
@@ -416,8 +346,7 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		Properties antProperties = new Properties();
 		String basedirFromArgs = "";
 
-		int i = (args[0].equals(CommandUtil.CMD_CREATE_CRUD)
-				|| CommandUtil.containsPluginNameNecessaryCommand(args[0]) || CommandUtil
+		int i = (args[0].equals(CommandUtil.CMD_CREATE_CRUD) || CommandUtil.containsPluginNameNecessaryCommand(args[0]) || CommandUtil
 				.containsPluginNameOptionalCommand(args[0])) ? 2 : 1;
 		for (; i < args.length; i = i + 2) {
 			String option = args[i];
@@ -439,25 +368,29 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		}
 
 		// set env ant properties
+		
 		if (anyframeHome == null || anyframeHome.length() == 0) {
-			PropertiesIO pio = getAppProperties(projectHome);
-			anyframeHome = pio.readValue(CommonConstants.ANYFRAME_HOME);
+			ProjectConfig projectConfig = null;
+			try {
+				String configFile = ConfigXmlUtil.getCommonConfigFile(projectHome);
+				projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+				anyframeHome = projectConfig.getAnyframeHome();
+			} catch (Exception e) {
+				PluginLoggerUtil.error(ID, Messages.NO_ARGS, e);
+			}
 		}
 		String basedir = ".";
-		if (projectHome.equals("." + SLASH)
-				&& args[0].equals(CommandUtil.CMD_CREATE_PROJECT))
+		if (projectHome.equals("." + SLASH) && args[0].equals(CommandUtil.CMD_CREATE_PROJECT))
 			basedir = anyframeHome + SLASH + "applications";
 		else if (!projectHome.equals("." + SLASH)) {
 			basedir = projectHome;
-			antProperties
-					.setProperty(CommonConstants.PROJECT_HOME, projectHome);
+			antProperties.setProperty(CommonConstants.PROJECT_HOME, projectHome);
 		}
 
 		System.setProperty("anyframeHome", anyframeHome);
 
 		antProperties.setProperty("anyframeHome", anyframeHome);
-		antProperties.setProperty("ant.home", anyframeHome + SLASH + "ide"
-				+ SLASH + CommonConstants.PROJECT_BUILD_TYPE_ANT);
+		antProperties.setProperty("ant.home", anyframeHome + SLASH + "ide" + SLASH + CommonConstants.PROJECT_BUILD_TYPE_ANT);
 		if (basedirFromArgs.length() > 0)
 			basedir = basedirFromArgs;
 		antProperties.setProperty("basedir", basedir);
@@ -465,14 +398,4 @@ public class AntCommandUtil extends org.anyframe.ide.command.cli.CLIAntRunner {
 		return antProperties;
 	}
 
-	private static PropertiesIO getAppProperties(String projectHome) {
-		try {
-			return new PropertiesIO(projectHome + CommonConstants.METAINF
-					+ CommonConstants.METADATA_FILE);
-		} catch (Exception e) {
-			PluginLoggerUtil.error(ID, Messages.NO_ARGS, e);
-
-			return null;
-		}
-	}
 }

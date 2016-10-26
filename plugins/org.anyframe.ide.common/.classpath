@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/jasypt-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xpp3_min-1.1.3.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/freemarker-gae-2.3.19.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jasypt-1.7.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/anyframe-core-1.5.0.jar"/>
-	<classpathentry kind="lib" path="lib/anyframe-query-1.5.0.jar"/>
-	<classpathentry kind="lib" path="lib/anyframe-query-ria-1.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/anyframe-core-1.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/anyframe-query-1.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/anyframe-query-ria-1.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/avalon-framework-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.jar"/>

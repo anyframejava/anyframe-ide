@@ -35,7 +35,7 @@ public class DatabasesUtils {
 	@Deprecated
 	public static JdbcOption getJdbcOptionFromOldProperties(IProject project) {
 		JdbcOption jdbc = new JdbcOption();
-
+		
 		PropertyHandler prop = new PropertyHandler(project);
 
 		jdbc.setDriverJar(prop.getProperty(DatabasesConstants.DRIVER));

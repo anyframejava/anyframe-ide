@@ -19,12 +19,14 @@ import java.util.Map;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.CommandExecution;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.preferences.IdePreferencesPage;
 import org.anyframe.ide.codegenerator.util.DatabaseUtil;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.common.Constants;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -52,6 +54,8 @@ public class NewApplicationWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 
+		new UsageCheckAdapter(EventSourceID.CD_NEW_PROJECT);
+		
 		// 0. validation - common, service project name
 		// case 1 : The application doesn't have the
 		// common type project, it shows the message
@@ -160,8 +164,10 @@ public class NewApplicationWizard extends Wizard implements INewWizard {
 		applicationData.setInspectionHome(inspectionHome);
 
 		CommandExecution commandExecution = new CommandExecution();
+		
+		// plugin name add 13/06/26 by junghwan.hong
 		commandExecution.createProject(pjtType, applicationPage.getPjtName(),
-				applicationPage.getLocation(), applicationData, this.selection);
+				applicationPage.getLocation(), applicationData, this.selection, applicationPage.getPluginName());
 
 		return true;
 	}

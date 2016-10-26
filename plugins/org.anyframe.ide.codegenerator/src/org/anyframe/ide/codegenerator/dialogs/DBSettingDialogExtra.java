@@ -15,7 +15,6 @@
  */
 package org.anyframe.ide.codegenerator.dialogs;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +22,15 @@ import java.util.Map;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.CommandExecution;
 import org.anyframe.ide.codegenerator.messages.Message;
-import org.anyframe.ide.codegenerator.util.ProjectUtil;
-import org.anyframe.ide.command.common.util.CommonConstants;
-import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.anyframe.ide.command.maven.mojo.container.PluginContainer;
 import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.databases.JdbcOption;
 import org.anyframe.ide.common.dialog.IDBSettingDialog;
 import org.anyframe.ide.common.dialog.JdbcType;
+import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
-import org.anyframe.ide.common.util.PropertyUtil;
+import org.anyframe.ide.common.util.ProjectConfig;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -66,7 +63,7 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 	private Text driverVersionText;
 
 	private java.util.List<JdbcType> jdbcTypes;
-	private PropertiesIO pjtProps = null;
+	private ProjectConfig projectConfig;
 
 	public void init(IProject project, List<JdbcType> jdbcTypes) {
 		this.project = project;
@@ -75,13 +72,13 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 
 	public void createUI(final Composite composite) {
 		try {
-			pjtProps = ProjectUtil.getProjectProperties(project);
+			String configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
 		} catch (Exception e) {
 			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 
-		ExpandableComposite expander = new ExpandableComposite(composite,
-				ExpandableComposite.TWISTIE);
+		ExpandableComposite expander = new ExpandableComposite(composite, ExpandableComposite.TWISTIE);
 
 		Composite parent = new Composite(expander, SWT.NONE);
 		parent.setLayout(new GridLayout(1, false));
@@ -145,7 +142,6 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 	}
 
 	public void loadSettings(JdbcType type) {
-
 		for (int i = 0; i < jdbcTypes.size(); i++) {
 			JdbcType jdbcType = jdbcTypes.get(i);
 			if (type.getType().equals(jdbcType.getType())) {
@@ -154,127 +150,34 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 			}
 		}
 
-		dialectCombo.setText(type.getDialect()[0] == null ? "" : type
-				.getDialect()[0]);
-		if (pjtProps.readValue(CommonConstants.PROJECT_BUILD_TYPE).equals(
-				CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
+		dialectCombo.setText(type.getDialect()[0] == null ? "" : type.getDialect()[0]);
+		if (projectConfig.getAnyframeHome() == null || "".equals(projectConfig.getAnyframeHome())) { // MAVEN
 			driverGroupIdText.setText(type.getDriverGroupId());
 			driverArtifactIdText.setText(type.getDriverArtifactId());
 			driverVersionText.setText(type.getDriverVersion());
 		}
 	}
 
-	public void saveSettings(IProject project, JdbcOption jdbcOption,
-			boolean isChangedDBConfig) {
-
-		String projectLocation = project.getLocation().toOSString();
-		String metaFile = projectLocation + Constants.METAINF
-				+ Constants.METADATA_FILE;
-		File f = new File(metaFile);
-		if (f.exists()) {
-			PropertyUtil propertyUtil = new PropertyUtil(metaFile);
-			propertyUtil.setProperty(Constants.DB_TYPE, jdbcOption.getDbType());
-			propertyUtil.setProperty(Constants.DB_NAME, jdbcOption.getDbName());
-			propertyUtil.setProperty(Constants.DB_SCHEMA,
-					jdbcOption.getSchema() == null
-							|| jdbcOption.getSchema().equals("No Schema") ? ""
-							: jdbcOption.getSchema());
-			propertyUtil.setProperty(Constants.DB_USERNAME,
-					jdbcOption.getUserName());
-			propertyUtil.setProperty(Constants.DB_PASSWORD,
-					jdbcOption.getPassword());
-			propertyUtil.setProperty(Constants.DB_SERVER, "");
-			propertyUtil.setProperty(Constants.DB_PORT, "");
-			propertyUtil.setProperty(Constants.DB_DRIVER_CLASS,
-					jdbcOption.getDriverClassName());
-			propertyUtil.setProperty(Constants.DB_DRIVER_PATH,
-					jdbcOption.getDriverJar());
-			propertyUtil.setProperty(Constants.DB_URL, jdbcOption.getUrl());
-
-			if (pjtProps.readValue(CommonConstants.PROJECT_BUILD_TYPE).equals(
-					CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-
-				if (!validateMavenInfo(jdbcOption)) {
-					for (int i = 0; i < jdbcTypes.size(); i++) {
-						JdbcType jdbcType = jdbcTypes.get(i);
-						if (jdbcOption.getDbType().equals(jdbcType.getType())) {
-
-							propertyUtil.setProperty(Constants.DB_DIALECT,
-									jdbcType.getDialect()[0]);
-							propertyUtil.setProperty(
-									CommonConstants.DB_GROUPID,
-									jdbcType.getDriverGroupId());
-							propertyUtil.setProperty(
-									CommonConstants.DB_ARTIFACTID,
-									jdbcType.getDriverArtifactId());
-							propertyUtil.setProperty(
-									CommonConstants.DB_VERSION,
-									jdbcType.getDriverVersion());
-							break;
-						}
-					}
-
-				} else {
-					propertyUtil.setProperty(Constants.DB_DIALECT,
-							jdbcOption.getDialect());
-					propertyUtil.setProperty(CommonConstants.DB_GROUPID,
-							jdbcOption.getMvnGroupId());
-					propertyUtil.setProperty(CommonConstants.DB_ARTIFACTID,
-							jdbcOption.getMvnArtifactId());
-					propertyUtil.setProperty(CommonConstants.DB_VERSION,
-							jdbcOption.getMvnVersion());
-				}
-			}
-			propertyUtil.write();
-			
-			if (isChangedDBConfig) {
-				try {
-					// call ant task
-					CommandExecution genExecution = new CommandExecution();
-					genExecution.changeDBConfig(project.getLocation()
-							.toOSString());
-				} catch (Exception e) {
-					PluginLoggerUtil.error(ID,
-							Message.view_exception_savedbconfig, e);
-					MessageDialogUtil.openMessageDialog(
-							Message.ide_message_title,
-							Message.view_exception_findconfig,
-							MessageDialog.ERROR);
-				}
-			}
+	public void changeDb(IProject project, JdbcOption jdbcOption) {
+		try {
+			// call ant task
+			CommandExecution genExecution = new CommandExecution();
+			genExecution.changeDBConfig(project.getLocation().toOSString());
+		} catch (Exception e) {
+			PluginLoggerUtil.error(ID, Message.view_exception_savedbconfig, e);
+			MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.view_exception_findconfig, MessageDialog.ERROR);
 		}
-	}
-
-	private boolean validateMavenInfo(JdbcOption jdbcOption) {
-		if (jdbcOption.getDialect() == null) {
-			return false;
-		}
-		if (jdbcOption.getMvnArtifactId() == null) {
-			return false;
-		}
-		if (jdbcOption.getMvnGroupId() == null) {
-			return false;
-		}
-		if (jdbcOption.getMvnVersion() == null) {
-			return false;
-		}
-		return true;
 	}
 
 	public void setDatabaseTypeSelectListener(SelectionEvent e) {
-
 		clearUI();
 
 		Combo selected = (Combo) e.getSource();
-		JdbcType jdbcType = (JdbcType) this.jdbcTypes.get(selected
-				.getSelectionIndex());
+		JdbcType jdbcType = (JdbcType) this.jdbcTypes.get(selected.getSelectionIndex());
 		if (!jdbcType.getType().equalsIgnoreCase("Others...")) {
 			setDialect(selected.getSelectionIndex());
-			if (pjtProps != null) {
-				if (pjtProps.readValue(CommonConstants.PROJECT_BUILD_TYPE)
-						.equals(CommonConstants.PROJECT_BUILD_TYPE_MAVEN)) {
-					setDriverPom(selected.getSelectionIndex());
-				}
+			if (projectConfig.getAnyframeHome() == null || "".equals(projectConfig.getAnyframeHome())) { // MAVEN
+				setDriverPom(selected.getSelectionIndex());
 			}
 		}
 	}
@@ -290,8 +193,7 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 
 	private void setDriverPom(int index) {
 		driverGroupIdText.setText(jdbcTypes.get(index).getDriverGroupId());
-		driverArtifactIdText
-				.setText(jdbcTypes.get(index).getDriverArtifactId());
+		driverArtifactIdText.setText(jdbcTypes.get(index).getDriverArtifactId());
 		driverVersionText.setText(jdbcTypes.get(index).getDriverVersion());
 	}
 
@@ -305,12 +207,9 @@ public class DBSettingDialogExtra implements IDBSettingDialog {
 	public Map<String, String> getInputData() {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put(Constants.XML_TAG_DIALECT, dialectCombo.getText());
-		result.put(Constants.XML_TAG_DRIVER_GROUPID,
-				driverGroupIdText.getText());
-		result.put(Constants.XML_TAG_DRIVER_ARTIFACTID,
-				driverArtifactIdText.getText());
-		result.put(Constants.XML_TAG_DRIVER_VERSION,
-				driverVersionText.getText());
+		result.put(Constants.XML_TAG_DRIVER_GROUPID, driverGroupIdText.getText());
+		result.put(Constants.XML_TAG_DRIVER_ARTIFACTID, driverArtifactIdText.getText());
+		result.put(Constants.XML_TAG_DRIVER_VERSION, driverVersionText.getText());
 		return result;
 	}
 

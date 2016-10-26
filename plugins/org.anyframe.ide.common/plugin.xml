@@ -69,6 +69,11 @@
 				webURL="http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.2.xsd">
 			</public>
 			<public 
+				publicId="http://www.anyframejava.org/schema/mvc" 
+				uri="xsds/anyframe-spring-mvc-5.3.xsd" 
+				webURL="http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.3.xsd">
+			</public>
+			<public 
 				publicId="http://www.anyframejava.org/schema/query" 
 				uri="xsds/anyframe-query-1.0.xsd" 
 				webURL="http://www.anyframejava.org/schema/query/anyframe-query-1.0.xsd">

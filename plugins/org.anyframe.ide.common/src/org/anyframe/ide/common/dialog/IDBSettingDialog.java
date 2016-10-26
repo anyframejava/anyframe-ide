@@ -35,8 +35,7 @@ public interface IDBSettingDialog {
 
 	public void loadSettings(JdbcType type);
 
-	public void saveSettings(IProject project, JdbcOption jdbcOption,
-			boolean isChangedDBConfig);
+	public void changeDb(IProject project, JdbcOption jdbcOption);
 
 	public void setDatabaseTypeSelectListener(SelectionEvent e);
 

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/icu4j-2.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jasypt-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.maven.ide.eclipse_0.12.1.20110112-1712.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher-1.8.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-nodeps-1.8.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr-2.7.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-ant-2.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-aspect-2.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-cli-2.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-common-2.2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/anyframe-maven-plugin-2.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-ant-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-aspect-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-cli-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-ide-command-common-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/anyframe-maven-plugin-2.2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/appfuse-maven-plugin-2.1.0-M1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/archetype-common-2.0-alpha-4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aspectjrt-1.6.8.jar"/>

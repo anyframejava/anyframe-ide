@@ -45,9 +45,18 @@ public interface Constants {
 	String XML_TAG_JDBCDRIVERS = "jdbcdrivers";
 	String XML_TAG_DATABASES = "databases";
 
-	// project.mf
-	String ANYFRAME_HOME = "anyframe.home";
-
+	
+	// config
+	String CONFIG_ROOT = "anyframe";
+	String ANYFRAME_HOME = "anyframe-home";
+	String PROJECT_HOME = "pjthome";
+	String PACKAGE_NAME = "package";
+	String PROJECT_NAME = "pjtname";
+	String PROJECT_BUILD_TYPE_ANT = "ant";
+	String CONFIG_PATH = "path";
+	String CONTEXT_ROOT = "context-root";
+	String OFFLINE = "offline";
+	
 	String APP_DAOFRAMEWORK_TYPE = "project.daoframework";
 	String APP_TEMPLATE_TYPE = "project.template";
 
@@ -67,15 +76,11 @@ public interface Constants {
 	String DB_SERVER = "db.server";
 	String DB_PORT = "db.port";
 
-	String PACKAGE_NAME = "package.name";
 	String WEB_FRAMEWORK = "web.framework";
 	String TEMPLATE_TYPE = "template.type";
 	String PROJECT_BUILD_TYPE = "project.build";
-	String PROJECT_BUILD_TYPE_ANT = "ant";
 	String PROJECT_BUILD_TYPE_MAVEN = "maven";
 
-	String PROJECT_HOME = "project.home";
-	String PROJECT_NAME = "project.name";
 	String PROJECT_TEMPLATE_HOME = "project.template.home";
 
 	String PROJECT_TYPE = "project.type";
@@ -93,7 +98,8 @@ public interface Constants {
 	String METAINF_ANYFRAME = METAINF + "anyframe" + FILE_SEPERATOR;
 
 	// db settings
-	String XML_CONFIG_ROOT_PATH = "/dbexplorer/dataSource";
+	String XML_CONFIG_ROOT_PATH = "dbexplorer";
+	String XML_TAG_DATASOURCE = "dataSource";
 	String XML_TAG_TYPE = "type";
 	String XML_TAG_NAME = "name";
 	String XML_TAG_DRIVER_PATH = "driverJar";
@@ -102,6 +108,7 @@ public interface Constants {
 	String XML_TAG_USERNAME = "username";
 	String XML_TAG_PASSWORD = "password";
 	String XML_TAG_SCHEMA = "schema";
+	String XML_CONFIG_ROOT = "/" + XML_CONFIG_ROOT_PATH + "/" + XML_TAG_DATASOURCE;
 
 	// community maven info
 	String XML_TAG_DIALECT = "dialect";
@@ -112,6 +119,7 @@ public interface Constants {
 	// optional
 	String XML_TAG_USE_DB_SPECIFIC = "useDbSpecific";
 	String XML_TAG_RUN_EXPLAIN_PLAN = "runExplainPlan";
+	String XML_TAG_DEFAULT = "isDefault";
 
 	// default db connection url
 	String DB_HSQL_FILE_URL = "jdbc:hsqldb:file:<database_name>";
@@ -138,6 +146,8 @@ public interface Constants {
 	String XML_DRIVER_CONFIG_OTHERS = "Others...";
 
 	// for online runtime - check whether enterprise version(online) is installed or not
+	String TEMPLATE_TYPE_CORE = "core";
+	String TEMPLATE_TYPE_QUERY = "query";
 	String TEMPLATE_TYPE_ONLINE = "online";
 	
 	//Pling id ID
@@ -151,4 +161,15 @@ public interface Constants {
 	String DB_SCHEMA_PUBLIC = "PUBLIC";
 
 	String DB_SETTING_DEFAULT_POSTFIX = "[Default]";
+	String TEMPLATE_TYPE_DISABLE_POSTFIX = "[Disable]";
+	
+	String PROJECT_NAME_CODE_GENERATOR = "codegenerator";
+	String PROJECT_NAME_DAO_MANAGER = "daomanager";
+	String PROJECT_NAME_VO_MANAGER = "vomanager";
+	String PROJECT_NAME_UNITTEST_MANAGER = "unittestmanager";
+	
+	String PLUGIN_INSTALLED_FILE = "plugin-installed.xml";
+	
+	String PLUGIN_XML = "plugin";
+	
 }

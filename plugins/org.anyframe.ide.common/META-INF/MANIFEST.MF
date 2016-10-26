@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.common;singleton:=true
-Bundle-Version: 2.9.0
+Bundle-Version: 3.0.0
 Bundle-Activator: org.anyframe.ide.common.CommonActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ant.core,
@@ -32,9 +32,9 @@ Require-Bundle: org.eclipse.ant.core,
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/jasypt-1.7.jar,
- lib/anyframe-core-1.5.0.jar,
- lib/anyframe-query-1.5.0.jar,
- lib/anyframe-query-ria-1.5.0.jar,
+ lib/anyframe-core-1.5.1.jar,
+ lib/anyframe-query-1.5.1.jar,
+ lib/anyframe-query-ria-1.5.1.jar,
  lib/avalon-framework-4.0.jar,
  lib/commons-beanutils-1.8.0.jar,
  lib/commons-collections-3.2.jar,
@@ -65,7 +65,7 @@ Export-Package: org.anyframe.ide.common,
  org.anyframe.ide.common.preferences,
  org.anyframe.ide.common.properties,
  org.anyframe.ide.common.table,
- org.anyframe.ide.common.util,
  org.anyframe.ide.common.usage,
+ org.anyframe.ide.common.util,
  org.apache.commons.lang,
  org.springframework.beans.factory

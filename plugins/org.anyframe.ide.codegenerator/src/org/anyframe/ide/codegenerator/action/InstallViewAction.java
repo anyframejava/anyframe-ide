@@ -19,6 +19,8 @@ package org.anyframe.ide.codegenerator.action;
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.InstallationView;
+import org.anyframe.ide.common.usage.EventSourceID;
+import org.anyframe.ide.common.usage.UsageCheckAdapter;
 
 /**
  * Constructs an Action group for ctip view of Anyframe IDE Eclipse Plug-in.
@@ -43,6 +45,8 @@ public class InstallViewAction extends AbstractlViewAction {
 	 * Run this Action with message box
 	 */
 	public void run() {
+		new UsageCheckAdapter(EventSourceID.CD_PLUGIN_INSTALL);
+		
 		InstallationView view = CodeGeneratorActivator.getDefault().getInstallationView();
 		view.installPlugin();
 	}

@@ -58,31 +58,31 @@ public class EncryptUtil {
 	public static String decrypt(String stringToDecrypt) {
 		if (stringToDecrypt == null) {
 			return null;
-		} else if (stringToDecrypt.startsWith(ENCRYPTION_PREFIX)) {
-			try {
-				return textEncryptor.decrypt(stringToDecrypt
-						.substring(ENCRYPTION_PREFIX.length()));
-			} catch (EncryptionOperationNotPossibleException eope) {
-				// bonobono TODO : temporary code for compatibility with old
-				// version (encrypted text with salt)
-				BasicTextEncryptor tempDecryptor = new BasicTextEncryptor();
-				tempDecryptor.setPassword(ONLINE_PASSWORD_KEY);
-				return tempDecryptor.decrypt(stringToDecrypt
-						.substring(ENCRYPTION_PREFIX.length()));
-			}
 		} else {
-			return stringToDecrypt;
+			if (stringToDecrypt.startsWith(ENCRYPTION_PREFIX)) {
+				String decrypt = internalDecrypt(stringToDecrypt);
+				String encrypt = EncryptUtil.encrypt(decrypt);
+				if (stringToDecrypt.equals(encrypt)) {
+					try {
+						return internalDecrypt(stringToDecrypt);
+					} catch (EncryptionOperationNotPossibleException eope) {
+						// bonobono TODO : temporary code for compatibility with
+						// old
+						// version (encrypted text with salt)
+						BasicTextEncryptor tempDecryptor = new BasicTextEncryptor();
+						tempDecryptor.setPassword(ONLINE_PASSWORD_KEY);
+						return tempDecryptor.decrypt(stringToDecrypt.substring(ENCRYPTION_PREFIX.length()));
+					}
+				} else {
+					return stringToDecrypt;
+				}
+			} else {
+				return stringToDecrypt;
+			}
 		}
 	}
 
-	// public static void main(String...args) {
-	// String original = "TestOraclePwd4321";
-	// String encryptedWithSalt =
-	// "ENC_cvnYrxj8+k5pZwrU95/Bb4AbudE/ubeqe5yfLPggRDY=";
-	// System.out.println(decrypt(encryptedWithSalt));
-	// String encryptedWithoutSalt1 = encrypt(original);
-	// String encryptedWithoutSalt2 = encrypt(original);
-	// System.out.println(encryptedWithoutSalt1.equals(encryptedWithoutSalt2));
-	// }
-
+	private static String internalDecrypt(String stringToDecrypt) {
+		return textEncryptor.decrypt(stringToDecrypt.substring(ENCRYPTION_PREFIX.length()));
+	}
 }

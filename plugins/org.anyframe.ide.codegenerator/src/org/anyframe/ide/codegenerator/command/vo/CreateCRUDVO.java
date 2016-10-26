@@ -24,6 +24,7 @@ public class CreateCRUDVO extends CommandVO {
 
 	private String domainClassName = "";
 	private String scope = "";
+	private String templateType = "";
 	private String insertSampleData = "";
 
 	public String getInsertSampleData() {
@@ -48,5 +49,13 @@ public class CreateCRUDVO extends CommandVO {
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public String getTemplateType() {
+		return templateType;
+	}
+
+	public void setTemplateType(String templateType) {
+		this.templateType = templateType;
 	}
 }

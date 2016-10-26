@@ -30,8 +30,8 @@
    		Refresh 버튼을 수행하면 현재 선택 가능한 DB Table이 트리 형태로 조회되며 Domain 클래스로 생성하고자하는 Table을 선택한다. 
    		선택한 Table로 Domain 클래스를 생성 할 경우 Finish 버튼을 클릭한다.</para>
 
-      <para>참조관계에 있는 테이블의 경우 해당 테이블을 동시에 선택하여 Domain 클래스를 생성 해야 하며, 이를 통해
-      참조관계에 관한 정보가 제공된다.</para>
+      <!-- para>참조관계에 있는 테이블의 경우 해당 테이블을 동시에 선택하여 Domain 클래스를 생성 해야 하며, 이를 통해
+      참조관계에 관한 정보가 제공된다.</para -->
 
       <itemizedlist>
         <listitem>
@@ -41,63 +41,71 @@
           <para>Select Tables: JDBC 구성에 따라 연결된 DB의 테이블 목록이 조회된다.</para>
         </listitem>
       </itemizedlist>
-<warning>
+<!-- warning>
   <title>DB 타입이 MySQL 경우 테이블 선택 시 주의사항</title>
     <para>Anyframe Java IDE에서는 Hibernate Tools의 API를 이용하여 Domain 자동 생성기능을 지원하고 있다.
     DB가 mysql일 경우는 Hibernate Tools의 API에서 소문자로된 테이블명만 인식하므로,
     대문자로 된 테이블명을 선택하여 Domain 클래스 자동 생성 기능을 수행하는 경우 Domain 클래스가 생성되지 않을 수 있다.(빌드 도구로 Ant를 사용하는 경우)
     </para>
-</warning>
+</warning -->
   </listitem>
   <listitem>
    <para>Domain 클래스 생성 작업이 완료되면, Console 창을 통해
    Build Successful 이라는 메세지가 출력된다.
    Domain 클래스가 제대로 생성되었는지 확인하기 위해 
    Domain 클래스 생성시 지정한 패키지 하위로 Domain 클래스들이 위치하고 있는지 확인한다.
-   생성된 Domain 클래스는 JPA Annotation 설정을 통해 DB Table, Column 정보들을 가지고 있다.
-   참고로, Build Successful 메세지가 출력되어도 해당 패키지에 Domain 클래스가 생성되지 않은 경우는 Domain 클래스가 정상적으로 생성되지 않은것이다.
-   예를 들어, DB 타입이 MySQL인 경우처럼 Hibernate Tools의 API가 인식하지 못하는 테이블명이 입력되었을 경우,
-   Build Successful 메세지는 출력되지만 실제로 Domain 클래스는 생성되지 않는다. 
+   생성된 Domain 클래스는 Annotation 설정을 통해 DB Table, Column 정보들을 가지고 있다.
       </para>
-		<programlisting language="java">@Entity
-@Table(name = "BOARD")
-<emphasis role="bold">//@Table의 schema 속성은 default 템플릿을 활용하여 
-//sybase DB와 hibernate dao framework을 사용할때 정의됨
-//@Table의 catalog 속성은 catalog 정보가 존재할 경우 정의됨</emphasis>
+		<programlisting language="java">
+/**
+ * @Table BOARD
+ * @author SDS
+ */
 public class Board implements Serializable {
-    private BoardId id;
-    private BoardMaster boardMaster;
-    private String boardName;
+    
+   /**
+	* @ColumnName BOARD_ID
+	* @ColumnType INTEGER
+	* @Length(32)
+	* @Key
+	*/
+    private int boardId;
+    
+   /**
+	* @ColumnName BOARD_MASTER_ID
+	* @ColumnType INTEGER
+	* @Length(32)
+	* @Key
+	*/
+	private int boardMasterId;
+    
     중략...
-    @EmbeddedId
-    @AttributeOverrides({@AttributeOverride(name = "boardId",column = 
-           @Column(name = "BOARD_ID",nullable = false)
-        )
-        , @AttributeOverride(name = "boardMasterId",column = 
-           @Column(name = "BOARD_MASTER_ID",nullable = false)
-        )
-    })
-    public BoardId getId() {
-        return this.id;
+    
+    public BoardId getBoardId() {
+        return boardId;
     }
-    public void setId(BoardId id) {
-        this.id = id;
+    public void setBoardId(int boardId) {
+       this.boardId = boardId;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOARD_MASTER_ID", nullable = false, 
-                insertable = false, updatable = false)
-    public BoardMaster getBoardMaster() {
-        return this.boardMaster;
+    public int getBoardMasterId() {
+        return boardMasterId;
     }
-    public void setBoardMaster(BoardMaster boardMaster) {
-        this.boardMaster = boardMaster;
+    public void setBoardMasterId(int boardMasterId) {
+        this.boardMasterId = boardMasterId;
     }
-    @Column(name = "BOARD_NAME", nullable = false, length = 150)
-    public String getBoardName() {
-        return this.boardName;
-    }
-    public void setBoardName(String boardName) {
-        this.boardName = boardName;
+    중략...
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+        sb.append(" [");
+		sb.append("boardId").append("='").append(getBoardId()).append("', ");
+		sb.append("boardMasterId").append("='").append(getBoardMasterId()).append("', ");
+		sb.append("boardName").append("='").append(getBoardName()).append("', ");
+		sb.append("boardDesc").append("='").append(getBoardDesc()).append("', ");
+		sb.append("boardOrder").append("='").append(getBoardOrder()).append("', ");
+		sb.append("boardTopics").append("='").append(getBoardTopics()).append("', ");
+		sb.append("regDate").append("='").append(getRegDate()).append("'");
+		sb.append("] ");
+        return sb.toString();
     }
 }</programlisting>
       </listitem>
@@ -120,9 +128,6 @@ public class Board implements Serializable {
 		생성해줌으로써
 		생성된 코드의 기능 확인까지 손쉽게 할 수 있다. 따라서, CRUD 생성 기능을 사용하기 전에
 		Domain 생성 기능을 이용하여, 연결된 DB 테이블 기반의 Domain 클래스를 먼저 생성하도록 한다.
-		Domain Generation 기능을 수행 할 때, 참조관계에 있는 테이블의 경우 
-		해당 테이블을 동시에 선택하여 Domain 클래스를 생성하지 않으면,
-		CRUD Generation 기능을 수행 할 때 에러가 발생하므로 주의한다.
 	</para>
 
 	<orderedlist numeration="arabic" inheritnum="inherit">
@@ -143,6 +148,11 @@ public class Board implements Serializable {
 						패키지
 						정보를 함께 입력하면 된다. (ex. sub.categories)</para>
 				</listitem>
+				
+				<listitem>
+					<para>Template Type: CRUD가 생성시 이용할 Template Type을 선택한다.</para>
+				</listitem>
+				
 				<listitem>
 					<para>Web source code generation: 비즈니스 레이어에 해당하는 소스 뿐 아니라 프리젠테이션
 						레이어 소스 코드들도 함께 생성하고자 한다면 체크 박스에 체크하도록 한다. </para>
@@ -431,46 +441,11 @@ public class BoardControllerTest {
 		</listitem>
 	</orderedlist>
 	<note>
-		<title>참고 1</title>
+		<title>참고</title>
 		<para>위에서 설명한 기능 수행 도중에는 프로젝트 생성, 코드 생성 및 DB 변경 등과 같은
 			Code Generator 의 기능을
 			동시에 수행시킬 수 없으므로 유의하도록 한다.
 			(Background 실행을 통한 기능 수행 시) </para>
-	</note>
-	<note>
-		<title>참고 2</title>
-		<para>
-			CRUD 소스 코드 생성은 Domain 클래스를 기반으로 이루어지는데, 이를 위해 Domain 클래스를 포함한 전체
-			프로젝트의
-			소스 코드를 컴파일을 한 후 컴파일된 Domain 클래스를 이용하여 코드를 생성한다. 그러므로 프로젝트 내 소스
-			코드의 양이 많아
-			CRUD 소스 코드 생성 시 컴파일에 걸리는 시간이 많이 소요되는 경우, [Anyframe
-			Home]/ide/cli/scripts 폴더 내에 있는 code-generation.xml 파일에서
-			"create-crud"
-			target 내에 정의된 다음 clean target을 호출해주는 부분을 제거해주도록 한다.
-			clean target에서는
-			기존에 컴파일된 모든 소스 코드를 삭제한 후 이후 compile target에서 새로 전체
-			소스 코드를 컴파일하게 되므로 소스
-			코드의 양이 많을 경우 시간이 많이 소요될 수 있다. 속도 향상을 위해서 clean
-			target을 제거하는 경우
-			incremental
-			build를 수행하는 compile target에 의해 변경된 소스 코드만 컴파일되므로 시간이 적게
-			소요된다.
-				</para>
-		<programlisting language="java"><![CDATA[<ant antfile="build.xml" dir="${project.home}" target="clean"/>]]></programlisting>
-	</note>
-	<note>
-		<title>참고 3</title>
-		<para>CRUD 소스코드는 정상적으로 생성되었지만 런타임시에 발생할 수 있는 문제에 대해서 해결방법을 알아본다.</para>
-		<itemizedlist>
-		  <listitem><para>time 타입 데이터가 있는 경우</para>
-		  	<itemizedlist>
-			  <listitem><para>현상) 입력/수정 화면에서 create/update 할 때 Fali to convert 오류 발생</para></listitem>
-			  <listitem><para>원인)Time 타입 데이터(시:분:초)가 request parameter에 String으로 담겨지기 때문에, Domain 클래스와 Binding 될때 데이터 바인딩이 되지 않음</para></listitem>
-			  <listitem><para>해결책)Domain 클래스에서 time 타입 컬럼을 string 타입으로 선언하여 사용</para></listitem>
-			</itemizedlist>
-		  </listitem>
-		</itemizedlist>
 	</note>
 </section>
 </chapter>

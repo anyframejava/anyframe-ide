@@ -77,7 +77,7 @@
 			<contains string="${ide.version}" substring="SNAPSHOT" casesensitive="false" />
 			<then>
 				<svn username="${subv.username}" password="${subv.password}">
-					<checkout url="${subv.url.ctip.tag}/packager" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
+					<checkout url="${subv.url.ctip.trunk}/packager" revision="HEAD" destPath="${build}/temp/src/ctip-packager" />
 				</svn>
 			</then>
 			<else>

@@ -65,15 +65,27 @@ public class PluginUtil {
 	 * @return
 	 */
 	public static String getTemplateHomePath(IProject project){
-		String projectLocation = project.getLocation().toOSString();
-		String metaFile = projectLocation + Constants.METAINF + Constants.METADATA_FILE;
-		File f = new File(metaFile);
-		String property = null;
-		if (f.exists()) {
-			PropertyUtil propertyUtil = new PropertyUtil(metaFile);
-			property = propertyUtil.getProperty(Constants.PROJECT_TEMPLATE_HOME);
-			
+		String configFile;
+		ProjectConfig projectConfig = null;
+		
+		try {
+			configFile = ConfigXmlUtil.getCommonConfigFile(project.getLocation().toOSString());
+			projectConfig = ConfigXmlUtil.getProjectConfig(configFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return property;
+		
+		return projectConfig.getTemplateHomePath();
+//		String projectLocation = project.getLocation().toOSString();
+//		String metaFile = projectLocation + Constants.METAINF + Constants.METADATA_FILE;
+//		File f = new File(metaFile);
+//		String property = null;
+//		if (f.exists()) {
+//			PropertyUtil propertyUtil = new PropertyUtil(metaFile);
+//			property = propertyUtil.getProperty(Constants.PROJECT_TEMPLATE_HOME);
+//			
+//		}
+//		return property;
 	}
 }
