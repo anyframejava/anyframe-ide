@@ -1,0 +1,304 @@
+<chapter id="installation_ant">
+	<title>Ant</title>
+	
+	<para>
+		본 장에서는 해당 프로젝트의 빌드 도구가 Ant인 경우, 
+		CLI를 이용하여 Anyframe 기반의 개발 환경을 쉽게 구성하는 방법에 대해서 설명하고자 한다.
+		Ant를 기반으로 개발 환경을 구성하려면 다음과 같은 순서로 작업을 진행한다.
+	</para>
+	
+	<itemizedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para><link linkend="installation_ant_configuration">Anyframe 설치 및 환경 설정</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_ant_generate_archetype">프로젝트 구조 생성</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_ant_install_plugin">Plugin 설치</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_ant_run">어플리케이션 실행</link></para>
+		</listitem>
+	</itemizedlist>
+	
+	<section id="installation_ant_configuration">
+		<title>Anyframe 설치 및 환경 설정</title>
+		<para>
+			여기서는 빌드 도구로 Ant를 사용할 경우, 본격적인 Anyframe 기반의 개발 환경 구성 전에 선행되어야 하는 작업들에 대해 설명하고자 한다.
+			Ant는 Anyframe 배포판에 포함되어 있으므로, Anyframe을 설치하면 Ant가 자동적으로 함께 설치된다.
+			Anyframe은 압축파일로 배포되며, 다음과 같은 순서에 의하여 설치한다.
+			<orderedlist numeration="arabic" inheritnum="inherit">
+				<listitem>
+					<para>
+						Anyframe을 설치하기 위한 [<link linkend="introduction_systemrequirements">시스템 사양</link>]을 확인한다.
+					</para>
+				</listitem>
+				<listitem>
+					<para>Anyframe의 최신 배포판을 
+					<ulink url="http://www.anyframejava.org/project/anyframe#downloads">http://www.anyframejava.org/project/anyframe#downloads</ulink>
+					에서 확인한다. 
+					</para>
+				</listitem>
+				<listitem>
+					<para>Anyframe의 최신 배포판("anyframe-x.x.x.zip")을 사용자의 컴퓨터에 내려받는다.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						내려받은 최신 배포판의 압축을 원하는 폴더에 푼다.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						압축을 풀면 다음과 같은 구조를 확인할 수 있다. 여기서 압축을 푼 위치가 Anyframe이 설치된 root 경로가 되며 이후 매뉴얼 내용에서 [Anyframe Home]이라 통칭하도록 한다.
+						Anyframe에서 제공하는 모든 라이브러리들과 빌드 도구인 Ant, 프로젝트 및 코드 생성 템플릿, 공통 빌드 스크립트, 샘플 HSQL DB등이 모두 함께 설치된다.
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="../image/installation/ant/install-filetree.png" align="center" />
+							</imageobject>
+							<textobject>
+								<phrase>Anyframe의 최신 배포판("anyframe-x.x.x.zip")을 압축 해제한 모습을 나타내는 그림으로써 내부에 applications, bin, ide, licenses, 
+								repo, templates 등의 폴더와 changelog.txt, license.txt, readme.txt 파일을 포함하고 있다.</phrase>
+							</textobject> 							
+						</mediaobject>
+					</para>
+					<para>
+						<itemizedlist>
+							<listitem>
+								<para>
+									applications : Anyframe에서 제공하는 Command를 이용하여 프로젝트 생성시 생성된 프로젝트들이 위치하게 되는 기본 디렉토리 (Command의 옵션을 통해 변경 가능)
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									bin : Anyframe Command 실행을 위한 Script 포함
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									ide : Anyframe Command 관련 라이브러리 및 공통 빌드 Script 파일들, 빌드 도구인 Ant, 샘플을 위한 HsqlDB, Anyframe IDE Editor에서 CTIP(Jenkins, Hudson) 연계를 위한 파일들(anyframe-ide-eclipse-hudson-X.X.X.jar, web.xml) 포함 
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									licenses : Anyframe을 통해 배포되는 CLI 라이브러리와 Anyframe Repository로 부터 다운받을 수 있는 3rd party 라이브러리들에 대한 라이센스 본문과 정리된 목록
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									repo : Anyframe 및 Anyframe에서 참조하는 3rd party 라이브러리 파일들 포함
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									templates : 프로젝트 생성 및 코드 생성을 위한 템플릿 파일들 포함
+								</para>
+							</listitem>
+							<listitem>
+								<para>changelog.txt : 버전 별 변경 사항 로그</para>
+							</listitem>
+							<listitem>
+								<para>license.txt : Anyframe 라이센스(Apache License)</para>
+							</listitem>
+							<listitem>
+								<para>readme.txt : Anyframe 소개 및 기본 사항</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+				
+				<listitem>
+					<para>Anyframe에서 제공하는 개발 환경 구성 관련 Command들을 Ant를 기반으로 실행하기 위해서 다음과 같이 환경설정을 한다.</para>
+					<para>
+						Anyframe 설치 폴더 하위의 bin 폴더에서 command 창을 실행 시킨 다음, env 명령어를 입력하여 env.bat 파일을 실행시킨다.
+						env 명령 실행을 통해서 ANT_HOME, PATH, CLASSPATH, MAINCLASS 등의 환경 변수 설정이 이루어진다.
+					</para>
+					
+					<para>
+						이 때, Anyframe을 설치한 경로를 값으로 가지는 ANYFRAME_HOME 환경 변수가 필요한데, 
+						시스템의 환경 변수로 등록할 수도 있고, 아래 그림처럼 command창에서 set 명령어를 이용하여 등록할 수도 있다. 
+						(단, command 창에서 등록한 환경변수는 해당 창에서만 유효하고, 새로운 command 창을 열었을 경우에는 다시 등록해주어야 한다.)
+						<programlisting language="java"><![CDATA[ANYFRAME_HOME/bin>env
+ERROR: Environment variable ANYFRAME_HOME not set.
+ANYFRAME_HOME/bin>set ANYFRAME_HOME=C:/ats-x.x.x/anyframe-x.x.x
+
+ANYFRAME_HOME/bin>env]]></programlisting>
+					</para>
+					<warning>
+						<title>주의 사항</title>
+						<para>
+							Windows 환경에서는 env.bat 파일을 Command창에서 실행시키고, Unix 환경(ex. Mac OS 등)에서는
+							우선 bin 폴더 하위의 파일들에 대해서 실행 권한을 부여(chmod 755 *)한 후, env.sh 파일을
+							실행(source env.sh)시킨다. 수행시켜야 할 command는 각 내용의 괄호안을 참고하도록 한다. 
+						</para>
+					</warning>
+				</listitem>
+				
+				<listitem>
+					<para>
+						이제 Ant 기반에서 Command Line Interface를 활용하여 Anyframe 기반 개발 환경 구성이 가능해졌다.
+					</para>
+				</listitem>
+			</orderedlist>
+		</para>
+	</section>
+	
+	<section id="installation_ant_generate_archetype">
+		<title>프로젝트 구조 생성</title>
+		<para>
+			Anyframe 기반의 개발 환경 구성을 위해서, 먼저 프로젝트의 기본 구조를 생성한다.
+			'env' command 실행을 통해 환경 변수 정보가 설정된 command 창에서 다음과 같이 Command를 입력하여 anyframe-basic-archetype을 설치한다.
+			(Anyframe Archetype에 대한 자세한 내용은 본 매뉴얼의 <link linkend="commands_maven_generate_archetype">Archetype</link> 설명을 참고하도록 한다.) 
+		</para>
+		<programlisting language="java"><![CDATA[anyframe create-project]]></programlisting>
+		<para>이 명령어를 통해 anyframe-basic-archetype이 설치되어 [Anyframe Home]/applications 폴더에 프로젝트가 생성된다.</para>
+		
+		<para>
+			다음 그림은 anyframe-basic-archetype 설치를 통해 구성된 샘플 프로젝트의 기본 모습이다.
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/ant/myproject_structure.jpg"
+						align="center" />
+				</imageobject>
+				<textobject>
+					<phrase>anyframe-basic-archetype 설치를 통해 구성된 샘플 프로젝트의 기본 모습을 나타내는 그림으로써 myproject 폴더 하위에 db, src/main/java, 
+					src/main/resources 등의 폴더를 포함하고 있다.</phrase>
+				</textobject>				
+			</mediaobject>
+		</para>
+		
+		<para>
+			이제 생성한 프로젝트 디렉토리로 이동하여 계속해서 Anyframe에서 제공하는 다양한 Plugin을 설치할 수 있다.
+			<programlisting language="java"><![CDATA[cd ../applications/myproject]]></programlisting>
+		</para>
+	</section>
+	
+	<section id="installation_ant_install_plugin">
+		<title>Plugin 설치</title>
+		<para>
+			Anyframe 4.6.0 이후부터는 다양한 오픈 소스들이 통합된 템플릿 기반의 샘플 코드, 참조 라이브러리 집합을 plugin이라 칭하며, 다양한 유형의 plugin을 제공한다.
+		</para>
+		<para>
+			여기서는 Anyframe의 다른 plugin이 동작하는 데 기본적으로 필요한 plugin인 core plugin을 설치해보자.
+		</para>
+		<para>
+			Command 창을 띄우고 앞서 설치한 [샘플 프로젝트 설치 폴더]/db/hsqldb 폴더로 이동하여 start.cmd (or start.sh) 파일을 더블클릭함으로써 샘플용으로 제공되는 
+			hsqldb를 시작시킨다. 해당 Plugin 실행을 위해 DB 데이터 추가가 필요한 경우 선택한 Plugin 설치시 DB 데이터 추가 작업도 함께 이루어지므로 DB를 시작시켜 놓아야 한다. 
+			만일 선택한 Plugin 설치시 DB가 시작되지 않았다면 Plugin 설치 이후 제공되는 DB 스크립트 파일([샘플 프로젝트 설치 폴더]/db/scripts/{Plugin명-insert-data-db명}.sql)을 
+			직접 실행시키면 된다. 또한 샘플용으로 제공되는 hsqldb가 아닌 다른 DB 기반에서 Plugin을 설치하고자 하는 경우에는 
+			<link linkend="commands_ant_db">DB 변경</link>을 참고하도록 한다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/ant/start_hsqldb.jpg"
+						align="center" />
+				</imageobject>
+      		    <textobject>
+      				<phrase>hsqldb 시작을 위한 명령어 실행 결과 화면으로써 start.cmd (or start.sh) 파일을 더블클릭하여 실행하였다.</phrase>
+      			</textobject>			
+			</mediaobject>
+		</para>
+		<para>
+			'env' command 실행을 통해 환경 변수 정보가 설정된 command 창에서 샘플 프로젝트 설치 폴더로 
+			이동(예를 들어, myproject 라는 프로젝트를 생성시켰다면 myproject 폴더에서 command를 실행시키도록 한다.)하여 
+			다음과 같이 명령어를 입력한다.
+			(Plugin 설치와 관련된 자세한 내용은 Ant 기반 <link linkend="commands_ant_install">install</link> command를 참조한다.)
+		</para>
+		
+		<programlisting language="java"><![CDATA[anyframe install core]]></programlisting>
+		<para>
+			core plugin의 동작을 위해서는 datasource, logging, spring plugin이 필요하므로 아래와 같이 출력될 것이다. 계속 설치를 진행하고자 하는 경우 'y'를 입력한다.
+		</para>
+		<programlisting language="java"><![CDATA[[install] Resolving plugin dependencies ...
+[install] Dependencies Resolved.
+[install] ------------------------------------------------------------------------------
+[install]  <action>  <name>	<version>
+[install]  Install   datasource	1.0.1
+[install]  Install   spring	1.0.1
+[install]  Install   core		1.0.4
+[install]  Install   logging	1.0.1
+[install] ------------------------------------------------------------------------------
+[install] Is this OK? (y, n):]]></programlisting>
+		<para>
+			Plugin이 정상적으로 설치되었다면, 지정한 패키지 경로에 해당 Plugin 샘플 소스 코드가 생성되어 있고, 
+			src/main/webapp/WEB-INF/lib에 Plugin 관련 라이브러리가 설치되어 있을 것이다.
+		</para>
+		<para>
+			Command 창을 띄우고 샘플 프로젝트 설치 폴더로 이동하여 다음과 같은 명령어를 입력하면 샘플 프로젝트를 대상으로 추가된 Plugin 목록을 확인할 수 있다. 
+		</para>
+		<programlisting language="java"><![CDATA[anyframe installed]]></programlisting>
+		<programlisting language="java"><![CDATA[[installed]  <name>		<current>	<latest>
+[installed]  core		1.0.4            1.0.4
+[installed]  datasource	1.0.1            1.0.1
+[installed]  spring		1.0.1            1.0.1
+[installed]  logging		1.0.1            1.0.1]]></programlisting>
+		<para>
+			core plugin과 동일한 방법으로 다른 Plugin들을 추가로 설치할 수 있다.
+			설치할 수 있는 Plugin 목록을 조회하려면 다음과 같은 명령어를 사용한다.
+			<programlisting language="java"><![CDATA[anyframe list]]></programlisting>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/ant/show_plugin_list.jpg"
+						align="center" />
+				</imageobject>
+				<textobject>
+					<phrase>설치 가능한 plugin 목록 조회를 위한 명령어 실행 결과 화면</phrase>
+				</textobject>					
+			</mediaobject>
+		</para>
+	</section>
+	
+	<section id="installation_ant_run">
+		<title>어플리케이션 실행</title>
+		<para>
+			특정 Plugin 설치 후 구성된 샘플 어플리케이션이 정상적으로 동작하는지 쉽게 확인할 수 있도록
+			Anyframe에서는 Jetty 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
+		</para>
+		<para>
+			'env' command 실행을 통해 환경 변수 정보가 설정된 command 창에서, 샘플 프로젝트 설치 폴더 위치로 이동하여 다음과 같이 명령어를 입력하면 
+			Jetty 기반에서 샘플 어플리케이션을 시작시킬 수 있다.
+		</para>
+		<programlisting><![CDATA[anyframe run]]></programlisting>
+		<para>
+			Jetty가 정상적으로 시작되면 'Started Jetty Server'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
+		</para>
+				
+		<para>
+			WAS가 정상적으로 시작되었으면 웹브라우저를 열고, 주소창에 http://localhost:8080/myproject (http://localhost:8080/${샘플 프로젝트 이름})와 같이 
+			입력하여 샘플 어플리케이션이 정상적으로 실행되는지 확인해본다.
+			다음은 core plugin만 설치된 경우 샘플 어플리케이션의 초기 화면이다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_initial.jpg"
+						align="center" />
+				</imageobject>		
+				<textobject>
+					<phrase>core plugin만 설치된 경우 샘플 어플리케이션의 초기 화면</phrase>
+				</textobject>							
+			</mediaobject>
+		</para>
+		<para>
+			화면에서 Core 링크를 클릭하면 영화 정보를 관리할 수 있는 페이지로 이동한다.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_core_initial.jpg"
+						align="center" />
+				</imageobject>
+				<textobject>
+					<phrase>Core 링크를 클릭하였을 때 이동한 페이지의 모습으로 초기 데이터로 등록된 Movie 정보를 보여주는 목록이 보여진다.</phrase>
+				</textobject>					
+			</mediaobject>	
+		</para>
+		<para>
+			'anyframe run' 명령어를 실행하면 프로젝트 dist 폴더 하위에 jetty-temp라는 폴더가 생성되어 Jetty가 구동되게 된다. 배포
+			이후에 클래스나 JAR 파일, JSP 파일 등을 반영하고 Jetty로 재확인하고 싶다면 이 폴더의 해당 위치에 배포하도록 한다. 
+		</para>
+	</section>
+	
+</chapter>

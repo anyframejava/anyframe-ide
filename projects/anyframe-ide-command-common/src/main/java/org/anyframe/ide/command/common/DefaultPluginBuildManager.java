@@ -23,9 +23,7 @@ import java.util.Map;
 
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.Exclude;
-import org.anyframe.ide.command.common.plugin.Fileset;
 import org.anyframe.ide.command.common.plugin.Include;
-import org.anyframe.ide.command.common.plugin.PluginBuild;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginInterceptor;
 import org.anyframe.ide.command.common.plugin.PluginResource;
@@ -278,9 +276,8 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		pluginBuildInfo.setDependentPlugins(dependentPlugins);
 		pluginBuildInfo.setSamples("true");
 		pluginBuildInfo.setEssential("false");
-		pluginBuildInfo.setBuild(getPluginBuild(packageName,
+		pluginBuildInfo.setResources(getPluginResources(packageName,
 				pluginBuildInfo.getName()));
-		pluginBuildInfo.setResources(getPluginResources());
 
 		return pluginBuildInfo;
 	}
@@ -321,27 +318,39 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 	 * 
 	 * @return plugin resource list
 	 */
-	private List<PluginResource> getPluginResources() {
+	private List<PluginResource> getPluginResources(String packageName, String pluginName) {
 		getLogger().debug(
 				"Call getPluginResources() of DefaultPluginBuildManager");
-
 		List<PluginResource> resources = new ArrayList<PluginResource>();
 
 		// java resource include
 		List<String> javaIncludeNames = new ArrayList<String>();
-		javaIncludeNames.add("**/*.java");
+		String javaPackageName = StringUtils.replace(pluginName, "-", "/");
+		javaIncludeNames.add("**/" + javaPackageName + "/**/*.java");
 		List<Include> javaResourceIncludes = getIncludes(javaIncludeNames);
 
 		// xml resource include
 		List<String> xmlIncludeNames = new ArrayList<String>();
-		xmlIncludeNames.add("**/*.xml");
+		xmlIncludeNames.add("**/*" + pluginName + "*.xml");
 		List<Include> xmlResourceIncludes = getIncludes(xmlIncludeNames);
 
-		// all resource include
-		List<String> jspIncludeNames = new ArrayList<String>();
-		jspIncludeNames.add("**/*.jsp");
-		List<Include> jspResourceIncludes = getIncludes(jspIncludeNames);
-
+		// webapp resource include
+		List<String> webappIncludeNames = new ArrayList<String>();
+		webappIncludeNames.add("**/" + pluginName + "/**/*.*");
+		List<Include> webappResourceIncludes = getIncludes(webappIncludeNames);
+		
+		// webapp resource exclude
+		List<Exclude> webappResourceExcludes = new ArrayList<Exclude>();
+		Exclude webxml = new Exclude();
+		webxml.setName("**/" + CommonConstants.WEB_XML_FILE);
+		webxml.setMerged(true);
+		webappResourceExcludes.add(webxml);
+		Exclude welcomeFile = new Exclude();
+		welcomeFile.setName("**/" + CommonConstants.WELCOME_FILE);
+		welcomeFile.setMerged(true);
+		webappResourceExcludes.add(welcomeFile);
+		
+		
 		PluginResource srcMainJavaResource = getPluginResource(SRC_MAIN_JAVA,
 				true, true, javaResourceIncludes, null);
 		PluginResource srcMainResourcesResource = getPluginResource(
@@ -351,8 +360,8 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		PluginResource srcTestResourcesResource = getPluginResource(
 				SRC_TEST_RESOURCES, true, false, xmlResourceIncludes, null);
 		PluginResource srcMainWebappResource = getPluginResource(
-				SRC_MAIN_WEBAPP + "/WEB-INF/jsp", false, false,
-				jspResourceIncludes, null);
+				SRC_MAIN_WEBAPP, false, false,
+				webappResourceIncludes, webappResourceExcludes);
 
 		resources.add(srcMainJavaResource);
 		resources.add(srcMainResourcesResource);
@@ -394,94 +403,6 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		return pluginResource;
 	}
 
-	/**
-	 * get plugin build object which has default plugin
-	 * filesets(includes/excludes)
-	 * 
-	 * @param packageName
-	 *            project's base package name
-	 * @param pluginName
-	 *            plugin project root folder which has plugin sample codes
-	 * @return plugin build object which has plugin filesets
-	 */
-	private PluginBuild getPluginBuild(String packageName, String pluginName) {
-		getLogger().debug("Call getPluginBuild() of DefaultPluginBuildManager");
-
-		String packageDir = FileUtil.changePackageForDir(packageName);
-
-		// java fileset include
-		List<String> javaIncludeNames = new ArrayList<String>();
-		String javaPackageName = StringUtils.replace(pluginName, "-", "/");
-		javaIncludeNames.add("**/" + packageDir + "/" + javaPackageName
-				+ "/**/*.java");
-		List<Include> javaFilesetIncludes = getIncludes(javaIncludeNames);
-
-		// xml fileset include
-		List<String> xmlIncludeNames = new ArrayList<String>();
-		xmlIncludeNames.add("**/*" + pluginName + "*.xml");
-		List<Include> xmlFilesetIncludes = getIncludes(xmlIncludeNames);
-
-		// webapp fileset include
-		List<String> webappIncludeNames = new ArrayList<String>();
-		webappIncludeNames.add("**/" + pluginName + "/**/*.*");
-		webappIncludeNames.add("**/" + CommonConstants.WEB_XML_FILE);
-		webappIncludeNames.add("**/" + CommonConstants.WELCOME_FILE);
-		List<Include> webappFilesetIncludes = getIncludes(webappIncludeNames);
-
-		List<Fileset> filesets = new ArrayList<Fileset>();
-		Fileset srcMainJavaFileset = getBuildFileSet(SRC_MAIN_JAVA, true, true,
-				javaFilesetIncludes, null);
-		Fileset srcMainResourcesFileset = getBuildFileSet(SRC_MAIN_RESOURCES,
-				true, false, xmlFilesetIncludes, null);
-		Fileset srcTestJavaFileset = getBuildFileSet(SRC_TEST_JAVA, true, true,
-				javaFilesetIncludes, null);
-		Fileset srcTestResourcesFileset = getBuildFileSet(SRC_TEST_RESOURCES,
-				true, false, xmlFilesetIncludes, null);
-		Fileset srcMainWebappFileset = getBuildFileSet(SRC_MAIN_WEBAPP, false,
-				false, webappFilesetIncludes, null);
-
-		filesets.add(srcMainJavaFileset);
-		filesets.add(srcMainResourcesFileset);
-		filesets.add(srcTestJavaFileset);
-		filesets.add(srcTestResourcesFileset);
-		filesets.add(srcMainWebappFileset);
-
-		PluginBuild build = new PluginBuild();
-		build.setFilesets(filesets);
-		return build;
-	}
-
-	/**
-	 * get fileset resource with options(directory, filtered, packaged,
-	 * includes, excludes)
-	 * 
-	 * @param dir
-	 *            fileset folder to build
-	 * @param filtered
-	 *            whether a fileset resource will be merged with velocity
-	 *            context
-	 * @param packaged
-	 *            whether a fileset resource has package (ex. java)
-	 * @param includes
-	 *            include folders
-	 * @param excludes
-	 *            exclude folders
-	 * @return fileset resource information
-	 */
-	private Fileset getBuildFileSet(String dir, boolean filtered,
-			boolean packaged, List<Include> includes, List<Exclude> excludes) {
-		getLogger()
-				.debug("Call getBuildFileSet() of DefaultPluginBuildManager");
-
-		Fileset fileset = new Fileset();
-		fileset.setDir(dir);
-		fileset.setFiltered(filtered);
-		fileset.setPackaged(packaged);
-		fileset.setIncludes(includes);
-		fileset.setExcludes(excludes);
-
-		return fileset;
-	}
 
 	/**
 	 * get include folders
@@ -502,4 +423,5 @@ public class DefaultPluginBuildManager extends AbstractLogEnabled implements
 		}
 		return includes;
 	}
+	
 }

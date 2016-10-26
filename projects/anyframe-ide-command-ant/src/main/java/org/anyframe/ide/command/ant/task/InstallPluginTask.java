@@ -59,14 +59,10 @@ public class InstallPluginTask extends AbstractPluginTask {
 			}
 
 			PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
-			String templateHome = pio.readValue(CommonConstants.ANYFRAME_HOME)
-					+ CommonConstants.fileSeparator + "templates";
+			String templateHome = getTarget() + CommonConstants.TEMPLATE_HOME;
 
-			String inspectionHome = pio
-					.readValue(CommonConstants.ANYFRAME_HOME)
-					+ CommonConstants.fileSeparator
-					+ "ide"
-					+ CommonConstants.fileSeparator + "inspection";
+			String inspectionHome = getTarget()
+					+ CommonConstants.INSPECTION_HOME;
 
 			if (isEmpty("version", this.version)) {
 				this.version = null;
@@ -110,7 +106,7 @@ public class InstallPluginTask extends AbstractPluginTask {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	
+
 	public void setIsCLIMode(String isCLIMode) {
 		this.isCLIMode = isCLIMode;
 	}

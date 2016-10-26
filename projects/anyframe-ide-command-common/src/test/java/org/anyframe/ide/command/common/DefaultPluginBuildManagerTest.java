@@ -108,9 +108,6 @@ public class DefaultPluginBuildManagerTest extends AbstractCommandTest {
 		assertNotNull("fail to get default interceptor value.",
 				pluginBuildInfo.getInterceptor());
 
-		// 3.4 assert build filesets, resources
-		assertEquals("fail to get default build filesets.", 5, pluginBuildInfo
-				.getBuild().getFilesets().size());
 		assertEquals("fail to get default resources.", 5, pluginBuildInfo
 				.getResources().size());
 	}

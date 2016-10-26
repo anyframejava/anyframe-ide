@@ -1,0 +1,231 @@
+<chapter id="ctip_installation">
+	<title>Installation</title>
+	<para>CTIP 환경 구성을 위해 Build Server와 SCM Server(소스 코드 형상 관리 서버)를 설치하도록 한다. 
+	 현재 Build Server로 Jenkins 설치를 가이드하고 있으며 SCM Server로 <ulink url="http://subversion.tigris.org/">SubVersion</ulink>, <ulink url="http://www.nongnu.org/cvs/">CVS</ulink> 등을 가이드하고 있다. 
+	 Jenkins의 경우, Anyframe IDE 툴 연계를 위한 추가 설정이 필요하기 때문에 본 매뉴얼에서는 Jenkins 설치 및 연계 작업에 대한 내용을 설명하고 있다. 
+	 SCM Server 설치는 선택한 제품을 추가 변경 없이 설치하면 되므로 본 매뉴얼에서 설명하고 있지 않다. 
+	</para>
+	
+	<section id="ctip_installation_download">
+		<title>Jenkins 설치</title>
+		<para>
+		<ulink url="http://jenkins-ci.org/">Jenkins 사이트</ulink>로부터 Jenkins의 WAR 파일을 다운로드 받은 후, 단독 실행시키거나 Servlet Container에 배포하여 구동시키도록 한다. Jenkins의 설치에 대한 자세한 내용은 
+		<ulink url="http://jenkins-ci.org/">Jenkins 사이트</ulink>를 참고하도록 한다. 
+		현재 Anyframe은 Jenkins 1.464 버전에 대해서 테스트되었으며 아래 표에 나타난 Jenkins Plugin들을 설치하여 구성되었다. 기본적으로 설치되는 Jenkins Plugin들외 추가시킨 Jenkins Plugin들도 있으므로 
+		Plugin 전체 목록을 확인해보도록 한다. 
+		각 Jenkins Plugin의 버전에 따라 설치된 Jenkins 서버에서 정상적으로 동작하지 않을 수도 있으므로 Jenkins Plugin 버전에 유의하도록 한다.
+		만약 최신 버전의 Jenkins Plugin 설치 시 정상적으로 동작하지 않는다면 <ulink url="http://jenkins-ci.org/">Jenkins Plugin 다운로드 사이트</ulink>에서 
+		해당 Plugin의 버전을 찾아서 따로 설치해주도록 한다.		
+		</para>		
+			<informaltable>
+			<caption>Jenkins Plugin 목록</caption>
+			<tgroup cols="4">
+				<colspec colname="col1" colnum="1" colwidth="3*" />
+				<colspec colname="col2" colnum="2" colwidth="2*" />
+				<colspec colname="col3" colnum="3" colwidth="4*" />
+				<colspec colname="col4" colnum="4" colwidth="1*" />
+				
+          		<thead>
+					<row>
+						<entry align="center">Plugin Name</entry>
+						<entry align="center">Plugin ID</entry>
+			            <entry align="center">Description</entry>
+			            <entry align="center">Version</entry>
+					</row>
+				</thead>
+
+          		<tbody>
+            		<row>
+              			<entry vlign="center">javadoc</entry>
+              			<entry vlign="center">javadoc</entry>
+              			<entry vlign="center">This plugin adds Javadoc support to Jenkins. This functionality used to be a part of the core, but as of Jenkins 1.431, it was split off into separate plugins.</entry>
+              			<entry vlign="center" align="center">1.0</entry>
+            		</row>	
+            		<row>
+              			<entry>Maven 2 Project Plugin</entry>
+              			<entry>maven-plugin</entry>
+              			<entry>This plugin is part of the core Jenkins distribution. See Building a maven2 project for more information on Maven 2 projects in Jenkins.</entry>
+              			<entry align="center">1.462</entry>
+            		</row>
+            		<row>
+              			<entry>ant</entry>
+              			<entry>ant</entry>
+						<entry>
+							This plugin adds Apache Ant support to Jenkins. This functionality used to be a part of the core, but as of Jenkins 1.431, it was split off into separate plugins. 
+						</entry>
+              			<entry align="center">1.1</entry>
+            		</row>
+
+					<row>
+              			<entry>Static Code Analysis Plug-ins</entry>
+              			<entry>analysis-core</entry>
+						<entry>
+							This plug-in provides utilities for the static code analysis plug-ins.
+						</entry>
+              			<entry align="center">1.40</entry>
+					</row>
+					
+					<row>
+              			<entry>Checkstyle Plugin</entry>
+              			<entry>checkstyle</entry>
+						<entry>
+							This plugin generates the trend report for Checkstyle, an open source static code analysis program.
+						</entry>
+              			<entry align="center">3.26</entry>
+					</row>
+					
+					<row>
+              			<entry>FindBugs Plugin</entry>
+              			<entry>findbugs</entry>
+						<entry>
+							This plugin generates the trend report for FindBugs, an open source program which uses static analysis to look for bugs in Java code.
+						</entry>
+              			<entry align="center">4.39</entry>
+					</row>
+					
+					<row>
+              			<entry>PMD Plugin</entry>
+              			<entry>pmd</entry>
+						<entry>
+							This plugin generates the trend report for PMD, an open source static code analysis program.
+						</entry>
+              			<entry align="center">3.27</entry>
+					</row>
+					
+					<row>
+              			<entry>Analysis Collector Plugin</entry>
+              			<entry>analysis-collector</entry>
+						<entry>
+							TThis plug-in is an add-on for the plug-ins Checkstyle, Dry, FindBugs, PMD, Task Scanner, and Warnings: the plug-in collects the different analysis results and shows the results in a combined trend graph. 
+							Additionally, the plug-in provides health reporting and build stability based on these combined results.
+						</entry>
+              			<entry align="center">1.26</entry>
+					</row>
+					
+					<row>
+              			<entry>CVS Plugin</entry>
+              			<entry>cvs</entry>
+						<entry>
+							his bundled plugin integrates Jenkins with CVS version control system.
+						</entry>
+              			<entry align="center">1.6</entry>
+					</row>
+					
+					<row>
+              			<entry>Emma Plugin</entry>
+              			<entry>emma</entry>
+						<entry>
+							his plugin allows you to capture code coverage report from Emma. Jenkins will generate the trend report of coverage.
+						</entry>
+              			<entry align="center">1.27</entry>
+					</row>
+					
+					<row>
+              			<entry>Jenkins JDepend Plugin</entry>
+              			<entry>jdepend</entry>
+						<entry>
+							The JDepend Plugin is a plugin to generate JDepend reports for builds.
+						</entry>
+              			<entry align="center">1.2.3</entry>
+					</row>
+					
+					<row>
+              			<entry>Jenkins SSH Slaves plugin</entry>
+              			<entry>ssh-slaves</entry>
+						<entry>
+							This plugin allows you to manage slaves running on *nix machines over SSH.
+						</entry>
+              			<entry align="center">0.21</entry>
+					</row>
+					
+					<row>
+              			<entry>Subversion Plugin</entry>
+              			<entry>subversion</entry>
+						<entry>
+							This plugin adds the Subversion support (via SVNKit) to Jenkins.
+						</entry>
+              			<entry align="center">1.34</entry>
+					</row>
+					<row>
+              			<entry>Translation Assistance Plugin</entry>
+              			<entry>translation</entry>
+						<entry>
+							This plugin adds an additional dialog box in every page, which enables people to contribute localizations for the messages they are seeing in the current page.
+						</entry>
+              			<entry align="center">1.8</entry>
+					</row>
+					<row>
+              			<entry>Jenkins Violations plugin</entry>
+              			<entry>violations</entry>
+						<entry>
+							This plugin does reports on checkstyle, csslint, pmd, cpd, fxcop, pylint, jcReport, and findbugs violations.
+						</entry>
+              			<entry align="center">0.7.11</entry>
+					</row>
+          		</tbody>
+        	</tgroup>
+      		</informaltable>		
+	</section>
+	
+	<section id="ctip_installation_anyframe">
+		<title>Anyframe IDE 파일 설치</title>
+		<para>
+		Anyframe IDE Editor에서 CTIP 서버와 연계하여 CTIP 프로젝트에 대해 추가,수정,삭제,실행	등의 작업을 하기 위해서는 다음과 같은 추가 작업이 필요하다.
+		</para>
+			<orderedlist>
+				<listitem>
+					<para>Anyframe 포탈 사이트에서 anyframe-X.X.X.zip 을 다운받는다.</para>
+				</listitem>
+				<listitem>
+					<para>
+						압축을 풀고 anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더에 있는 플러그인 패키지
+						파일(
+						<emphasis role="bold">anyframe-ide-eclipse-hudson-X.X.X.jar
+						</emphasis>
+						)를 "
+						<emphasis role="bold">[CTIP 서버 설치 폴더]/jenkins/war/WEB-INF/lib
+						</emphasis>
+						" 로 복사한다. 
+					</para>
+					<para>anyframe-ide-eclipse-hudson-X.X.X.jar 은 IDE에서 설정한 정보를 CTIP 서버에
+						반영하는 역할을 수행한다.</para>
+				</listitem>
+
+				<listitem>
+					<para>
+						<emphasis role="bold">[CTIP 서버 설치 폴더]/jenkins/war/WEB-INF/web.xml
+						</emphasis>
+						파일을 열어서 아래와 같은 내용을 추가하거나,
+						anyframe-X.X.X/ide/eclipse-plugins/hudson 폴더 내에 있는 web.xml 을
+						[CTIP 서버 설치 폴더]/jenkins/war/WEB-INF 폴더에 붙여넣는다.
+					</para>
+					<para>hudsonHome, hudsonJobDir 는 [CTIP 서버 설치 폴더]/bin 기준으로 표현된 것으로,
+						경로가 다를 경우 수정이 필요하다.
+						hudsonHome의 경우 hudson.tasks.Ant.xml,hudson.tasks.Mailer.xml,
+						hudson.tasks.Maven.xml 세개 파일에서 현재 개발 환경에 맞도록 폴더 경로를 지정한다.
+						hudsonJobDir의 경우 hudson job 이 있는 폴더경로를 지정한다.        
+	        </para>
+					<programlisting><![CDATA[<servlet>
+    <servlet-name>Hudson Gen Servlet</servlet-name>
+    <servlet-class>org.anyframe.ide.eclipse.hudson.HudsonGenServlet</servlet-class>
+    <init-param>
+        <param-name>hudsonHome</param-name>
+        <!-- 상대경로는 [Jenkins 설치 폴더]/bin 기준으로 표현된 것  -->
+        <!-- Jenkins을 start 하는 경로가 위의 경로가 아닌경우 param-value 조정해야 함  -->
+        <param-value>../jenkins</param-value>
+    </init-param>
+    <init-param>
+        <!-- 상대경로는 [Jenkins 설치 폴더]/bin 기준으로 표현된 것  -->
+        <!-- Jenkins을 start 하는 경로가 위의 경로가 아닌경우 param-value 조정해야 함  -->
+        <param-name>hudsonJobDir</param-name>
+        <param-value>../jenkins/jobs</param-value>
+    </init-param>
+</servlet>
+<servlet-mapping>
+    <servlet-name>Hudson Gen Servlet</servlet-name>
+    <url-pattern>/anyframe/api/*</url-pattern>
+</servlet-mapping>]]></programlisting>
+				</listitem>
+			</orderedlist>		
+	</section>	
+</chapter>

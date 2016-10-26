@@ -9,7 +9,7 @@
 		<fileset dir="${anyframe.home}/ide/cli/lib" includes="**/*.jar" />
 	</path>
 	<path id="anyframe.reportpath">
-		<fileset dir="${anyframe.home}/ide/inspection" includes="**/*.jar" excludes = "**/*-sources.jar"/>
+		<fileset dir="${basedir}/.settings/anyframe/inspection" includes="**/*.jar" excludes = "**/*-sources.jar"/>
 	</path>
 
 </project>

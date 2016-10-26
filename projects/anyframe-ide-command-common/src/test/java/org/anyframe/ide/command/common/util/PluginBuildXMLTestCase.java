@@ -23,9 +23,7 @@ import junit.framework.TestCase;
 
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.Exclude;
-import org.anyframe.ide.command.common.plugin.Fileset;
 import org.anyframe.ide.command.common.plugin.Include;
-import org.anyframe.ide.command.common.plugin.PluginBuild;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginInterceptor;
 import org.anyframe.ide.command.common.plugin.PluginResource;
@@ -93,34 +91,6 @@ public class PluginBuildXMLTestCase extends TestCase {
 		dependency.setVersion("1.0.0 > *");
 		dependentPlugins.add(dependency);
 		pluginInfo.setDependentPlugins(dependentPlugins);
-		
-		List<Fileset> filesets = new ArrayList<Fileset>();
-		Fileset fileset = new Fileset();
-		fileset.setDir("src/main/java");
-		
-		List<Include> filesetIncludes = new ArrayList<Include>();
-		Include filesetInclude = new Include();
-		filesetInclude.setName("**/*.java");
-		filesetIncludes.add(filesetInclude);
-		filesetInclude = new Include();
-		filesetInclude.setName("**/*.java1");
-		filesetIncludes.add(filesetInclude);
-		fileset.setIncludes(filesetIncludes);
-		
-		List<Exclude> filesetExcludes = new ArrayList<Exclude>();
-		Exclude filesetExclude = new Exclude();
-		filesetExclude.setName("**/*.java");
-		filesetExcludes.add(filesetExclude);
-		filesetExclude = new Exclude();
-		filesetExclude.setName("**/*.java1");
-		filesetExcludes.add(filesetExclude);
-		fileset.setExcludes(filesetExcludes);
-		
-		filesets.add(fileset);
-		
-		PluginBuild build = new PluginBuild();
-		build.setFilesets(filesets);
-		pluginInfo.setBuild(build);	
 		
 		List<PluginResource> resources = new ArrayList<PluginResource>();
 		PluginResource resource = new PluginResource();

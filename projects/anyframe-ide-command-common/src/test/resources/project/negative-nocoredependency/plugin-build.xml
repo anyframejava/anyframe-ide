@@ -19,28 +19,6 @@
 		</dependencies>
 	</interceptor>
 	<samples>true</samples>
-	<build>
-		<filesets>
-			<fileset dir="src/main/java" filtered="true" packaged="true">
-				<include name="**/remoting/**/*.java" />
-			</fileset>
-			<fileset dir="src/test/java" filtered="true" packaged="true">
-				<include name="**/remoting/**/*.java" />
-			</fileset>
-			<fileset dir="src/main/resources" filtered="true" packaged="false">
-				<include name="**/*remoting*.xml" />
-			</fileset>
-			<fileset dir="src/test/resources" filtered="true" packaged="false">
-				<include name="**/*remoting*.xml" />
-			</fileset>
-			<fileset dir="src/main/webapp" filtered="false" packaged="false">
-				<include name="**/remoting/**/*.*" />
-				<include name="**/tilesviews.xml" />
-				<include name="**/web.xml" />
-				<include name="**/sample/layouts/left.jsp" />
-			</fileset>
-		</filesets>
-	</build>
 	<resources>
 		<resource dir="src/main/java" filtered="true" packaged="true">
 			<include name="**/*.java" />

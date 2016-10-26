@@ -431,7 +431,7 @@ public class AnyframeDBData {
 			// Field(OneToMany)에 대해서는 데이터를 생성하지 않는다.
 			if (getColumn(field) == null)
 				continue;
-			
+
 			if (c2h.isManyToOne(field)
 					&& !field.equals(pojo.getIdentifierProperty())) {
 				if (field.getValue() instanceof ManyToOne) {
@@ -461,7 +461,7 @@ public class AnyframeDBData {
 							String propertyName = field.getName()
 									+ "."
 									+ pojoclass.getIdentifierProperty()
-										.getName();
+											.getName();
 							columnFieldMap.put(c.getName(), propertyName);
 						}
 
@@ -595,7 +595,7 @@ public class AnyframeDBData {
 			return "OTHER";
 		}
 	}
-
+	
 	public ListOrderedMap getColumnFieldWithoutIdMap(POJOClass pojo) {
 		ListOrderedMap columnFieldMap = new ListOrderedMap();
 

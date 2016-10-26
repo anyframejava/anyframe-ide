@@ -100,13 +100,13 @@ public class InstallPluginMojo extends AbstractPluginMojo {
 			setRepository(request);
 
 			if (templateHome == null || templateHome.length() == 0) {
-				templateHome = System.getProperty("user.home")
-						+ CommonConstants.USER_HOME_ANYFRAME + "templates";
+				templateHome = baseDir.getAbsolutePath()
+						+ CommonConstants.TEMPLATE_HOME;
 			}
 
 			if (inspectionHome == null || inspectionHome.length() == 0) {
-				inspectionHome = System.getProperty("user.home")
-						+ CommonConstants.USER_HOME_ANYFRAME + "inspection";
+				inspectionHome = baseDir.getAbsolutePath()
+						+ CommonConstants.INSPECTION_HOME;
 			}
 
 			pluginInstaller.install(request, baseDir.getAbsolutePath(), name,

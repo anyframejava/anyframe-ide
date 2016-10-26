@@ -30,14 +30,6 @@ import java.io.Serializable;
  * 	</resource>
  *  ...
  * </resources>
- * <build>
- *  <filesets>
- * 	    <fileset dir="src/main/java" filtered="true" packaged="true">
- * 		    <include name="**\/org\/anyframe\/plugin\/mip\/query\/**\/*.java" />
- * 	    </fileset>
- *      ...
- *  </filesets>
- * </build>
  * </pre>
  * 
  * @author SoYon Lim

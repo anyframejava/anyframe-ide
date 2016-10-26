@@ -1,0 +1,218 @@
+<chapter id="plugins_structure">
+	<title>Plugin 구조</title>
+	<para>
+		Anyframe archetype 설치 후 anyframe-maven-plugin을 이용하여 Core, Hibernate, CXF, Monitoring 등과 같은 Plugin들을 설치/삭제할 수 있도록 하기 위하여 
+		Plugin들은 Maven Archetype과 유사한 모습을 가지면서 실제 폴더 구조 및 파일은 다른 형태로 구성되어 있다.
+	</para>		
+	<para>
+		다음은 배포되는 Core Plugin의 주요 구성 요소를 표현한 그림이다.
+	</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="../image/installation/core_structure.jpg" align="center" />
+		</imageobject>
+		<textobject>
+			<phrase>배포되는 Core Plugin의 주요 구성 요소를 표현한 그림으로써 META-INF 폴더에는 plugin에 대한 정보를 담고 있는 plugin.xml 파일이 있고, 
+			plugin-resources 폴더에는 pom.xml 파일과 리소스 템플릿 파일들이 위치하고 있다.</phrase>
+		</textobject>		
+	</mediaobject>	
+	<para>
+		META-INF 폴더에는 plugin에 대한 정보를 담고 있는 plugin.xml 파일이 있고, plugin-resources 폴더에는 pom.xml 파일과 리소스 템플릿 파일들이 위치하고 있다.	
+	</para>
+	<para>
+		pom.xml 파일 내에는 해당 Plugin 설치로 인해 추가될 기능 실행에 필요한 참조 라이브러리가 정의되어 있다.
+	</para>
+	<para>
+		또한 plugin.xml 파일은 정의된 리소스 템플릿을 이용하여 샘플 프로젝트를 생성할 때 추가되어야 하는 리소스에 대한 Meta 정보를 관리한다.  
+		plugin-resources 하위 폴더 내에 정의된 리소스를 샘플 프로젝트에 추가할 때 대표 패키지를 부여할 것인지, Velocity를 이용하여 
+		리소스 템플릿과 사용자의 입력값이 Merge된 리소스를 추가할 것인지 여부를 정의하는데 사용된다. 다음은 Core Plugin의 plugin.xml 파일에 
+		대한 예이다.
+	</para>
+	<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="core" description="Core Plugin is the basic plugin 중략...">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-core-pi</artifactId>
+  <version>x.x.x</version>
+  <dependent-plugins>
+    <dependent-plugin name="datasource" version="1.0.0&lt;=*"/>
+    <dependent-plugin name="logging" version="1.0.0&lt;=*"/>
+    <dependent-plugin name="spring" version="1.0.0&lt;=*"/>
+  </dependent-plugins>
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+    중략...
+  </resources>
+  <samples>true</samples>
+  <essential>true</essential>
+</plugin>]]></programlisting>
+	<para>
+		위 파일을 살펴보면 <![CDATA[<resource/>]]> 내에서는 특정 디렉토리에 속한 파일 그룹에 대해 filtered, packaged 속성값을 정의하고 있음을 알 수 있다. 
+		만일 리소스 파일 중의 하나인 MovieService.java가 다음과 같이 구성되어 있다라고 가정해 보자.
+	</para>
+		<programlisting language="java">package ${package}.core.moviefinder.service;
+
+import ${package}.core.domain.Movie;
+
+public interface MovieService {
+
+	Movie get(String movieId) throws Exception;
+
+	void create(Movie movie) throws Exception;
+
+	void update(Movie movie) throws Exception;
+
+	void remove(String movieId) throws Exception;
+}</programlisting>	
+		<para>
+			filtered 속성값이 true인 경우, ${package}로 정의된 부분이 Velocity Engine에 의해 해석되어 package의 값이 'anyframe' 이라면 
+			'package anyframe.core.moviefinder.service;'로 재조합되어 샘플 프로젝트 내에 MovieService.java 파일이 추가될 것이다. 
+			filtered 속성값이 false인 경우, 정의된 모든 부분에 대한 변경없이 샘플 프로젝트 내에 MovieService.java 파일이 추가될 것이다.
+		</para>			
+		<para>
+			다음으로 packaged 속성에 대해 알아보도록 하자. plugin-resources/src/main/java 하위에 core/moviefinder/service/MovieService.java라는 리소스가 
+			정의되어 있다라고 가정해 보자. packaged 속성값이 true인 경우 package의 값이 'anyframe'이라면 샘플 프로젝트 내 
+			src/main/java/<emphasis role="bold">anyframe</emphasis>/core/moviefinder/service 하위에 해당 리소스가 추가될 것이다.
+			즉, packaged 속성값에 따라 패키지 구조를 반영하여 리소스를 생성할 위치가 정해지는 것이다. 
+		</para>	
+		<para>
+			다음은 plugin-resources 하위 폴더에 대한 설명이다.
+		</para>		
+		<informaltable>
+			<caption>plugin-resources 하위 폴더 목록</caption>
+			<tgroup cols="2">
+				<colspec colnum="1" colname="col1" colwidth="1*"/>
+				<colspec colnum="2" colname="col2" colwidth="5*"/>
+				<thead>
+					<row>
+						<entry align="center">Folder</entry>
+						<entry align="center">Description</entry>
+					</row>
+				</thead>
+				<tbody>	
+					<row>
+						<entry>db/resources</entry>
+						<entry>
+							해당 Plugin이 DB 유형에 따라 변경되어야 하는 리소스를 포함하고 있는 경우에 활용한다. 예를 들어, QueryService의 경우 DB의 종류에 따라 
+							사용할 PagingSQLGenerator 구현체가 달라지므로 Query Plugin을 설치할 때 DB 종류에 따라 QueryService 속성 정의가 달라져야 한다.
+							이를 위해 db/resources 폴더 하위에 DB 명을 폴더명으로 두고 그 폴더 하위에 해당 리소스의 위치를 그대로 정의하고 변경되어야 하는 파일을 정의해둘 수 있다.
+							Core Plugin의 경우 DB 유형에 따라 변경되어야 하는 파일이 없으므로 resources 폴더를 관리하고 있지 않다.
+							<important>
+								<title>DB 리소스 정의시 참고</title>
+								<para>
+									Anyframe에서는 개발 환경 구성 작업 중에 처음 설정한 DB와 다른 DB를 사용해야 하는 경우를 위해 DB 관련 정보를 변경할 수 있는 기능을 제공하고 있다. 
+									DB 관련 정보 변경 작업시, 개발자가 그동안 수행한 작업 정보를 최대한 유지하면서 관련된 리소스들 내의 DB 관련 정보만을 변경할 수 있도록 하기 위해서 
+									DB 리소스 정의시 다음과 같이 규약을 따르고 있다. 	 
+								</para>
+								<programlisting language="xml"><![CDATA[...
+    <!--query-propertyLobHandler-START-->		
+    <property name="lobHandler" ref="lobHandler"/>
+    <!--query-propertyLobHandler-END-->	
+
+    <!--query-generator-START-->
+    <bean id="pagingSQLGenerator" class="org.anyframe.query.impl.jdbc.generator.OraclePagingSQLGenerator"/>
+    <!--query-generator-END-->
+
+    <!--query-lobHandler-START-->
+    <bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
+        <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor"/>
+    </bean>
+    <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" lazy-init="true"/>
+    <!--query-lobHandler-END-->						
+</beans>]]></programlisting>
+								<para>
+									위 내용은 Query Plugin 내에 정의된 Oracle용 DB 리소스 파일의 일부이다. 위 내용을 살펴보면 중간 부분에 <![CDATA[<!--query-xxx-START--> ...
+									<!--query-xxx-END-->]]> 영역이 있음을 확인할 수 있을 것이다. 이 영역이 바로 DB가 변경될 때 대체될 부분이 된다.
+									따라서 Plugin의 DB 리소스 내에는 DB가 변경될 때 변경되어야 하는 영역에 대해 <![CDATA[<!--{plugin name}-xxx-START--> ... <!--{plugin name}-xxx-END-->]]>로
+									구분지어야 한다. 이때 xxx는 해당 파일 내에서 unique한 id 값으로 설정해주면 된다. 
+								</para>
+							</important>
+						</entry>
+					</row>
+					<row>
+						<entry>db/scripts</entry>
+						<entry>
+							해당 Plugin 설치로 인해 추가될 기능이 기본 DB 데이터 이외의 데이터를 필요로 하는 경우를 위해 실행될 DB 스크립트를 포함한다. 
+							현재 Plugin들 별로 필요한 DB 유형 별 스크립트를 제공하고 있다. HSQL DB를 위한 스크립트를 기본으로 제공하며
+							Oracle, MySQL, DB2, Sybase, MSSQL DB 스크립트를 추가 제공하고 있다.
+						</entry>
+					</row>
+					<row>
+						<entry>src/main/java</entry>
+						<entry>
+							소스 코드를 관리한다. 모든 소스 코드의 패키지는 Plugin 이름으로 시작하도록 정의해야 한다.
+						</entry>
+					</row>	
+					<row>
+						<entry>src/main/resources</entry>
+						<entry>
+							Spring, SpringMVC 기반의 어플리케이션 실행을 위한 속성 정의 파일과 메시지 파일, 쿼리문을 정의하고
+							있는 매핑 XML 파일, Domain/CRUD 소스 코드 자동 생성에 활용될 hibernate.cfg.xml 파일들을 관리한다.
+							Spring 속성 정의 파일명은 context-{plugin name}-xxx.xml, SpringMVC 속성 정의 파일명은 {plugin name}-servlet.xml으로 정의해야 한다. 
+							이 외, 리소스 파일이 필요한 경우에는 Plugin명과 동일한 이름의 폴더를 생성하여 관리하도록 한다.
+						</entry>
+					</row>	
+					<row>
+						<entry>src/main/webapp</entry>
+						<entry>
+							웹 어플리케이션을 위한 웹 리소스(*.jsp, *.css, *.js ...)들을 관리한다. JSP 파일은 WEB-INF/jsp 하위에
+							Plugin명과 동일한 폴더를 생성하여 관리하도록 한다.
+							src/main/webapp 폴더 하위에는 설치 대상 리소스가 아니기 때문에 plugin.xml 파일 내의 정의에서는 제외되었으나 
+							생성된 샘플 어플리케이션에 통합되어야 할 정보를 포함한 리소스들이 있다.
+							다음에서는 이들 각각을 정의하는 방법에 대해서 살펴보도록 하자.
+							<itemizedlist>
+								<listitem>
+									<para>
+										Plugin이 동작하기 위해 WebApplication 속성 정의가 필요한 경우 src/main/webapp/WEB-INF/web.xml 파일 내에 다음과 같은 형태로 정의할 수 있다.
+									</para>
+									<programlisting language="xml"><![CDATA[<servlet>
+    <servlet-name>struts</servlet-name>
+    <servlet-class>org.anyframe.struts.action.DefaultActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>struts/struts-config-common.xml ,struts/struts-config-movie.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>character-encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>struts</servlet-name>
+        <url-pattern>*.action</url-pattern>
+    </servlet-mapping>]]></programlisting>			
+								<para>
+									위의 내용은 Struts Plugin 설치로 추가되는 WebApplication 속성 정보로써 Struts의 경우 SpringMVC와 달리 DefaultActionServlet을 통해 
+									사용자의 요청 처리가 이루어져야 하므로 이를 위한 servlet 정의 및 servlet-mapping 정보가 정의되어 있음을 알 수 있다. Struts Plugin 설치 이후
+									샘플 프로젝트의 src/main/webapp/WEB-INF/web.xml 파일 내에 위에 정의된 내용이 통합되어 Struts 기반에서도 샘플 어플리케이션이 동작 가능하게 된다.
+								</para>						
+							</listitem>
+							<listitem>
+								<para>
+									Plugin 설치 이후, 샘플 어플리케이션에 해당 Plugin과 관련된 메뉴가 추가되어야 하는 경우 src/main/webapp/anyframe.jsp 파일 내에 
+									다음과 같이 메뉴명과 접근 URL을 정의한다.
+								</para>
+								<programlisting language="xml"><![CDATA[<!--query-menu-START-->
+    <a href="${ctx}/queryMovieFinder.do?method=list"><font size="2">- Query 1.0.0</font></a><br/>
+<!--query-menu-END-->]]></programlisting>			
+								<para>
+									위의 내용은 Query Plugin 설치로 추가되는 메뉴 정보로써 Query Plugin이 설치되면 Query 1.0.0이라는 이름의 메뉴가 추가될 것이고,
+									이 메뉴를 클릭하였을 때 http://${ctx}/queryMovieFinder.do?method=list라는 요청이 처리될 것이다.
+								</para>							
+							</listitem>
+						</itemizedlist>
+					</entry>
+				</row>						
+				<row>
+					<entry>src/test/java</entry>
+					<entry>테스트 코드를 관리한다. 테스트 코드의 패키지는 Plugin 이름으로 시작하도록 정의해야 한다.</entry>
+				</row>	
+				<row>
+					<entry>src/test/resources</entry>
+					<entry>테스트 코드 실행에 필요한 리소스들을 관리한다. src/main/resources와 동일한 규칙을 따라 리소스를 정의한다.</entry>
+				</row>																																									
+			</tbody>
+		</tgroup>
+	</informaltable>				
+</chapter>

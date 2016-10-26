@@ -11,10 +11,10 @@
   <classpathentry kind="var" path="M2_REPO/org/aspectj/aspectjrt/1.6.8/aspectjrt-1.6.8.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-utils/1.4.6/plexus-utils-1.4.6.jar"/>
   <classpathentry kind="var" path="M2_REPO/ant/ant-launcher/1.8.1/ant-launcher-1.8.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.2.0/anyframe-ide-command-aspect-2.2.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.2.0/anyframe-ide-command-cli-2.2.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.2.0/anyframe-ide-command-common-2.2.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.2.0/anyframe-maven-plugin-2.2.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-aspect/2.2.1-SNAPSHOT/anyframe-ide-command-aspect-2.2.1-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-cli/2.2.1-SNAPSHOT/anyframe-ide-command-cli-2.2.1-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/anyframe/anyframe-ide-command-common/2.2.1-SNAPSHOT/anyframe-ide-command-common-2.2.1-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/mojo/anyframe-maven-plugin/2.2.1-SNAPSHOT/anyframe-maven-plugin-2.2.1-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.15/log4j-1.2.15.jar"/>
   <classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.5/commons-lang-2.5.jar"/>

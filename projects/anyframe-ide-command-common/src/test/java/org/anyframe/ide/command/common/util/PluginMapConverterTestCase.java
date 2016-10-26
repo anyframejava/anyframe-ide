@@ -22,10 +22,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.anyframe.ide.command.common.plugin.Fileset;
-import org.anyframe.ide.command.common.plugin.Include;
-import org.anyframe.ide.command.common.plugin.PluginBuild;
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
+import org.anyframe.ide.command.common.plugin.Include;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginResource;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -143,25 +141,6 @@ public class PluginMapConverterTestCase extends TestCase {
 		resources.add(resource);
 
 		pluginInfo.setResources(resources);
-
-		List<Fileset> filesets = new ArrayList<Fileset>();
-		Fileset fileset = new Fileset();
-		fileset.setDir("src/main/java");
-
-		List<Include> filesetIncludes = new ArrayList<Include>();
-		Include filesetInclude = new Include();
-		filesetInclude.setName("**/*.java");
-		filesetIncludes.add(include);
-		filesetInclude = new Include();
-		filesetInclude.setName("**/*.java1");
-		filesetIncludes.add(include);
-
-		fileset.setIncludes(includes);
-		filesets.add(fileset);
-
-		PluginBuild build = new PluginBuild();
-		build.setFilesets(filesets);
-		pluginInfo.setBuild(build);
 
 		result.put("test", pluginInfo);
 

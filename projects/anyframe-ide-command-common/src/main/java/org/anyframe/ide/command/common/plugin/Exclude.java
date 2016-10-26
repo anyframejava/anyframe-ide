@@ -20,24 +20,16 @@ import java.io.Serializable;
 /**
  * This is an Exclude class. This object is converted from plugin resource
  * META-INF/anyframe/plugin.xml or plugin-build.xml using XStream. This object
- * is related to <exclude> in plugin.xml or plugin-build.xml
+ * is related to <exclude> in plugin.xml or plugin-build.xml.
  * 
  * <pre>
  * Example:
  * <resources>
  * 	<resource dir="src/main/java" filtered="true" packaged="true">
- * 		<exclude name="**\/*.xml" />
+ * 		<exclude name="**\/*.xml" merged="true"/>
  * 	</resource>
  *  ...
  * </resources>
- * <build>
- *  <filesets>
- * 	    <fileset dir="src/main/java" filtered="true" packaged="true">
- * 		    <exclude name="**\/org\/anyframe\/plugin\/mip\/query\/**\/*.java" />
- * 	    </fileset>
- *      ...
- *  </filesets>
- * </build>
  * </pre>
  * 
  * @author SoYon Lim
@@ -45,6 +37,7 @@ import java.io.Serializable;
 public class Exclude implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String name;
+	private boolean merged = false;
 
 	public String getName() {
 		return name;
@@ -53,4 +46,13 @@ public class Exclude implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public boolean isMerged() {
+		return merged;
+	}
+
+	public void setMerged(boolean merged) {
+		this.merged = merged;
+	}
+	
 }

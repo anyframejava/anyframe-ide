@@ -134,7 +134,7 @@ public class DefaultPluginPackagerTest extends AbstractCommandTest {
 				"fail to generate the right plugin version of plugin resources pom file - version.",
 				pluginBuildInfo.getVersion(), pluginResourcesPom.getVersion());
 
-		// 3.4 check filesets (includes/excludes)
+		// 3.4 check resources (includes/excludes)
 		assertTrue(
 				"fail to include a remoting plugin resource - java",
 				new File(baseDir + CommonConstants.fileSeparator

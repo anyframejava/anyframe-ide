@@ -43,9 +43,7 @@ import java.util.zip.ZipInputStream;
 
 import org.anyframe.ide.command.common.plugin.DependentPlugin;
 import org.anyframe.ide.command.common.plugin.Exclude;
-import org.anyframe.ide.command.common.plugin.Fileset;
 import org.anyframe.ide.command.common.plugin.Include;
-import org.anyframe.ide.command.common.plugin.PluginBuild;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
 import org.anyframe.ide.command.common.plugin.PluginInterceptor;
 import org.anyframe.ide.command.common.plugin.PluginInterceptorDependency;
@@ -570,8 +568,10 @@ public class FileUtil {
 		if(file.getName().endsWith("." + CommonConstants.EXT_JAVA)){
 			AntUtil.executeReplaceRegExpTask(antProject, file, "//" + token
 					+ "-START", "//" + token + "-END", value);
-		}
-		else{
+		}else if(file.getName().endsWith("." + CommonConstants.EXT_PROPERTIES)){
+			AntUtil.executeReplaceRegExpTask(antProject, file, "#" + token
+					+ "-START", "#" + token + "-END", value);
+		}else{
 			AntUtil.executeReplaceRegExpTask(antProject, file, "<!--" + token
 				+ "-START-->", "<!--" + token + "-END-->", value);
 		}
@@ -714,6 +714,7 @@ public class FileUtil {
 							"filtered");
 			xstream.aliasAttribute(Include.class, "name", "name");
 			xstream.aliasAttribute(Exclude.class, "name", "name");
+			xstream.aliasAttribute(Exclude.class, "merged", "merged");
 
 			xstream.aliasField("dependent-plugins", PluginInfo.class,
 					"dependentPlugins");
@@ -721,23 +722,12 @@ public class FileUtil {
 			xstream.aliasAttribute(DependentPlugin.class, "name", "name");
 			xstream.aliasAttribute(DependentPlugin.class, "version", "version");
 
-			xstream.alias("filesets", ArrayList.class);
-			xstream.alias("fileset", Fileset.class);
-			xstream.aliasAttribute(Fileset.class, "dir", "dir");
-			xstream.aliasAttribute(Fileset.class, "filtered", "filtered");
-			xstream.aliasAttribute(Fileset.class, "packaged", "packaged");
-
 			xstream.addImplicitCollection(PluginResource.class, "includes",
 					"include", Include.class);
 			xstream.addImplicitCollection(PluginResource.class, "excludes",
 					"exclude", Exclude.class);
-			xstream.addImplicitCollection(Fileset.class, "includes", "include",
-					Include.class);
-			xstream.addImplicitCollection(Fileset.class, "excludes", "exclude",
-					Exclude.class);
 			xstream.alias("include", Include.class);
 			xstream.alias("exclude", Exclude.class);
-			xstream.alias("build", PluginBuild.class);
 		} else if (type == Model.class) {
 			xstream.alias("project", Model.class);
 			xstream.omitField(Model.class, "modelEncoding");
@@ -1173,6 +1163,16 @@ public class FileUtil {
 				files.add(directory);
 			}
 
+		}
+	}
+
+	public static void deleteEmptyDirectory(File f, boolean recursive) throws Exception{
+		if(f.listFiles() == null || f.listFiles().length <= 0){
+			FileUtils.deleteDirectory(f);
+			if(recursive){
+				deleteEmptyDirectory(new File(f.getParent()), recursive);
+			}
+			
 		}
 	}
 }

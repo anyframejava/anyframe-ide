@@ -47,7 +47,6 @@ public class PluginInfo implements Serializable {
 	private List<String> versions;
 	private List<DependentPlugin> dependentPlugins;
 	private List<PluginResource> resources;
-	private PluginBuild build;
 
 	private String samples;
 	private PluginInterceptor interceptor;
@@ -165,14 +164,6 @@ public class PluginInfo implements Serializable {
 
 	public void setInterceptor(PluginInterceptor interceptor) {
 		this.interceptor = interceptor;
-	}
-
-	public PluginBuild getBuild() {
-		return build;
-	}
-
-	public void setBuild(PluginBuild build) {
-		this.build = build;
 	}
 
 	public boolean isEssential() {

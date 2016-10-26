@@ -48,6 +48,7 @@ public interface CommonConstants {
 	String MYBATIS_PLUGIN = "mybatis";
 	String XP_QUERY_PLUGIN = "xp-query";
 	String LOGBACK_PLUGIN = "logback";
+	String I18N_PLUGIN = "i18n";
 
 	// 3. plugin resources
 	String PLUGIN_RESOURCES = "plugin-resources";
@@ -152,17 +153,21 @@ public interface CommonConstants {
 	String SRC_MAIN_WEBAPP_SAMPLE = SRC_MAIN_WEBAPP + "sample" + fileSeparator;
 
 	String DB_SCRIPTS = fileSeparator + "db" + fileSeparator + "scripts";
-	String DB_RESOURCES = PLUGIN_RESOURCES + fileSeparator + "db"
-			+ fileSeparator + "resources" + fileSeparator;
+	String DB_RESOURCES = PLUGIN_RESOURCES + "/db/resources/";
 	
 	String PLUGIN_ASPECT_PACKAGE = "common" + fileSeparator + "aspect" + fileSeparator;
 	String ORIGIN_PLUGIN_ASPECT_PACKAGE = "org"+ fileSeparator 
 			+ "anyframe" + fileSeparator + "plugin" + fileSeparator+ PLUGIN_ASPECT_PACKAGE;
+	
+	String TEMPLATE_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "templates";
+	String INSPECTION_HOME = fileSeparator + ".settings" + fileSeparator + "anyframe" + fileSeparator + "inspection";
 
 	// 9. others
 	String EXT_JAR = "jar";
 	String EXT_JAVA = "java";
 	String EXT_XML = "xml";
+	String EXT_JSP = "jsp";
+	String EXT_PROPERTIES = "properties";
 	String OFFLINE = "offline";
 	String REMOTE_CATALOG_PATH = "http://dev.anyframejava.org/maven/repo";
 	String USER_HOME_ANYFRAME = CommonConstants.fileSeparator + ".anyframe"

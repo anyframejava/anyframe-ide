@@ -1,0 +1,425 @@
+<chapter id="installation_eclipseide">
+	<title>Eclipse IDE</title>
+	<para>
+	Anyframe IDE 툴의 기능은 Command Line 기반으로도 제공되며, Eclipse Plugin 형태로도 제공된다. 여기서는 Eclipse를 위한 Anyframe IDE를 설치하는 방법에 대해서 설명하고 있다. 
+	</para>
+	<section id="installation_eclipseide_maven">
+	<title>Maven 기반 개발 환경으로 설치</title>
+		<orderedlist>
+
+			<listitem>
+				<para>Anyframe IDE 플러그인 설치는 Anyframe Plugin Update Site를 통해서 설치할 수
+					있다.
+					외부 인터넷 연결이 안되거나 네트웍에 문제가 있는 경우 아래의 노트
+					[Update Site를 이용하지 않고
+					Anyframe IDE Eclipse Plugin 설치하기] 내용을 참고하여 설치하도록 한다.
+				</para>
+
+				<orderedlist>
+					<listitem>
+						<para>Eclipse의 Help > Install New Software... 메뉴를 선택한다.</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: 사용하는 Eclipse에 m2eclipse를 설치하지 않은 경우에만 해당되는 사항이다. 
+                        우측 상단의 Add...버튼을 클릭하여 m2eclipse Plugin Update Site 2개를 추가하도록 한다. 
+                        첫번째 Update Site의 Name에는 m2eclipse Update Site를, Location에는 <emphasis role="bold">http://m2eclipse.sonatype.org/sites/m2e</emphasis>를 입력한다. 
+                        두번째 Update Site의 Name에는 m2eclipse extras Update Site를, Location에는 <emphasis role="bold">http://m2eclipse.sonatype.org/sites/m2e-extras</emphasis>를 입력한다. 
+                        이렇게 m2eclipse update site에 대한 url 주소를 추가해 주면, 이후 Anyframe IDE Plugin 설치 시 함께 설치된다. 
+						</para>
+						<para>
+							만약 Anyfrmae Query Manager를 함께 설치할 경우, SQLExplorer Update Site(<emphasis role="bold">http://eclipsesql.sourceforge.net</emphasis>) 역시 추가해 주어야 한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: 우측 상단의 Add...버튼을 클릭하여 Anyframe
+							Plugin Update Site를 추가하도록 한다. 이때 Name에는 Anyframe Plugin Update
+							Site를, Location에는 http://dev.anyframejava.org/update를 입력한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: 중앙에 Anyframe Plugin Update Site 를
+							루트로 하는 Plugin Tree가 나타난다.
+							여기서 하단 항목 중 "Contact all
+							update sites during install to find
+							required software" 체크 박스를 해제하여
+							다른 Plugin이 함께 설치되는 것을 방지한다. 그러나 <emphasis role="bold">사용하는 Eclipse에 m2eclipse를 설치하지 않은 상태라면 체크 박스에 체크를 하여 m2eclipse가 함께 설치되도록 한다.</emphasis></para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: Plugin Tree 중 Anyframe IDE을 선택하고
+							하단의 Next 버튼을 클릭한다.</para>
+						<para>
+							최신 버전인 Anyframe Tools 2.2.1의 Anyframe IDE임을 유의한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Review Licenses] 화면: 좌측의 Plugin을 선택하면 우측에 License text가
+							나온다.
+							Anyframe IDE에 대해서 우측 하단의 "I accept the terms
+							of the
+							license agreements" 구문에 동의하고 Finish 버튼을 클릭한다.
+			       </para>
+					</listitem>
+					<listitem>
+						<para>[Security Warning] 화면: 팝업창에서 설치 진행 여부 물을 때 OK 버튼을 선택한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Software Updates] 화면: 팝업창이 뜨고, "Would you like to restart
+							now?" 질문에 Yes 버튼을 선택한다.</para>
+					</listitem>
+				</orderedlist>
+
+				<warning>
+					<title>Anyframe Plugin Update Site를 이용한 설치 전 주의 사항</title>
+					<para>
+						Anyframe IDE Plugin이 설치하려고 하는 Eclipse의 dropins나 plugins 혹은 addins 폴더 에
+						이미 설치되어 있다면 Update Site를 통해 설치될 Plugin과 중복되어 문제를 일으킬 수 있으므로
+						반드시
+						dropins나 plugins 혹은 addins 폴더에 Anyframe IDE Plugin이 설치되어 있는지 확인하고 설치되어 있다면
+						제거한 후, Update Site를 통해 설치하도록 한다.
+						Update Site를 통해 설치한 경우 물리적인
+						Anyframe IDE Plugin 파일은 plugins 폴더 하위에 위치하게
+						된다.
+					</para>
+				</warning>
+			</listitem>
+
+			<listitem>
+				<para>
+					<emphasis role="bold">"Help &gt; About Eclipse Platform (또는
+						About
+						Eclipse SDK) &gt; Plug-in Details"</emphasis>
+					를 통해 정상적으로 설치되었는 지
+					확인한다.
+				</para>
+
+				<para>☞ About Eclipse Platform (또는 About Eclipse SDK) 메뉴는 Windows용
+					Eclipse의 경우 Help 메뉴에서, Mac OS X용 Eclipse의 경우 Eclipse 메뉴에서 확인할 수
+					있다.
+				</para>
+				<para>☞ Eclipse 루트 폴더 하위의 plugins 폴더 내로
+					org.anyframe.common.eclipse.core_xxx.jar와
+					org.anyframe.ide.eclipse.core_xxx.jar 파일이 설치되어있는지 확인해볼 수 있다.</para>
+			</listitem>
+
+			<listitem>
+				<para>Anyframe IDE 플러그인을 포함한 전체 Anyframe IDE의 설치가 완료되었다. Anyframe
+					IDE의
+					기능을 사용하여 개발하기 이전에 반드시 Eclipse Preferences 설정 내용을 참고하여 환경 설정을 모두
+					끝마치도록
+					한다.</para>
+			</listitem>
+		</orderedlist>
+
+		<note>
+			<title>Update Site를 이용하지 않고 Anyframe IDE Eclipse Plugin 설치하기</title>
+
+			<para>Anyframe IDE 플러그인은 Anyframe 포탈사이트에서 다운받은 anyframe-X.X.X.zip 파일을
+				이용해서 설치할 수 있다.</para>
+
+			<orderedlist>
+				<listitem>
+					<para>Anyframe 포탈 사이트에서 anyframe-X.X.X.zip 을 다운받는다. </para>
+				</listitem>
+				<listitem>
+					<para>압축을 풀고 anyframe-X.X.X/ide/eclipse-plugins 폴더 내에 있는
+						2개의 플러그인
+						패키지 파일들(org.anyframe.[제품명].eclipse[.*]_x.x.x.jar)를
+						"[eclipse 설치
+						폴더]/plugins" 로 복사한다.</para>
+					<para>plugins 폴더에는 다음 두가지 플러그인 패키지가 존재한다.</para>
+					<itemizedlist>
+						<listitem>
+							<para>org.anyframe.common.eclipse.core_x.x.x.jar : Anyframe plugins의
+								공용 라이브러리 및 공통 메뉴 제공</para>
+						</listitem>
+
+						<listitem>
+							<para>org.anyframe.ide.eclipse.*_x.x.x.x.jar : Anyframe IDE
+								플러그인
+							</para>
+						</listitem>
+					</itemizedlist>
+
+				</listitem>
+			</orderedlist>
+
+			<para>
+				☞ 현재
+				<emphasis role="bold">Anyframe Common 플러그인의
+					경우</emphasis>
+				, Anyframe IDE 설치 파일 내에 함께 배포되어 손쉽게 설치할 수 있도록 제공하고 있다.
+				하지만 Anyframe
+				Common 플러그인은 독립적으로 배포되고 사용될 수 있는 플러그인이므로
+				추후 Anyframe Common 플러그인 버전이
+				업데이트되고, 업데이트된 버전을 사용하고자 한다면
+				Anyframe IDE에서 배포한 구버전 Anyframe Common
+				플러그인을 제거하고 업데이트된
+				플러그인 패키지를 설치하도록 한다.
+			</para>
+			<para>
+				m2eclipse plugin 설치는
+				<emphasis role="bold">m2eclipse update site</emphasis>
+				(http://m2eclipse.sonatype.org/sites/m2e, http://m2eclipse.sonatype.org/sites/m2e-extras)를 통해서 설치하도록 한다.
+			</para>
+		</note>
+	</section>
+	
+	<section id="installation_eclipseide_ant">
+	<title>Ant 기반 개발 환경으로 설치</title>
+		<para>
+			Ant 기반 개발 시 Anyframe IDE Eclipse Plugin 설치 방법은 Maven 기반의 개발 시 Anyframe IDE Eclipse Plugin 설치 방법과 동일하다.
+			Anyframe IDE Eclipse Plugin 설치 방법은 Maven 기반 개발의 [<link linkend="installation_eclipseide_maven">Anyframe IDE Eclipse Plugin 설치</link>]를 참조한다.
+		</para>
+	</section>
+	
+	<section id="installation_eclipseide_preferences">
+		<title>Eclipse Preferences 설정</title>
+
+		<para>Anyframe IDE 을 이용하여 생성한 프로젝트 실행을 위해 필요한 환경설정을 한다. Anyframe
+			IDE의
+			환경설정은 Eclipse Preferences 창을 통해 수행한다.</para>
+
+		<para>
+		[1] Maven 기반 개발 환경에서는 다음과 같이 Preferneces 정보를 설정하도록 한다.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>프로젝트 빌드 타입 설정 : 생성할 프로젝트의 빌드 타입을 지정하고, 빌드방식에 따른 Home 정보를 세팅한다.
+					지정한 프로젝트 빌드 타입에 따라 IDE 플러그인에서 제공하는 프로젝트 생성화면이 다르게 제공된다. </para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>
+								에서 MAVEN 선택
+							</para>
+							<para>Maven Home setting : Maven이 설치된 경로 지정</para>
+							<informaltable>
+								<caption>MAVEN_HOME 및 Settings.xml 설정</caption>
+								<tgroup cols="1">
+									<colspec colnum="1" colname="col1" colwidth="*" />
+
+									<thead>
+										<row>
+											<entry align="center">MAVEN_HOME 및 Settings.xml 설정</entry>
+										</row>
+									</thead>
+
+									<tbody>
+										<row>
+											<entry>
+												Maven 빌드 방식을 채택하여 프로젝트를 생성하고자 하는 경우, 로컬에 Maven이 설치되어 있어야 하며
+												설치된 Maven에 대한 시스템 변수 MAVEN_HOME이 설정되어야 한다.
+												또한, Maven 프로젝트가
+												바라봐야 할 Remote Repository 정보에 대해 settings.xml 에
+												정의가 필요하다.
+												이에 대한
+												자세한 가이드는 Anyframe 포탈의
+												Quick Start의 [
+												<ulink url="http://www.anyframejava.org/project/anyframe/quickstart">Maven 설치 및 환경설정 부분</ulink>
+												]을 참조한다.
+											</entry>
+										</row>
+									</tbody>
+								</tgroup>
+							</informaltable>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Maven &gt;&gt; User Settings</emphasis>
+								에서 User Settings 경로 확인</para>
+							<para>User Settings : Anyframe Repository(http://dev.anyframejava.org/maven/repo) 속성이 추가된 settings.xml 파일 경로 설정</para>	
+							<para>Maven 빌드 방식을 채택하여 프로젝트를 생성하는 경우 이클립스에 M2Eclipse가 설치되어 있어야 한다.
+							이는 생성된 프로젝트가 M2Eclipse 프로젝트 형태로 전환되기 때문인데, 이 때 M2Eclipse가 바라보는 settings.xml 은
+							Window &gt;&gt; Preferences &gt;&gt;Maven &gt;&gt; User Settings 에 정의되어 있는 경로의 파일이다.
+							Anyframe Repository(http://dev.anyframejava.org/maven/repo) 속성이 추가되어 있는 settings.xml 파일 경로가
+							Preferences에 설정되어 있는지 확인하고, 경로가 맞지 않다면 수정하도록 한다.
+							</para>	
+						</listitem>
+					</itemizedlist>
+
+				</para>
+			</listitem>
+			<listitem>
+				<para>[선택] Archetype 버전 설정 : Basic Archetype 버전과 Service Archetype 버전을 설정하여 프로젝트 생성 시 사용할 Archetype을 선택할 수 있게 한다.
+				설정하지 않은 경우, 최신 버전의 Archetype을 이용하여 프로젝트가 생성된다. 
+				</para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>
+								에서 MAVEN 선택 
+							</para>
+							<para>[Optional] Archetype Version setting : Archetype 버전 설정</para>
+							<para>
+								Basic Archetype Version과 Service Archetype Version을 설정할 수 있다. 우측의 콤보 박스를 선택하여 버전 목록을 확인해볼 수 있는데 
+								로컬 환경에 archetype-catalog.xml 파일이 존재하면 이 파일로부터 버전 목록을 얻고, 
+								로컬 환경에 파일이 존재하지 않으면 원격 Repository로부터 archetype-catalog.xml 파일을 
+								다운로드 받아서 버전 목록을 얻어온다.  
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+			<listitem>
+				<para>Log Level 설정 : Maven 명령어 수행 시 나오는 로그 정보들을 레벨(ERROR, INFO, DEBUG) 별로 구분하여 확인해볼 수 있도록 설정한다.
+				디폴트로 INFO 레벨이 설정되어 있다. 
+				</para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>
+								에서 MAVEN 선택 
+							</para>
+							<para>Log Level setting : 로그 레벨 설정</para>
+							<para>
+								ERROR, INFO, DEBUG 중 하나의 로그 레벨을 선택하도록 한다. ERROR를 선택하면 실제 Maven 명령어 실행 시 명령어 파라미터로 "-q"를 입력한 것과 동일한 
+								기능으로 에러 로그로 제공되는 로그 메시지들만 보여지게 된다.
+								INFO를 선택하면 실제 Maven 명령어 실행 시 기본적으로 보여지는 로그 메시지들이 보인다. 
+								DEBUG를 선택하면 실제 Maven 명령어 실행 시 명령어 파라미터로 "--debug"를 입력한 것과 동일한 기능으로 디버그성 로그 메시지들이 모두 함께 보여지게 된다.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>			
+			<listitem>
+				<para>Server 설정 : 어플리케이션이 구동될 WAS로 Tomcat v6.0을 사용한다.</para>
+
+				<para>
+					<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+						Server
+						&gt;&gt; Runtime Environments</emphasis>
+					에서 Add..클릭
+				</para>
+
+				<para>Name : Apache Tomcat v6.0</para>
+
+				<para>Tomcat Installation directory : [Tomcat 이 설치된 root 경로]</para>
+
+				<para>JRE : Workbench default JRE</para>
+
+			</listitem>
+		</itemizedlist>
+		
+		<para>
+		[2] Ant 기반 개발 환경에서는 다음과 같이 Preferneces 정보를 설정하도록 한다.
+		</para>		
+		
+    <itemizedlist>
+      <listitem>
+      	<para>프로젝트 빌드 타입 설정 : 생성할 프로젝트의 빌드 타입을 지정하고, 빌드방식에 따른 Home 정보를 세팅한다.
+			지정한 프로젝트 빌드 타입에 따라 IDE 플러그인에서 제공하는 프로젝트 생성화면이 다르게 제공된다. </para>
+      	
+      	<para>
+      	
+      	<itemizedlist>
+	        <listitem>
+		        <para><emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt; Anyframe Tools &gt;&gt; IDE</emphasis> 에서
+					    ANT 선택</para>
+				<para>Anyframe Home : Anyframe이 설치된 root 경로 지정.</para>
+				<para>Offline : Anyframe과 연관된 라이브러리를 online으로 연결해서 지원받을지 여부 결정.
+					  체크를 하는 경우 [Anyframe 을 설치한 root 폴더 경로]/repo 에 있는 라이브러리만 사용,
+					  체크하지 않는 경우는 필요한 라이브러리가 로컬에 없는 경우 remote로 부터 다운받는다.
+				</para>
+				<informaltable>
+					<caption>ANT HOME 설정</caption>
+					<para>Anyframe 설치 시 제공된 Ant를 인식하도록 Eclipse의 디폴트 Ant Home 정보를 변경한다.
+					
+					</para>
+	              		<tgroup cols="1">
+	              			<colspec colnum="1" colname="col1" colwidth="*"/>
+	              	
+		               		 <thead>
+				                 <row>
+				                 <entry align="center">ANT HOME 설정</entry>
+				                 </row>
+			                 </thead>
+		
+			                <tbody>
+				                <row>
+				                    <entry>
+				                    	<itemizedlist>
+											<listitem>
+												<para>Ant Home 변경 : <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt; Ant &gt;&gt; Runtime &gt;&gt; Classpath Tab &gt;&gt; 우측 하단의 Ant Home..</emphasis> 버튼 클릭</para> 
+					    						<para>path : [Anyframe 이 설치된 root 경로]/ide/ant</para>
+					    					</listitem>
+										</itemizedlist>
+				                    </entry>
+				                </row>
+							</tbody>
+						</tgroup>
+				</informaltable>
+	        </listitem>
+        </itemizedlist> 
+      	
+      	</para>
+      </listitem>
+	<listitem>
+		<para>[선택] Archetype 버전 설정 : Basic Archetype 버전과 Service Archetype 버전을 설정하여 프로젝트 생성 시 사용할 Archetype을 선택할 수 있게 한다.
+		설정하지 않은 경우, 최신 버전의 Archetype을 이용하여 프로젝트가 생성된다. 
+		</para>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+							Anyframe Tools &gt;&gt; IDE</emphasis>
+						에서 ANT 선택
+					</para>
+					<para>[Optional] Archetype Version setting : Archetype 버전 설정</para>
+					<para>
+						Basic Archetype Version과 Service Archetype Version을 설정할 수 있다. 우측의 콤보 박스를 선택하여 버전 목록을 확인해볼 수 있는데 
+						로컬 환경에 archetype-catalog.xml 파일이 존재하면 이 파일로부터 버전 목록을 얻고, 
+						로컬 환경에 파일이 존재하지 않으면 원격 Repository로부터 archetype-catalog.xml 파일을 
+						다운로드 받아서 버전 목록을 얻어온다.  
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</listitem>
+	<listitem>
+		<para>Log Level 설정 : Ant 명령어 수행 시 나오는 로그 정보들을 레벨(ERROR, INFO, DEBUG) 별로 구분하여 확인해볼 수 있도록 설정한다.
+		디폴트로 INFO 레벨이 설정되어 있다. 
+		</para>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+							Anyframe Tools &gt;&gt; IDE</emphasis>
+						에서 ANT 선택
+					</para>
+					<para>Log Level setting : 로그 레벨 설정</para>
+					<para>
+						ERROR, INFO, DEBUG 중 하나의 로그 레벨을 선택하도록 한다. ERROR를 선택하면 빌드 스크립트 파일을 기준으로 실제 Ant 명령어 실행 시 
+						ERROR 로그 레벨을 설정한 것과 동일하게 에러 로그로 제공되는 로그 메시지들만 보여지게 된다.
+						INFO를 선택하면 실제 Ant 명령어 실행 시 기본적으로 보여지는 로그 메시지들이 보인다. 
+						DEBUG를 선택하면 실제 Ant 명령어 실행 시 DEBUG 로그 레벨을 설정한 것과 동일하게 디버그성 로그 메시지들이 모두 함께 보여지게 된다.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</listitem>			  	
+      <listitem>    	
+        <para>Server 설정 : 어플리케이션이 구동될 WAS로 Tomcat v6.0을 사용한다.</para>
+
+        <para><emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+        Server &gt;&gt; Runtime Environments</emphasis> 에서 Add..클릭</para>
+
+        <para>Name : Apache Tomcat v6.0</para>
+
+        <para>Tomcat Installation directory : [Tomcat 이 설치된 root 경로]</para>
+
+        <para>JRE : Workbench default JRE</para>
+
+      </listitem>
+    </itemizedlist>
+		
+	</section>
+</chapter>

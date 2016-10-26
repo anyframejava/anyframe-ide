@@ -15,23 +15,35 @@
  */
 package org.anyframe.ide.command.maven.mojo;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 import org.anyframe.ide.command.common.CommandException;
 import org.anyframe.ide.command.common.DefaultPluginPomManager;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
-import org.apache.maven.archetype.common.Constants;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.deployer.ArtifactDeployer;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.AttachedArtifact;
+import org.apache.maven.project.artifact.ProjectArtifactMetadata;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.WriterFactory;
 
 /**
  * This is an DeployFileMojo class. This mojo is for deploy service binary file
- * simply.
+ * and sources simply.
  * 
  * @goal deploy-file
  * @execute phase="package"
@@ -60,6 +72,72 @@ public class DeployFileMojo extends AbstractPluginMojo {
 	private String repositoryId;
 
 	/**
+	 * Component used to deploy an artifact.
+	 * 
+	 * @component
+	 */
+	private ArtifactDeployer deployer;
+
+	/**
+	 * Component used to create an artifact.
+	 * 
+	 * @component
+	 */
+	protected ArtifactFactory artifactFactory;
+
+	/**
+	 * Component used to create a repository.
+	 * 
+	 * @component
+	 */
+	ArtifactRepositoryFactory repositoryFactory;
+
+	/**
+	 * @parameter default-value="${project}"
+	 * @required
+	 * @readonly
+	 */
+	private MavenProject project;
+
+	/**
+	 * Flag whether Maven is currently in online/offline mode.
+	 * 
+	 * @parameter default-value="${settings.offline}"
+	 * @readonly
+	 */
+	private boolean offline;
+
+	/**
+	 * Map that contains the layouts.
+	 * 
+	 * @component role=
+	 *            "org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout"
+	 */
+	private Map<String, ArtifactRepositoryLayout> repositoryLayouts;
+
+	/**
+	 * The type of remote repository layout to deploy to. Try <i>legacy</i> for
+	 * a Maven 1.x-style repository layout.
+	 * 
+	 * @parameter expression="${repositoryLayout}" default-value="default"
+	 */
+	private String repositoryLayout;
+
+	/**
+	 * name of target file to be deployed
+	 * 
+	 * @parameter expression="${targetFileName}"
+	 */
+	private String targetFileName;
+
+	/**
+	 * Flag whether target project is assembly-project.
+	 * 
+	 * @parameter expression="${assembled}" default-value="false"
+	 */
+	private boolean isAssemblyProject;
+
+	/**
 	 * main method for executing DeployFileMojo. This mojo is executed when you
 	 * input 'mvn anyframe:deploy-file [-options]'
 	 */
@@ -69,67 +147,75 @@ public class DeployFileMojo extends AbstractPluginMojo {
 			ArchetypeGenerationRequest request = new ArchetypeGenerationRequest();
 			setRepository(request);
 
-			// 2. read pom.xml
-			File pomFile = new File(baseDir, Constants.ARCHETYPE_POM);
-			Model model = pluginPomManager.readPom(pomFile);
+			// 2. check maven mode
+			if (offline) {
+				throw new MojoFailureException(
+						"Fail to deploy artifacts when Maven is in offline mode");
+			}
 
-			// 3. read packging file
-			String fileName = model.getArtifactId() + "-" + model.getVersion()
-					+ "." + model.getPackaging();
+			// 3. check an artifact to deploy
+			if (targetFileName == null || "".equals(targetFileName)) {
+				targetFileName = project.getArtifactId() + "-"
+						+ project.getVersion() + "."
+						+ (isAssemblyProject ? ".jar" : project.getPackaging());
+			}
+
 			File file = new File(baseDir + CommonConstants.fileSeparator
-					+ "target", fileName);
-
-			// 4. execute deploy-file mojo
-			String mavenHome = System.getenv().get("MAVEN_HOME");
-			String mvnCommand = "mvn";
-			if (mavenHome != null) {
-				mvnCommand = mavenHome + "/bin/mvn";
+					+ "target", targetFileName);
+			if (!file.exists()) {
+				if (isAssemblyProject) {
+					return;
+				}
+				throw new CommandException("You need target/" + targetFileName
+						+ " file to deploy artifacts into remote repository.");
 			}
 
-			String os = System.getProperty("os.name");
-			String extensions = "";
-			if (os.startsWith("Windows")) {
-				extensions = ".bat";
+			// 4. find a deployment repository
+			ArtifactRepositoryLayout layout = (ArtifactRepositoryLayout) repositoryLayouts
+					.get(repositoryLayout);
+			url = "dav:" + url;
+			ArtifactRepository deploymentRepository = repositoryFactory
+					.createDeploymentArtifactRepository(repositoryId, url,
+							layout, true);
+
+			// 5. set metadata with a generated pom information
+			Artifact artifact = null;
+			if (!isAssemblyProject) {
+				artifact = project.getArtifact();
+			} else {
+				artifact = artifactFactory.createArtifactWithClassifier(
+						project.getGroupId(), project.getArtifactId(),
+						project.getVersion(), "jar", null);
 			}
 
-			BufferedReader bufferedReader = null;
-			InputStream inputStream = null;
-			try {
-				Runtime run = Runtime.getRuntime();
+			ArtifactMetadata metadata = new ProjectArtifactMetadata(artifact,
+					generateNewPomFile());
+			artifact.addMetadata(metadata);
 
-				Process pr = run.exec(mvnCommand + extensions
-						+ " deploy:deploy-file -Dfile=./target/" + fileName
-						+ " -DgroupId=" + model.getGroupId() + " -DartifactId="
-						+ model.getArtifactId() + " -Dversion="
-						+ model.getVersion() + " -Dpackaging="
-						+ model.getPackaging()
-						+ " -DgeneratePom=true -Durl=dav:" + url
-						+ " -DrepositoryId=" + repositoryId + " -q");
-				// pr.waitFor();
+			// 6. try to deploy an artifact
+			deployer.deploy(file, artifact, deploymentRepository,
+					request.getLocalRepository());
 
-				inputStream = pr.getInputStream();
-				bufferedReader = new BufferedReader(new InputStreamReader(
-						inputStream));
-				String line = "";
+			// 7. check an attached artifact (sources) to deploy
+			String attachedFileName = project.getArtifactId() + "-"
+					+ project.getVersion() + "-sources.jar";
 
-				StringBuffer lines = new StringBuffer();
-				while ((line = bufferedReader.readLine()) != null) {
-					lines.append(line + "\n");
-				}
+			File attachedFile = new File(baseDir
+					+ CommonConstants.fileSeparator + "target",
+					attachedFileName);
 
-				if (lines.toString().contains("ERROR")) {
-					throw new CommandException("Fail to deploy " + fileName
-							+ " to remote repository ['" + url + "'].");
-				}
+			// 8. try to deploy an attached artifact
+			if (attachedFile.exists()) {
+				AttachedArtifact attachedArtifact = new AttachedArtifact(
+						artifact, "java-source", "sources",
+						artifact.getArtifactHandler());
 
-				System.out.println(lines.toString());
-			} finally {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-				if (bufferedReader != null) {
-					bufferedReader.close();
-				}
+				deployer.deploy(attachedFile, attachedArtifact,
+						deploymentRepository, request.getLocalRepository());
+			} else {
+				getLog().info(
+						"Deploying sources is skipped. The reason is a '"
+								+ attachedFile + "' doesn't exist.");
 			}
 		} catch (Exception ex) {
 			getLog().error(
@@ -137,5 +223,48 @@ public class DeployFileMojo extends AbstractPluginMojo {
 							+ ex.getMessage() + "'.");
 			throw new MojoFailureException(null);
 		}
+	}
+
+	/**
+	 * Generates a new pom.xml from the generated model.
+	 * 
+	 * @return The generated pom.xml file
+	 */
+	private File generateNewPomFile() throws MojoExecutionException {
+		Model model = generateModel();
+
+		Writer writer = null;
+		try {
+			File tempFile = File.createTempFile("mvndeploy", ".pom");
+			tempFile.deleteOnExit();
+
+			writer = WriterFactory.newXmlWriter(tempFile);
+			new MavenXpp3Writer().write(writer, model);
+
+			return tempFile;
+		} catch (IOException e) {
+			throw new MojoExecutionException(
+					"Error writing temporary pom file: " + e.getMessage(), e);
+		} finally {
+			IOUtil.close(writer);
+		}
+	}
+
+	/**
+	 * Generates a new model from the user-supplied artifact information.
+	 * 
+	 * @return The generated model, never <code>null</code>.
+	 */
+	private Model generateModel() {
+		Model model = new Model();
+
+		model.setModelVersion("4.0.0");
+		model.setGroupId(project.getGroupId());
+		model.setArtifactId(project.getArtifactId());
+		model.setVersion(project.getVersion());
+		model.setPackaging(project.getPackaging());
+		model.setDescription(project.getDescription());
+
+		return model;
 	}
 }

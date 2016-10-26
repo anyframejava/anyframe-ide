@@ -17,7 +17,6 @@ package org.anyframe.ide.command.common;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,14 +32,16 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
+import org.anyframe.ide.command.common.plugin.Exclude;
+import org.anyframe.ide.command.common.plugin.Include;
 import org.anyframe.ide.command.common.plugin.PluginInfo;
+import org.anyframe.ide.command.common.plugin.PluginResource;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.DBUtil;
 import org.anyframe.ide.command.common.util.FileUtil;
 import org.anyframe.ide.command.common.util.ObjectUtil;
 import org.anyframe.ide.command.common.util.PropertiesIO;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.archetype.ArchetypeGenerationRequest;
 import org.apache.maven.archetype.common.Constants;
@@ -479,15 +480,14 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 			processPom(baseDir, installedPluginJars, pluginJar, backupDir,
 					springProperties);
 			addProcessPom(baseDir, pluginJar);
+		}else{
+			// remove dependent libraries
+			processDependencyLibs(baseDir, pio
+					.readValue(CommonConstants.PROJECT_TYPE), pluginInfo.getName(),
+					installedPluginJars, pluginJar, springProperties, backupDir);
+			addDependencyLibs(request, pio
+					.readValue(CommonConstants.PROJECT_TYPE), baseDir, pluginJar);
 		}
-
-		// remove dependent libraries
-		processDependencyLibs(baseDir, pio
-				.readValue(CommonConstants.PROJECT_TYPE), pluginInfo.getName(),
-				installedPluginJars, pluginJar, springProperties, backupDir);
-		addDependencyLibs(request, pio
-				.readValue(CommonConstants.PROJECT_TYPE), baseDir, pluginJar);
-
 		if (!pomHandling
 				&& pio.readValue(CommonConstants.PROJECT_TYPE)
 						.equalsIgnoreCase(CommonConstants.PROJECT_TYPE_SERVICE)) {
@@ -525,34 +525,25 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				}
 			}
 
-			processFiles(baseDir, pluginInfo.getName(), excludeList, pio,
-					backupDir, pluginNames);
-
-			// process web.xml of current project
-			processWebXMLFile(baseDir, pluginInfo.getName());
-
-			// process file about transaction configuration
-			processTransactionFile(baseDir, pluginInfo.getName());
-
-			// remove a link from index file
-			processWelcomeFile(baseDir, pluginInfo.getName());
-
-			// remove a tiles definition
-			processTiles(baseDir, pluginInfo.getName());
-			
-			// process log4j.xml of current project
-			processLog4jXMLFile(baseDir, pluginInfo.getName());
-			
-			// process context-message.xml of current project
-			processMessageFile(baseDir, pluginInfo.getName());
-			
-			// process LoggingAsepct.java of current project
-			processLoggingAspectClass(baseDir, pluginInfo.getName(), pio.readValue(CommonConstants.PACKAGE_NAME));
-
-			// drop table, delete data to DB
 			List<String> fileNames = FileUtil.resolveFileNames(pluginJar);
+			
 			ZipFile pluginZip = pluginArtifactManager
 					.getArchetypeZipFile(pluginJar);
+			
+			processTemplates(baseDir, backupDir, fileNames, pluginInfo, pluginZip, pio);
+			
+			// remove a link from index file
+			processWelcomeFile(baseDir, pluginInfo.getName());
+			
+			// process file about transaction configuration
+			if (pluginInfo.getName().equals(CommonConstants.HIBERNATE_PLUGIN))
+				processTransactionFile(baseDir);
+			
+			// process file about messageSource configuration
+			if (pluginInfo.getName().equals(CommonConstants.I18N_PLUGIN))
+				processMessageFile(baseDir);
+
+			// drop table, delete data to DB
 			processInitialData(new File(baseDir), fileNames, pluginInfo
 					.getName(), pluginZip, encoding, pio);
 		}
@@ -725,67 +716,6 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	}
 
 	/**
-	 * Removes generated folder and configuaration files
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            user defined plugin name
-	 * @param excludeFiles
-	 *            files which exclude from removing
-	 * @param pio
-	 *            properties in project.mf
-	 * @param backupDir
-	 *            directory for backup
-	 */
-	public void processFiles(String baseDir, String pluginName,
-			List<String> excludeFiles, PropertiesIO pio, File backupDir,
-			List<String> pluginNames) {
-		getLogger().debug("Call processFiles() of DefaultPluginUninstaller");
-
-		String packageName = pio.readValue("package.name");
-
-		// to protect resources of other plugins (cxf-jaxws, cxf-jaxrs,
-		// simpleweb-vo, simpleweb-map, query-ria...)
-		List<String> excludeFolders = new ArrayList<String>();
-		String tailOfPluginName = "";
-
-		for (String name : pluginNames) {
-			if (!name.equals(pluginName)) {
-				if (name.contains("-")) {
-					tailOfPluginName = name.substring(name.indexOf("-") + 1);
-				}
-				if (StringUtils.isNotEmpty(tailOfPluginName)
-						&& !tailOfPluginName.equals(pluginName)) {
-					excludeFolders.add(tailOfPluginName);
-				}
-			}
-		}
-
-		try {
-			getLogger().debug(
-					"Removing files related to a specified plugin '"
-							+ pluginName + "'.");
-
-			backupFiles(baseDir, pluginName, packageName, excludeFiles,
-					backupDir, pluginNames);
-			getLogger().debug(
-					"Removing directories related to a specified plugin '"
-							+ pluginName + "'.");
-
-			backupDirectories(baseDir, pluginName, packageName, excludeFiles,
-					backupDir, excludeFolders);
-		} catch (Exception e) {
-			e.printStackTrace();
-			getLogger().warn(
-					"Making a backup of " + pluginName
-							+ " plugin files is skipped. The reason is a '"
-							+ e.getMessage() + "'.");
-		}
-
-	}
-
-	/**
 	 * Updates .classpath file
 	 * 
 	 * @param installedPluginJars
@@ -855,301 +785,199 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 							+ "'.");
 		}
 	}
-
+	
 	/**
-	 * Copies a directory named 'pluginName' to a backup location.
+	 * replace plugin resources and delete files to target folder
 	 * 
 	 * @param baseDir
 	 *            plugin project root folder which has plugin sample codes
-	 * @param pluginName
-	 *            a target plugin name to uninstall
-	 * @param packageName
-	 *            project's base package name
-	 * @param excludes
-	 *            files which exclude from removing
 	 * @param backupDir
 	 *            directory for backup
-	 * @throws Exception
+	 * @param fileNames
+	 *            resources in plugin jar file
+	 * @param pluginInfo
+	 *            plugin detail information
+	 * @param pluginZip
+	 *            zip file includes plugin binary file
+	 * @param pio
+	 *            properties in project.mf
+	 * 
 	 */
-	private void backupDirectories(String baseDir, String pluginName,
-			String packageName, List<String> excludes, File backupDir,
-			List<String> excludeFolders) throws Exception {
-		String pluginFolder = pluginName;
-		
-		if (pluginName.contains("-")) {
-			pluginFolder = pluginName.replace("-",
-					CommonConstants.fileSeparator);
-		}
-
-		// 1. remove generated folder ( eg. src/main/java/xxx/xxx/cxf/jaxws)
-		File srcFolder = new File(baseDir + CommonConstants.SRC_MAIN_JAVA
-				+ FileUtil.changePackageForDir(packageName), pluginFolder);
-
-		if (FileUtil.moveDirectory(baseDir, srcFolder, backupDir, excludes,
-				excludeFolders)) {
+	private void processTemplates(String baseDir, File backupDir, List<String> fileNames,
+			PluginInfo pluginInfo, ZipFile pluginZip, PropertiesIO pio) throws Exception {
+		getLogger().debug("Call processTemplates() of DefaultPluginUnInstaller");
+		// 1. get resource list
+		List<PluginResource> pluginResources = pluginInfo.getResources();
+		for (PluginResource pluginResource : pluginResources) {
 			getLogger().debug(
-					"Moved directory '" + srcFolder.getAbsolutePath() + "'");
-		}
-
-		// 2. remove generated folder (eg. src/test/java/xxx/xxx/cxf/jaxws)
-		File testFolder = new File(baseDir + CommonConstants.SRC_TEST_JAVA
-				+ FileUtil.changePackageForDir(packageName), pluginFolder);
-		if (FileUtil.moveDirectory(baseDir, testFolder, backupDir, excludes,
-				excludeFolders)) {
-			getLogger().debug(
-					"Moved directory '" + testFolder.getAbsolutePath() + "'");
-		}
-
-		// 3. remove generated folder (eg. src/main/resources/cxf-jaxws)
-		if (!pluginName.equals(CommonConstants.SPRING_PLUGIN)) {
-			File resourcesFolder = new File(baseDir
-					+ CommonConstants.SRC_MAIN_RESOURCES, pluginName);
-			if (FileUtil.moveDirectory(baseDir, resourcesFolder, backupDir, excludes)) {
-				getLogger().debug(
-						"Moved directory '" + resourcesFolder.getAbsolutePath()
-								+ "'");
+					"Processing resources in ["
+							+ CommonConstants.METAINF_ANYFRAME
+							+ CommonConstants.PLUGIN_FILE + "]");
+			// 2. get file list from current resource
+			// 2.1 set include
+			List<Include> includeResources = pluginResource.getIncludes();
+			List<String> includes = new ArrayList<String>();
+			for (Include include : includeResources) {
+				includes.add(include.getName());
 			}
-		}
 
-		// 4. remove generated folder (eg. src/main/resources/sql/query)
-		File sqlFolder = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES
-				+ "sql", pluginName);
-		if (!CommonConstants.QUERY_PLUGIN.equals(pluginName)
-				|| (CommonConstants.QUERY_PLUGIN.equals(pluginName) && (sqlFolder
-						.listFiles() == null || sqlFolder.listFiles().length == 0))) {
-			if (FileUtil.moveDirectory(baseDir, sqlFolder, backupDir, excludes)) {
-				getLogger()
-						.debug(
-								"Moved directory '"
-										+ sqlFolder.getAbsolutePath() + "'");
+			// 2.2 set exclude
+			List<Exclude> excludeResources = pluginResource.getExcludes();
+			List<String> excludes = new ArrayList<String>();
+			List<String> replaces = new ArrayList<String>();
+			for (Exclude exclude : excludeResources) {
+				excludes.add(exclude.getName());
+				if(exclude.isMerged()){
+					replaces.add(exclude.getName());
+				}
+				
 			}
-		}
-
-		// remove generated folder (db/resource/xxx/xxx)
-		File dbResourcesFolder = new File(baseDir
-				+ CommonConstants.fileSeparator + "db"
-				+ CommonConstants.fileSeparator + "resources");
-
-		// if (FileUtil.moveDirectory(dbResourcesFolder, backupDir, pluginName,
-		// excludes)) {
-		// getLogger().debug(
-		// "Moved directory '" + dbResourcesFolder.getAbsolutePath()
-		// + "'");
-		// }
-
-		// 4. remove generated folder (src/test/resources/xxx)
-		File testResourcesFolder = new File(baseDir
-				+ CommonConstants.SRC_TEST_RESOURCES, pluginName);
-		if (FileUtil.moveDirectory(baseDir, testResourcesFolder, backupDir, excludes)) {
-			getLogger().debug(
-					"Moved directory '" + testResourcesFolder.getAbsolutePath()
-							+ "'");
-		}
-
-		// 5. remove generated folder (src/main/webapp/xxx)
-		File webappFolder = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP,
-				pluginName);
-		if (FileUtil.moveDirectory(baseDir, webappFolder, backupDir, excludes)) {
-			getLogger().debug(
-					"Moved directory '" + webappFolder.getAbsolutePath() + "'");
-		}
-
-		// 6. remove generated folder (src/main/webpp/WEB-INF/jsp/xxx)
-		File jspFolder = new File(
-				baseDir + CommonConstants.SRC_MAIN_WEBAPP_JSP, pluginName);
-		if (FileUtil.moveDirectory(baseDir, jspFolder, backupDir, excludes)) {
-			getLogger().debug(
-					"Moved directory '" + jspFolder.getAbsolutePath() + "'");
-		}
-
-		// 7. remove generated folder (src/main/webapp/WEB-INF/xxx)
-		File webinfFolder = new File(baseDir
-				+ CommonConstants.SRC_MAIN_WEBAPP_WEBINF, pluginName);
-		if (FileUtil.moveDirectory(baseDir, webinfFolder, backupDir, excludes)) {
-			getLogger().debug(
-					"Moved directory '" + webinfFolder.getAbsolutePath() + "'");
-		}
-
-		// remove generated folder (src/main/webapp/sample/xxx)
-		File sampleFolder = new File(baseDir
-				+ CommonConstants.SRC_MAIN_WEBAPP_SAMPLE, pluginName);
-		if (FileUtil.moveDirectory(baseDir, sampleFolder, backupDir, excludes)) {
-			getLogger().debug(
-					"Moved directory '" + sampleFolder.getAbsolutePath() + "'");
-		}
-
-		// remove empty folder. (eg. src/test/java/xxx/xxx/cxf)
-		if (pluginFolder.contains(CommonConstants.fileSeparator)) {
-			String parentFolder = pluginFolder.substring(0, pluginFolder
-					.lastIndexOf(CommonConstants.fileSeparator));
-			// 8. removed src package folder
-			File srcPackageFolder = new File(baseDir
-					+ CommonConstants.SRC_MAIN_JAVA
-					+ FileUtil.changePackageForDir(packageName), parentFolder);
-			if (srcPackageFolder.exists()
-					&& (srcPackageFolder.listFiles() == null || srcPackageFolder
-							.listFiles().length == 0)) {
-				FileUtil.deleteDir(srcPackageFolder, excludes);
+			// 2.3 scan resources
+			List<String> templates = FileUtil.findFiles(
+					fileNames,
+					CommonConstants.PLUGIN_RESOURCES
+							+ CommonConstants.fileSeparator
+							+ pluginResource.getDir(), includes, excludes);
+			
+			String packageName = pio.readValue("package.name");
+			
+			// 4. delete files to base directory
+			processTemplate(baseDir, pluginResource.getDir(), backupDir, pluginZip, pluginInfo.getName(),  
+					packageName, templates, pluginResource.isPackaged());
+			
+			getLogger().debug("Remove " + templates.size() + " files");
+			
+			if(replaces.size() > 0){
+				List<String> replaceFiles = FileUtil.findFiles(fileNames, 
+						CommonConstants.PLUGIN_RESOURCES
+						+ CommonConstants.fileSeparator
+						+ pluginResource.getDir(),
+						replaces, null);
+			
+				// 5. remove contents of files from base directory
+				processReplace(pluginInfo.getName(), baseDir, pluginResource.getDir(), packageName,
+						replaceFiles, pluginResource.isPackaged());
+				
+				getLogger().debug("Replace " + replaces.size() + " files");
 			}
-			getLogger().debug(
-					"Deleted directory '" + srcPackageFolder.getAbsolutePath()
-							+ "'");
-
-			// 9. removed test package folder
-			File testPackageFolder = new File(baseDir
-					+ CommonConstants.SRC_TEST_JAVA
-					+ FileUtil.changePackageForDir(packageName), parentFolder);
-			if (testPackageFolder.exists()
-					&& (testPackageFolder.listFiles() == null || testPackageFolder
-							.listFiles().length == 0)) {
-				FileUtil.deleteDir(testPackageFolder, excludes);
-			}
-			getLogger().debug(
-					"Deleted directory '" + testPackageFolder.getAbsolutePath()
-							+ "'");
+			
 		}
 	}
-
+	
 	/**
-	 * Copies files of which the name contains pluginName to backup location
+	 * delete file and folder
 	 * 
 	 * @param baseDir
 	 *            plugin project root folder which has plugin sample codes
-	 * @param pluginName
-	 *            a target plugin name to uninstall
-	 * @param packageName
-	 *            project's base package name
-	 * @param excludeFiles
-	 *            files which exclude from removing
+	 * @param resourceDir
+	 *            plugin resources folder
 	 * @param backupDir
 	 *            directory for backup
-	 * @throws Exception
+	 * @param pluginZip
+	 *            zip file includes plugin binary file
+	 * @param packageName
+	 *            project's base package name
+	 * @param templates
+	 *            plugin resources
+	 * @param packaged
+	 *            whether a plugin resource has package (ex. java)
 	 */
-	private void backupFiles(String baseDir, String pluginName,
-			String packageName, Collection<String> excludeFiles,
-			File backupDir, List<String> pluginNames) throws Exception {
-
-		// src/main/resources/spring
-		File resourcesSpringDir = new File(baseDir
-				+ CommonConstants.SRC_MAIN_RESOURCES + "spring");
-
-		List<String> includePatterns = new ArrayList<String>();
-		includePatterns.add("context-*" + pluginName + "*.xml");
-		includePatterns.add("*"+pluginName + "*-servlet.xml");
+	private void processTemplate(String baseDir, String resourceDir, File backupDir,
+			ZipFile pluginZip, String pluginName, String packageName,
+			 List<String> templates, boolean packaged) throws Exception {
 		
-		if (CommonConstants.FLEX_QUERY_PLUGIN.equals(pluginName)) {
-			includePatterns.add("flex.xml");
+		for (String template:templates) {
+			
+			File file = getOutput(baseDir, resourceDir, template, packaged, packageName);
+			
+			if(!file.exists())
+				return;
+
+			FileUtil.moveFile(baseDir, file, backupDir);
+			
+			FileUtil.deleteEmptyDirectory(new File(file.getParent()), true);
 		}
-
-		if (FileUtil.moveFile(resourcesSpringDir, baseDir, backupDir, includePatterns,
-				excludeFiles, false)) {
-			getLogger().debug(
-					"Moved files which filename includes '" + pluginName
-							+ "' in " + resourcesSpringDir.getAbsolutePath());
-		}
-
-		// src/main/resources/sql/query
-		// TODO : simpleweb의 version upgrade(uninstall --> install)시에
-		// mapping-simpleweb-{vo|map}-xxx.xml이 삭제될 것이다.
-		if (!CommonConstants.SIMPLEWEB_PLUGIN.equals(pluginName) && !pluginName.equals("cxf")) {
-			File resourcesSqlDir = new File(baseDir
-					+ CommonConstants.SRC_MAIN_RESOURCES + "sql", "query");
-
-			includePatterns.clear();
-			includePatterns.add("mapping-" + pluginName + "-*.xml");
-
-			if (FileUtil.moveFile(resourcesSqlDir, baseDir, backupDir, includePatterns,
-					excludeFiles, false)) {
-				getLogger().debug(
-						"Moved files which filename includes '" + pluginName
-								+ "' in " + resourcesSqlDir.getAbsolutePath());
+	}
+	
+	/**
+	 * remove contents.
+	 * 
+	 * @param plguinName
+	 * 			  plugin name
+	 * @param baseDir
+	 *            plugin project root folder which has plugin sample codes
+	 * @param resourceDir
+	 *            plugin resources folder
+	 * @param packageName
+	 *            project's base package name
+	 * @param replaceFiles
+	 *            merge target resources
+	 * @param packaged
+	 *            whether a plugin resource has package (ex. java)
+	 */
+	private void processReplace(String pluginName, String baseDir, String resourceDir, String packageName,
+			List<String> replaceFiles, boolean packaged) throws Exception {
+		getLogger().debug("Call processReplace() of DefaultPluginInstaller");
+		
+		try{
+			for(String replaceFile:replaceFiles){
+				
+				File file = getOutput(baseDir, resourceDir, replaceFile, packaged, packageName);
+				
+				boolean isPretty = true;
+				// 2. remove configuration for current plugin
+				try {
+					if(file.getName().endsWith(CommonConstants.EXT_JAVA) || file.getName().endsWith(CommonConstants.EXT_JSP)){
+						isPretty = false;
+					}
+					FileUtil.removeFileContent(file, pluginName
+							+ "-configuration", "", isPretty);
+					
+					if(pluginName.equals(CommonConstants.I18N_PLUGIN) && 
+							replaceFile.endsWith(CommonConstants.CONFIG_MESSAGE_FILE)){
+						FileUtil.removeFileContent(file, pluginName
+								+ "-messagesource", "", isPretty);
+					}
+					
+				} catch (Exception e) {
+					getLogger()
+							.warn(
+									"Removing configuration about "
+											+ pluginName
+											+ " plugin from "+ file.getName() +" is skipped. The reason is a '"
+											+ e.getMessage() + "'.");
+				}
+				
 			}
+		} catch (Exception e) {
+			getLogger().warn(
+					"Merging a file into current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
-
-		File resourcesDir = new File(baseDir
-				+ CommonConstants.SRC_MAIN_RESOURCES);
-
-		if (pluginName.equals(CommonConstants.MONITORING_PLUGIN)) {
-			FileUtil.moveFile(baseDir, new File(resourcesDir,
-					"infrared-agent.properties"), backupDir);
-
-			getLogger().debug(
-					"Moved files which filename includes 'infrared-agent.propertes'"
-							+ " in " + resourcesDir.getAbsolutePath());
-		}
-		if (pluginName.equals(CommonConstants.LOGBACK_PLUGIN)) {
-			FileUtil.moveFile(baseDir, new File(resourcesDir,
-					"logback.xml"), backupDir);
-
-			getLogger().debug(
-					"Moved files which filename includes 'logback.xml'"
-							+ " in " + resourcesDir.getAbsolutePath());
-		}
-
-		// src/test/resources/spring
-		File testResourcesSpringDir = new File(baseDir
-				+ CommonConstants.SRC_TEST_RESOURCES + "spring");
-
-		includePatterns.clear();
-		includePatterns.add("context-*" + pluginName + "*.xml");
-		includePatterns.add("*" + pluginName + "*-servlet.xml");
-
-		if (FileUtil.moveFile(testResourcesSpringDir, baseDir, backupDir,
-				includePatterns, excludeFiles, false)) {
-			getLogger().debug(
-					"Moved files which filename includes '" + pluginName
-							+ "' in "
-							+ testResourcesSpringDir.getAbsolutePath());
-		}
-
-		// src/main/webapp/
-		File webappFolder = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP);
-
-		includePatterns.clear();
-		includePatterns.add("*" + pluginName + "*");
-		if (FileUtil.moveFile(webappFolder, baseDir, backupDir, includePatterns,
-				excludeFiles, false)) {
-			getLogger().debug(
-					"Moved files which filename includes '" + pluginName
-							+ "' in " + webappFolder.getAbsolutePath()
-							+ " and subdirectory.");
-		}
-
-		// src/main/webapp/WEB-INF
-		File webinfFolder = new File(baseDir
-				+ CommonConstants.SRC_MAIN_WEBAPP_WEBINF);
-
-		// to protect files of other plugins
-		for (int i = 0; i < pluginNames.size(); i++) {
-			pluginNames.set(i, pluginNames.get(i) + "*.xml");
-		}
-
-		FilenameFilter fileFilter = new WildcardFileFilter(pluginNames);
-		String[] excludeFileNames = webinfFolder.list(fileFilter);
-		for (String name : excludeFileNames) {
-			excludeFiles.add(name);
-		}
-
-		if (FileUtil.moveFile(webinfFolder, baseDir, backupDir, includePatterns,
-				excludeFiles, false)) {
-			getLogger().debug(
-					"Moved files which filename includes '" + pluginName
-							+ "' in " + webinfFolder.getAbsolutePath()
-							+ " and subdirectory.");
-		}
-
-		// db
-		File dbFolder = new File(baseDir + CommonConstants.DB_SCRIPTS);
-		includePatterns.clear();
-		includePatterns.add(pluginName + "-insert-data-*.sql");
-		includePatterns.add(pluginName + "-delete-data-*.sql");
-
-		if (FileUtil.moveFile(dbFolder, baseDir, backupDir, includePatterns,
-				excludeFiles, false)) {
-			getLogger().debug(
-					"Moved files which filename includes '" + pluginName
-							+ "' in " + dbFolder.getAbsolutePath()
-							+ " and subdirectory.");
+		
+	}
+	
+	/**
+	 * remove a hyperlink from welcome file
+	 * 
+	 * @param baseDir
+	 *            the path of current project
+	 * @param pluginName
+	 *            plugin name to be uninstalled
+	 */
+	public void processWelcomeFile(String baseDir, String pluginName)
+			throws Exception {
+		getLogger().debug(
+				"Call processWelcomeFile() of DefaultPluginUninstaller");
+		File indexFile = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP,
+				CommonConstants.WELCOME_FILE);
+		try {
+			FileUtil.removeFileContent(indexFile, pluginName + "-menu", "",
+					false);
+		} catch (Exception e) {
+			getLogger().warn(
+					"Removing a menu from current project is skipped. The reason is a '"
+							+ e.getMessage() + "'.");
 		}
 	}
 
@@ -1288,124 +1116,6 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		}
 	}
 
-	/**
-	 * change log4j.xml of current project (logger, appender,
-	 * etc.)
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be uninstalled
-	 */
-	public void processLog4jXMLFile(String baseDir, String pluginName)
-			throws Exception {
-		getLogger().debug(
-				"Call processLog4jXMLFile() of DefaultPluginUninstaller");
-		// 1. get a log4j.xml file
-		File file = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES, CommonConstants.LOG4J_FILE);
-
-		// 2. remove configuration for current plugin
-		try {
-			FileUtil.removeFileContent(file, pluginName
-					+ "-configuration", "", true);
-		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Removing configuration about "
-									+ pluginName
-									+ " plugin from log4j.xml is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
-		}
-	}
-	
-	/**
-	 * change context-message.xml of current project (message resource)
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be uninstalled
-	 */
-	public void processMessageFile(String baseDir, String pluginName)
-			throws Exception {
-		getLogger().debug(
-				"Call processMessageFile() of DefaultPluginUninstaller");
-		// 1. get a context-message.xml file
-		File file = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES
-				+ "spring", CommonConstants.CONFIG_MESSAGE_FILE);
-
-		// 2. remove configuration for current plugin
-		try {
-			FileUtil.removeFileContent(file, pluginName
-					+ "-configuration", "", true);
-		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Removing configuration about "
-									+ pluginName
-									+ " plugin from context-message.xml is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
-		}
-	}
-	/**
-	 * change LoggingAspect.java of current project (pointcut)
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be uninstalled
-	 */
-	public void processLoggingAspectClass(String baseDir, String pluginName, String packageName)
-			throws Exception {
-		getLogger().debug(
-				"Call processMessageFile() of DefaultPluginUninstaller");
-		// 1. get a LoggingAspect.java file
-		File file = new File(baseDir + CommonConstants.SRC_MAIN_JAVA+ packageName + System.getProperty("file.separator")
-				+ CommonConstants.PLUGIN_ASPECT_PACKAGE, CommonConstants.LOGGING_ASPECT_CLASS);
-		// 2. remove configuration for current plugin
-		try {
-			FileUtil.removeFileContent(file, pluginName
-					+ "-configuration", "", false);
-		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Removing configuration about "
-									+ pluginName
-									+ " plugin from LoggingAspect.java is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
-		}
-	}
-	
-	/**
-	 * change web.xml of current project (servlet definition, servlet-mapping,
-	 * etc.)
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be uninstalled
-	 */
-	public void processWebXMLFile(String baseDir, String pluginName)
-			throws Exception {
-		getLogger().debug(
-				"Call processWebXMLFile() of DefaultPluginUninstaller");
-		// 1. get a web.xml file
-		File webXMLFile = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP
-				+ "WEB-INF", CommonConstants.WEB_XML_FILE);
-
-		// 2. remove configuration for current plugin
-		try {
-			FileUtil.removeFileContent(webXMLFile, pluginName
-					+ "-configuration", "", true);
-		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Removing configuration about "
-									+ pluginName
-									+ " plugin from web.xml is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
-		}
-	}
 
 	/**
 	 * in case of installing hibernate plugin, change transaction configuration
@@ -1416,7 +1126,7 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 	 * @param pluginName
 	 *            plugin name to be uninstalled
 	 */
-	public void processTransactionFile(String baseDir, String pluginName)
+	public void processTransactionFile(String baseDir)
 			throws Exception {
 		getLogger().debug(
 				"Call processTransactionFile() of DefaultPluginUninstaller");
@@ -1424,91 +1134,55 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 		// 1. get a context-transaction.xml file
 		File txFile = new File(baseDir + CommonConstants.SRC_MAIN_RESOURCES
 				+ "spring", CommonConstants.CONFIG_TX_FILE);
-		// 2. remove configuration for current plugin
+		
 		try {
-			FileUtil.removeFileContent(txFile, pluginName
-					+ "-configuration", "", true);
+			FileUtil
+					.replaceFileContent(
+							txFile,
+							"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
+							"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
+			FileUtil
+					.replaceFileContent(
+							txFile,
+							"<property name=\"sessionFactory\" ref=\"sessionFactory\" />",
+							"<property name=\"dataSource\" ref=\"dataSource\" />");
 		} catch (Exception e) {
 			getLogger()
 					.warn(
-							"Removing configuration about "
-									+ pluginName
-									+ " plugin from context-transaction is skipped. The reason is a '"
+							"Replace transaction configuration about hibernate"
+									+ " plugin from context-transaction.xml is skipped. The reason is a '"
 									+ e.getMessage() + "'.");
 		}
-		
-		if (pluginName.equals(CommonConstants.HIBERNATE_PLUGIN)) {
-			try {
-				FileUtil
-						.replaceFileContent(
-								txFile,
-								"id=\"txManager\" class=\"org.springframework.orm.hibernate3.HibernateTransactionManager\"",
-								"id=\"txManager\" class=\"org.springframework.jdbc.datasource.DataSourceTransactionManager\"");
-				FileUtil
-						.replaceFileContent(
-								txFile,
-								"<property name=\"sessionFactory\" ref=\"sessionFactory\" />",
-								"<property name=\"dataSource\" ref=\"dataSource\" />");
-			} catch (Exception e) {
-				getLogger()
-						.warn(
-								"Removing transaction configuration about "
-										+ pluginName
-										+ " plugin from context-transaction.xml is skipped. The reason is a '"
-										+ e.getMessage() + "'.");
-			}
-		}
 	}
-
+	
 	/**
-	 * remove a hyperlink from welcome file
+	 * in case of uninstalling i18n plugin, change messageSource configuration
 	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be uninstalled
+	 * @param targetDir
+	 *            target project folder to install a plugin
 	 */
-	public void processWelcomeFile(String baseDir, String pluginName)
+	private void processMessageFile(String baseDir)
 			throws Exception {
 		getLogger().debug(
-				"Call processWelcomeFile() of DefaultPluginUninstaller");
-		File indexFile = new File(baseDir + CommonConstants.SRC_MAIN_WEBAPP,
-				CommonConstants.WELCOME_FILE);
+				"Call processMessageFile() of DefaultPluginUnInstaller");
 		try {
-			FileUtil.removeFileContent(indexFile, pluginName + "-menu", "",
-					false);
+			
+				// 1. get a transaction configuration file
+				File file = new File(baseDir
+						+ CommonConstants.SRC_MAIN_RESOURCES + "spring",
+						CommonConstants.CONFIG_MESSAGE_FILE);
+				
+				FileUtil.replaceFileContent(
+						file,
+						"<bean id=\"fileMessageSource\"",
+						"<bean id=\"messageSource\"");
 		} catch (Exception e) {
-			getLogger().warn(
-					"Removing a menu from current project is skipped. The reason is a '"
+			getLogger()
+					.warn("Processing a context-message.xml of current project is skipped. The reason is a '"
 							+ e.getMessage() + "'.");
 		}
 	}
 
-	/**
-	 * remove a tiles information from tiles definition file
-	 * 
-	 * @param baseDir
-	 *            the path of current project
-	 * @param pluginName
-	 *            plugin name to be installed
-	 */
-	public void processTiles(String baseDir, String pluginName)
-			throws Exception {
-		getLogger().debug("Call processTiles() of DefaultPluginUninstaller");
-		File tilesFile = new File(baseDir
-				+ CommonConstants.SRC_MAIN_WEBAPP_WEBINF,
-				CommonConstants.TILES_XML_FILE);
-
-		try {
-			FileUtil.removeFileContent(tilesFile, pluginName
-					+ "-tiles-definition", "", true);
-		} catch (Exception e) {
-			getLogger()
-					.warn(
-							"Removing a tiles definition into current project is skipped. The reason is a '"
-									+ e.getMessage() + "'.");
-		}
-	}
 
 	/**
 	 * drop custom table, delete data to DB
@@ -1602,5 +1276,36 @@ public class DefaultPluginUninstaller extends AbstractLogEnabled implements
 				backupDirName);
 
 		return file;
+	}
+	
+	/**
+	 * make a output file
+	 * 
+	 * @param baseDir
+	 *            plugin project root folder which has plugin sample codes
+	 * @param resourceDir
+	 *            resource folder to build plugin resources
+	 * @param template
+	 *            a plugin resource
+	 * @param packaged
+	 *            whether a plugin resource has package (ex. java)
+	 * @param packageName
+	 *            project's base package name
+	 * @return output file
+	 */
+	private File getOutput(String baseDir, String resourceDir,
+			String template, boolean packaged, String packageName) {
+		getLogger().debug("Call getOutput() of DefaultPluginPackager");
+
+		template = StringUtils.replaceOnce(template,
+				CommonConstants.PLUGIN_RESOURCES + "/" + resourceDir, "");
+		
+		String outputName = resourceDir + CommonConstants.fileSeparator
+			+ (packaged ? FileUtil.changePackageForDir(packageName) : "")
+			+ CommonConstants.fileSeparator + template;
+		
+		File output = new File(baseDir, outputName);
+		
+		return output;
 	}
 }
