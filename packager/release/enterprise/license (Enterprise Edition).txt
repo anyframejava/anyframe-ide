@@ -1,0 +1,50 @@
+End User License Agreement
+         
+Anyframe Java IDE(Enterprise Ed.) 3.0.0
+
+Copyright (C) 2012 Samsung SDS Co., Ltd. All Rights Reserved
+
+IMPORTANT- READ CAREFULLY: 
+This license agreement governs  Anyframe Java IDE(Enterprise Ed.) 3.0.0 ("Software").  By installing Software, you enter into the terms of this binding contract between you ("you" or "User") and Samsung SDS Co., Ltd. 
+If you do not agree with the terms of this license, exit the installation of Software. 
+Installation of the Software constitutes acceptance of the terms of this License Agreement.
+
+DEFINITIONS
+
+In this End User License Agreement, unless the contrary intention appears:
+
+"EULA" means this End User License Agreement. 
+"Licensor" means Samsung SDS Co., Ltd. 
+"Licensee" means YOU, or the organization (if any) on whose behalf YOU are taking the EULA. 
+"SOFTWARE PRODUCT" or "SOFTWARE" means Anyframe Java IDE(Enterprise Ed.) 3.0.0 which includes computer software and associated media and printed materials, and may include online or electronic documentation. 
+
+GRANT OF LICENSE
+
+Subject to the terms and conditions of this Agreement, Licensor hereby grants you a limited, nonexclusive license to install and use the object code version of the Software, a copy of which is provided herewith, on a single personal computer.
+
+ADDITIONAL RIGHTS AND LIMITATIONS
+
+You must retain all copyright and related notices of Licensor's ownership and other rights in the Software in the product, labeling and documentation provided.
+you may not modify, translate, de-compile, reverse engineer, disassemble or otherwise decode the Software.
+you may not copy any of the Software other than as reasonably required for your own personal use of the Software in accordance with this Agreement. 
+you may not sublicense, sell, rent, lend, transfer, post, transmit, distribute or otherwise make the Software available to anyone else, except that you may permanently transfer the Software and accompanying materials provided you retain no copies and the recipient agrees to the terms of this Agreement.
+
+ASSIGNMENT
+
+YOU may only assign all your rights and obligations under this EULA to another party if YOU supply to the transferee a copy of this EULA and all other documentation including proof of ownership. Your license is then terminated.
+
+TERMINATION
+
+Without prejudice to any other rights, Licensor may terminate this EULA if YOU fail to comply with the terms and conditions. Upon termination YOU or YOUR representative shall destroy all copies of the SOFTWARE PRODUCT and all of its component parts or otherwise return or dispose of such material in the manner directed by Licensor.
+
+
+LIMITATION OF LIABILITY
+IN NO EVENT WILL LICENSOR BE LIABLE FOR ANY DAMAGES, INCLUDING LOSS OF DATA, LOST OPPORTUNITY OR PROFITS, COST OF COVER OR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, DIRECT OR INDIRECT DAMAGES ARISING FROM OR RELATING TO THE USE OF THE SOFTWARE, HOWEVER CAUSED ON ANY THEORY OF LIABILITY.  THIS LIMITATION WILL APPLY EVEN IF LICENSOR HAS BEEN ADVISED OR GIVEN NOTICE OF THE POSSIBILITY OF SUCH DAMAGE.  THE ENTIRE RISK AS TO THE USE OF THE SOFTWARE IS ASSUMED BY THE USER. BECAUSE SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CERTAIN INCIDENTAL, CONSEQUENTIAL OR OTHER DAMAGES, THIS LIMITATION MAY NOT APPLY TO YOU.
+
+
+DISCLAIMER OF WARRANTY
+TO THE EXTENT PERMITTED BY APPLICABLE LAW ALL LICENSOR SOFTWARE, INCLUDING THE IMAGES AND/OR COMPONENTS, IS PROVIDED "AS IS" AND WITHOUT EXPRESS OR IMPLIED WARRANTY OF ANY KIND BY EITHER LICENSOR OR ANYONE ELSE WHO HAS BEEN INVOLVED IN THE CREATION, PRODUCTION OR DELIVERY OF SUCH SOFTWARE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, NONINFRINGEMENT OR FITNESS FOR A PARTICULAR PURPOSE.  NO COVENANTS, WARRANTIES OR INDEMNITIES OF ANY KIND ARE GRANTED BY LICENSOR TO THE USER.
+
+TRADEMARKS
+
+All names of products and companies used in this EULA, the SOFTWARE PRODUCT, or the enclosed documentation may be trademarks of their corresponding owners. Their use in this EULA is intended to be in compliance with the respective guidelines and licenses.

@@ -11,13 +11,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.anyframe.ide.common.CommonActivator;
-import org.anyframe.util.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.io.filefilter.SizeFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 
 public class LoggerCommon {
@@ -65,7 +65,7 @@ public class LoggerCommon {
 			File file = iter.next();
 			String num = file.getName().replaceAll(pluginId, "").replaceAll(hostAddress, "").replaceAll("-", "").replaceAll(".log", "");
 			
-			fileIndexes.add(StringUtil.isEmpty(num) ? 0 : Integer.parseInt(num));
+			fileIndexes.add(StringUtils.isEmpty(num) ? 0 : Integer.parseInt(num));
 		}
 		
 		if(fileIndexes.isEmpty()){

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.anyframe.ide</groupId>
+		<artifactId>anyframe-ide-parent</artifactId>
+		<version>2.7.0</version>
+	</parent>
+
+	<groupId>org.anyframe.ide</groupId>
+	<artifactId>org.anyframe.ide.update</artifactId>
+	<version>3.1.0</version>
+	<name>Anyframe Java IDE Update Site Project</name>
+
+	<packaging>eclipse-repository</packaging>
+
+	<build>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<profiles>
+		<!-- This profile is used to upload the repo -->
+		<profile>
+			<id>uploadRepo</id>
+			<properties>
+				<ftp.url>ftp://70.2.229.101:22</ftp.url>
+				<ftp.toDir>./update/update-release</ftp.toDir>
+				<repo.path>./target/repository</repo.path>
+			</properties>
+
+			<build>
+				<plugins>
+					<!-- Upload the repo to the server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>wagon-maven-plugin</artifactId>
+						<version>1.0-beta-4</version>
+						<executions>
+							<execution>
+								<id>upload-repo</id>
+								<phase>install</phase>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<configuration>
+									<fromDir>${repo.path}</fromDir>
+									<includes>**</includes>
+									<toDir>${ftp.toDir}</toDir>
+									<url>${ftp.url}</url>
+									<serverId>ftp-repository</serverId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>copy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<ftp server="${dev.server.url}" port="${dev.server.port}"
+											remotedir="${dev.server.target}" userid="${dev.server.id}"
+											password="${dev.server.password}">
+											<fileset file="category.xml" />
+										</ftp>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+
+						<dependencies>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>1.0b3</version>
+							</dependency>
+							<dependency>
+								<groupId>ant</groupId>
+								<artifactId>ant-nodeps</artifactId>
+								<version>1.8.1</version>
+							</dependency>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant-commons-net</artifactId>
+								<version>1.8.1</version>
+							</dependency>
+							<dependency>
+								<groupId>commons-net</groupId>
+								<artifactId>commons-net</artifactId>
+								<version>1.4.1</version>
+							</dependency>
+							<dependency>
+								<groupId>apache-oro</groupId>
+								<artifactId>jakarta-oro</artifactId>
+								<version>2.0.8</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

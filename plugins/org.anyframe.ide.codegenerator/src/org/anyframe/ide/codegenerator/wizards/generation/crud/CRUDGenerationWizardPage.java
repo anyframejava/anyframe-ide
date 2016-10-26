@@ -348,15 +348,17 @@ public class CRUDGenerationWizardPage extends WizardPage {
 						List typelist = cu.types();
 						if (typelist.size() == 0)
 							return result.toArray();
-						TypeDeclaration td = (TypeDeclaration) typelist.get(0);
-						Javadoc jdoc = td.getJavadoc();
+						if(typelist.get(0) instanceof TypeDeclaration){
+							TypeDeclaration td = (TypeDeclaration) typelist.get(0);
+							Javadoc jdoc = td.getJavadoc();
 
-						if (jdoc != null) {
-							List tags = jdoc.tags();
-							for (int i = 0; i < tags.size(); i++) {
-								String tag = String.valueOf(tags.get(i));
-								if (tag.contains(Domain.TABLE)) {
-									result.add(td.resolveBinding().getQualifiedName());
+							if (jdoc != null) {
+								List tags = jdoc.tags();
+								for (int i = 0; i < tags.size(); i++) {
+									String tag = String.valueOf(tags.get(i));
+									if (tag.contains(Domain.TABLE)) {
+										result.add(td.resolveBinding().getQualifiedName());
+									}
 								}
 							}
 						}

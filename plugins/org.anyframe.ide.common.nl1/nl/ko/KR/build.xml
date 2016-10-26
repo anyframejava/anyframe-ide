@@ -13,7 +13,7 @@
 	
 	<!-- Plug-in Information -->
 	<property name="bundle.id" value="org.anyframe.ide.common" />
-	<property name="bundle.version" value="3.0.1-SNAPSHOT" />
+	<property name="bundle.version" value="3.1.0" />
 	<property name="bundle.about" location="${basedir}/about" />
 	<property name="bundle.src" location="${basedir}/src" />
 	<property name="bundle.lib" location="${basedir}/lib" />

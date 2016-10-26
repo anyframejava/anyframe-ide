@@ -1,0 +1,319 @@
+﻿Anyframe Java IDE CHANGELOG
+==========================
+http://www.anyframe-ent.com
+
+Changes in version 3.0.0 (2013-07-22)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Configuration file 톻합
+    . project.mf 파일의 정보를 기존 Configuration file과 통합하도록 개선
+
+2) Code Generator - Eclipse Plugin
+  - Domain/CRUD Generation 기능 개선  
+    . Domain/CRUD 소스 생성 시 Hibernate,Appfuse 의존관계를 배재하여 생성되도록 개선
+  - Template Engine 및 구조 변경
+    . Domain / CRUD 소스코드 생성시 Freemarker에서 Velocity로 Template Engine 변경 및 Template 폴더 구조 개선  
+  - Wizard 
+    . 신규 프로젝트 생성 시 추가되는 기본 Anyframe Plugin 설정이 가능하게 개선
+
+3) Common(Enterprise Ed.) - Eclipse Plugin
+  - Util
+    . Dialog, Popup, Alert의 생성위치가 동일 모니터에서 생성되도록 개선
+  - Configuration 설정 추가
+    . DAO Manager SQL Meta Editor 기능, SQL Validate 관련 설정 추가
+  
+4) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - SQL Meta Editor
+    . 사용자가 Drag&Drop 등을 이용하여 쉽게 SQL 문을 완성할 수 있도록 개선
+  - SQL Validate
+    . SQL 문의 Syntax 및 Meta 정보의 정합성을 체크하여 SQL을 검증할 수 있도록 개선
+  - Usage Logging
+    . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선     
+  
+5) VO Manager(Enterprise Ed.) - Eclipse Plugin
+  - Properties
+    . 전문처리 관련 Connector가 구동하지 않을 경우 관련 설정을 보이지 않게 개선
+  - Usage Logging
+    . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선
+
+6) UnitTest Manager(Enterprise Ed.) - Eclipse Plugin
+  - Usage Logging
+    . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선
+
+* 참조 라이브러리 변경 내역
+  - 기존의 anyframe-ide-command-ant-2.2.1.jar 파일을 anyframe-ide-command-ant-2.2.2.jar로 버전 변경
+  - 기존의 anyframe-ide-command-aspect-2.2.1.jar 파일을 anyframe-ide-command-aspect-2.2.2.jar로 버전 변경
+  - 기존의 anyframe-ide-command-cli-2.2.1.jar 파일을 anyframe-ide-command-cli-2.2.2.jar로 버전 변경
+  - 기존의 anyframe-ide-command-common-2.2.1.jar 파일을 anyframe-ide-command-common-2.2.2.jar로 버전 변경
+  - 기존의 anyframe-maven-plugin-2.2.1.jar 파일을 anyframe-maven-plugin-2.2.2.jar로 버전 변경
+  
+ * 테스트 내역
+  - Anyframe Java IDE 2.8.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-140] Configuration File 통합
+  Code Generator - Eclipse Plugin
+    . [AE-141] Domain Generation 기능 개선
+    . [AE-142] CRUD Generation 기능 개선
+    . [AE-143] Template 구조 개선 및 Code Generator Template Engine 변경
+    . [AE-144] 프로젝트 생성 시 추가되는 기본 Plug in 설정 기능 개발    
+  Common(Enterprise Ed.)
+    . [AEJIDE-317] Dialog, popup, alert 생성위치 통일 유틸
+    . [AEJIDE-320] xml 파일 설정 추가    
+  DAO Manager(Enterprise Ed.)
+    . [AEJIDE-300] usage logging
+    . [AEJIDE-301] DAO Manager - SQL Meta Editor 개발
+    . [AEJIDE-323] SQL Validate 기능 개발
+  VO Manager(Enterprise Ed.)
+    . [AEJIDE-300] usage logging
+    . [AEJIDE-324] 전문(메세지) 생성 기능 관련 속성 정의 개선
+  UnitTest Manager(Enterprise Ed.)
+    . [AEJIDE-300] usage logging
+    
+Changes in version 2.9.0 (2013-06-04)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - 로깅 기능
+    . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선    
+
+2) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - iBatis2 처리 지원
+    . Persistence Framework에서 iBatis2 지원이 가능하도록 개선
+
+* 참조 라이브러리 변경 내역
+  - N/A
+  
+* 테스트 내역
+  - Anyframe Java IDE 2.9.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-139] IDE 사용자 중심의 이력관리 기능 추가
+  DAO Manager(Enterprise Ed.)
+    . [AEJIDE-303] Dao Manager 에서 iBatis2 처리 기능 개발
+
+Changes in version 2.8.0 (2013-04-12)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Properties
+    . Configuration file 위치를  Eclipse Properties UI 화면에서 정의하도록 개선 
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선    
+
+2) Code Generator - Eclipse Plugin
+  - m2eclipse 의존관계 개선  
+    . 사용자가 원하는 m2eclipse로 설치하여 진행하도록 개선
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+
+3) Query Manager - Eclipse Plugin
+  - Bug fix
+    . Row Limit 에 숫자 외 값을 입력 시 경고 발생등 조치  
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선  
+  
+4) Common(Enterprise Ed.) - Eclipse Plugin
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+  
+5) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - Next key Paging 처리 지원
+    . Next key 방식의 Paging, Dynamic Paging 메소드 등 Generate 가능하도록 소스 및 템플릿 개선
+  - SQL ID 변경 이슈
+    . 메소드 이름 수정 시 SQL ID가 입력값이 아닌 값으로  변경되는 이슈 개선
+  - dynamic DML 타입일 경우 input type
+    . 기존 VO Input type이 Map 인 것을 VO type이 생성되도록 개선    
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선    
+  
+6) VO Manager(Enterprise Ed.) - Eclipse Plugin
+  - 매뉴얼 추가
+    . Eclipse Help Contents에 VO Manager 매뉴얼 추가
+  - Editor
+    . Paste 버튼 기능 오류 개선, Configuration xml file을 통한 버튼명 및 버튼 사용여부를 정의하도록 개선
+    . Insert Dialog 기능 개선, 입력 시 포커스 및 Validation 개선    
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+
+7) UnitTest Manager(Enterprise Ed.) - Eclipse Plugin
+  - 매뉴얼 추가
+    . Eclipse Help Contents에 VO Manager 매뉴얼 추가
+  - Bug fix
+    . Properties 내 JVM 결과 대기 시간 속성이  저장이 안되었던 이슈 개선 
+    . Run this test 시 ServiceRunner를 못찾던 이슈 개선
+    . Console 창 테스트 결과 출력 결과에 관한 이슈 및 가독성을 고려한 포맷으로 변경
+  - 다국어 지원
+    . 다국어 지원(한글/영어)을 위한 Fragment 프로젝트 구조 및 메시지/Help Contents 다국어 지원하도록 개선
+
+* 참조 라이브러리 변경 내역
+  - org.maven.ide.eclipse_0.12.1.20110112-1712.jar 추가
+  
+* 테스트 내역
+  - Anyframe Java IDE 2.8.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-138] Anyframe IDE Configuration 구성 개선
+  Code Generator - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+    . [AE-136] Code Generator의 m2eclipse Dependency 관계 개선
+  Query Manager - Eclipse Plugin
+    . [AE-132] Fragment 프로젝트 구성
+    . [AE-133] 다국어(한국어) 메세지 작성
+  Common(Enterprise Ed.)
+    . [AEJIDE-256] Fragment 프로젝트 구성
+	. [AEJIDE-257] 다국어(한국어) 메세지 작성
+  DAO Manager(Enterprise Ed.)
+    . [AEJIDE-261] DML 타입이 dynamic인 경우 Input Type의 디폴트 값이 Map 으로 변경
+    . [AEJIDE-271] DAO Manager에서 메소드의 이름을 변경할 때, SQL ID가 잘못 변경되는 문제
+	. [AEJIDE-281] Next key 방식의 Pageing, DynamicPaging 타입 추가
+  VO Manager(Enterprise Ed.)
+    . [AEJIDE-260] Insert Dialog 개선
+    . [AEJIDE-267] VO Manager 매뉴얼 작업
+    . [AEJIDE-282] Paste 버튼 기능 개선
+  UnitTest Manager(Enterprise Ed.)
+    . [AEJIDE-268] UnitTest Manager 매뉴얼 작업
+
+Changes in version 2.7.0 (2012-12-28)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Properties
+    . Database 속성 정의, 코드 생성 Template 파일의 위치, Template Type 및 DAO Framework 정의를 Eclipse Properties UI 화면에서 정의하도록 개선 
+  - 공통 Utility
+    . Database 처리, 암복호화, 경고창 생성, 메세지 처리를 공통 Utility화 하도록 개선    
+
+2) Code Generator - Eclipse Plugin
+  - Wizard  
+    . DB Table 기반의 Domain/VO Class 생성 및 전체 Classes 생성을 Eclipse Wizard를 통해 생성하도록 개선
+  - View
+    . Anyframe Plugin Installation, CTIP Integration 등을 Eclipse View 를 통해 검색 및 실행이 가능하게 개선  
+
+3) Query Manager - Eclipse Plugin
+  - Eclipse Data Tools Platform 적용하여 Eclipse Java EE 기본 제공 Eclipse plugin 사용
+    . Database Browser, SQL Test 개선  
+  - Anyframe Java Core 5.5.0 버전에서 제공하는 Query Service 기반 개발 지원
+    . QueryServiceDaoSupport 사용 시 지원이 가능하도록 개선
+    . result mapping style, mapping class 가 선택이 가능하도록 개선  
+  
+4) Common(Enterprise Ed.) - Eclipse Plugin
+  - 리펙토링
+  - login 기능 통합(기존 splash plugin 으로 별도 관리하던 플러그인 프로젝트를 통합)
+  - siteProvider 커넥터 및 불필요한 커넥터 정리 및 제거
+  
+5) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - View 화면 개발 방식에서 Editor 화면 개발 방식으로 변경
+  - 트랜드에 맞는 Web Style 의 개발 화면으로 변경
+  - DB 의존성을 최소화하여 Plugin Server, DB 가 없이도 소스 파싱을 통한 DAOManager 개발 가능
+  - Multipart Editor 를 통한 개발 화면 변경
+  
+6) VO Manager(Enterprise Ed.) - Eclipse Plugin
+  - 리펙토링
+
+7) UnitTest Manager(Enterprise Ed.) - Eclipse Plugin
+  - 리펙토링
+
+* 참조 라이브러리 변경 내역
+  - anyframe-online-4.5.0.jar 파일 추가  
+  - spring-core-3.1.1.RELEASE.jar 파일 추가  
+  - spring-jdbc-3.1.1.RELEASE.jar 파일 추가  
+  - spring-tx-3.1.1.RELEASE.jar 파일 추가  
+  - 기존의 anyframe-ide-command-ant-2.2.0.jar 파일을 anyframe-ide-command-ant-2.2.1.jar로 버전 변경
+  - 기존의 anyframe-ide-command-aspect-2.2.0.jar 파일을 anyframe-ide-command-aspect-2.2.1.jar로 버전 변경
+  - 기존의 anyframe-ide-command-cli-2.2.0.jar 파일을 anyframe-ide-command-cli-2.2.1.jar로 버전 변경
+  - 기존의 anyframe-ide-command-common-2.2.0.jar 파일을 anyframe-ide-command-common-2.2.1.jar로 버전 변경
+  - 기존의 anyframe-maven-plugin-2.2.0.jar 파일을 anyframe-maven-plugin-2.2.1.jar로 버전 변경
+  - 기존의 anyframe-core-1.0.5.jar 파일을 anyframe-core-1.5.0.jar로 버전 변경
+  - 기존의 anyframe-query-1.1.4.jar 파일을 anyframe-query-1.1.4.jar로 버전 변경
+  - 기존의 anyframe-query-ria-1.0.4.jar 파일을 anyframe-query-ria-1.5.0.jar로 버전 변경
+  - 기존의 velocity-dep-1.4.jar 파일을 velocity-dep-1.6.2.jar 로 버전 변경
+  
+* 테스트 내역
+  - Anyframe Java IDE 2.7.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common
+    . [AE-92] Util, Properties, Preferences 등 공통 클래스 통합 정리
+    . [AE-95] 전체 설정 정보 변경 - Preferences Build 타입 정보
+    . [AE-96] Eclipse Data Tools Platform 적용 Eclipse 버전 및 라이센스 확인
+	. [AE-97] Maven 기반 Eclipse Plugin 빌드 및 배포 관리
+	. [AE-100] 프로젝트 설정 정보 변경 - Properties (Databases)
+	. [AE-102] 프로젝트 설정 정보 변경 - Properties (Databases)
+	. [AE-112] Eclipse Update Site 구성 테스트
+	. [AE-113] Anyframe Core 5.5.0 릴리즈 버전 통합
+	. [AE-114] Eclipse 3rd Party Plugin 지원
+	. [AE-115] Eclipse 버전 별 패키징 및 테스트
+	. [AE-116] 사용자 매뉴얼 작성
+	. [AE-120] Exception/Logging/Message 개발 표준 적용
+	. [AE-122] 매뉴얼 프로젝트 구조 개편 및 신규 내용 작성
+	. [AE-123] Code Generator Properties Page 개발
+	. [AE-124] Anyframe IDE 이미지, 메세지, exeption 처리 리팩토링
+	. [AE-125] 단위 테스트 오류 수정
+	. [AE-126] Code Templates, Inspection Resources 관리 폴더 변경
+  Code Generator
+    . [AE-93] Code Generator - 변경된 org.anyframe.common 구조에 맞게 Eclipse Project 내부 구조 변환
+	. [AE-98] 프로젝트 생성 Wizard 개발(프로젝트 정보 입력)
+	. [AE-99] 프로젝트 생성 Wizard 개발(JDBC Configuration Settings)
+	. [AE-103] Anyframe Plugin Installation View 개발
+	. [AE-104] CTIP Integration View 개발
+	. [AE-105] 다건 VO 클래스 생성 Wizard 개발
+	. [AE-106] CRUD 전체 소스코드 생성 Wizard 개발
+	. [AE-107] 단건 VO 클래스 생성 Wizard 개발
+	. [AE-108] DAO 클래스 생성 Wizard 개발
+	. [AE-121] Code Generator/Query Manager 단위테스트 수행
+	. [AE-127] 기존 MigLayout UI 정리
+	. [AE-128] ctip/installatoin view, Query Manager 단위테스트 결과 처리
+	. [AE-129] DAO/VO 클래스 생성 시 부모 클래스를 Project Properties에서 변경할 수 있도록 기능 추가
+	. [AE-130] 매뉴얼 작성
+  Query Manager
+    . [AE-94] Query Manager - 변경된 org.anyframe.common 구조에 맞게 Eclipse Project 내부 구조 변환
+	. [AE-101] 프로젝트 설정 정보 변경 - Properties (Query Manager)
+	. [AE-109] SQL Explorer 참조관계를 제거하고 Eclipse Data Tools Platform 사용하는 형태로 변경
+	. [AE-110] Result Class Mapping을 위해 Open Type Dialog 활용
+	. [AE-119] QueryManager 리팩토링 및 부가기능 개선
+	. [AE-121] Code Generator/Query Manager 단위테스트 수행
+	. [AE-128] ctip/installatoin view, Query Manager 단위테스트 결과 처리
+  Common(Enterprise Ed.)
+    . [AEJIDE-226] Util, Properties, Preferences 등 공통 클래스 통합 정리
+	. [AEJIDE-231] 전체 설정 정보 변경 - Preferences (Enterprise Settings/XML Settings)
+	. [AEJIDE-232] 프로젝트 설정 정보 변경 - Properties (Resources)
+	. [AEJIDE-233] Anyframe Core 5.5.0 (Enterprise Ed.) 릴리즈에 따른 소스코드 템플릿 변경 사항 반영
+	. [AEJIDE-239] 사용자 매뉴얼 작성
+	. [AEJIDE-242] Plugin Server 프로젝트 개발표준 적용
+	. [AEJIDE-243] VO Manager, UnitTest Manager 개발표준 적용
+	. [AEJIDE-245] 코딩표준 적용(License 구문, 클래스주석, Author 작성, Encoding 설정 등)
+  DAO Manager(Enterprise Ed.)
+    . [AEJIDE-227] DAO Manager - 변경된 com.anyframe.common 구조에 맞게 Eclipse Project 내부 구조 변환
+	. [AEJIDE-234] DAO Manager 내 DAO Editor UI 개편 및 기능 개선
+	. [AEJIDE-235] DAO Manager 내 DAO Editor 소스코드 Reverse 기능 개발
+	. [AEJIDE-236] DAO Manager 내 DAO Editor 소스코드 수정 및 저장 기능 개발
+	. [AEJIDE-237] DAO Manager 내 SQL 수정 Wizard 개발
+	. [AEJIDE-238] DAO Manager CRUD Method 생성 Wizard 개발
+	. [AEJIDE-241] DAO Editor UI 개발
+	. [AEJIDE-247] DAO Manager 메뉴얼 작업
+  VO Manager(Enterprise Ed.)
+    . [AEJIDE-228] VO Manager - 변경된 com.anyframe.common 구조에 맞게 Eclipse Project 내부 구조 변환
+  UnitTest Manager(Enterprise Ed.)
+    . [AEJIDE-229] UnitTest Manager - 변경된 com.anyframe.common 구조에 맞게 Eclipse Project 내부 구조 변환
+	. [AEJIDE-246] UnitTest Manager 의 TestInfo 객체 리팩토링 및 불필요한 extension point 제거
+
+* 2.7.0 버젼 이전의  이슈 목록은 기 changelog.txt를 참고	

@@ -6,13 +6,13 @@
 	<parent>
 		<groupId>org.anyframe.ide</groupId>
 		<artifactId>anyframe-ide-parent</artifactId>
-		<version>2.7.1-SNAPSHOT</version>
+		<version>2.7.0</version>
 		<!--<relativePath>../org.anyframe.ide.parent/pom.xml</relativePath>-->
 	</parent>
 	
 	<groupId>org.anyframe.ide</groupId>
 	<artifactId>org.anyframe.ide.common</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.1.0</version>
 	<name>org.anyframe.ide.common Project</name>
 
 	<packaging>eclipse-plugin</packaging>

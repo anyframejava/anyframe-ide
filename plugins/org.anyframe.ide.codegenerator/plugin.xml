@@ -29,6 +29,7 @@
          	</description>
 		</wizard>
 		-->
+		
 		<wizard category="org.anyframe.ide.common.wizards.anyframe"
 			class="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard"
 			id="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard" name="%Wizard_Menu_VOClasses"

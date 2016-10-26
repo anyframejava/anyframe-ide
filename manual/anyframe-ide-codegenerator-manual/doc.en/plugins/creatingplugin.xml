@@ -1,0 +1,908 @@
+<chapter id="plugins_creatingplugin">
+	<title>New Plugin Development</title>
+	<para>
+	It is not easy for a developer to develop a plugin manually according to the Anyframe Plugin structure previously explained. 
+	Maven commands are provided to support development of Anyframe Plugins. Let us look at how to develop plugins using them.
+	</para>
+	
+	<section id="plugins_creatingplugin_createpjt">
+		<title>New Plugin Project Generation</title>
+		<para>Generate a project for a new plugin that you want to develop using Maven commands provided by Anyframe IDE.</para>
+		<programlisting language="xml"><![CDATA[mvn archetype:generate 
+  -DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>			
+		<para>
+			Generate a sample project to create a new Anyframe Plugin, 
+			and when the sample project is a web type project, select anyframe basic archetype and for a service type project, select anyframe service archetype. 
+			Input groupId, artifactId, version, package information for the new Anyframe Plugin. 
+		</para>
+		<para>
+			For example, a new Anyframe plugin project is generated with the name anyframe-query-pi, the values can be entered as follows.  
+			For version, the default is 1.0-SNAPSHOT, and for package, the default is the same as groupId. 
+		<programlisting language="xml"><![CDATA[Define value for property 'groupId': : org.anyframe.plugin 
+Define value for property 'artifactId': : anyframe-query-pi
+Define value for property 'version': 1.0-SNAPSHOT: x.x.x
+Define value for property 'package': org.anyframe.plugin:]]></programlisting>					
+		</para>		
+	</section>
+	
+	<section id="plugins_creatingplugin_dbrunning">
+		<title>Running Sample DB</title>
+		<para>
+			Run HSQL DB, which is the basic sample DB, by executing start.cmd (or start.sh) file under db/hsqldb folder in the project previously generated.  
+			After implementing the new Anyframe plugin based on the basic sample DB, proceed with implementation of plugin sample codes for each DB that is additionally provided.  
+			For how to create the sample codes for each DB, refer to <emphasis role="bold">Adding New Plugin Sample Codes</emphasis> at the bottom.  
+			If the new plugin is constituted to provide only libraries without sample codes, running the sample DB is not necessary.  
+		</para>
+	</section>	
+	
+	<section id="plugins_creatingplugin_dependentplugin">
+		<title>Reference Plugin Installation</title>
+		<para>
+			If there are existing plugins that the new plugin should reference, install them using the install command.  
+			If there is no plugin to reference, install Anyframe Core Plugin as the default.  
+			If a reference plugin is installed, the sample codes of the new plugin can be additionally implemented based on the libraries and the sample codes provided by the reference plugin. 
+			
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=core]]></programlisting>		
+	</section>	
+	
+	<section id="plugins_creatingplugin_addnewlibraries">
+		<title>Adding New Plugin Libraries</title>
+		<para>
+			Add the libraries required by the new plugin in pom.xm. file under the plugin project root folder previously generated. 	 
+			Write them in the &lt;dependencies> tag, and it should be marked that they are the libraries of the new plugin using the START/END comment. 
+		</para>
+<programlisting language="xml"><![CDATA[<dependencies>
+<!-- query plugin dependencies START -->
+<dependency>
+    <groupId>org.anyframe</groupId>
+    <artifactId>anyframe-query</artifactId>
+    <version>x.x.x</version> 
+</dependency>   
+<dependency>
+	<groupId>org.apache.velocity</groupId>
+	<artifactId>velocity-dep</artifactId>
+	<version>1.6.2</version>
+</dependency> 
+<dependency>
+    <groupId>avalon</groupId>
+    <artifactId>avalon-framework</artifactId>
+    <version>4.0</version>
+</dependency>
+... 
+<!-- query plugin dependencies END -->]]></programlisting>			
+			<note>
+				<title>Notes</title>
+				<para>
+					- Proceed with development of the new plugin by importing to Eclipse Project. 
+				</para>
+				<para>
+					- Change the inspection.dir item in properties tag in pom.xml file under the Plugin project root folder as follows. 
+					Since the user home folder information of the local environment of the plugin developer is in pom.xml file, change it to ${user.home}.
+					<programlisting language="xml"><![CDATA[<properties>
+    <inspection.dir>${user.home}/.anyframe/inspection</inspection.dir>
+    ...]]></programlisting>	
+				</para>
+			</note>	
+	</section>		
+	
+	<section id="plugins_creatingplugin_addnewcode">
+		<title>Adding New Plugin Sample Codes</title>
+		<para>Create the resources (Java, XML, etc.) to be provided as sample codes along with the libraries installed by the new plugin  
+				in line with Anyframe Plugin's folder/file naming rules. (Refer to <link linkend="plugins_structure">Plugin Structure</link>.)
+		</para>
+			<para>
+				Let us look at how to additionally create sample codes by dividing by each folder that exists in the Plugin project. 
+				In addition to the folder listed here, the plugin developer can add other folders. 
+				(It can be set to recognize the newly generated folder as Plugin Resource after the plugin build file is generated.) 
+			</para>
+			<orderedlist numeration="lowerroman">
+				<listitem>
+					<para>
+					src/main/java
+					</para>
+					<para>
+						Under the main package, there is always the plugin name, under which packages can be constituted and sample java codes can be created.  
+						For example, domain classes in the plugin can be located under the domain package name, 
+						service interface classes under the service package name, service implementation classes and DAO classes under the service.impl package name, 
+						and classes related to development of the presentation layer under the web package name. 
+					</para>
+				</listitem>	
+				<listitem>
+					<para>
+					src/main/resources
+					</para>
+					<para>
+					Property definition file for execution of applications based on Spring and SpringMVC, the message file, and mapping XML files that define 
+					query statements can be added. 
+					Locate Spring property definition file under spring folder as context-{plugin name}-xxx.xml.
+					SpringMVC property definition file should be defined as {plugin name}-servlet.xml. 
+					When resource files are additionally necessary, generate and manage a folder with the same name as the Plugin name. 
+					</para>
+					<para>
+					When the plugin contains resources that should be changed according to the DB type, 
+					it should be marked in the file using the &lt;!--{plugin name}-{unique id}-START-->,
+					&lt;!--{plugin name}-{unique id}-END--> comment tag. 
+					It can be marked using the START/END tag for each configuration information changed for each DB type 
+					in src/main/resoures/spring/context-query.xml file of Query Plugin as in the following example. 
+					</para>
+					<programlisting language="xml"><![CDATA[<bean name="queryService" class="org.anyframe.query.impl.QueryServiceImpl">
+	<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	<property name="pagingSQLGenerator" ref="pagingSQLGenerator"/>
+	<property name="sqlRepository" ref="sqlLoader"/>
+	<!--query-propertyLobHandler-START-->
+	<property name="lobHandler" ref="lobHandler"/>
+	<!--query-propertyLobHandler-END-->				
+</bean>
+
+<!--query-generator-START-->
+<bean id="pagingSQLGenerator" class="org.anyframe.query.impl.jdbc.generator.HSQLPagingSQLGenerator"/>
+<!--query-generator-END-->
+
+<!--query-lobHandler-START-->
+<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true">
+	<property name="wrapAsLob" value="true"/>
+</bean>		
+<!--query-lobHandler-END-->
+...]]></programlisting>						
+					<para>
+					The Velocity-Support statement can be used when dynamic sql is written in XML files. 
+					When the Velocity statement should be maintained in the XML file as it is as in the following example, 
+					it should be marked setting comment tags before and after the relevant part.  
+					&lt;!--Velocity-Support-{unique id}-START-->,
+					&lt;!--Velocity-Support-{unique id}-END--> 
+					</para>
+					<programlisting language="xml"><![CDATA[<query id="findJqueryMovieList" isDynamic="true">
+  <statement>
+  <!--simpleweb-jquery-findJqueryMovieList-START-->
+     SELECT movie.movie_id, movie.title, ...
+     FROM JQUERY_MOVIE movie, JQUERY_GENRE genre
+	<!--Velocity-Support-findJqueryMovieList-START-->
+	#if($vo.sidx &amp;&amp; !$vo.sidx.equals(""))ORDER BY
+	  #if($vo.sidx == "genre.name")
+		genre.name
+	  #elseif($vo.sidx == "title")
+		movie.title
+	  #end
+	#end
+	<!--Velocity-Support-findJqueryMovieList-END-->
+...]]></programlisting>	
+				</listitem>	
+				<listitem>
+					<para>
+					src/test/java
+					</para>
+					<para>
+						There is always the plugin name under the main package, 
+						under which packages can be constituted freely and the test case java codes can be created for the plugin sample codes.
+						
+					</para>
+				</listitem>	
+				<listitem>
+					<para>
+					src/test/resources
+					</para>
+					<para>
+						It should be noted that when there are resource files necessary to execute the test case, they are added in this folder, and the rules of adding them are the same as adding files in src/main/resources folder.  
+					</para>
+				</listitem>		
+				<listitem>
+					<para>
+					src/main/webapp
+					</para>
+					<para>
+						JSP file for the Plugin sample codes should be managed by generating a folder with the same name as the plugin name under WEB-INF/jsp.
+						When other files such as css and image should be deployed for the Plugin sample codes, they should be managed by generating a folder with the same name as the Plugin name under webapp folder.
+					</para>
+					<para>
+					To add menu on the plugin list page when installing the Plugin, set  &lt;!--{plugin name}-menu-START-->, &lt;!--{plugin name}-menu-END--> tag at the top and at the bottom of the menu in anyframe.jsp file as below.
+					If there are also parts that should be added in web.xml file during the plugin installation, set them using the START/END tag. 
+					</para>
+				<programlisting language="java"><![CDATA[<!--query-menu-START-->
+  <a href="${ctx}/queryMovieFinder.do?method=list"><font size="2">- Query 1.0.0</font></a><br/>
+<!--query-menu-END-->]]></programlisting>					
+				</listitem>																
+				<listitem>
+					<para>db/scripts</para>
+					<para>
+						If separate DB data should be added to execute the relevant Plugin, 
+						define {plugin name}-insert-data-{db.name}.sql and {plugin name}-delete-data-{db.name}.sql files under db/scripts folder 
+						and necessary DDL and DML, and they will be executed by anyframe-maven-plugin when the relevant plugin is installed/uninstalled. 
+						
+					</para>
+				</listitem>		
+				<listitem>
+					<para>db/resources</para>
+					<para>
+						Used when the plugin contains resources that should be changed according to the DB type. 
+						For example, since for QueryService, the PagingSQLGenerator implementation to be used differs according to the DB type, 
+						QueryService property definition should be different depending on the DB type when Query Plugin is installed. 
+						For this, the DB name can be used as the folder name under db/resources folder, and under the folder the location of the relevant resources 
+						and the files that should be changed can be defined. 
+						For details, refer to db/resources in <link linkend="plugins_structure">Plugin Structure</link>. 
+						(e.g. db/resources/oracle/src/main/resources/spring/context-query.xml)							
+					</para>
+				</listitem>																			
+			</orderedlist>		
+			<para>
+				Test whether they properly run in CLI or Eclipse after additionally implementing the Plugin sample codes. 
+				For a web type project, the test can be conducted using the jetty:run command, and for a service type project, 
+				the test command can be used.  				
+				<programlisting language="java"><![CDATA[mvn clean jetty:run
+mvn clean test]]></programlisting>
+			</para>						
+	</section>		
+	
+	<section id="plugins_creatingplugin_addplugininterceptor">
+		<title>Adding New Plugin Interceptor</title>
+			<para>
+				When there are jobs to handle separately in addition to basic jobs conducted by anyframe-maven-plugin when the relevant Plugin is installed/uninstalled, 
+				they can be handled through implementation of the Interceptor class. 
+				Interceptor class is located under src/main/java under the Plugin project, 
+				and can be implemented as follows. 
+			</para>
+<programlisting language="java"><![CDATA[public class CustomPluginInterceptor {
+    // when a separate process is required before installation
+    public void preInstall(String baseDir, File pluginJarFile) throws Exception {
+        System.out.println("#### call preInstall ####");
+    }
+    
+    // when a separate process is required after installation
+    public void postInstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call postInstall ####");
+    }
+
+    // when a separate process is required before uninstallation
+    public void preUninstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call preUninstall ####");
+    }
+    
+    // when a separate process is required after uninstallation
+    public void postUninstall(String baseDir, File pluginJarFile)
+        throws Exception {
+        System.out.println("#### call postUninstall ####"); 
+    }
+}]]></programlisting>					
+			<para>
+				The following is part of the Interceptor class of Query Plugin, 
+				and it can be seen that it contains the logic that changes the value of the "project.daoframework" property in META-INF/project.mf file of the project to "springjdbc" after Query Plugin is uninstalled. 
+				(It should be noted that the libraries necessary to implement/execute the Interceptor class should be defined 
+				in pom.xml file in the Plugin project and the interceptor dependencies tag of the Plugin build file (plugin-build.xml) together.)
+			</para>	
+<programlisting language="java">public class QueryPluginInterceptor {
+	public void postUninstall(String baseDir, File pluginJarFile)
+			throws Exception {
+      File metadataFile = new File(new File(baseDir)
+	                  + CommonConstants.METAINF, CommonConstants.METADATA_FILE);
+      PropertiesIO pio = new PropertiesIO(metadataFile.getAbsolutePath());
+
+      if (pio.readValue(CommonConstants.APP_DAOFRAMEWORK_TYPE).equals(CommonConstants.DAO_QUERY)) {
+        pio.setProperty(CommonConstants.APP_DAOFRAMEWORK_TYPE,CommonConstants.DAO_SPRINGJDBC);
+        pio.write();
+      }
+...</programlisting>			
+	</section>	
+	
+	<section id="plugins_creatingplugin_activate_plugin">
+		<title>Automatic Generation and Modification of Plugin Build File</title>
+			<para>
+				The plugin build file is generated in the new plugin project root folder, 
+				and at this time generate the build file with the default configuration value using the activate-plugin command.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:activate-plugin]]></programlisting>
+			<para>
+				Modify the items that should be changed according to the new plugin, opening plugin-build.xml file generated under the project root folder. 
+				Write the detailed information on the plugin since plugin packaging is conducted using the Plugin build file.  
+				The following is the configuration information that should be written for each tag. 
+			</para>
+			<informaltable>
+			<tgroup cols="5">
+				<colspec colname="col1" colnum="1" colwidth="3*" />
+				<colspec colname="col2" colnum="2" colwidth="1*" />
+				<colspec colname="col3" colnum="3" colwidth="4*" />
+				<colspec colname="col4" colnum="4" colwidth="1*" />
+				<colspec colname="col5" colnum="5" colwidth="1*" />
+
+          		<thead>
+					<row>
+						<entry align="center">Tag Name</entry>
+			            <entry align="center">Attrubute Name</entry>
+			            <entry align="center">Description</entry>
+			            <entry align="center">Required</entry>
+			            <entry align="center">Child Tag</entry>
+					</row>
+				</thead>
+
+          		<tbody>
+            		<row>
+              			<entry vlign="center">plugin</entry>
+              			<entry vlign="center">name</entry>
+              			<entry vlign="center">Write the Plugin name. Set with the name written as the name tag value in pom.xml file when the build file is first generated.</entry>
+              			<entry vlign="center" align="center">Y</entry>
+              			<entry>groupId,artifactId,version,dependent-plugins,build,resources,interceptor,essential,samples,checked</entry>
+            		</row>	
+            		<row>
+              			<entry/>
+              			<entry>description</entry>
+              			<entry>Plugin explanation information. Set with the explanation written as the description tag value in pom.xml file when the build file is first generated. 
+              			(If there is no value, it is set with the plugin name + "plugin".)</entry>
+              			<entry align="center">Y</entry>
+              			<entry/>
+            		</row>
+            		<row>
+              			<entry>groupId</entry>
+              			<entry />
+						<entry>
+							groupId (of Maven) information of the plugin. Set with the value written as the groupId tag value in pom.xml file when the build file is first generated. 
+						</entry>
+              			<entry align="center">Y</entry>
+              			<entry />
+            		</row>
+
+					<row>
+						<entry>artifactId</entry>
+						<entry />
+						<entry>
+							artifactId (of Maven) information of the Plugin. Set with the value written as the artifactId tag value in pom.xml file when the build file is first generated.  
+						</entry>					
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+
+					<row>
+						<entry>version</entry>
+						<entry/>
+						<entry>version (of Maven) information of the plugin. Set with the value written as the version tag value in pom.xml file when the build file was first generated. </entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+
+					<row>
+						<entry>dependent-plugins</entry>
+						<entry/>
+						<entry>
+							Set the information on other plugins reference by the Plugin.
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>dependent-plugin</entry>
+					</row>
+
+					<row>
+						<entry>dependent-plugin</entry>
+						<entry>name</entry>
+						<entry>
+							Set the name of the reference plugin. Set with the plugin name added in META-INF/plugin-installed.xml file when the build file is first generated.  
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+					<row>
+						<entry/>
+						<entry>version</entry>
+						<entry>
+							Mark the range of compatible versions of the reference plugin (using &lt;,&lt;=,>,>= etc.).
+							Set with the plugin version information added in META-INF/plugin-installed.xml file when the build file is first generated.  
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>					
+					<row>
+						<entry>build</entry>
+						<entry />
+						<entry>
+							Write the information necessary to execute Plugin packaging
+						</entry>
+						<entry align="center">N</entry>
+						<entry>filesets</entry>
+					</row>
+					<row>
+						<entry>filesets</entry>
+						<entry />
+						<entry>
+							Information on the list of the folders under the plugin project subject to Plugin packaging. 
+						</entry>
+						<entry align="center">N</entry>
+						<entry>fileset</entry>
+					</row>
+					<row>
+						<entry>fileset</entry>
+						<entry>dir</entry>
+						<entry>
+							Name of the folder under the Plugin project. Write the path of the folder to be included in Plugin packaging. 
+							Dir information is set for the following five folders when the build file is first generated, 
+							and the default values for filtered, packaged and include are provided. 
+							(src/main/java, src/main/resources, src/test/java, src/test/resources, src/main/webapp)
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>include, exclude</entry>
+					</row>		
+					<row>
+						<entry/>
+						<entry>filtered</entry>
+						<entry>
+							Mark whether there are parts to be changed in the plugin sample source codes, interpreted by Velocity Engine Plugin when the plugin is installed later. 
+							When the filtered property value is true, the part of the main package name in the plugin sample codes will be changed to ${package} 
+							during Plugin packaging and the part of the project name changed to ${artifactId} and included in plugin packaging. 
+							On the other hand, when the filtered property value is false, it will be included in plugin packaging without changes in all the parts defined. 
+							
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry/>
+						<entry>packaged</entry>
+						<entry>
+							Mark whether there are parts that should make a package folder in the Plugin sample source codes when there is the package information of the java codes when the plugin is installed later. 
+							When the packaged property value is true, the folder that has the main package name in the plugin sample java codes will not be included in Plugin packaging. 
+							On the other hand, when the packaged property value is false, it will be included in plugin packaging without changes in the constitution of the folder.  
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>		
+					<row>
+						<entry>include</entry>
+						<entry>name</entry>
+						<entry>
+							Write the name of the file to be included among the files in dir folder. The signs such as * and **/, which are Ant-style regular expressions, can be used. (e.g. **/*.java, **/*.*)
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>																						
+					<row>
+						<entry>exclude</entry>
+						<entry>name</entry>
+						<entry>
+							Write the name of the file not to be included among the files in dir folder. The signs such as * and **/, which are Ant-style regular expressions, can be used. (e.g. **/*.xml, **/*.jsp, **/query/**/*.*)
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>						
+					<row>
+						<entry>resources</entry>
+						<entry />
+						<entry>
+							Write the information necessary to install the Plugin. Information on the folder list under the plugin project where the Plugin is to be installed.
+						</entry>
+						<entry align="center">N</entry>
+						<entry>resource</entry>
+					</row>	
+					<row>
+						<entry>resource</entry>
+						<entry>dir</entry>
+						<entry>
+							The name of the folder under the plugin project. Write the path of the folder to be included during Plugin installation. 
+							Dir information is set for the following five folders when the build file is first generated, 
+							and the default values for filtered, packaged and include are provided.
+							(src/main/java, src/main/resources, src/test/java, src/test/resources, src/main/webapp/WEB-INF/jsp) 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry>include, exclude</entry>
+					</row>		
+					<row>
+						<entry/>
+						<entry>filtered</entry>
+						<entry>
+							Mark whether there are parts that should be changed among the Plugin sample source codes, interpreted by Velocity Engine during the plugin installation later.  
+							When the property value of filtered is true, plugin installation will proceed with ${package} changed to the main package name and ${artifactId} changed to the project name in the Plugin sample codes. 
+							On the other hand, when the property value of filtered is false, plugin installation will proceed without changes in all the parts defined.  
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry/>
+						<entry>packaged</entry>
+						<entry>
+							Mark whether there are parts that should make a package folder among the Plugin sample source codes when there is the package information of java codes during the plugin installation later.
+							When the property value of packaged is true, a folder that has the main package name will be installed during the plugin installation. 
+							On the other hand, when the property value of packaged is false, plugin installation will proceed without changes in the constitution of the folder. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>															
+					<row>
+						<entry>interceptor</entry>
+						<entry />
+						<entry>
+							When separate processes are required during installation/uninstallation of the plugin, set them after implementing the Interceptor class.
+						</entry>
+						<entry align="center">N</entry>
+						<entry>class, dependencies</entry>
+					</row>
+					<row>
+						<entry>class</entry>
+						<entry />
+						<entry>
+							Set the Plugin Interceptor class name along with the whole package name. 
+							The classes and resource files that exist under the same package name as the interceptor class are together included in the plugin packaging. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry/>
+					</row>
+					<row>
+						<entry>dependencies</entry>
+						<entry />
+						<entry>
+							Defines the reference libraries required during the Plugin Interceptor class compiling and run time. 
+						</entry>
+						<entry align="center">N</entry>
+						<entry>dependency</entry>
+					</row>
+					<row>
+						<entry>dependency</entry>
+						<entry />
+						<entry>
+							Define in the same way as the dependency tag type that defines reference libraries required by Plugin Interceptor in Maven pom.xml file.
+							That is, write groupId, artifactId and version. 
+							Here, plugin sample codes are not required, and set the scope of the reference libraries used only in the Interceptor class  
+							as interceptor.(e.g. <![CDATA[<scope>interceptor</scope>]]>)
+						</entry>
+						<entry align="center">N</entry>
+						<entry/>
+					</row>																	
+					<row>
+						<entry>essential</entry>
+						<entry />
+						<entry>
+							Mark whether the Plugin is an essential plugin. Set the value as true to generate as an essential plugin. 
+							Set as false when the build file is first generated.   
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>
+					<row>
+						<entry>samples</entry>
+						<entry />
+						<entry>
+							Mark whether the Plugin has sample source codes. Set as true when the build file is first generated. 
+						</entry>
+						<entry align="center">Y</entry>
+						<entry />
+					</row>					
+					<row>
+						<entry>checked</entry>
+						<entry />
+						<entry>
+							Configuration used by Eclipse plugin among the tools provided by Anyframe IDE. The values generated automatically when the build file is first generated can be used. 
+							An item that the Plugin developer does not need to modify. 
+						</entry>
+						<entry align="center">N</entry>
+						<entry />
+					</row>
+          		</tbody>
+        	</tgroup>
+      		</informaltable>	
+      		<para>
+      		The following is part of plugin-build.xml file for Query Plugin.
+      		</para>		
+      		<programlisting language="xml"><![CDATA[<plugin name="query" description="Query Plugin consists of sample code that provides...">
+	<groupId>org.anyframe.plugin</groupId>
+	<artifactId>anyframe-query-pi</artifactId>
+	<version>x.x.x</version>
+	<dependent-plugins>
+		<dependent-plugin name="core" version="2.0.0&gt;*" />
+	</dependent-plugins>
+	<resources>
+		<resource dir="src/main/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+		</resource>
+		<resource dir="src/main/resources" filtered="true" packaged="false">
+			<include name="**/*.xml" />
+		</resource>
+		<resource dir="src/test/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+		</resource>
+		<resource dir="src/test/resources" filtered="true" packaged="false">
+			<include name="**/*.xml" />
+		</resource>
+		<resource dir="src/main/webapp/WEB-INF/jsp" filtered="false"
+			packaged="false">
+			<include name="**/*.jsp" />
+		</resource>
+	</resources>
+	<build>
+		<filesets>
+			<fileset dir="src/main/java" filtered="true" packaged="true">
+				<include name="**/org/anyframe/plugin/query/**/*.java" />
+			</fileset>
+			<fileset dir="src/main/resources" filtered="true" packaged="false">
+				<include name="**/*query*.xml" />
+			</fileset>
+			<fileset dir="src/test/java" filtered="true" packaged="true">
+				<include name="**/org/anyframe/plugin/query/**/*.java" />
+			</fileset>
+			<fileset dir="src/test/resources" filtered="true" packaged="false">
+				<include name="**/*query*.xml" />
+			</fileset>
+			<fileset dir="src/main/webapp" filtered="false" packaged="false">
+				<include name="**/query/**/*.*" />
+				<include name="**/anyframe.jsp" />
+			</fileset>
+			<fileset dir="db/resources" filtered="false" packaged="false">
+				<include name="**/*.*" />
+			</fileset>
+		</filesets>
+	</build>
+	<samples>true</samples>
+	<interceptor>
+		<class>org.anyframe.plugin.interceptor.QueryPluginInterceptor
+		</class>
+		<dependencies>
+			<dependency>
+				<groupId>org.anyframe</groupId>
+				<artifactId>anyframe-ide-command-common</artifactId>
+				<version>x.x.x</version>
+				<scope>interceptor</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.1</version>
+			</dependency>				
+		</dependencies>
+	</interceptor>
+	<essential>false</essential>
+	<checked>false</checked>
+</plugin>]]></programlisting>	
+	</section>	
+	
+	<section id="plugins_creatingplugin_package_plugin">
+		<title>Plugin Packaging</title>
+		<para>
+			Plugin packaging can be executed based on the revised plugin build file.  
+			Proceed with the packaging, using package-plugin command. 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:package-plugin]]></programlisting>
+		<para>
+			When Plugin packaging is finished, the plugin file is generated in the JAR file type under target folder (with the file name {artifactId}-{version}.jar). 
+			Check the constitution of this JAR file through the files under /target/temp folder. 
+			Check the structure of the generated folder and the contents of the files by referring to <link linkend="plugins_structure">Plugin Structure</link>.
+			If the folder or files have not been packaged properly, modify the Plugin build file after checking the configuration of it(plugin-build.xml),  
+			and reconduct the packaging.  
+		</para>
+	</section>	
+	
+	<section id="plugins_creatingplugin_install_plugin">
+		<title>Deployment of Plugin in Local Environment and Checking</title>
+		<para>
+			Let us test the plugin files done with the packaging after deploying them in local environment of the user. 
+			When the essential configuration information in the Plugin build file (plugin-build.xml) is set as true, 
+			Plugin information will be added in plugin-catalog-essential.xml file under [user account home directory]/.anyframe folder of the Plugin developer, 
+			and when it is set as false, the plugin information will be registered in plugin-catalog-optional.xml file. 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:install-pluginfile]]></programlisting>
+			<para>
+				For example, as for Query Plugin, it can be checked that the plugin information is written in plugin-catalog-optional.xml file 
+				under [user account home directory]/.anyframe folder of the plugin developer as follows. 
+			</para>
+<programlisting language="xml"><![CDATA[<plugins>
+<plugin name="query" description="Query Plugin consists of sample code that provides ..." latestVersion="1.0.0">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-query-pi</artifactId>
+    <versions>
+      <version>x.x.x</version>
+                :
+    </versions>
+  </plugin>
+...]]></programlisting>			
+		<para>
+		Check whether the new plugin has been added to the list of plugins that can be installed by executing list command in the Command window.  
+		When it has been properly added, it is possible to install/uninstall it in the same way as other plugins provided by Anyframe.	 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:list]]></programlisting>
+	</section>	
+	
+	<section id="plugins_creatingplugin_deploy_plugin">
+		<title>Plugin Deployment and Checking</title>
+		<para>
+			To share the new plugin with others, execute deploy-pluginfile command and deploy it in the remote repository. 
+			If it is not deployed in the remote Repository used by Anyframe (http://dev.anyframejava.org/maven/repo), 
+			the repositoryId and url information for the wanted remote repository should be entered as parameters when the command is executed.  
+			
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:deploy-pluginfile -DrepositoryId=anyframe-repository -Durl=http://dev.anyframejava.org/maven/repo]]></programlisting>
+		<para>
+			Download the plugin catalog file deployed from the remote Repository by deleting the plugin files deployed in local Repository and executing update-catalog command.  
+			Check whether the new plugin has been added to the list of installable plugins by executing list command. 
+			Test it since it is possible to install/uninstall it in the same way as other plugins provided by Anyframe 
+			when it has been properly added. 
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:update-catalog
+mvn anyframe:list]]></programlisting>
+		<note>
+			<title>Notes</title>
+			<para>
+				When user authentication is required when the new plugin is deployed in Maven Remote Repository, 
+				the user information for accessing the relevant repository should be added in the server information in settings.xml file. 
+				
+			</para>
+<programlisting language="xml"><![CDATA[<servers>
+<server>
+      <id>remote-repository</id>
+      <username>samplename</username>
+      <password>samplepassword</password>
+    </server>        
+...]]></programlisting>
+	</note>
+	</section>	
+
+	<section id="plugins_creatingplugin_example_plugin">
+		<title>Simple New Board Plugin Development Sample</title>
+	<para>
+		Develop a simple Board Plugin that provides CRUD sample codes for Board. 
+		For details on the development of the Plugin, refer to the explanation above. 
+	</para>		
+	<orderedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>Board Plugin Project Generation</para>
+			<programlisting language="xml"><![CDATA[mvn archetype:generate 
+	-DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>			
+			<para>
+				Generate a project to create the Board Plugin, and select anyframe basic archetype since it will be created as a web type project.  
+				Enter the groupId, artifactId, version and package information for the Board Plugin. 
+			</para>
+			<para>
+				If a new Anyframe Plugin project is generated with the name board, the following values can be entered. 
+				For version, the default value is 1.0-SNAPSHOT, and for package, the default value is the same as the value of groupId. 
+			<programlisting language="xml"><![CDATA[Define value for property 'groupId': : sample.plugin 
+Define value for property 'artifactId': : board
+Define value for property 'version': 1.0-SNAPSHOT: 
+Define value for property 'package': sample.plugin:]]></programlisting>					
+			</para>
+		</listitem>	
+		<listitem>
+			<para>Running HSQL DB</para>
+			<para>
+				Run HSQL DB, which is the basic sample DB, by executing start.cmd (or start.sh) file 
+				under db/hsqldb folder in the board project. 
+			</para>
+		</listitem>
+		<listitem>
+			<para>Installation of Simpleweb-jQuery and Test Plugin</para>
+			<para>
+				After moving to the board project folder, install the plugins that Board Plugin should reference using install command.  
+				The list of the plugins to be installed will be shown, and enter y for the question 'Is this OK? (y,n)'. 
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=simpleweb-jquery,test]]></programlisting>
+		</listitem>		
+		<listitem>
+			<para>Adding Board Plugin Sample Codes</para>
+			<para>
+				Create the resources that you want to provide as sample codes along with the libraries installed by Board Plugin (Java, XML, etc.) 
+				according to the folder/file naming rule of Anyframe Plugin.
+			</para>
+			<para>
+				Let us generate CRUD source codes for Board using the source code generation function of Anyframe IDE. 
+				After generating the domain class for BOARD and BOARD_MASTER provided as sample DB tables first, 
+				generate the CRUD source codes based on the Board domain class among them.
+  
+<programlisting language="java"><![CDATA[mvn anyframe:create-model -Dtable=BOARD,BOARD_MASTER -Dpackage=sample.plugin.board.domain
+mvn anyframe:create-crud -Dentity=sample.plugin.board.domain.Board -Dpackage=sample.plugin.board
+]]></programlisting>				
+			</para>		
+		</listitem>		
+	
+		<listitem>
+			<para>Automatic Generation and Modification of Board Plugin Build File</para>
+			<para>
+				Generate the build file for Board Plugin using activate-plugin command. 
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:activate-plugin]]></programlisting>
+			<para>
+				Open plugin-build.xml file generated under the project root folder, and modify the items that should be changed according to Board Plugin.
+      			The following is the contents of plugin-build.xml file for Board Plugin, and the parts in bold are the items changed after the file was generated as the default. 
+      		</para>		
+      		<programlisting language="xml"><![CDATA[<plugin name="board" description="board plugin">
+  <groupId>sample.plugin</groupId>
+  <artifactId>board</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <dependent-plugins>
+    <dependent-plugin name="core" version="1.0.0"/>
+    <dependent-plugin name="simpleweb" version="1.0.0"/>
+    <dependent-plugin name="test" version="1.0.0"/>
+...
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+    <resource dir="src/main/resources" filtered="true" packaged="false">
+      <include name="**/*.xml"/>
+      ]]><emphasis role="bold"><![CDATA[<include name="**/*.properties"/>]]></emphasis><![CDATA[
+    </resource>
+...
+  </resources>
+  <build>
+    <filesets>
+      <fileset dir="src/main/java" filtered="true" packaged="true">
+        <include name="**/sample/plugin/board/**/*.java"/>
+      </fileset>
+      <fileset dir="src/main/resources" filtered="true" packaged="false">
+        <include name="**/*board*.xml"/>
+        ]]><emphasis role="bold"><![CDATA[<include name="**/message-generation.properties"/>]]></emphasis><![CDATA[
+      </fileset>
+...
+</plugin>]]></programlisting>	
+		</listitem>			
+		<listitem>
+			<para>Adding Board Plugin Menu</para>
+			<para>
+				Open anyframe.jsp page in /src/main/webapp folder under the project, and add the menu for Board Plugin.
+				The following is part of anyframe.jsp page, and the parts in bold are the changed parts.  
+				Move the Board menue generated in the &gt;!--Add new crud generation menu here--&lt; comment to the  
+				&gt;!--Add new menu here--&lt; comment at the top. 
+				It should be noted that it should be written with Board-menu-START/END tag so that it can be seen that it is the Plugin menu. 
+<programlisting language="java"><![CDATA[<!--Add new menu here-->
+]]><emphasis role="bold"><![CDATA[<!--Board-menu-START-->]]></emphasis><![CDATA[
+  <a href="${ctx}/board.do?method=list"><font size="2">- ]]><emphasis role="bold">Board 1.0-SNAPSHOT</emphasis><![CDATA[</font></a><br/>
+]]><emphasis role="bold"><![CDATA[<!--Board-menu-END-->]]></emphasis><![CDATA[
+...
+<td class="underline" valign="top">
+<!--Add new crud generation menu here-->
+</td>]]></programlisting>				
+			</para>
+		</listitem>		
+		<listitem>
+			<para>Board Plugin Packaging</para>
+			<para>
+				Proceed with packaging, using package-plugin command based on the modified Plugin build file.  
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:package-plugin]]></programlisting>
+			<para>
+				Check whether the files under /target/temp folder of the project have been properly packaged according to the plugin structure.  
+			</para>
+		</listitem>		
+		<listitem>
+			<para>Deployment of Board Plugin in Local Environment and Checking</para>
+			<para>
+				Test the Board Plugin files done with packaging after deploying them in local environment of the developer. 
+				Board Plugin will be registered as an optional Plugin.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:install-pluginfile]]></programlisting>
+			<para>
+				It can be checked that Board Plugin information is created in plugin-catalog-optional.xml file 
+				under [user account home directory]/.anyframe folder of the plugin developer as follows. 
+			</para>
+<programlisting language="xml"><![CDATA[<plugins>
+  <plugin name="board" description="board plugin" latestVersion="1.0-SNAPSHOT">
+    <groupId>sample.plugin</groupId>
+    <artifactId>board</artifactId>
+    <versions>
+      <version>1.0-SNAPSHOT</version>
+    </versions>
+  </plugin>
+...]]></programlisting>			
+			<para>
+			Execute list command in the Command window and check whether Board Plugin has been added to the list of installable plugins. 
+			If it has been properly added, it is possible to install/uninstall it in the same way as other plugins provided by Anyframe. 
+			Afer generating other sample projects, install Board Plugin in the relevant project. 
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:list
+mvn anyframe:install -Dname=board
+]]></programlisting>
+		</listitem>	
+		<listitem>
+			<para>Board Plugin Deployment and Checking</para>
+			<para>
+				To share Board Plugin with others, deploy it in the Remote Repository by executing deploy-pluginfile command. 
+				If it is not deployed in the Remote Repository used by Anyframe (http://dev.anyframejava.org/maven/repo), 
+				the repositoryId and url information for the wanted remote Repository should be entered as parameters when the command is executed.
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:deploy-pluginfile -DrepositoryId=anyframe-repository -Durl=http://dev.anyframejava.org/maven/repo]]></programlisting>
+			<para>
+				Download plugin catalog file deployed from the remote Repository by executing update-catalog command.  
+				Check whether Board Plugin has been added to the list of installable plugins by executing list command. 
+				Test it after generating other sample projects since it is possible to install/uninstall it in the same way as other plugins provided by Anyframe 
+				if it has been properly added. 
+				
+			</para>
+			<programlisting language="java"><![CDATA[mvn anyframe:update-catalog
+mvn anyframe:list
+mvn anyframe:install -Dname=board
+]]></programlisting>
+		</listitem>			
+	</orderedlist>
+	</section>
+</chapter>

@@ -147,14 +147,9 @@ public class ProjectUtil {
 		try {
 
 			IProject project = findProject(projectName);
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
-			// IWorkspace workspace =
-			// ResourcesPlugin.getWorkspace();
-			// workspace.getRoot().getProject(projectName)
-			// .refreshLocal(IResource.DEPTH_INFINITE,
-			// null);
-
+			if(project != null){
+				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			}
 		} catch (CoreException e) {
 			PluginLoggerUtil.error(ID, Message.exception_log_refresh, e);
 		}

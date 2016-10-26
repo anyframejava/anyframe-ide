@@ -389,8 +389,15 @@ public class IdePreferencesPage extends PreferencePage implements
 
 			} else {
 				boolean isValid = false;
-				File mavenLib = new File(getHomeLocation() + ProjectUtil.SLASH
-						+ "lib");
+				// m2.conf
+				File mavenLib = new File(getHomeLocation() + ProjectUtil.SLASH + "lib");
+				File mavenBin = new File(getHomeLocation() + ProjectUtil.SLASH + "bin");
+				if(mavenLib.exists() && mavenLib.isDirectory() && mavenLib.listFiles().length > 0
+						&& mavenBin.exists() && mavenBin.isDirectory() && mavenBin.listFiles().length > 0
+						&& new File(mavenBin + ProjectUtil.SLASH + "m2.conf").exists()){
+					isValid = true;
+				}
+				/*
 				if (mavenLib.exists() && mavenLib.isDirectory()
 						&& mavenLib.listFiles().length > 0) {
 					File[] files = mavenLib.listFiles();
@@ -403,6 +410,7 @@ public class IdePreferencesPage extends PreferencePage implements
 						}
 					}
 				}
+				*/
 				if (!isValid) {
 					MessageDialogUtil.openMessageDialog(
 							Message.ide_message_title,

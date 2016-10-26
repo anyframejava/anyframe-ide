@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.common;singleton:=true
-Bundle-Version: 3.0.2.qualifier
+Bundle-Version: 3.1.0
 Bundle-Activator: org.anyframe.ide.common.CommonActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ant.core,
@@ -54,11 +54,7 @@ Bundle-ClassPath: .,
  lib/spring-webflow-2.0.9.RELEASE.jar,
  lib/spring-webmvc-3.1.1.RELEASE.jar,
  lib/xstream-1.3.jar,
- lib/xpp3_min-1.1.3.4.0.jar,
- lib/freemarker-gae-2.3.19.jar,
- lib/anyframe-core-1.5.2-SNAPSHOT.jar,
- lib/anyframe-query-1.5.2-SNAPSHOT.jar,
- lib/anyframe-query-ria-1.5.2-SNAPSHOT.jar
+ lib/xpp3_min-1.1.3.4.0.jar
 Export-Package: org.anyframe.ide.common,
  org.anyframe.ide.common.databases,
  org.anyframe.ide.common.dialog,

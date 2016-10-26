@@ -1,0 +1,8 @@
+1. Plugin : 매뉴얼 목차로 작성될 경우 대문자로 작성, 내용 설정 중 언급 시에는 Plugin, plugin, 플러그인 혼용하여 사용함
+2. Architecture : architecture, 아키텍처 혼용하여 사용함
+3. Service : service, 서비스 혼용하여 사용함
+4. Project : project, 프로젝트 혼용하여 사용함
+5. Anyframe : Anyframe을 지칭하는 경우 Anyframe으로 사용하고, command나 archetype을 지정하여 사용할때는 anyframe을 사용함
+6. Build : 매뉴얼 목차로 작성되는 경우, 툴 UI 항목으로 사용되는 경우에는 Build로 사용하고, 그 외에는 build와 빌드를 혼용하여 사용함
+7. Template : template, 템플릿 혼용하여 사용함
+8. Catalog : catalog, Catalog, 카타로그 혼용하여 사용함

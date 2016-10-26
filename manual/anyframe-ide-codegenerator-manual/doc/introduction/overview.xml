@@ -1,0 +1,55 @@
+<chapter id="introduction_overview">
+	<title>Overview</title>
+	<para>
+		Anyframe Java Core는 오픈 소스 어플리케이션 개발 Framework로 다음과 같은 특징을 가지고 있다.
+	</para>
+	
+	<itemizedlist>
+		<listitem>
+			<para>
+				<emphasis role="bold">순수 객체 중심의(POJO) 어플리케이션 개발 지원</emphasis>
+				: 프레임워크로 인해서 기본 설계와 상세 설계가 이중으로 진행되거나, 개발 시 설계 모델이 구현체와 불일치 되는 것을 줄이기 위해
+				순수 객체 중심의(POJO) 어플리케이션 개발을 지원한다.
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<emphasis role="bold">Dependency Injection을 통한 의존 관계 처리</emphasis>
+				: 인터페이스 중심의 개발을 가이드하고 객체나 컴포넌트간의 참조 관계는 Dependency Injection을 통해 처리함으로써 구현체의 
+				변경에 따른 영향력을 최소화한다.
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<emphasis role="bold">개발자는 비즈니스 로직에만 집중하여 구현</emphasis>
+				: 로깅, 트랜잭션, 예외처리 등과 같은 비기능 영역에 대한 코드가 업무 기능 개발 영역에서 분리될 수 있도록 함으로써, 
+				개발자는 비즈니스 로직에만 집중하여 구현할 수 있다.
+			</para>
+		</listitem>
+		
+		<listitem>
+			<para>
+				<emphasis role="bold">Singleton, Factory 패턴 등 유용한 패턴 실행 지원</emphasis>
+				: 직접적인 패턴 구현 없이도 Singleton, Factory 패턴 등의 실행을 지원함으로써, 어플리케이션 개발시 인스턴스의 생성 관리, 
+				데이터 무결성 확보 등을 위해 유용한 패턴 등을 직접 구현하는 어려움을 해결해준다.
+			</para>
+		</listitem>
+		
+		<listitem>
+			<para>
+				<emphasis role="bold">MVC Model2 아키텍처 가이드</emphasis>
+				: Layered Architecture에 기반한 Java EE 웹 어플리케이션을 작성할 때 프리젠테이션 로직과 비지니스 로직을 완전히 분리하여
+				프리젠테이션 레이어를 구조적으로 개발할 수 있다.
+			</para>
+		</listitem>
+	</itemizedlist>
+	
+	<para>
+		또한 Anyframe Java Core 기반으로 프로젝트 수행 시, 개발자들의 개발 편의성을 극대화할 수 있도록 
+		<emphasis role="bold">Anyframe Java Core 설치, 프로젝트 생성 및 코드 생성 기능을 포함한 Code Generator를 제공</emphasis>한다. 
+		Eclipse Plugin 형태의 Code Generator를 통해 
+		Anyframe Java Core 설치에서부터 프로젝트 구조, 코드 생성, 빌드 수행에 이르기까지 개발 프로세스 전반에 걸쳐 도움을 받을 수 있다.
+	</para>
+</chapter>

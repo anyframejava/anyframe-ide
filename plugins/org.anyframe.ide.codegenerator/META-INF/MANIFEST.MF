@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.codegenerator;singleton:=true
-Bundle-Version: 3.0.2.qualifier
+Bundle-Version: 3.1.0
 Bundle-Activator: org.anyframe.ide.codegenerator.CodeGeneratorActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -86,9 +86,9 @@ Bundle-ClassPath: lib/ant-launcher-1.8.1.jar,
  lib/org.maven.ide.eclipse_0.12.1.20110112-1712.jar,
  lib/jasypt-1.7.jar,
  lib/icu4j-2.6.1.jar,
- lib/anyframe-ide-command-ant-2.2.3-SNAPSHOT.jar,
- lib/anyframe-ide-command-aspect-2.2.3-SNAPSHOT.jar,
- lib/anyframe-ide-command-cli-2.2.3-SNAPSHOT.jar,
- lib/anyframe-ide-command-common-2.2.3-SNAPSHOT.jar,
- lib/anyframe-maven-plugin-2.2.3-SNAPSHOT.jar
+ lib/anyframe-ide-command-ant-2.3.0.jar,
+ lib/anyframe-ide-command-aspect-2.3.0.jar,
+ lib/anyframe-ide-command-cli-2.3.0.jar,
+ lib/anyframe-ide-command-common-2.3.0.jar,
+ lib/anyframe-maven-plugin-2.3.0.jar
 Bundle-Vendor: %Bundle-Vendor
