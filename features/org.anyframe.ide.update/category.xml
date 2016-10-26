@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.anyframe.ide.codegenerator.feature_3.1.0.jar" id="org.anyframe.ide.codegenerator.feature" version="3.1.0">
+   <feature url="features/org.anyframe.ide.codegenerator.feature_3.1.1.jar" id="org.anyframe.ide.codegenerator.feature" version="3.1.1">
       <category name="Anyframe Java IDE"/>
    </feature>
    <category-def name="Anyframe Java IDE" label="Anyframe Java IDE">

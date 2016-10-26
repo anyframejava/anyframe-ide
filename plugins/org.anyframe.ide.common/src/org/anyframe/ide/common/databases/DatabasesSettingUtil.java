@@ -409,13 +409,20 @@ public class DatabasesSettingUtil {
 		// Schema
 		if (!(jdbcOption.getDbType().equals(Constants.DB_TYPE_SYBASE)|| jdbcOption.getDbType().equals(Constants.DB_TYPE_MYSQL)
 				|| jdbcOption.getDbType().equals(Constants.DB_TYPE_MSSQL))) {
-			if (jdbcOption.getSchema() == null || jdbcOption.getSchema().trim().length() == 0) {
+
+			if (jdbcOption.getSchema() == null) {
 				MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.properties_validation_dbschema, MessageDialog.INFORMATION);
 				return false;
-			} else if (jdbcOption.getSchema().equals(Message.wizard_jdbc_defaultschema)) {
-				MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.properties_validation_dbschema, MessageDialog.INFORMATION);
-				return false;
+			}else if (jdbcOption.getSchema() != null){
+				if (jdbcOption.getSchema().equals(Message.wizard_jdbc_defaultschema)) {
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.properties_validation_dbschema, MessageDialog.INFORMATION);
+					return false;
+				}else if (jdbcOption.getSchema().trim().length() == 0){
+					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.properties_validation_dbschema, MessageDialog.INFORMATION);
+					return false;
+				}
 			}
+			
 		}
 
 		return true;

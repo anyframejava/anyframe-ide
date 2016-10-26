@@ -2,7 +2,7 @@
 	<property environment="env" />
 
 	<!-- TODO : Please, check your variables -->
-	<property name="ide.version" value="3.1.0" />
+	<property name="ide.version" value="3.1.1" />
 	<property name="ctip.version" value="2.7.0" />
 	<property name="subv.username" value="${env.SVN_USER}" />
 	<property name="subv.password" value="${env.SVN_PASSWORD}" />

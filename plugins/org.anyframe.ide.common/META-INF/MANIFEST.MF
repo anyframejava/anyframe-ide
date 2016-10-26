@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.common;singleton:=true
-Bundle-Version: 3.1.0
+Bundle-Version: 3.1.1
 Bundle-Activator: org.anyframe.ide.common.CommonActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ant.core,

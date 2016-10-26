@@ -1,60 +1,43 @@
 Anyframe 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 
 아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
+만약 사이트 URL이 접근되지 않을 경우, Anyframe 대표계정 (anyframe@samsung.com)을 통해 해당 오픈 소스에 대한 정보를 요청할 수 있다. 
 
-1)ANTLR plugin for Eclipse - org.antlr2.7.6 : http://sourceforge.net/projects/antlreclipse/, Common Public License
-2)Apache Avalon Framework4.0 : , Apache 1.1
-3)Apache Jakarta Commons Codec1.3 : http://jakarta.apache.org/commons/codec/, Apache License Version 2.0
-4)Apache Jakarta Commons Collections3.2 : http://jakarta.apache.org/commons/collections/, Apache License Version 2.0
-5)Apache Jakarta Commons Digester1.8 : http://jakarta.apache.org/commons/digester/index.html, Apache License Version 2.0
-6)Apache Jakarta Commons IO2.2 : http://jakarta.apache.org/commons/io/, Apache License Version 2.0
-7)Apache Jakarta Commons IO1.4 : http://jakarta.apache.org/commons/io/, Apache License Version 2.0
-8)Apache Jakarta Commons JEXL1.1 : http://jakarta.apache.org/commons/jexl/, Apache License Version 2.0
-9)Apache Jakarta HTTP Client3.1 : http://jakarta.apache.org/commons/httpclient/, Apache License Version 2.0
-10)Apache Jakarta Velocity1.5 : http://velocity.apache.org/, Apache License Version 2.0
-11)Apache License Version 2.0 : http://www.apache.org, Apache License Version 2.0
-12)Apache log4j1.2.15 : http://logging.apache.org/log4j/docs/, Apache License Version 2.0
-13)Apache-Ant1.8.1 : http://ant.apache.org/, Apache License Version 2.0
-14)Apache-Jakarta BeanUtils1.8.0 : http://jakarta.apache.org/commons/beanutils/index.html, Apache License Version 2.0
-15)Apache-Jakarta Lang2.6 : http://jakarta.apache.org/commons/lang/index.html, Apache License Version 2.0
-16)Apache-Jakarta Velocity1.6.2 : http://velocity.apache.org/, Apache License Version 2.0
-17)Apache-Jakarta Velocity Tools1.4 : http://velocity.apache.org/tools/devel/, Apache License Version 2.0
-18)appfuse2.1.0-M1 : http://java.net/projects/appfuse, Apache License Version 2.0
-19)classworlds1.1-alpha-2 : http://classworlds.codehaus.org/, Classworlds License
-20)deep_cloning1.5 : http://github.com/DefV/deep_cloning/, Apache License Version 2.0
-21)DOM4J - Flexible XML Framework for Java1.6.1 : http://dom4j.sourceforge.net, dom4j License (BSD 2.0 +)
-22)Eclipse Technology Aspect J1.6.8 : http://www.eclipse.org/aspectj/, Mozilla Public License 1.1
-23)FreeMarker2.3.19 : http://sourceforge.net/projects/freemarker/, BSD 2.0
-24)hibernate-tools3.2.4.CR2 : http://github.com/hibernate/hibernate-tools/, LGPL 2.1
-25)Hudson - Continuous Integration Tool1.358 : http://java.net/projects/hudson, MIT License V2
-26)International Components for Unicode - ICU4J2.6.1 : http://repo1.maven.org/maven2/com/ibm/icu/icu4j/, ICU License
-27)jasypt: java simplified encryption1.7 : http://sourceforge.net/projects/jasypt/, Apache License Version 2.0
-28)jchardet1.0 : http://github.com/vidoss/jchardet/, Mozilla Public License 1.0
-29)jcl-over-slf4j1.6.4 : http://www.slf4j.org/legacy.html#jcl-over-slf4j, Apache License Version 2.0
-30)JDOM1.0 : http://www.jdom.org, Jdom License
-31)JTidyr8-20060801 : http://jtidy.sourceforge.net/, Jtidy License
-32)JUnit4.9 : http://sourceforge.net/projects/junit/, Common Public License
-33)JUnit-addons1.4 : http://sourceforge.net/projects/junit-addons/, Apache License Version 2.0
-34)Localizer1.10 : http://github.com/raulriera/Localizer/, MIT License V2
-35)Maven2.0.8 : http://maven.apache.org/, Apache License Version 2.0
-36)maven-archetypes2.0-alpha-4 : http://code.google.com/p/maven-archetypes/, Apache License Version 2.0
-37)maven-eclipse-plugin0.12.1.20110112-1712 : http://github.com/PaulKeeble/maven-eclipse-plugin/, Eclipse Public License - v 1.0
-38)Objenesis1.1 : http://objenesis.googlecode.com/svn/docs/index.html, MIT License V2
-39)plexus-classworlds2.2.2 : http://github.com/sonatype/plexus-classworlds/, Apache License Version 2.0
-40)plexus-componentsinteractivity-1.0-alpha-62650 : http://github.com/sonatype/plexus-components/, Apache License Version 2.0
-41)plexus-componentsvelocity-1.1.74567 : http://github.com/sonatype/plexus-components/, Apache License Version 2.0
-42)plexus-containerscontainer-default-1.0-alpha-9-stable-12935 : http://github.com/sonatype/plexus-containers/, Apache License Version 2.0
-43)plexus-utils1.5.1 : http://github.com/krosenvold/plexus-utils/, Apache License Version 2.0
-44)reallhy : http://code.google.com/p/reallhy/, Apache License Version 2.0
-45)slf4jv_1.6.1 : http://github.com/ceki/slf4j/, MIT License V2
-46)slf4jv_1.6.4 : http://github.com/ceki/slf4j/, MIT License V2
-47)Spring Framework - spring-webflow2.0.9 : http://sourceforge.net/projects/springframework/, Apache License Version 2.0
-48)Spring Framework - springframework3.1.1 : http://www.springsource.org/spring-core, Apache License Version 2.0
-49)Spring Framework - springframework-22.5.6 : http://sourceforge.net/projects/springframework/, Apache License Version 2.0
-50)wagon1.0.0 : http://github.com/threetrieslater/wagon/, Apache License Version 2.0
-51)XPP - XML Pull Parser3-1.1.3.4.O : http://www.extreme.indiana.edu/xgws/xsoap/xpp/, Indiana University Extreme! Lab Software License
-52)XStream Library1.3 : http://xstream.codehaus.org/, BSD 2.0
-
-
-
-
+1)Apache Commons Collections 3.2 : http://commons.apache.org/collections/, Apache License 2.0
+2)Apache Jakarta Commons Collections 3.2 : http://jakarta.apache.org/commons/collections/, Apache License 2.0
+3)Apache Jakarta Commons IO 2.2 : http://jakarta.apache.org/commons/io/, Apache License 2.0
+4)Apache Log4j 1.2.16 : http://logging.apache.org/log4j/docs/, Apache License 2.0
+5)Apache Log4j 1.2.15 : http://logging.apache.org/log4j/docs/, Apache License 2.0
+6)Apache POI 3.0.1-FINAL-20070705 : http://jakarta.apache.org/poi/index.html, Apache License 2.0
+7)Apache Velocity  : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License 2.0
+8)Apache Velocity 1.7 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License 2.0
+9)Apache-Jakarta BeanUtils 1.8.0 : http://jakarta.apache.org/commons/beanutils/index.html, Apache License 2.0
+10)Apache-Jakarta Velocity 1.6.2 : http://velocity.apache.org/, Apache License 2.0
+11)Apache-Jakarta Velocity Tools 2.0 : http://velocity.apache.org/tools/devel/, Apache License 1.1
+12)avalon-framework 4.0 : http://repo1.maven.org/maven2/avalon-framework/avalon-framework/, Apache License 1.1
+13)Commons Lang 2.6 : http://repo1.maven.org/maven2/commons-lang/commons-lang/, Apache License 2.0
+14)Eclipse Modeling Tools - includes Incubating components  : http://www.eclipse.org/downloads/packages/eclipse-modeling-tools-includes-incubating-components/heliossr1, Eclipse Public License 1.0
+15)General SQL Parser  : , License for General SQL Parser
+16)geogas  : http://code.google.com/p/geogas/, Apache License 2.0
+17)Guava: Google Core Libraries for Java 16.0.1 : http://code.google.com/p/guava-libraries/guava, Apache License 2.0
+18)JASYPT: Java Simplified Encryption 1.7 : http://repo1.maven.org/maven2/org/jasypt/jasypt/, Apache License 2.0
+19)jasypt: java simplified encryption 1.7 : http://sourceforge.net/projects/jasypt/, Apache License 2.0
+20)JCL 1.1.1 implemented over SLF4J 1.6.4 : http://repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/, Apache License 2.0
+21)JDOM 1.1.2 : http://www.jdom.org, Jdom License
+22)JDOM 1.0 : http://www.jdom.org, Jdom License
+23)JUnit 4.9-maven : http://repo1.maven.org/maven2/junit/junit-dep/, Common Public License 1.0
+24)JUnit 3.8.1 : http://www.junit.org/., Common Public License 1.0
+25)JUnit 4.4 : http://www.junit.org/., Common Public License 1.0
+26)mybatis-3  : http://github.com/mybatis/mybatis-3/, Apache License 2.0
+27)MyBatis-Spring 1.2.1 : http://www.mybatis.org/spring/, Apache License 2.0
+28)Petra REV  : http://sourceforge.net/projects/petrarev/, Apache License 2.0
+29)SLF4J API Module (for Apache Directory Studio) 1.6.4 : http://directory.apache.org/studio/parent-libraries/org.slf4j.api/, Apache License 2.0
+30)SLF4J LOG4J-12 Binding (for Apache Directory Studio) 1.6.4 : http://directory.apache.org/studio/parent-libraries/org.slf4j.log4j12/, Apache License 2.0
+31)Spring Framework - spring-webflow 2.0.9 : http://sourceforge.net/projects/springframework/, Apache License 2.0
+32)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-framework, Apache License 2.0
+33)Spring Framework - springframework  : http://www.springsource.org/spring-core, Apache License 2.0
+34)Spring Framework - springframework-2 2.5.6 : http://sourceforge.net/projects/springframework/, Apache License 2.0
+35)spring-context 3.1.1 : http://mirrors.ibiblio.org/maven2/org/springframework/spring-context/, Apache License 2.0
+36)Tk-UI - tk-ui  : http://sourceforge.net/projects/tk-ui/, Eclipse Public License 1.0
+37)XPP - XML Pull Parser 3-1.1.3.4.O : http://www.extreme.indiana.edu/xgws/xsoap/xpp/, Indiana University Extreme! Lab Software License
+38)XStream Library 1.3 : http://xstream.codehaus.org/, BSD 3-clause "New" or "Revised" License
 

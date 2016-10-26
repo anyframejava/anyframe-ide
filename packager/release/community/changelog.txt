@@ -2,6 +2,39 @@
 ==========================
 http://www.anyframejava.org
 
+Changes in version 3.1.1 (2014-07-25)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - Configuration file 톻합
+    . project.mf 파일의 정보를 기존 Configuration file과 통합하도록 개선
+
+2) Code Generator - Eclipse Plugin
+  - Domain/CRUD Generation 기능 개선  
+    . Domain/CRUD 소스 생성 시 Hibernate,Appfuse 의존관계를 배재하여 생성되도록 개선
+  - Template Engine 및 구조 변경
+    . Domain / CRUD 소스코드 생성시 Freemarker에서 Velocity로 Template Engine 변경 및 Template 폴더 구조 개선  
+  - Wizard 
+    . 신규 프로젝트 생성 시 추가되는 기본 Anyframe Plugin 설정이 가능하게 개선  
+
+* 참조 라이브러리 변경 내역
+  - N/A
+  
+ * 테스트 내역
+  - Anyframe Java IDE 3.1.1 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.7.2, Eclipse 4.2.1, Eclipse 4.3.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-140] Configuration File 통합
+  Code Generator - Eclipse Plugin
+    . [AE-141] Domain Generation 기능 개선
+    . [AE-142] CRUD Generation 기능 개선
+    . [AE-143] Template 구조 개선 및 Code Generator Template Engine 변경
+    . [AE-144] 프로젝트 생성 시 추가되는 기본 Plug in 설정 기능 개발    
+
 Changes in version 3.0.0 (2013-07-22)
 -------------------------------------
 * 주요 변경 내역
@@ -25,7 +58,7 @@ Changes in version 3.0.0 (2013-07-22)
   - 기존의 anyframe-maven-plugin-2.2.1.jar 파일을 anyframe-maven-plugin-2.2.2.jar로 버전 변경
   
  * 테스트 내역
-  - Anyframe Java IDE 2.8.0 버전은 다음과 같은 환경에서 테스트를 거침
+  - Anyframe Java IDE 3.0.0 버전은 다음과 같은 환경에서 테스트를 거침
     . JDK : 1.5, 1.6, 1.7 
     . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
     . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1

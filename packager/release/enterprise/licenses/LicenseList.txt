@@ -1,24 +1,43 @@
 Anyframe 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 
 아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
+만약 사이트 URL이 접근되지 않을 경우, Anyframe 대표계정 (anyframe@samsung.com)을 통해 해당 오픈 소스에 대한 정보를 요청할 수 있다. 
 
-1)Apache Jakarta Commons Collections 3.2 : http://jakarta.apache.org/commons/collections/, Apache License Version 2.0
-2)Apache log4j 1.2.16 : http://logging.apache.org/log4j/docs/, Apache License Version 2.0
-3)Apache POI 3.0.1-FINAL-20070705 : http://jakarta.apache.org/poi/index.html, Apache License Version 2.0
-4)Apache Velocity 1.6.2 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License Version 2.0
-5)Apache Velocity 1.7 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License Version 2.0
-6)Apache-Jakarta Lang 2.6 : http://jakarta.apache.org/commons/lang/index.html, Apache License Version 2.0
-7)Eclipse Standard Widget Toolkit 3.5.1 : http://www.eclipse.org/swt/, Mozilla Public License 1.1
-8)Flow4J-Eclipse 0.9.4 : http://sourceforge.net/projects/flow4jeclipse/, BSD 2.0
-9)GSP  : https://gsp.dev.java.net/, LGPL 2.1
-10)ibatis-sqlmap 2.3.4.726 : http://repo1.maven.org/maven2/org/apache/ibatis/ibatis-sqlmap/, Apache License Version 2.0
-11)jasypt: java simplified encryption 1.7 : http://sourceforge.net/projects/jasypt/, Apache License Version 2.0
-12)jdom 1.1.2 : http://github.com/hunterhacker/jdom/, Jdom License
-13)JUnit 3.8.1 : http://www.junit.org/., Common Public License
-14)Oracle JDBC Drivers  : http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/index.html, Oracle Technology Network Development and Distribution 01-2009 License
-15)Petra REV  : http://sourceforge.net/projects/petrarev/, Unspecified
-16)reallhy  : http://code.google.com/p/reallhy/, Apache License Version 2.0
-17)Rhino Components 1.7R2 : http://sourceforge.net/projects/rhinocomponents/, Mozilla Public License 1.1
-18)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-framework, Apache License Version 2.0
-19)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-core, Apache License Version 2.0
-20)svnClientAdapter  : http://subclipse.tigris.org/svnClientAdapter.html, Apache License Version 2.0
+1)Apache Commons Collections 3.2 : http://commons.apache.org/collections/, Apache License 2.0
+2)Apache Jakarta Commons Collections 3.2 : http://jakarta.apache.org/commons/collections/, Apache License 2.0
+3)Apache Jakarta Commons IO 2.2 : http://jakarta.apache.org/commons/io/, Apache License 2.0
+4)Apache Log4j 1.2.16 : http://logging.apache.org/log4j/docs/, Apache License 2.0
+5)Apache Log4j 1.2.15 : http://logging.apache.org/log4j/docs/, Apache License 2.0
+6)Apache POI 3.0.1-FINAL-20070705 : http://jakarta.apache.org/poi/index.html, Apache License 2.0
+7)Apache Velocity  : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License 2.0
+8)Apache Velocity 1.7 : http://repo1.maven.org/maven2/org/apache/velocity/velocity/, Apache License 2.0
+9)Apache-Jakarta BeanUtils 1.8.0 : http://jakarta.apache.org/commons/beanutils/index.html, Apache License 2.0
+10)Apache-Jakarta Velocity 1.6.2 : http://velocity.apache.org/, Apache License 2.0
+11)Apache-Jakarta Velocity Tools 2.0 : http://velocity.apache.org/tools/devel/, Apache License 1.1
+12)avalon-framework 4.0 : http://repo1.maven.org/maven2/avalon-framework/avalon-framework/, Apache License 1.1
+13)Commons Lang 2.6 : http://repo1.maven.org/maven2/commons-lang/commons-lang/, Apache License 2.0
+14)Eclipse Modeling Tools - includes Incubating components  : http://www.eclipse.org/downloads/packages/eclipse-modeling-tools-includes-incubating-components/heliossr1, Eclipse Public License 1.0
+15)General SQL Parser  : , License for General SQL Parser
+16)geogas  : http://code.google.com/p/geogas/, Apache License 2.0
+17)Guava: Google Core Libraries for Java 16.0.1 : http://code.google.com/p/guava-libraries/guava, Apache License 2.0
+18)JASYPT: Java Simplified Encryption 1.7 : http://repo1.maven.org/maven2/org/jasypt/jasypt/, Apache License 2.0
+19)jasypt: java simplified encryption 1.7 : http://sourceforge.net/projects/jasypt/, Apache License 2.0
+20)JCL 1.1.1 implemented over SLF4J 1.6.4 : http://repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/, Apache License 2.0
+21)JDOM 1.1.2 : http://www.jdom.org, Jdom License
+22)JDOM 1.0 : http://www.jdom.org, Jdom License
+23)JUnit 4.9-maven : http://repo1.maven.org/maven2/junit/junit-dep/, Common Public License 1.0
+24)JUnit 3.8.1 : http://www.junit.org/., Common Public License 1.0
+25)JUnit 4.4 : http://www.junit.org/., Common Public License 1.0
+26)mybatis-3  : http://github.com/mybatis/mybatis-3/, Apache License 2.0
+27)MyBatis-Spring 1.2.1 : http://www.mybatis.org/spring/, Apache License 2.0
+28)Petra REV  : http://sourceforge.net/projects/petrarev/, Apache License 2.0
+29)SLF4J API Module (for Apache Directory Studio) 1.6.4 : http://directory.apache.org/studio/parent-libraries/org.slf4j.api/, Apache License 2.0
+30)SLF4J LOG4J-12 Binding (for Apache Directory Studio) 1.6.4 : http://directory.apache.org/studio/parent-libraries/org.slf4j.log4j12/, Apache License 2.0
+31)Spring Framework - spring-webflow 2.0.9 : http://sourceforge.net/projects/springframework/, Apache License 2.0
+32)Spring Framework - springframework 3.1.1 : http://www.springsource.org/spring-framework, Apache License 2.0
+33)Spring Framework - springframework  : http://www.springsource.org/spring-core, Apache License 2.0
+34)Spring Framework - springframework-2 2.5.6 : http://sourceforge.net/projects/springframework/, Apache License 2.0
+35)spring-context 3.1.1 : http://mirrors.ibiblio.org/maven2/org/springframework/spring-context/, Apache License 2.0
+36)Tk-UI - tk-ui  : http://sourceforge.net/projects/tk-ui/, Eclipse Public License 1.0
+37)XPP - XML Pull Parser 3-1.1.3.4.O : http://www.extreme.indiana.edu/xgws/xsoap/xpp/, Indiana University Extreme! Lab Software License
+38)XStream Library 1.3 : http://xstream.codehaus.org/, BSD 3-clause "New" or "Revised" License
 
