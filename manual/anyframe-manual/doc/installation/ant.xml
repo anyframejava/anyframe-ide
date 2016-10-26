@@ -240,15 +240,15 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 		<title>어플리케이션 실행</title>
 		<para>
 			특정 Plugin 설치 후 구성된 샘플 어플리케이션이 정상적으로 동작하는지 쉽게 확인할 수 있도록
-			Anyframe에서는 Jetty 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
+			Anyframe에서는 Tomcat 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
 		</para>
 		<para>
 			'env' command 실행을 통해 환경 변수 정보가 설정된 command 창에서, 샘플 프로젝트 설치 폴더 위치로 이동하여 다음과 같이 명령어를 입력하면 
-			Jetty 기반에서 샘플 어플리케이션을 시작시킬 수 있다.
+			Tomcat 기반에서 샘플 어플리케이션을 시작시킬 수 있다.
 		</para>
 		<programlisting><![CDATA[anyframe run]]></programlisting>
 		<para>
-			Jetty가 정상적으로 시작되면 'Started Jetty Server'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
+			Tomcat가 정상적으로 시작되면 'Starting ProtocolHandler ["http-bio-8080"]'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
 		</para>
 				
 		<para>
@@ -276,8 +276,7 @@ ANYFRAME_HOME/bin>env]]></programlisting>
 			</mediaobject>	
 		</para>
 		<para>
-			'anyframe run' 명령어를 실행하면 프로젝트 dist 폴더 하위에 jetty-temp라는 폴더가 생성되어 Jetty가 구동되게 된다. 배포
-			이후에 클래스나 JAR 파일, JSP 파일 등을 반영하고 Jetty로 재확인하고 싶다면 이 폴더의 해당 위치에 배포하도록 한다. 
+			'anyframe run' 명령어를 실행하면 내부적으로 포함된 Tomcat7 Runtime Library가 기동되어 해당 어플리케이션이 실행될 수 있도록 해준다. 
 		</para>
 	</section>
 	

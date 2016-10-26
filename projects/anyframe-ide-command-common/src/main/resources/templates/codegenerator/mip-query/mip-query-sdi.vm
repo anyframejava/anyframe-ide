@@ -1,0 +1,9 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--new miplatform service group xml here-->
+<!--Miplatform ${domain.name}-START-->
+        <AppGroup CodePage="utf-8" Language="0" Prefix="#getDomainNameLower(${domain.name})" Type="form" Version="1.0">
+            <script Baseurl="./#getDomainNameLower(${domain.name})/" ScriptUrl="./#getDomainNameLower(${domain.name})/" />
+        </AppGroup>
+<!--Miplatform ${domain.name}-END-->

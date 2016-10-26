@@ -23,6 +23,7 @@
 <!ENTITY app_server_configurations_jeus SYSTEM "appserverconfigurations/jeus.xml">
 <!ENTITY app_server_configurations_jboss SYSTEM "appserverconfigurations/jboss.xml">
 <!ENTITY app_server_configurations_websphere SYSTEM "appserverconfigurations/websphere.xml">
+<!ENTITY app_server_configurations_websocket SYSTEM "appserverconfigurations/websocket.xml">
 ]
 >
 
@@ -50,7 +51,7 @@
 			<year>2008-2014</year>
 			<holder>삼성SDS</holder>
 		</copyright>
-		<releaseinfo>Version 5.5.2</releaseinfo>
+		<releaseinfo>Version 5.6.0</releaseinfo>
 
 		<productname>Anyframe Java</productname>
 
@@ -121,7 +122,7 @@
 		<title>Plugins</title>
 		<partintro id="plugins-intro">
 			<para>
-				Anyframe Core에서는 Spring, Hibernate, CXF 등과 같은 다양한 오픈 소스들을 중심으로 참조 라이브러리와 샘플 코드를 엮어서 
+				Anyframe Core에서는 Spring, Hibernate, Query 등과 같은 다양한 오픈 소스들을 중심으로 참조 라이브러리와 샘플 코드를 엮어서 
 				구성된 다양한 Plugin들을 제공함으로써 사용자가 원하는 Plugin들을 적절히 선택하고 설치함으로써 해당 프로젝트에 필요한 기능들을 갖춘 샘플 
 				프로젝트를 손쉽게 구성할 수 있도록 지원한다.		
 			</para>
@@ -135,9 +136,9 @@
 		<title>App. Server Configurations</title>
 		<partintro id="app-server-configurations-intro">
 			<para>
-				본 문서에서는 Plugin 설치로 생성된 샘플 어플리케이션을 실행시키기 위한 WAS로써 Jetty, Tomcat를 채택하여 설명을 기술하고 있다. 
+				본 문서에서는 Plugin 설치로 생성된 샘플 어플리케이션을 실행시키기 위한 WAS로써 Tomcat를 채택하여 설명을 기술하고 있다. 
 				그러나 Plugin 설치로 생성된 샘플 어플리케이션은 특정 WAS에 종속되지 않으므로 
-				<emphasis role="bold">mvn clean compile war:war</emphasis>와 같은 명령어 실행을 통해 패키징한 후 
+				<emphasis role="bold">mvn clean compile war:war</emphasis> 또는 <emphasis role="bold">mvn clean package</emphasis>와 같은 명령어 실행을 통해 패키징한 후 
 				WebLogic, JEUS와 같은 상용 WAS에 deploy하여 실행시키는 것도 가능하다. 
 				단, 샘플 어플리케이션이 참조하는 일부 라이브러리의 버전을 해당 WAS에서 지원하지 않는 경우가 있어 이에 대한 조치사항을 언급하고자 한다.
 			</para>
@@ -145,7 +146,8 @@
 		&app_server_configurations_weblogic;
 		&app_server_configurations_jeus;
 		&app_server_configurations_jboss;
-		&app_server_configurations_websphere;
+		<!-- &app_server_configurations_websphere; -->
+		&app_server_configurations_websocket;
 	</part>
 
 </book>

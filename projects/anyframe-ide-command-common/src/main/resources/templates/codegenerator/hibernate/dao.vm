@@ -1,0 +1,90 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+#macro( getFieldNameUpper $fieldName )### START getFieldNameUpper
+${fieldName.substring(0,1).toUpperCase()}${fieldName.substring(1)}##
+#end#### END getFieldNameUpper
+package ${package}.service.impl;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
+
+import ${domain.packageName}.${domain.name};
+
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+import org.anyframe.util.NumberUtil;
+import org.anyframe.util.StringUtil;
+import org.anyframe.hibernate.DynamicHibernateService;
+
+/**
+ * ${domain.name}Dao implementation class with Hibernate
+ * @author $author
+ */
+@Repository("#getDomainNameLower(${domain.name})Dao")
+public class ${domain.name}Dao extends HibernateDaoSupport {
+
+	@Value("#{contextProperties['pageSize'] ?: 10}")
+	int pageSize;
+
+	@Value("#{contextProperties['pageUnit'] ?: 10}")
+	int pageUnit;
+
+	@Inject
+	DynamicHibernateService dynamicHibernateService;
+	
+	@Inject
+	public void setHibernateDaoSessionFactory(SessionFactory sessionFactory) {
+		super.setSessionFactory(sessionFactory);
+	}	
+	
+	public void create(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.getHibernateTemplate().save(#getDomainNameLower(${domain.name}));
+	}
+	
+	public void remove(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.getHibernateTemplate().delete(#getDomainNameLower(${domain.name}));
+	}
+
+	public void update(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.getHibernateTemplate().update(#getDomainNameLower(${domain.name}));
+	}
+
+	public ${domain.name} get(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		#foreach($column in $domain.columns)
+#******##if($column.isKey)
+#set($keyFieldName = $column.fieldName)
+##set($keyGetter = #getDomainNameLower(${domain.name}).get#getFieldNameUpper(${column.fieldName}))
+#break
+#******##end
+#******##end
+		return super.getHibernateTemplate().get(${domain.name}.class, #getDomainNameLower(${domain.name}).get#getFieldNameUpper($keyFieldName)());
+	}
+	
+	public Page getPagingList(SearchVO searchVO) throws Exception {
+        int pageIndex = searchVO.getPageIndex();
+
+        String searchCondition = StringUtil.nullToString(searchVO.getSearchCondition());
+        String searchKeyword = StringUtil.nullToString(searchVO.getSearchKeyword());
+        String isNumeric = NumberUtil.isNumber(searchKeyword) ? "true" : "false";
+        
+        Object[] args = new Object[4];		            
+        args[0] = "condition=" + searchCondition;
+        args[1] = "keywordStr=%" + searchKeyword + "%";
+        args[2] = "keywordNum=" + searchKeyword + "";
+        args[3] = "isNumeric=" + isNumeric;
+
+        List resultList = dynamicHibernateService.findList("find${domain.name}List", args, pageIndex, pageSize);
+        Long totalSize = (Long) dynamicHibernateService.find("count${domain.name}List", args);
+
+        Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(), pageUnit, pageSize);
+        return resultPage;
+	}    
+}
+

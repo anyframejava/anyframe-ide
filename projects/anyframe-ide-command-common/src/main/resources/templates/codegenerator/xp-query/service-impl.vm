@@ -1,0 +1,51 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.service.impl;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import ${package}.service.${domain.name}XPService;
+
+import org.anyframe.xp.query.service.impl.XPDao;
+import org.anyframe.xp.query.service.impl.XPServiceImpl;
+import org.anyframe.xp.query.impl.XPQueryServiceImpl;
+
+import com.tobesoft.xplatform.data.DataSet;
+import com.tobesoft.xplatform.data.DataSetList;
+import com.tobesoft.xplatform.data.VariableList;
+
+
+@Service("#getDomainNameLower(${domain.name})XPService")
+public class ${domain.name}XPServiceImpl extends XPServiceImpl implements ${domain.name}XPService {
+    
+    @Inject
+	public ${domain.name}XPServiceImpl(XPDao xpDao){
+		super.xpDao = xpDao;
+	}
+    
+	public void saveAll(VariableList inVl, DataSetList inDl,
+                    VariableList outVl, DataSetList outDl) throws Exception {
+
+            Map sqlMap = new HashMap();
+            sqlMap.put(XPQueryServiceImpl.QUERY_INSERT, "createXP${domain.name}");
+            sqlMap.put(XPQueryServiceImpl.QUERY_UPDATE, "updateXP${domain.name}");
+            sqlMap.put(XPQueryServiceImpl.QUERY_DELETE, "removeXP${domain.name}");
+
+            super.xpDao.saveAll(sqlMap, inDl.get("dsSave"));
+    }
+
+    public void getPagingList(VariableList inVl, DataSetList inDl,
+                    VariableList outVl, DataSetList outDl) throws Exception {
+            
+            //outDl.add("dsResult", super.xpDao.getPagingList("findXP${domain.name}List", inDl.get("dsSearch")));
+            DataSet outDs = super.xpDao.getPagingList("findXP${domain.name}List", inDl.get("dsSearch"));
+            outDs.setName("dsResult");
+            outDl.add(outDs);
+    }  
+}

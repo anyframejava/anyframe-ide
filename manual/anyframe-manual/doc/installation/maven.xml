@@ -35,8 +35,8 @@
 		<orderedlist numeration="arabic" inheritnum="inherit">
 			<listitem>
 				<para>
-					Anyframe 설치 대상 PC에 Maven이 설치되어 있지 않은 경우, Maven을 설치하도록 한다. (본 문서에서는 Maven Ver.2.2.1을 기반으로 설치
-					작업을 진행할 것이다.) <ulink url="http://maven.apache.org/">Maven 사이트</ulink> 로부터 Maven(apache-maven-2.2.1-bin.xxx)을 다운로드받은 후,
+					Anyframe 설치 대상 PC에 Maven이 설치되어 있지 않은 경우, Maven을 설치하도록 한다. (본 문서에서는 Maven Ver.3.1.1을 기반으로 설치
+					작업을 진행할 것이다.) <ulink url="http://maven.apache.org/">Maven 사이트</ulink> 로부터 Maven(apache-maven-3.1.1-bin.xxx)을 다운로드받은 후,
 					원하는 위치에 압축을 해제한다.
 				</para>
 			</listitem>
@@ -137,21 +137,14 @@
 			Command 입력창을 열고 다음과 같이 Maven Command를 입력하여 anyframe-basic-archetype을 설치한다.
 			(Anyframe Archetype에 대한 자세한 내용은 본 매뉴얼의 <link linkend="commands_maven_generate_archetype">Archetype</link> 설명을 참고하도록 한다.) 
 		</para>
-		<para>
-			현재 Anyframe Repository는 5.6.0을 기준으로 구성되어 있으므로, 다음과 같은 절차를 통해 설치를 진행하도록 한다.
-			링크된 파일에서 archetype-catalog.xml 파일을 압축해제 후 (사용자 홈 디렉토리)\.m2에 복사한다.
-			링크된 파일에서 plugin-catalog-essential.xml, plugin-catalog-optional.xml 두 파일을 압축해제 후 (사용자 홈 디렉토리)\.anyframe에 복사한다.
-			<ulink url="https://www.anyframejava.org/system/files/repo.zip">5.5.2용 Catalog 파일</ulink>
-		</para>
-		
-		<programlisting language="java"><![CDATA[mvn archetype:generate -DarchetypeCatalog="file://(사용자 홈 디렉토리)\.m2\archetype-catalog.xml"]]></programlisting>
+		<programlisting language="java"><![CDATA[mvn archetype:generate -DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>
 	    
 	    <para>
-			위와 같이 명령어를 입력하면 Command 창에 archetypeCatalog 속성값으로 정의된 archetype-catalog.xml 
+			위와 같이 명령어를 입력하면 Command 창에 archetypeCatalog 속성값으로 정의된 http://dev.anyframejava.org/maven/repo/archetype-catalog.xml 
 			파일 내에 정의된 Maven Archetype 목록이 제시될 것이다. 제시된 Maven Archetype 목록 중 최신 anyframe-basic-archetype에 해당하는 번호('1')를 선택한다.
-			등록된 anyframe-basic-archetype의 버전이 여러개일 경우 버전을 선택할 수 있도록 버전 목록이 제시된다. 여기서는 최신 버전인 5.5.2를 선택할 것이다.
+			등록된 anyframe-basic-archetype의 버전이 여러개일 경우 버전을 선택할 수 있도록 버전 목록이 제시된다. 여기서는 최신 버전인 5.6.0을 선택할 것이다.
 		<programlisting language="java"><![CDATA[Choose archetype:
-1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-basic-archetype (Basic archetype for Anyframe Java Core (latest stable version with JDK5 is 5.5.2))
+1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> org.anyframe.archetype:anyframe-basic-archetype (Basic archetype for Anyframe Java Core (latest stable version with JDK6 is 5.6.0))
 Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): : 1]]></programlisting>
 		</para>
 		
@@ -263,16 +256,16 @@ Is this OK? (y, n):]]></programlisting>
 		<title>어플리케이션 실행</title>
 		<para>
 			특정 Plugin 설치 후 구성된 샘플 어플리케이션이 정상적으로 동작하는지 쉽게 확인할 수 있도록
-			Anyframe에서는 Jetty 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
+			Anyframe에서는 Tomcat 서버에 어플리케이션을 deploy하여 바로 실행해볼 수 있는 Command를 제공한다.
 		</para>
 		<para>
-			Command 창을 띄운 후, 샘플 프로젝트 설치 폴더 위치로 이동하여 다음과 같이 Maven 명령어를 입력하면 Jetty 기반에서 
+			Command 창을 띄운 후, 샘플 프로젝트 설치 폴더 위치로 이동하여 다음과 같이 Maven 명령어를 입력하면 Tomcat 기반에서 
 			샘플 어플리케이션을 시작시킬 수 있다.
 		</para>
-		<programlisting language="java"><![CDATA[mvn clean jetty:run]]></programlisting>
+		<programlisting language="java"><![CDATA[mvn clean tomcat7:run]]></programlisting>
 	
 		<para>
-			Jetty가 정상적으로 실행되면 'Started Jetty Server'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
+			Tomcat가 정상적으로 실행되면 'Starting ProtocolHandler ["http-bio-8080"]'라는 INFO 레벨의 로그 메세지가 콘솔창에 보일 것이다.
 		</para>		
 	
 		<para>

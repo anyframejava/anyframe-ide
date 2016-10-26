@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryservice xmlns="http://www.anyframejava.org/schema/query/mapping" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.anyframejava.org/schema/query/mapping http://www.anyframejava.org/schema/query/mapping/anyframe-query-mapping-1.0.xsd ">
+
+  <queries>
+	<query id="create${domain.name}" isDynamic="true" mappingStyle="upper">
+		<statement>
+		<![CDATA[
+			INSERT INTO ${domain.table.toUpperCase()} (
+				#foreach($column in $domain.columns)
+#**************#${column.columnName.toUpperCase()}#if($velocityHasNext), #end
+#**************##end#**#
+			)
+			VALUES (
+				#foreach($column in $domain.columns)
+#**************#:${column.fieldName.toUpperCase()}#if($velocityHasNext), #end
+#**************##end#**#
+			)
+		]]>
+		</statement>
+	</query>
+		
+	<query id="update${domain.name}" isDynamic="true" mappingStyle="upper">
+		<statement>
+		<![CDATA[
+			UPDATE ${domain.table.toUpperCase()}
+			SET 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName.toUpperCase()} = :${column.fieldName.toUpperCase()}#if($velocityHasNext), #end
+#**************##end#**#
+			WHERE 
+				#foreach($column in $domain.columns)
+#**************##if($column.isKey)
+#**************##if($velocityCount > 1)AND #end${column.columnName.toUpperCase()} = :${column.fieldName.toUpperCase()} #end
+#**************##end#**#
+		]]>
+		</statement>
+	</query>
+	
+	<query id="remove${domain.name}" isDynamic="true" mappingStyle="upper">
+		<statement>
+		<![CDATA[
+			DELETE FROM ${domain.table.toUpperCase()}
+			WHERE 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName.toUpperCase()} = :${column.fieldName.toUpperCase()}
+			    #if($velocityHasNext)AND #end
+#**************##end#**#
+		]]>
+		</statement>
+	</query>
+	
+	<query id="find${domain.name}ByPk" isDynamic="true" mappingStyle="upper">
+		<statement>
+		<![CDATA[
+			SELECT 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName.toUpperCase()}#if($velocityHasNext), #end
+#**************##end#**#
+			FROM ${domain.table.toUpperCase()}
+			WHERE 
+#**************##set($keyCount = '0')
+				#foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") AND ##
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end ${column.columnName.toUpperCase()} = :${column.fieldName.toUpperCase()} #end
+#**************##end#**#
+		]]>
+		</statement>
+		<result class="${domain.packageName}.${domain.name}" />											
+	</query>
+
+	<query id="find${domain.name}List" isDynamic="true" mappingStyle="upper">
+		<statement>
+		<![CDATA[
+			SELECT 
+				#foreach($column in $domain.columns)
+#**************#${column.columnName.toUpperCase()}#if($velocityHasNext), #end
+#**************##end#**#
+			FROM ${domain.table.toUpperCase()} 
+			\#if($SEARCH_CONDITION && $SEARCH_CONDITION != ""  && $SEARCH_KEYWORD && $SEARCH_KEYWORD != "" )
+			WHERE 		
+				\#if ($SEARCH_CONDITION == "All")
+#**************##set($keyCount = '0')
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)
+#**********************##if($keyCount!="0") #**#
+					OR #**#
+#**********************##else##
+#******************##set($keyCount = '1')##
+#**********************##end##
+					\#if ($isNumeric == "true")
+						${column.columnName.toUpperCase()} = :SEARCH_KEYWORD
+					\#else
+						${column.columnName.toUpperCase()} LIKE :SEARCH_KEYWORD
+					\#end##
+#******************##end
+#**************##end
+#**************##foreach($column in $domain.columns)
+#******************##if($column.isKey)#**#
+				\#elseif ($SEARCH_CONDITION == "${column.fieldName}")
+					\#if ($isNumeric == "true")
+						${column.columnName.toUpperCase()} = :SEARCH_KEYWORD
+					\#else
+						${column.columnName.toUpperCase()} LIKE :SEARCH_KEYWORD
+					\#end
+#******************##end
+#**************##end
+				\#end
+			\#end
+		]]>
+		</statement>
+		<result class="${domain.packageName}.${domain.name}" />		
+	</query>
+  </queries>
+</queryservice>

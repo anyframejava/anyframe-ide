@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="Anyframe DB Config Chagne ANT" default="change-db" basedir="${basedir}">
+
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-path.xml" />
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml" />
+
+	<!-- setting ant log level -->		
+	<if><equals arg1="$${logLevel}" arg2="${logLevel}" />
+      <then><property name="logLevel" value="info"/></then></if>
+	<log level="${logLevel}" />		
+
+	<target name="change-db">
+		<change-db projecthome="${basedir}" anyframeHome="${anyframeHome}" target="${basedir}"/>
+	</target>
+
+</project>

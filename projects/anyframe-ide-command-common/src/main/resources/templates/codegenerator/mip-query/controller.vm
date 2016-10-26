@@ -1,0 +1,35 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.web;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import ${package}.service.${domain.name}MiPService;
+import org.anyframe.mip.query.web.controller.AbstractMiPDispatchController;
+
+import com.tobesoft.platform.PlatformRequest;
+import com.tobesoft.platform.data.DatasetList;
+import com.tobesoft.platform.data.VariableList;
+
+public class ${domain.name}MiPController extends AbstractMiPDispatchController {
+
+	@Inject
+	@Named("#getDomainNameLower(${domain.name})MiPService")
+	private ${domain.name}MiPService #getDomainNameLower(${domain.name})MiPService;
+    
+    public void getPagingList(PlatformRequest platformRequest,
+                    VariableList inVl, DatasetList inDl, VariableList outVl,
+                    DatasetList outDl) throws Exception {
+            #getDomainNameLower(${domain.name})MiPService.getPagingList(inVl, inDl, outVl, outDl);
+    }
+
+    public void saveAll(PlatformRequest platformRequest, VariableList inVl,
+                    DatasetList inDl, VariableList outVl, DatasetList outDl)
+                    throws Exception {
+            #getDomainNameLower(${domain.name})MiPService.saveAll(inVl, inDl, outVl, outDl);
+    }
+
+}
+

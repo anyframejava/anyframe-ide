@@ -1,7 +1,7 @@
 <chapter id="plugins_structure">
 	<title>Plugin 구조</title>
 	<para>
-		Anyframe archetype 설치 후 anyframe-maven-plugin을 이용하여 Core, Hibernate, CXF, Monitoring 등과 같은 Plugin들을 설치/삭제할 수 있도록 하기 위하여 
+		Anyframe archetype 설치 후 anyframe-maven-plugin을 이용하여 Core, Hibernate, Monitoring 등과 같은 Plugin들을 설치/삭제할 수 있도록 하기 위하여 
 		Plugin들은 Maven Archetype과 유사한 모습을 가지면서 실제 폴더 구조 및 파일은 다른 형태로 구성되어 있다.
 	</para>		
 	<para>

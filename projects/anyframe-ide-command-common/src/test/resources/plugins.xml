@@ -1,0 +1,9 @@
+<plugins>
+	<plugin>
+		<name>foundation</name>
+		<groupId>anyframe.plugin</groupId>
+		<artifactId>anyframe.plugin.foundation</artifactId>
+		<version>4.2.0</version>
+		<samples>true</samples>
+	</plugin>
+</plugins>

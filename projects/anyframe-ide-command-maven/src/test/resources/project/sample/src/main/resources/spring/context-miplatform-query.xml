@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config="http://www.anyframejava.org/schema/service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.anyframejava.org/schema/service http://www.anyframejava.org/schema/service/anyframe-core-service-2.0.xsd">
+		  
+	<bean id="miPQueryService" class="anyframe.core.query.ria.mip.impl.MiPQueryServiceImpl">
+		<property name="riaQueryService" ref="riaQueryService" />
+	</bean>
+	
+	<bean name="riaQueryService" class="anyframe.core.query.ria.impl.RiaQueryServiceImpl">
+        <property name="jdbcTemplate" ref="pagingNamedParamJdbcTemplate"/>
+        <property name="sqlRepository" ref="sqlLoader"/>           
+        <!--lobHandler property here -->
+<!--lobHandler property-START-->
+<property name="lobHandler" ref="lobHandler"/>
+<!--lobHandler property-END-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	      	
+	</bean>  
+	
+	<bean id="pagingNamedParamJdbcTemplate"
+		class="anyframe.core.query.impl.jdbc.PagingNamedParamJdbcTemplate">
+		<constructor-arg index="0" ref="pagingJdbcTemplate" />
+		<constructor-arg index="1" ref="dataSource" />
+	</bean>
+	
+	<bean id="pagingJdbcTemplate"
+		class="anyframe.core.query.impl.jdbc.PagingJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+		<property name="exceptionTranslator" ref="exceptionTranslator" />
+        <!--pagination sql getter property here -->
+        <!--pagination sql getter property-START-->		
+#if ($paging_generator && !$paging_generator.equals(""))		
+		<property name="paginationSQLGetter" ref="pagingSQLGenerator" />
+#end
+        <!--pagination sql getter property-END-->		
+	</bean>
+	
+    <bean name="sqlLoader" class="anyframe.core.query.impl.config.loader.SQLLoader">
+		<config:configuration>
+        <!-- Add new mapping xml file name here -->
+          <filename>classpath:query/mip*/mapping-query-mip*.xml</filename>			
+          <nullcheck type="VARCHAR" default-value="" />
+          <sqlload dynamic="false" frequency="5" />
+          <skiperror>true</skiperror>
+        </config:configuration>
+	  </bean>
+		
+	  <!-- The original JdbcTemplate definition -->
+    <bean id="jdbcTemplate" class="anyframe.core.query.impl.jdbc.PagingJdbcTemplate">
+      <property name="dataSource" ref="dataSource" />
+      <property name="exceptionTranslator" ref="exceptionTranslator" />
+    </bean>
+    
+    <bean id="exceptionTranslator" class="anyframe.core.query.impl.util.RawSQLExceptionTranslator"/>
+    <!--paging sql generator here -->
+    <!--paging sql generator-START-->  
+#if ($paging_generator && !$paging_generator.equals(""))
+    <bean id="pagingSQLGenerator" class="${paging_generator}"/>    
+#end
+    <!--paging sql generator-END-->    
+    <!--lobHandler here -->
+    <!--lobHandler-START-->               	
+#if ($lobhandler && !$lobhandler.equals(""))    
+    <bean id="lobHandler" class="${lobhandler}" lazy-init="true">
+    #if (!$lobhandler.equals("org.springframework.jdbc.support.lob.DefaultLobHandler"))        
+        <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor"/>
+    </bean>
+    <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" lazy-init="true"/>    
+    #else
+    </bean>
+    #end    
+#end         
+    <!--lobHandler-END-->  	        		
+</beans>	

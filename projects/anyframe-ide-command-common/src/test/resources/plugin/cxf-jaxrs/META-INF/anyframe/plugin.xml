@@ -1,0 +1,28 @@
+<plugin name="cxf-jaxrs">
+	<groupId>org.anyframe.plugin</groupId>
+	<artifactId>anyframe-cxf-jaxrs-pi</artifactId>
+	<version>1.0.0</version>
+	<interceptor/>
+	<dependent-plugins>
+		<dependent-plugin name="cxf" version="1.0.0&gt;=*" />
+	</dependent-plugins>  
+	<samples>true</samples>
+	<resources>
+		<resource dir="src/main/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+			<exclude name="**/*.properties" />
+		</resource>
+		<resource dir="src/test/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+		</resource>
+		<resource dir="src/main/resources" filtered="true" packaged="false">
+			<include name="**/*.xml" />
+			<exclude name="**/core/*.properties" />
+			<exclude name="**/core/*.xml" />
+		</resource>
+		<resource dir="src/main/webapp/WEB-INF/jsp" filtered="false" packaged="false">
+			<include name="**/*.jsp" />
+			<include name="**/*.js" />
+		</resource>
+	</resources>	
+</plugin>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!-- ********************************************************** -->
+<!-- * This macrodef codes are from Mark Michaelis.           * -->
+<!-- * original codes from [https://blog.coremedia.com/cm/post/1505148/Apache_Ant_Task_to_Upper_and_LowerCase.html] -->
+<!-- ********************************************************** -->
+
+<project name="Anyframe MacroDefinition ANT" >	
+  
+  <property name="upperlower.style" location="${anyframeHome}/ide/cli/scripts/macro-upper-lower.xsl"/>
+  
+  <macrodef name="upper" description="Converts property values to uppercase.">
+    <element name="propset" implicit="true" description="Set of properties to up'case."/>
+    <attribute name="prefix"
+               default="upper."
+               description="Prefix for the new properties as they cannot be overridden."/>
+    <sequential>
+      <tempfile property="upper.in.tempfile"
+                prefix="ant.upper.in."
+                suffix=".xml"
+                deleteonexit="true"/>
+      <tempfile property="upper.out.tempfile"
+                prefix="ant.upper.out."
+                suffix=".properties"
+                deleteonexit="true"/>
+      <echo level="debug" message="Dumping properties to &quot;${upper.in.tempfile}&quot;."/>
+      <echoproperties destfile="${upper.in.tempfile}" failonerror="true" format="xml">
+        <propset/>
+      </echoproperties>
+      <xslt in="${upper.in.tempfile}" out="${upper.out.tempfile}" style="${upperlower.style}">
+        <param name="case" expression="upper"/>
+        <param name="prefix" expression="@{prefix}"/>
+      </xslt>
+      <echo level="debug" message="Reading upper-cased properties from &quot;${upper.out.tempfile}&quot;."/>
+      <property file="${upper.out.tempfile}"/>
+      <delete file="${upper.in.tempfile}" quiet="true"/>
+      <delete file="${upper.out.tempfile}" quiet="true"/>
+    </sequential>
+
+  </macrodef>
+  
+  <macrodef name="lower" description="Converts property values to lowercase.">
+    <element name="propset" implicit="true" description="Set of properties to lowercase."/>
+    <attribute name="prefix"
+               default="lower."
+               description="Prefix for the new properties as they cannot be overridden."/>
+    <sequential>
+      <tempfile property="lower.in.tempfile"
+                prefix="ant.lower.in."
+                suffix=".xml"
+                deleteonexit="true"/>
+      <tempfile property="lower.out.tempfile"
+                prefix="ant.lower.out."
+                suffix=".properties"
+                deleteonexit="true"/>
+      <echo level="debug" message="Dumping properties to &quot;${lower.in.tempfile}&quot;."/>
+      
+      <echoproperties destfile="${lower.in.tempfile}" failonerror="true" format="xml">
+        <propset/>
+      </echoproperties>
+      
+      <xslt in="${lower.in.tempfile}" out="${lower.out.tempfile}" style="${upperlower.style}">
+        <param name="case" expression="lower"/>
+        <param name="prefix" expression="@{prefix}"/>
+      </xslt>
+      <echo level="debug" message="Reading lower-cased properties from &quot;${lower.out.tempfile}&quot;."/>
+      <property file="${lower.out.tempfile}"/>
+      
+      <delete file="${lower.in.tempfile}" quiet="true"/>
+      <delete file="${lower.out.tempfile}" quiet="true"/>
+    </sequential>
+    
+  </macrodef>
+</project>

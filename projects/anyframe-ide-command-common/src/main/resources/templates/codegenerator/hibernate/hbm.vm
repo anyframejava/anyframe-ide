@@ -1,0 +1,29 @@
+#macro( getSimpleTypeLower $fieldType )### START getSimpleTypeLower
+#set($lastDot=$fieldType.lastIndexOf("."))
+#set($indexSimpleField=$lastDot + 1)
+#if($lastDot > 0)$fieldType.substring($indexSimpleField).substring(0,1).toLowerCase()$fieldType.substring($indexSimpleField).substring(1)##
+#else$fieldType.substring(0,1).toLowerCase()$fieldType.substring(1)##
+#end##
+#end##### END getSimpleTypeLower
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="${domain.packageName}.${domain.name}" table="${domain.table}">
+    	<cache usage="read-write"/>
+#set($setId = 'N')
+    	#foreach($column in $domain.columns)
+#******##if($column.isKey && $setId == 'N')
+		<id name="${column.fieldName}" type="#getSimpleTypeLower(${column.fieldType})">
+            <column name="${column.columnName}"/>
+            <generator class="assigned" />
+        </id>
+#set($setId = 'Y')
+#******##else
+		<property name="${column.fieldName}" type="#getSimpleTypeLower(${column.fieldType})">
+            <column name="${column.columnName}" #if(!$column.notNull)not-null="true"#end />
+        </property>
+#******##end
+#******##end
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<project name="Anyframe Application Build ANT" default="build" basedir="${basedir}">
+
+	<xmlproperty file="${basedir}/.settings/anyframe/org.anyframe.ide.common.config.xml" />
+
+	<property file="${anyframe.home}/ide/cli/scripts/project-build.properties" />
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-path.xml" />
+	<import file="${anyframeHome}/ide/cli/scripts/anyframe-taskdef.xml" />
+	<import file="${basedir}/build.xml" />
+
+	<target name="clean">
+		<if>
+			<equals arg1="$${clean}" arg2="${clean}" />
+			<then>
+				<property name="clean" value="false" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${clean}" arg2="true" />
+			<then>
+				<delete dir="${project.home}/dist" includeemptydirs="true" />
+				<mkdir dir="${project.home}/dist" />
+			</then>
+		</if>
+	</target>
+
+	<target name="dist">
+		<if>
+			<equals arg1="$${clean}" arg2="${clean}" />
+			<then>
+				<property name="clean" value="false" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${clean}" arg2="true" />
+			<then>
+				<ant antfile="build.xml" dir="${basedir}" target="shared:clean" />
+				<ant antfile="build.xml" dir="${basedir}" />
+			</then>
+			<else>
+				<ant antfile="build.xml" dir="${basedir}" />
+			</else>
+		</if>
+
+	</target>
+
+	<target name="war">
+		<delete dir="${basedir}/dist/${anyframe.ant.context-root}" includeemptydirs="true" />
+		<!-- make web application folder -->
+		<copy todir="${basedir}/dist/${anyframe.ant.context-root}" overwrite="true">
+			<fileset dir="${basedir}/src/main/webapp">
+				<include name="**/*.*" />
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<if>
+			<equals arg1="$${deploy}" arg2="${deploy}" />
+			<then>
+				<property name="deploy" value="class" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${deploy}" arg2="jar" />
+			<then>
+				<delete includeemptydirs="true">
+					<fileset dir="${basedir}/dist/${anyframe.ant.context-root}/WEB-INF/classes">
+						<exclude name="**/displaytag.properties" />
+						<exclude name="**/log4j.xml" />
+						<exclude name="**/META-INF/*.*" />
+					</fileset>
+				</delete>
+				<copy todir="${basedir}/dist/${anyframe.ant.context-root}/WEB-INF/lib">
+					<fileset dir="${basedir}/target/temp/instrlib/">
+						<include name="**/${anyframe.pjtname}-${version}.jar" />
+					</fileset>
+				</copy>
+				<antcall target="makewar" />
+			</then>
+			<elseif>
+				<equals arg1="${deploy}" arg2="class" />
+				<then>
+					<delete includeemptydirs="true" failonerror="false">
+						<fileset dir="${basedir}/dist/${anyframe.ant.context-root}/WEB-INF/lib" includes="**/{anyframe.pjthome}-*.jar" />
+					</delete>
+					<antcall target="makewar" />
+				</then>
+			</elseif>
+			<else>
+				<echo>Fail to make a web application. You need more arguments.(-deploy [jar/class])</echo>
+			</else>
+		</if>
+	</target>
+
+	<target name="makewar">
+		<!-- make war file -->
+		<if>
+			<equals arg1="${war}" arg2="true" />
+			<then>
+				<war destfile="${basedir}/dist/${anyframe.ant.context-root}.war" webxml="${web.src.dir}/WEB-INF/web.xml">
+					<fileset dir="${web.src.dir}">
+						<include name="**/*.*" />
+					</fileset>
+				</war>
+				<echo>makewar done.</echo>
+			</then>
+		</if>
+	</target>
+
+	<!--============ Anyframe Gen Command tartgets ============ -->
+
+	<target name="build" depends="clean, dist, war" />
+
+	<target name="run" depends="clean, dist, war">
+		<copy todir="${anyframeHome}/ide/ant/etc/tomcat/webapps">
+			<fileset dir="${basedir}/dist">
+				<include name="${anyframe.ant.context-root}.war" />
+			</fileset>
+		</copy>
+		<delete dir="${anyframeHome}/ide/ant/etc/tomcat/webapps/${anyframe.ant.context-root}" includeemptydirs="true" />
+		<antcall target="tomcat.start" />
+	</target>
+
+	<target name="tomcat.start">
+		<if>
+			<os family="windows" />
+			<then>
+				<echo>OS : Windows</echo>
+				<exec executable="cmd" failonerror="true">
+					<arg value="/c" />
+					<arg value="${anyframeHome}/ide/ant/etc/tomcat/bin/startup.bat" />
+					<env key="CATALINA_HOME" value="${anyframeHome}/ide/ant/etc/tomcat" />
+				</exec>
+			</then>
+			<elseif>
+				<os family="unix" />
+				<then>
+					<echo>OS : unix</echo>
+					<exec executable="/bin/sh" failonerror="true">
+						<arg value="-c" />
+						<arg value="${anyframeHome}/ide/ant/etc/tomcat/bin/startup.sh" />
+						<env key="CATALINA_HOME" value="${anyframeHome}/ide/ant/etc/tomcat" />
+					</exec>
+				</then>
+			</elseif>
+		</if>
+	</target>
+
+</project>

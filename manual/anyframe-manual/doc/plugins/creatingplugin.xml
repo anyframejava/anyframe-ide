@@ -8,7 +8,7 @@
 	<section id="plugins_creatingplugin_createpjt">
 		<title>신규 Plugin 프로젝트 생성</title>
 		<para>개발하고자 하는 신규 Plugin을 위한 프로젝트를 Anyframe IDE에 제공하는 Maven 명령어를 이용하여 생성하도록 한다.</para>
-		<programlisting language="xml"><![CDATA[mvn archetype:generate -DarchetypeCatalog="file://(사용자 홈 디렉토리)\.m2\archetype-catalog.xml"]]></programlisting>			
+		<programlisting language="xml"><![CDATA[mvn archetype:generate -DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>			
 		<para>
 			신규 Anyframe Plugin을 만들어내기 위한 샘플 프로젝트를 생성해내는데 이때 샘플 프로젝트가 웹 타입 프로젝트인 경우 archetype으로 
 			anyframe basic archetype을 선택하도록 한다. 
@@ -222,8 +222,8 @@ Define value for property 'package': org.anyframe.plugin:]]></programlisting>
 			</orderedlist>		
 			<para>
 				Plugin 샘플 코드를 추가 구현한 뒤 CLI 혹은 Eclipse 상에서 정상 동작하는지 테스트해보도록 한다.
-				웹 타입 프로젝트의 경우 jetty:run 명령어를 이용하여 테스트할 수 있고, 서비스 타입 프로젝트의 경우 test 명령어를 이용하여 테스트해볼 수 있다. 				
-				<programlisting language="java"><![CDATA[mvn clean jetty:run
+				웹 타입 프로젝트의 경우 tomcat7:run 명령어를 이용하여 테스트할 수 있고, 서비스 타입 프로젝트의 경우 test 명령어를 이용하여 테스트해볼 수 있다. 				
+				<programlisting language="java"><![CDATA[mvn clean tomcat7:run
 mvn clean test]]></programlisting>
 			</para>						
 	</section>		
@@ -260,8 +260,7 @@ mvn clean test]]></programlisting>
     }
 }]]></programlisting>					
 			<para>
-				다음은 Query Plugin의 Interceptor 클래스의 일부로써 Query Plugin이 삭제된 이후 해당 프로젝트의 META-INF/project.mf 파일 내의
-				"project.daoframework" 속성의 값을 "springjdbc"로 변경시키는 로직을 포함하고 있음을 알 수 있다. 
+				다음은 Query Plugin의 Interceptor 클래스의 일부이다. 
 				(Interceptor 클래스 구현/실행을 위해 필요한 라이브러리는 Plugin 프로젝트 내의 pom.xml 파일과 
 				Plugin 빌드 파일(plugin-build.xml)의 interceptor dependencies 태그 내에 함께 정의해주도록 함에 유의하도록 한다.)
 			</para>	
@@ -647,7 +646,8 @@ mvn anyframe:list]]></programlisting>
 	<orderedlist numeration="arabic" inheritnum="inherit">
 		<listitem>
 			<para>Board Plugin 프로젝트 생성</para>
-			<programlisting language="xml"><![CDATA[mvn archetype:generate -DarchetypeCatalog="file://(사용자 홈 디렉토리)\.m2\archetype-catalog.xml"]]></programlisting>			
+			<programlisting language="xml"><![CDATA[mvn archetype:generate 
+	-DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>			
 			<para>
 				Board Plugin을 만들어내기 위한 프로젝트를 생성해내는데 이때 웹 타입 프로젝트로 만들 것이기 때문에 archetype으로 
 				anyframe basic archetype를 선택한다. 

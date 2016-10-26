@@ -5,131 +5,13 @@
 		알아보자.
 	</para>
 	<section id="app_server_configurations_jboss_core">
-		<title>core plugin 사용 시</title>
+		<title>hibernate plugin 사용 시</title>
 		<itemizedlist>
 			<listitem>
 				<para>
-					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리
-					중복으로 인한 오류 해결을 위해
-					다음과 같이 일부 라이브러리를 제거한다.
-				</para>
-				<itemizedlist>
-					<listitem>
-						<para>WEB-INF/lib 폴더내에 hibernate-validator-4.1.0.Final.jar 파일을
-							제거한다.
-						</para>
-					</listitem>
-				</itemizedlist>
-			</listitem>
-			<listitem>
-				<para>
-					7.1 Final : JBoss AS7에서는 별도 설정이 불필요하다.
+					6.1 Final : Anyframe에서 참조하는 Hibernate 관련 Library들의 버전이, JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리 버전과 달라서 문제가 발생할 수 있다. 따라서, 클래스 로딩 순서를 조절하여 문제를 해결하도록 한다.
 				</para>
 			</listitem>
 		</itemizedlist>
-	</section>
-	<section id="app_server_configurations_jboss_cxf">
-		<title>cxf plugin 사용 시</title>
-		<itemizedlist>
-			<listitem>
-				<para>
-					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리
-					중복으로 인한 오류 해결을 위해
-					다음과 같이 설정을 추가한다.
-				</para>
-				<itemizedlist>
-					<listitem>
-						<para>WEB-INF 폴더에 jboss-scanning.xml 파일 추가</para>
-						<programlisting language="xml"><![CDATA[<scanning xmlns="urn:jboss:scanning:1.0" />]]></programlisting>
-					</listitem>
-				</itemizedlist>
-			</listitem>
-			<listitem>
-				<para>
-					7.1 Final : JBoss AS7에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리
-					중복으로 인한 오류 해결을 위해 아래의 설정을 참고한다.
-				</para>
-				<itemizedlist>
-					<listitem>
-						<para>[JBOSS_HOME]/standalone/configuration/
-							위치에 존재하는 standalone.xml 파일을 열어 <![CDATA[<extensions]]>
-							태그 내의 webservice module 선언 부분을 아래와 같이 주석 처리를 한다.
-						</para>
-						<programlisting language="xml"><![CDATA[
-<!-- 중략 -->
-<extensions>
-     <extension module="org.jboss.as.clustering.infinispan"/>
-     <extension module="org.jboss.as.configadmin"/>
-     <extension module="org.jboss.as.connector"/>
-     <extension module="org.jboss.as.deployment-scanner"/>
-     <extension module="org.jboss.as.ee"/>
-     <extension module="org.jboss.as.ejb3"/>
-     <extension module="org.jboss.as.jaxrs"/>
-     <extension module="org.jboss.as.jdr"/>
-     <extension module="org.jboss.as.jmx"/>
-     <extension module="org.jboss.as.jpa"/>
-     <extension module="org.jboss.as.logging"/>
-     <extension module="org.jboss.as.mail"/>
-     <extension module="org.jboss.as.naming"/>
-     <extension module="org.jboss.as.osgi"/>
-     <extension module="org.jboss.as.pojo"/>
-     <extension module="org.jboss.as.remoting"/>
-     <extension module="org.jboss.as.sar"/>
-     <extension module="org.jboss.as.security"/>
-     <extension module="org.jboss.as.threads"/>
-     <extension module="org.jboss.as.transactions"/>
-     <extension module="org.jboss.as.web"/>
-     <!-- extension module="org.jboss.as.webservices"/ -->
-     <extension module="org.jboss.as.weld"/>
-</extensions>
-]]></programlisting>
-
-						<programlisting language="xml"><![CDATA[
-<!-- 중략 -->
-<!-- subsystem xmlns="urn:jboss:domain:webservices:1.1">
-	<modify-wsdl-address>true</modify-wsdl-address>
-	<wsdl-host>${jboss.bind.address:127.0.0.1}</wsdl-host>
-	<endpoint-config name="Standard-Endpoint-Config" />
-	-
-	<endpoint-config name="Recording-Endpoint-Config">
-		-
-		<pre-handler-chain name="recording-handlers"
-			protocol-bindings="##SOAP11_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP ##SOAP12_HTTP_MTOM">
-			<handler name="RecordingHandler"
-				class="org.jboss.ws.common.invocation.RecordingServerHandler" />
-		</pre-handler-chain>
-	</endpoint-config>
-</subsystem -->
-						]]>
-						</programlisting>
-					</listitem>
-				</itemizedlist>
-			</listitem>
-		</itemizedlist>
-	</section>
-	<section id="app_server_configurations_jboss_cxfjaxws">
-		<title>cxf-jaxws plugin 사용 시</title>
-		<itemizedlist>
-			<listitem>
-				<para>
-					6.1 Final : JBoss AS6에서 웹 어플리케이션과 JBoss의 상위 클래스 로더에 존재하는 라이브러리
-					중복으로 인한 오류 해결을 위해
-					다음과 같이 일부 라이브러리를 제거한다.
-				</para>
-				<itemizedlist>
-					<listitem>
-						<para>WEB-INF/lib 폴더내에 xmlbeans-2.5.0.jar 파일을 제거한다.</para>
-					</listitem>
-				</itemizedlist>
-			</listitem>
-			<listitem>
-				<para>
-					7.1 Final : JBoss AS7에서는 별도 설정이 불필요하다.
-				</para>
-			</listitem>
-		</itemizedlist>
-		<para>
-			* JBoss 6.1.Final에서는 Hibernate Plugin은 테스트 되지 않았다.
-		</para>
 	</section>
 </chapter>

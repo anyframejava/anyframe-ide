@@ -1,0 +1,72 @@
+<chapter id="app_server_configurations_websocket">
+	<title>WebSocket 관련</title>
+	<para>
+		Anyframe-5.6.0 에서는 Spring 4.0에서 추가로 제공하는 Websocket 관련 feature를 websocket, sockjs, stomp 의 세 가지 플러그인으로 제공하고 있다.
+	</para>
+	<para>
+		이 플러그인들이 정상적으로 구동되기 위해서는 다음의 제약사항을 만족하여야 한다.
+	</para>
+	<orderedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>
+				Tomcat 7.0.47 이상(8이상 권장), Jetty-9.0.4 이상, Glassfish4 이상
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				WAS 실행시 JDK 7 이상 사용
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Servlet 3.0 이상 설정 권장
+				web.xml 스키마 버전 변경, &lt;filter/&gt;, &lt;servlet/&gt; 설정 시 &lt;async-supported&gt;true&lt;/async-supported&gt; 속성 추가
+			</para>
+			<para><programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_]]><emphasis role="bold">3_0</emphasis><![CDATA[.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_]]><emphasis role="bold">3_0</emphasis><![CDATA[.xsd" id="WebApp_ID" version="]]><emphasis role="bold">3.0</emphasis><![CDATA[">
+    <display-name>sample-web</display-name>
+<!--core-configuration-START-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:/spring/context-*.xml</param-value>
+    </context-param>
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        ]]><emphasis role="bold">&lt;async-supported&gt;true&lt;/async-supported&gt;</emphasis><![CDATA[
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    
+    <!-- ... 생략 ... --> 
+    
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:/spring/*-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        ]]><emphasis role="bold">&lt;async-supported&gt;true&lt;/async-supported&gt;</emphasis><![CDATA[
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    
+    <!-- ... 생략 ... -->
+     
+</web-app>]]></programlisting></para></listitem>
+	</orderedlist>
+	<para>
+		<note>
+			<title>Servlet 3.0이 권장사항인 이유</title>
+			<para>Servlet 3.0 설정이 필수는 아니지만, websocket를 지원하지 않는 브라우져나, 서버 환경에서 async servlet으로 유사 환경을 구성하는 경우가 있기 때문에 되도록 Servlet 3.0으로 설정한 후 사용할 것을 권장한다.</para>
+		</note>
+	</para>
+	
+</chapter>

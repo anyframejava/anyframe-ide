@@ -1,0 +1,50 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+#macro( columnToMessage $columnName )### START columnToMessage
+#foreach ($column in $columnName.split("_"))##
+#if($velocityCount > 1) #end${column.substring(0,1)}${column.substring(1).toLowerCase()}##
+#end##
+#end#### END columnToMessage
+
+# -- #getDomainNameLower(${domain.name})-START
+
+#foreach($column in $domain.columns)
+#getDomainNameLower(${domain.name}).${column.fieldName}=#columnToMessage(${column.columnName})#**#
+#end
+
+# -- success messages -- 
+#getDomainNameLower(${domain.name}).added=${domain.name} has been added successfully.
+#getDomainNameLower(${domain.name}).updated=${domain.name} has been updated successfully.
+#getDomainNameLower(${domain.name}).deleted=${domain.name} has been deleted successfully.
+
+# -- error messages --
+error.#getDomainNameLower(${domain.name})mipserviceimpl.saveall=${domain.name} data not saved
+error.#getDomainNameLower(${domain.name})mipserviceimpl.saveall.solution=Enter correct data for mandatory field or enter data according to formats means date format as yyyy-mm-dd
+error.#getDomainNameLower(${domain.name})mipserviceimpl.saveall.reason=Entered incorrect data for ${domain.name}
+
+error.#getDomainNameLower(${domain.name})mipserviceimpl.get=${domain.name} details of  specified #getDomainNameLower(${domain.name}) identifier not displayed
+error.#getDomainNameLower(${domain.name})mipserviceimpl.get.solution=Enter correct #getDomainNameLower(${domain.name}) identifier
+error.#getDomainNameLower(${domain.name})mipserviceimpl.get.reason=Entered incorrect #getDomainNameLower(${domain.name}) identifier
+
+error.#getDomainNameLower(${domain.name})mipserviceimpl.getlist=${domain.name} List not displayed
+error.#getDomainNameLower(${domain.name})mipserviceimpl.getlist.solution=Enter correct value
+error.#getDomainNameLower(${domain.name})mipserviceimpl.getlist.reason=Entered incorrect value
+
+error.#getDomainNameLower(${domain.name})mipserviceimpl.remove=${domain.name} information not removed
+error.#getDomainNameLower(${domain.name})mipserviceimpl.remove.solution=Remove only unused removable data
+error.#getDomainNameLower(${domain.name})mipserviceimpl.remove.reason=Your trying to remove, not removable data or you entered data in incorrect format
+
+# -- #getDomainNameLower(${domain.name}) list page --
+#getDomainNameLower(${domain.name})List.title=${domain.name} List
+#getDomainNameLower(${domain.name})List.heading=${domain.name}
+#getDomainNameLower(${domain.name})List.#getDomainNameLower(${domain.name})=#getDomainNameLower(${domain.name})
+#**#
+
+# -- #getDomainNameLower(${domain.name}) detail page --
+#getDomainNameLower(${domain.name})Detail.title=${domain.name} Detail
+#getDomainNameLower(${domain.name})Detail.heading=${domain.name} Information
+
+# -- #getDomainNameLower(${domain.name})-END
+
+# -- Add new messages here

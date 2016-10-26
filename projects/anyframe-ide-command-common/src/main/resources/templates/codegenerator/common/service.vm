@@ -1,0 +1,25 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.service;
+
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+import ${domain.packageName}.${domain.name};
+
+/**
+ * ${domain.name}Service interface.
+ * @author $author
+ */
+public interface ${domain.name}Service{
+
+  	void create(${domain.name} #getDomainNameLower(${domain.name})) throws Exception;
+	
+	void remove(${domain.name} #getDomainNameLower(${domain.name})) throws Exception;
+		
+	void update(${domain.name} #getDomainNameLower(${domain.name})) throws Exception;
+	
+	${domain.name} get(${domain.name} #getDomainNameLower(${domain.name})) throws Exception;
+	
+	Page getPagingList(SearchVO searchVO) throws Exception;        
+}
