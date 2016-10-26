@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<project name="Anyframe Common TaskDef" >	
-	
-	<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
-	<taskdef resource="org/anyframe/ide/command/ant/antlib.xml" classpathref="anyframe.antpath" />
-	  	
-</project>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[
+<!ENTITY overview_introduction SYSTEM "Overview/introduction.xml">
+<!ENTITY overview_keyfeatures SYSTEM "Overview/keyfeatures.xml">
+
+<!ENTITY gettingstarted_installingquerymanager SYSTEM "GettingStarted/installingquerymanager.xml">
+<!ENTITY gettingstarted_querymanagerperspective SYSTEM "GettingStarted/querymanagerperspective.xml">
+<!ENTITY gettingstarted_connectionsanddatabasestructureview SYSTEM "GettingStarted/connectionsanddatabasestructureview.xml">
+<!ENTITY gettingstarted_property SYSTEM "GettingStarted/property.xml">
+<!ENTITY gettingstarted_queryexplorerview SYSTEM "GettingStarted/queryexplorerview.xml">
+<!ENTITY gettingstarted_queryresultview SYSTEM "GettingStarted/queryresultview.xml">
+<!ENTITY gettingstarted_querymanagereditor SYSTEM "GettingStarted/querymanagereditor.xml">
+<!ENTITY gettingstarted_querytesteditor SYSTEM "GettingStarted/querytesteditor.xml">
+<!ENTITY gettingstarted_preferences SYSTEM "GettingStarted/preferences.xml">
+
+<!ENTITY workingwithqueries_mappingxmlfile SYSTEM "WorkingWithQueries/mappingxmlfile.xml">
+<!ENTITY workingwithqueries_addingaquery SYSTEM "WorkingWithQueries/addingaquery.xml">
+<!ENTITY workingwithqueries_modifyingaquery SYSTEM "WorkingWithQueries/modifyingaquery.xml">
+<!ENTITY workingwithqueries_removingaquery SYSTEM "WorkingWithQueries/removingaquery.xml">
+<!ENTITY workingwithqueries_usingcontentassist SYSTEM "WorkingWithQueries/usingcontentassist.xml">
+<!ENTITY workingwithqueries_openfilesbyusingcontextmenu SYSTEM "WorkingWithQueries/openfilesbyusingcontextmenu.xml">
+
+<!ENTITY natureandbuilder_nature SYSTEM "NatureAndBuilder/nature.xml">
+<!ENTITY natureandbuilder_builder SYSTEM "NatureAndBuilder/builder.xml">
+<!ENTITY natureandbuilder_duplicatedqueryidmarker SYSTEM "NatureAndBuilder/duplicatedqueryidmarker.xml">
+<!ENTITY natureandbuilder_checkingqueryidreferences SYSTEM "NatureAndBuilder/checkingqueryidreferences.xml">
+
+<!ENTITY about_license SYSTEM "About/license.xml">
+<!ENTITY about_notice SYSTEM "About/notice.xml">
+<!ENTITY about_credits SYSTEM "About/credits.xml">
+<!ENTITY about_releasenotes SYSTEM "About/releasenotes.xml">
+]
+>
+
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+
+<book lang="ko">
+	<title>Anyframe Query Manager</title>
+
+	<bookinfo>
+
+		<copyright>
+			<year>2007-2012</year>
+			<holder>Samsung SDS</holder>
+		</copyright>
+
+		<releaseinfo>version 2.7.0-SNAPSHOT</releaseinfo>
+
+		<productname>Anyframe Query Manager</productname>
+
+		<mediaobject>
+			<imageobject>
+				<!-- logo change -->
+				<imagedata fileref="../image/common/header_anyframe_doc_banner.png" />
+			</imageobject>
+		</mediaobject>
+		<legalnotice>
+			<para>The copyright of this document is the property of Samsung SDS.
+       Permission is granted to use this document for free only for the purpose of open source community activity. 
+       The copyright holder should be clearly stated in case this document is copied or distributed, 
+       and changed contents should be specified. 
+       Permission is not granted for the commercial use of the modification of the original document.  
+       Should there be parts considered to have errors in this document, 
+       please register the issue for which we will take proper action.
+			</para>
+		</legalnotice>
+	</bookinfo>
+
+	<chapter id="overview">
+		<title>Overview</title>
+		<para>
+			In this chapter, let's take a look at Anyframe Query Manager and its basic structure and core functions.
+		</para>
+		
+		&overview_introduction;
+		&overview_keyfeatures;
+	</chapter>
+
+	<chapter id="gettingstarted">
+		<title>Getting Started</title>
+		<para>
+			Let's take a look at how to install Anyframe Query Manager and user interface, environment setting, etc.
+		</para>
+		
+		&gettingstarted_installingquerymanager;
+		&gettingstarted_querymanagerperspective;
+		&gettingstarted_connectionsanddatabasestructureview;
+		&gettingstarted_property;
+		&gettingstarted_queryexplorerview;
+		&gettingstarted_queryresultview;
+		&gettingstarted_querymanagereditor;
+		&gettingstarted_querytesteditor;
+		&gettingstarted_preferences;
+
+	</chapter>
+
+	<chapter id="workingwithqueries">
+		<title>Working with Queries</title>
+		<para>
+			In this chapter, let's take a look at how to create Query XML by utilizing Anyframe Query Manager and 
+add/update/use/delete query at xml file. To this end, let's also take a look at how to add/update query through Query Editor and
+			Query Test Editor,etc. and utilize Query using  Content Assist.
+		</para>
+		
+		&workingwithqueries_mappingxmlfile;
+		&workingwithqueries_addingaquery;
+		&workingwithqueries_modifyingaquery;
+		&workingwithqueries_removingaquery;
+		&workingwithqueries_usingcontentassist;
+		&workingwithqueries_openfilesbyusingcontextmenu;
+
+	</chapter>
+
+	<chapter id="natureandbuilder">
+		<title>Anyframe Query Manager Nature and Builder</title>
+		<para>
+			This chapter will cover how to get useful information by applying Nature of Anyframe Query Manager to user's Eclipse project.
+		</para>
+		
+		&natureandbuilder_nature;
+		&natureandbuilder_builder;
+		&natureandbuilder_duplicatedqueryidmarker;
+		&natureandbuilder_checkingqueryidreferences;
+	</chapter>
+
+</book>

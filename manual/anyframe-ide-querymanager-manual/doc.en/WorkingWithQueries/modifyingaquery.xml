@@ -1,0 +1,51 @@
+<section id="workingwithqueries_modifyingaquery">
+	<title>Modifying a Query</title>
+
+	<para>
+		There are two ways of modifying Queries existing Query Mapping XML file. 
+		<itemizedlist>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_modifyingaquery_testeditor">Modification through Query Test Editor</link>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_modifyingaquery_editor">Modification through Query Manager Editor</link>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<note>
+		<title>Note : In an environment where Proxy server is used, it is needed to register Proxy server in Eclipse to use Query Test Editor.
+ </title>
+	</note>
+
+	<section id="workingwithqueries_modifyingaquery_testeditor">
+		<title>Modification through Query Test Editor</title>
+
+		<para>
+			For Query statement modification through Query Test Editor, execute Context Menu of Query ID at  Query Explorer View.
+			To modify Query statement at the executed Query Test Editor, follow <link linkend="workingwithqueries_addingaquery_querytesteditor">
+			Adding Query statement utilizing Query
+				Test Editor</link>.		
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/WorkingWithQueries/modifyquery-editorstep1.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</section>
+
+	<section id="workingwithqueries_modifyingaquery_editor">
+		<title>Modification through Query Manager Editor</title>
+
+		<para>
+			Modification of Query statement through Query Manager Editor is similar to adding Query statement except that it edits
+			the existing Query statement.
+			For more details, see <link linkend="workingwithqueries_addingaquery_queryeditor">Adding Query statement through Query Manager Editor.</link>.		
+		</para>
+	</section>
+</section>

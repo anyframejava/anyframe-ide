@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: anyframe-ide-ctip-integration
+Bundle-SymbolicName: anyframe-ide-ctip-integration
+Bundle-Version: 1.0.0
+Bundle-Vendor: Samsung SDS
+

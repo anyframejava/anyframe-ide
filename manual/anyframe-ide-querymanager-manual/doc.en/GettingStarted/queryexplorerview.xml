@@ -1,0 +1,137 @@
+<section id="gettingstarted_queryexplorerview">
+	<title>Query Explorer View</title>
+
+	<section id="gettingstarted_queryexplorerview_open">
+		<title>Opening Query Explorer View</title>
+
+		<para>
+			Query Explorer View provides functions of easily checking outline of Query mapping xml defined by project
+			and whether Query ID is in use or duplication through icon.
+		</para>
+		<para>
+			Query Explorer View opens automatically when opening Anyframe Query Manager Perspective and
+			you can also open it through the following ways.			
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Opening on Eclipse menu</emphasis>
+				</para>
+				<para>
+					Select  Query Navigator at "Window > Show View > Other..."
+				</para>
+
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../image/GettingStarted/explorer-showview.png"
+							align="center" />
+					</imageobject>
+				</mediaobject>
+			</listitem>
+		</itemizedlist>
+	</section>
+
+	<section id="gettingstarted_queryexplorerview_setting">
+		<title>Query Explorer View composition</title>
+
+		<para>
+			Query Explorer View is composed of the following components.</para>
+
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/GettingStarted/perspective-querymanager.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Query ID Tree</emphasis>
+				</para>
+				<para>
+					Among Query mapping XML files of the project where Query Manager Nature is defined,
+					files registered at Property is shown in tree format.				
+				</para>
+				<para>
+					You can check whether each Query ID is used or duplicated at DAO class.				
+				</para>
+				<table>
+				<title>Query ID Icon</title>
+					<tgroup cols="2">
+						<colspec colnum="1" colname="col1" colwidth="1*" />
+						<colspec colnum="2" colname="col2" colwidth="3*" />
+						<thead>
+							<row>
+								<entry align="center">Icon</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="../image/GettingStarted/explorer_tag_blue.png"
+												align="center" />
+										</imageobject>
+									</mediaobject>
+								</entry>
+								<entry>Query ID in use</entry>
+							</row>
+							<row>
+								<entry>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="../image/GettingStarted/explorer_tag_dark.png"
+												align="center" />
+										</imageobject>
+									</mediaobject>
+								</entry>
+								<entry>Query ID not in use</entry>
+							</row>
+							<row>
+								<entry>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="../image/GettingStarted/explorer_tag_blue_duplicate.png"
+												align="center" />
+										</imageobject>
+									</mediaobject>
+								</entry>
+								<entry>Query ID in use and duplication</entry>
+							</row>
+							<row>
+								<entry>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="../image/GettingStarted/explorer_tag_dark_duplicate.png"
+												align="center" />
+										</imageobject>
+									</mediaobject>
+								</entry>
+								<entry>Query ID not in use but in duplication</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Query Statement</emphasis>
+				</para>
+				<para>
+					If you select ID in the Query ID tree, you can see the query statement of the ID.			
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Link with Editor</emphasis>
+				</para>
+				<para>
+					The location of the open Query mapping file is shown in Query ID Tree.		
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</section>

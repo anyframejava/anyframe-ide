@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard" name="Project"
+			icon="images/icon_project.gif" project="true">
+			<description>
+           		Create an Anyframe project
+         	</description>
+		</wizard>
+		<!--
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.vo.NewVOClassWizard"
+			id="org.anyframe.ide.codegenerator.wizards.vo.NewVOClassWizard" name="Domain/VO Class"
+			icon="images/icon_vo.gif" project="false">
+			<description>
+           		Generate a VO class with Anyframe template
+         	</description>
+		</wizard>
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.dao.NewDAOClassWizard"
+			id="org.anyframe.ide.codegenerator.wizards.dao.NewDAOClassWizard" name="DAO Class"
+			icon="images/icon_dao.gif" project="false">
+			<description>
+           		Generate a DAO class with Anyframe template
+         	</description>
+		</wizard>
+		-->
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard" name="Domain/VO Classes from DB Tables"
+			icon="images/icon_domain.png" project="false">
+    		<description>
+           		Generate Domain classes with Anyframe templates
+         	</description>
+		</wizard>
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard" name="All CRUD Classes"
+			icon="images/icon_crud.png" project="false">
+    		<description>
+           		Generate all CRUD classes, JSP and SQL from generated domain classes with Anyframe templates
+         	</description>
+		</wizard>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.anyframe.ide.common.preferences.anyframe"
+			class="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
+			id="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
+			name="Build">
+		</page>
+	</extension>
+
+	
+	<extension point="org.eclipse.help.toc">		
+		<toc
+			file="help/toc.xml" primary="true">
+		</toc>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            id="org.anyframe.ide.codegenerator.command.maven.AnyframeMavenLaunchDelegate"
+            delegate="org.anyframe.ide.codegenerator.command.maven.AnyframeMavenLaunchDelegate"
+            name="Maven Build"
+            modes="run" public="true"/>
+   </extension>
+ <extension
+       point="org.anyframe.ide.common.database">
+    <database
+          class="org.anyframe.ide.codegenerator.dialogs.DBSettingDialogExtra">
+    </database>
+ </extension>
+ 	<extension point="org.eclipse.ui.views">
+		<view category="org.anyframe.ide.common.views.anyframe" 
+			class="org.anyframe.ide.codegenerator.views.CtipView" 
+			icon="images/icon_building.png" 
+			id="org.anyframe.ide.codegenerator.views.CtipView" 
+			name="CTIP Integration" />
+	  <view
+	        category="org.anyframe.ide.common.views.anyframe"
+	        class="org.anyframe.ide.codegenerator.views.InstallationView"
+	        icon="images/icon_plugin.png"
+	        id="org.anyframe.ide.codegenerator.views.InstallationView"
+	        name="Plugin Installation">
+	  </view>
+	 </extension>
+  <extension
+        point="org.eclipse.ui.propertyPages">
+     <page
+           adaptable="true"
+           category="org.anyframe.ide.common.properties.anyframe"
+           class="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
+           id="org.anyframe.ide.codegenerator.properties.CodeGeneratorPropertyPage"
+           name="Code Generator"
+           objectClass="org.eclipse.core.resources.IProject">
+     </page>
+  </extension>  
+</plugin>

@@ -1,0 +1,89 @@
+<section id="workingwithqueries_usingcontentassist">
+	<title>Content Assist</title>
+
+	<para>
+		Anyframe Query Manager enables more convenient and faster edition and utilization of Query statement by providing Content Assist function.
+		Users can utilize functions provided by Content Assist of Anyframe Query Manager through keyboard shortcut key(default: Ctrl+Space)
+		like other Content Assist.		
+	</para>
+
+	<section id="workingwithqueries_usingcontentassist_preference">
+		<title>Content Assist environment setting</title>
+
+		<para>
+			You can set Content Assist at "Java > Editor >
+			Content Assist > Advanced" of Eclipse Preferences
+			and decide whether Content Assist of Anyframe Query Manager will be called by shortcut key.		
+		</para>
+
+		<mediaobject>
+			<imageobject>
+				<imagedata
+					fileref="../image/WorkingWithQueries/contentassist-preferences.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</section>
+
+	<section id="workingwithqueries_usingcontentassist_queryproposal">
+		<title>Query Proposal of Content Assist</title>
+
+		<para>
+			For DAO(when either utilizing IQueryService or inheriting AbstractDAO) of Anyframe at Eclipse Java Editor,
+			Content Assist shows the candidate list for the Query ID. This function is provided when Content Assist is called through keyboard shortcut key
+			at Query input part (" " part in String type) which Query service method gets as a parameter.		
+		</para>
+
+		<mediaobject>
+			<imageobject>
+				<imagedata
+					fileref="../image/WorkingWithQueries/contentassist-queryproposal.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+
+		<note>
+			<title>Note:when searching/entering candidate list for Query ID through Content Assist</title>
+			<para>
+				When the method is create(), findByPk(),
+				findListWithPaging(), update(), remove(), etc. inheriting from AbstractDAO,
+				the only Query statement that follow prefix and suffix rules set in <link linkend="gettingstarted_preferences">Preferences</link>
+				of Anyframe Query Manager through Content Assist is searched.		
+			</para>
+		</note>
+	</section>
+
+	<section id="workingwithqueries_usingcontentassist_editing">
+		<title>Query Mapping XML edition support of Content Assist  
+		</title>
+
+		<para>
+			When editing Query at Source tab of Query Manager Editor at Anyframe Query Manager,
+			candidate list for Query Mapping XML tag and attribute is shown.			
+		</para>
+
+	</section>
+
+	<section id="workingwithqueries_usingcontentassist_navigation">
+		<title>Providing navigation between Query and Java code. </title>
+
+		<para>
+			Navigation between Query and Java code is possible, and which supports the following cases.			
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					Moving from Query Manager Editor to Result Class(VO) (Context Menu:
+					Open Class in Java Editor)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Moving from Query Service DAO to Query (Context Menu: Open Query in
+					Query Manager Editor)
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</section>

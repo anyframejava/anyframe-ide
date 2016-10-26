@@ -1,0 +1,44 @@
+1. Anyframe IDE Eclipse Plugin 3rd-party licenses
+
+1) Apache Ant 1.8.1 : http://ant.apache.org, Apache License 2.0
+2) Appfuse Maven Plugin 2.1.0-M1 : http://appfuse.org/,  Apache License 2.0
+3) Maven Archetype Common 2.0-alpha-4 : http://maven.apache.org/archetype/archetype-common/, Apache License 2.0
+4) Classworlds 1.1-alpha-2 : http://classworlds.codehaus.org/, Classworlds Project License
+5) Java Deep-Cloning 1.5 : http://code.google.com/p/cloning/, Apache License, Version 2.0 
+6) Apache Commons BeanUtils 1.8.0 : http://commons.apache.org/beanutils/, Apache License 2.0
+7) Apache Commons Codec 1.3 : http://commons.apache.org/codec/, Apache License 2.0
+8) Apache Commons Collections 3.2 : http://commons.apache.org/collections/, Apache License 2.0
+9) Apache Commons Digester 1.8 : http://commons.apache.org/digester/, Apache License 2.0
+10) Apache Commons HttpClient 3.1 : http://hc.apache.org/httpclient-3.x/, Apache License 2.0
+11) Apache Commons IO 1.4 : http://commons.apache.org/io/,  Apache License 2.0
+12) Apache Commons JEXL 1.1 : http://commons.apache.org/jexl/, Apache License 2.0
+13) dom4j 1.6.1 : http://www.dom4j.org, BSD Style License
+14) Hibernate Tools 3.2.4.CR2 : http://www.hibernate.org/, LGPL v2.1
+15) Java port of Mozilla charset detector 1.0 : http://sourceforge.net/projects/jchardet/, Mozilla Public License 1.1 (MPL 1.1)
+16) SLF4J 1.6.4 : http://www.slf4j.org/, MIT license
+17) JDOM 1.0 : http://www.jdom.org/, Jdom License
+18) JTidy r8-20060801 : http://sourceforge.net/projects/jtidy/ , JTidy Software License
+19) JUnit 4.9 : http://www.junit.org/, Common Public License - v 1.0 
+20) JUnit-addons 1.4 : http://sourceforge.net/projects/junit-addons/, Apache Software License
+21) Maven Artifact 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-artifact/index.html, Apache License 2.0
+22) Maven Artifact Manager 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-artifact-manager/index.html, Apache License 2.0
+23) Maven Model 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-model/index.html, Apache License 2.0
+24) Maven Profile Model 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-profile/index.html, Apache License 2.0
+25) Maven Project Builder 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-project/index.html, Apache License 2.0
+26) Maven Repository Metadata Model 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-repository-metadata/index.html, Apache License 2.0
+27) Maven Settings Model 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-settings/index.html, Apache License 2.0
+28) MiGLayout 3.7 : http://www.miglayout.com/, BSD
+29) Objenesis 1.1 - A library for instantiating Java objects : http://code.google.com/p/objenesis/, Apache License 2.0 
+30) Plexus Classworlds 2.2.2 : http://plexus.codehaus.org/plexus-classworlds/, Apache License 2.0 
+31) plexus-container-default 1.0-alpha-9-stable-1 : http://plexus.codehaus.org, Apache License 2.0 
+32) plexus-interactivity-api 1.0-alpha-5 : http://plexus.codehaus.org, Apache License 2.0
+33) Plexus Utils 1.5.1 : http://plexus.codehaus.org/plexus-utils/license.html, Apache License 2.0
+34) Plexus Velocity 1.1.7 : http://plexus.codehaus.org/plexus-components/plexus-velocity/, Apache License 2.0 
+35) SLF4J 1.6.4 : http://www.slf4j.org/, SLF4J Licence
+36) Apache Velocity 1.5 : http://velocity.apache.org/, Apache License 2.0
+37) Apache Velocity Tools 1.4 : http://velocity.apache.org/, Apache License 2.0
+38) Maven Wagon Providers 1.0-beta-2 : http://maven.apache.org/wagon/wagon-providers/index.html, Apache License 2.0
+39) Maven Wagon HTTP lightweight 1.0-beta-2 : http://maven.apache.org/wagon/wagon-providers/wagon-http-lightweight/index.html, Apache License 2.0
+40) XXP3 1.1.3.4.O.jar, http://modello.codehaus.org/modello-plugins/modello-plugin-xpp3/, MIT License
+41) XStream 1.3 : http://xstream.codehaus.org/, BSD license
+

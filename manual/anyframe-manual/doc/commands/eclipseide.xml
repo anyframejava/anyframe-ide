@@ -1,8 +1,0 @@
-<chapter id="commands_eclipseide">
-	<title>Anyframe Java IDE</title>
-	<para>
-	    Eclipse를 사용해서 Anyframe 기반의 프로젝트 생성, Domain 클래스 및 CRUD 소스 코드 생성, 
-		Configuration, JDBC Setting, Anyframe 플러그인 install/uninstall, Hudson/Jenkins 연계 등의 작업을 할 수 있다. 
-		해당 내용은 <ulink url="https://www.anyframejava.org/project/codegenerator#documentation">Anyframe Java IDE Code Generator의 매뉴얼</ulink>을 참조한다.
-	</para>
-</chapter>
