@@ -118,7 +118,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 			PluginLoggerUtil.warning(ID, Message.wizard_error_properties);
 		}
 	}
-
+	
 	private void createPackageFields(Composite parent) {
 		final String basePackage = projectConfig.getPackageName();
 
@@ -130,7 +130,8 @@ public class DomainGenerationWizardPage extends WizardPage {
 
 		packageText = new Text(comp, SWT.BORDER);
 		packageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		packageText.setText(basePackage + ".domain");
+		DomainGenerationWizard wizard = (DomainGenerationWizard)getWizard();
+		packageText.setText(wizard.getCurrentPackageName());
 		packageText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event event) {
 				setPageComplete(isPageComplete());
@@ -162,6 +163,8 @@ public class DomainGenerationWizardPage extends WizardPage {
 				ElementListSelectionDialog dialog = new ElementListSelectionDialog(comp.getShell(), new PackageLabelProvider());
 				dialog.setElements(packageSet.toArray());
 				dialog.setTitle(Message.wizard_crud_gen_packageselection);
+				DomainGenerationWizard wizard = (DomainGenerationWizard)getWizard();
+				dialog.setFilter(wizard.getCurrentPackageName());
 				dialog.open();
 
 				Object selectedResult = dialog.getFirstResult();
@@ -172,6 +175,7 @@ public class DomainGenerationWizardPage extends WizardPage {
 		});
 
 	}
+	
 
 	private void createTableRefreshFields(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);

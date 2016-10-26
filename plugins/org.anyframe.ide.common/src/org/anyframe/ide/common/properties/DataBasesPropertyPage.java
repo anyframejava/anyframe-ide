@@ -270,10 +270,7 @@ public class DataBasesPropertyPage extends PropertyPage {
 
 		}
 
-		List<JdbcOption> jdbcOptionList = new ArrayList();
-		List<JdbcOption> result = DatabasesSettingUtil.getDatasourcesByProject(project);
-		jdbcOptionList.addAll(result);
-		viewer.setInput(jdbcOptionList);
+		viewer.setInput(DatabasesSettingUtil.getDatasourcesByProject(project));
 		viewer.refresh();
 	}
 

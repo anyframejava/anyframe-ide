@@ -261,16 +261,19 @@ public class NewApplicationWizardPage extends WizardPage {
 
 		pluginCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		pluginCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+		pluginCombo.setText(Message.wizard_plugin_message);
+		
+		pluginCombo.removeAll();
+		pluginCombo.add(Message.wizard_plugin_message);
+		pluginCombo.select(0);
+		
 		pluginCombo.addListener(SWT.DROP_DOWN, new Listener() {
 			public void handleEvent(Event e) {
 				setPluginNames();
-				pluginCombo.select(0);
+				//pluginCombo.select(0);
 			}
 		});
-		
-		pluginCombo.select(0);
-		
+
 		pluginCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				setPageComplete(isPageComplete());
@@ -335,13 +338,14 @@ public class NewApplicationWizardPage extends WizardPage {
 	private void setPluginNames() {
 		try {
 			pluginCombo.removeAll();
-			
+			pluginCombo.add(Message.wizard_plugin_message);
+
 			Set<String> pluginNameList = PluginUtil.getPluginNameSet(this.buildType, anyframeHome, isOfflineChecked());
 
 			List<String> comboNames = Arrays.asList(Constants.TEMPLATE_TYPE_CORE, Constants.TEMPLATE_TYPE_QUERY, Constants.TEMPLATE_TYPE_ONLINE);
 			
-			for(String comboName : comboNames){
-				if(pluginNameList.contains(comboName)){
+			for (String comboName : comboNames) {
+				if (pluginNameList.contains(comboName)) {
 					pluginCombo.add(comboName);
 				}
 			}
@@ -431,11 +435,11 @@ public class NewApplicationWizardPage extends WizardPage {
 			return false;
 		}
 
-		if (StringUtil.isEmptyOrNull(getPluginName())){
+		if (StringUtil.isEmptyOrNull(getPluginName()) || getPluginName().equals(Message.wizard_plugin_message)) {
 			setErrorMessage(Message.wizard_application_validation_pi);
 			return false;
 		}
-		
+
 		if (!isAntProject) {
 			if (!templateHome.getSelection() && !getTemplateHomeLocation().equals(Constants.DFAULT_TEMPLATE_HOME)) {
 				if (getTemplateHomeLocation() == null || getTemplateHomeLocation().length() == 0) {
@@ -476,18 +480,18 @@ public class NewApplicationWizardPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		
-		if (StringUtil.isEmptyOrNull(getPluginName())){
+
+		if (StringUtil.isEmptyOrNull(getPluginName())) {
 			return false;
-		}else{
+		} else {
 			return true;
 		}
-		
-//		boolean isNext = super.canFlipToNextPage();
-//
-//		if (isNext)
-//			return true;
-//		return false;
+
+		// boolean isNext = super.canFlipToNextPage();
+		//
+		// if (isNext)
+		// return true;
+		// return false;
 	}
 
 }

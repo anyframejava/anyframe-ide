@@ -17,6 +17,7 @@ package org.anyframe.ide.codegenerator.popups;
 
 import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.views.CtipView;
+import org.anyframe.ide.common.util.DialogUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -75,13 +76,8 @@ public class CtipAddUrlPopup extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-
-		int screenWidth = shell.getDisplay().getPrimaryMonitor().getBounds().width;
-		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
-
 		shell.setText(Message.view_ctip_addserverpopup_title);
-		shell.setBounds((screenWidth - 300) / 2, (screenHeight - 130) / 3, 300,
-				150);
+		shell.setBounds(DialogUtil.center(300, 150));
 	}
 
 	protected Control createDialogArea(Composite parent) {

@@ -21,6 +21,7 @@ import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.common.util.DialogUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.eclipse.jface.dialogs.Dialog;
@@ -68,13 +69,8 @@ public class CtipConfigurationPopup extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-
-		int screenWidth = shell.getDisplay().getPrimaryMonitor().getBounds().width;
-		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
-
 		shell.setText(Message.view_ctip_configpopup_title);
-		shell.setBounds((screenWidth - 400) / 2, (screenHeight - 130) / 3, 400,
-				150);
+		shell.setBounds(DialogUtil.center(400, 150));
 	}
 
 	protected Control createDialogArea(Composite parent) {

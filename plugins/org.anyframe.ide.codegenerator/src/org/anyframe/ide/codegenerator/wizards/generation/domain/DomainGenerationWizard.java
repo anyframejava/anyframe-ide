@@ -36,6 +36,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -197,6 +198,15 @@ public class DomainGenerationWizard extends Wizard implements INewWizard {
 		result.setTemplateHomePath(projectConfig.getTemplateHomePath());
 		
 		return result;
+	}
+	
+	public String getCurrentPackageName(){
+		Object firstElement = selection.getFirstElement();
+		if(firstElement instanceof PackageFragment){
+			PackageFragment packageFragment = (PackageFragment)firstElement;
+			return packageFragment.getElementName();
+		}
+		return "";
 	}
 
 }

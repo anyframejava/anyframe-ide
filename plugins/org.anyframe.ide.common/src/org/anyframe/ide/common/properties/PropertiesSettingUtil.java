@@ -27,6 +27,7 @@ import org.anyframe.ide.common.Constants;
 import org.anyframe.ide.common.messages.Message;
 import org.anyframe.ide.common.util.ConfigXmlUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
+import org.anyframe.ide.common.util.MessageUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.ProjectConfig;
 import org.anyframe.ide.common.util.PropertyUtil;
@@ -54,7 +55,6 @@ public class PropertiesSettingUtil {
 	public static void parsing(String pjtLoc) {
 		getPrefs(pjtLoc);
 
-		Document document;
 		File file = new File(commonXml);
 		try {
 			if (file.exists()) {
@@ -63,18 +63,22 @@ public class PropertiesSettingUtil {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				factory.setNamespaceAware(true);
 				DocumentBuilder builder = factory.newDocumentBuilder();
-				document = builder.parse(file);
 
 				TEMPLATE_LOC = projectConfig.getTemplateHomePath();
 				JDBCDRIVERS_LOC = projectConfig.getJdbcdriverPath();
 				DATABASES_LOC = projectConfig.getDatabasesPath();
 			} else {
-				if (!create(pjtLoc)) {
-					PluginLoggerUtil.error(CommonActivator.PLUGIN_ID, Message.exception_create_config_xml, new Exception());
-					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.exception_create_config_xml, MessageDialog.ERROR);
-				} else {
-					parsing(pjtLoc);
-				}
+
+				MessageUtil.showConfirmMessage("", Message.exception_load_config_xml);
+				throw new RuntimeException(Message.exception_load_config_xml);
+				
+//				boolean isSuccessCreateAndSave = create(pjtLoc);
+//				if (isSuccessCreateAndSave==false) { //파일을 생성하고 저장이 잘 되지 않았다면
+//					PluginLoggerUtil.error(CommonActivator.PLUGIN_ID, Message.exception_create_config_xml, new Exception());
+//					MessageDialogUtil.openMessageDialog(Message.ide_message_title, Message.exception_create_config_xml, MessageDialog.ERROR);
+//				} else { // 성공했는데 왜 재귀호출하냐
+//					parsing(pjtLoc);
+//				}
 			}
 		} catch (Exception e) {
 			PluginLoggerUtil.error(CommonActivator.PLUGIN_ID, Message.exception_load_config_xml, e);

@@ -118,6 +118,7 @@ public class Message extends NLS {
 	
 	public static String wizard_plugin_group;
 	public static String wizard_plugin_name;
+	public static String wizard_plugin_message;
 	
 	public static String wizard_templatetype_group;
 	public static String wizard_templatetype_name;

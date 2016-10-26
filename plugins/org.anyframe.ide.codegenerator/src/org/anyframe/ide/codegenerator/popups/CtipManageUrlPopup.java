@@ -21,6 +21,7 @@ import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.common.util.ButtonUtil;
+import org.anyframe.ide.common.util.DialogUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -75,13 +76,8 @@ public class CtipManageUrlPopup extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-
-		int screenWidth = shell.getDisplay().getPrimaryMonitor().getBounds().width;
-		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
-
 		shell.setText(Message.view_ctip_popup_title);
-		shell.setBounds((screenWidth - 460) / 2, (screenHeight - 490) / 3, 460,
-				400);
+		shell.setBounds(DialogUtil.center(460, 400));
 
 	}
 

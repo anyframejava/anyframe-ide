@@ -26,6 +26,7 @@ import org.anyframe.ide.codegenerator.util.HudsonRemoteAPI;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.codegenerator.views.CtipView;
 import org.anyframe.ide.command.common.util.CommonConstants;
+import org.anyframe.ide.common.util.DialogUtil;
 import org.anyframe.ide.common.util.MessageDialogUtil;
 import org.anyframe.ide.common.util.PluginLoggerUtil;
 import org.anyframe.ide.common.util.ProjectConfig;
@@ -104,16 +105,12 @@ public class CtipAddJobPopup extends Dialog {
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-
-		int screenWidth = shell.getDisplay().getPrimaryMonitor().getBounds().width;
-		int screenHeight = shell.getDisplay().getPrimaryMonitor().getBounds().height;
-
 		if (isModify) {
 			shell.setText(Message.view_ctip_modifyctipjob);
 		} else {
 			shell.setText(Message.view_ctip_addnewjob);
 		}
-		shell.setBounds((screenWidth - 450) / 2, (screenHeight - 350) / 3, 450, 300);
+		shell.setBounds(DialogUtil.center(450, 300));
 	}
 
 	protected Control createDialogArea(Composite parent) {
