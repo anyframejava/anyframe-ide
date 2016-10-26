@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.common;singleton:=true
-Bundle-Version: 2.8.0
+Bundle-Version: 2.9.0
 Bundle-Activator: org.anyframe.ide.common.CommonActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ant.core,
@@ -39,6 +39,7 @@ Bundle-ClassPath: .,
  lib/commons-beanutils-1.8.0.jar,
  lib/commons-collections-3.2.jar,
  lib/commons-lang-2.6.jar,
+ lib/commons-io-2.2.jar,
  lib/jcl-over-slf4j-1.6.4.jar,
  lib/jdom-1.0.jar,
  lib/junit-4.9.jar,
@@ -65,5 +66,6 @@ Export-Package: org.anyframe.ide.common,
  org.anyframe.ide.common.properties,
  org.anyframe.ide.common.table,
  org.anyframe.ide.common.util,
+ org.anyframe.ide.common.usage,
  org.apache.commons.lang,
  org.springframework.beans.factory

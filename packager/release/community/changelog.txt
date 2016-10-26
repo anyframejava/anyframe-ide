@@ -2,6 +2,26 @@
 ==========================
 http://www.anyframejava.org
 
+Changes in version 2.9.0 (2013-06-04)
+-------------------------------------
+* 주요 변경 내역
+1) Common - Eclipse Plugin
+  - 로깅 기능
+    . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선 
+  
+* 참조 라이브러리 변경 내역
+  - N/A
+  
+ * 테스트 내역
+  - Anyframe Java IDE 2.9.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5, 1.6, 1.7 
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . Eclipse Eclipse 3.6.2, Eclipse 3.7.2, Eclipse 4.2.1
+
+* 해결된 이슈 목록
+  Common - Eclipse Plugin
+    . [AE-139] IDE 사용자 중심의 이력관리 기능 추가
+
 Changes in version 2.8.0 (2013-04-12)
 -------------------------------------
 * 주요 변경 내역

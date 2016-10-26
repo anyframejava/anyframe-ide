@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.anyframe.ide.codegenerator.feature_2.8.0.jar" id="org.anyframe.ide.codegenerator.feature" version="2.8.0">
+   <feature url="features/org.anyframe.ide.codegenerator.feature_2.9.0.jar" id="org.anyframe.ide.codegenerator.feature" version="2.9.0">
       <category name="Anyframe Java IDE"/>
    </feature>
-   <feature url="features/org.anyframe.ide.querymanager.feature_2.8.0.jar" id="org.anyframe.ide.querymanager.feature" version="2.8.0">
+   <feature url="features/org.anyframe.ide.querymanager.feature_2.9.0.jar" id="org.anyframe.ide.querymanager.feature" version="2.9.0">
       <category name="Anyframe Java IDE"/>
    </feature>
    <category-def name="Anyframe Java IDE" label="Anyframe Java IDE">

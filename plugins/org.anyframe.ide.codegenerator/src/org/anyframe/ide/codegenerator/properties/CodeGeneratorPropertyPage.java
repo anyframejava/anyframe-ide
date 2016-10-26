@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.anyframe.ide.codegenerator.CodeGeneratorActivator;
+import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.model.table.PluginInfoList;
 import org.anyframe.ide.codegenerator.util.FileUtil;
-import org.anyframe.ide.codegenerator.messages.Message;
 import org.anyframe.ide.codegenerator.util.ProjectUtil;
 import org.anyframe.ide.command.common.util.CommonConstants;
 import org.anyframe.ide.command.common.util.PropertiesIO;
@@ -38,11 +38,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -177,6 +179,28 @@ public class CodeGeneratorPropertyPage extends PropertyPage implements
 
 		// empty label
 		new Label(group, SWT.NONE);
+		
+		//TODO
+		/**
+		 * <pre>
+		 * 상위 new Label 라인 삭제 후 아래의 Button 부분을 주석해제하여 사용
+		 * widgetSelected 메소드가 버튼이 클릭되었을때 실행되는 부분임.
+		 * - 1, 2번 순서는 변경되어도 무관
+		 * 1. velocity engine 초기화 (HudsonRemoteAPI 생성자 참조)
+		 * 2. parameter 셋팅 (CtipAddJabPopup.createNewJob()의 getParamContext() 참조)
+		 * 3. mergeTemplate 통해 실제 .java 파일 생성 필요 (HudsonRemoteApi.createJob() 참조)
+		 * </pre>
+		 */
+		/*
+		Button testBtn = new Button(group, SWT.NONE);
+		testBtn.setText("Template 변환 테스트");
+		testBtn.setLayoutData(new GridData());
+		testBtn.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				
+			}
+		});
+		*/
 
 		validationResult = new Label(group, SWT.NONE);
 		validationResult.setLayoutData(new GridData(GridData.FILL,
@@ -234,6 +258,7 @@ public class CodeGeneratorPropertyPage extends PropertyPage implements
 		
 		if (templateTypeCombo.getText().equals(Constants.TEMPLATE_TYPE_ONLINE)) {
 			daoFrameworkTypeCombo.add(CommonConstants.DAO_SPRINGJDBC);
+			daoFrameworkTypeCombo.add(CommonConstants.DAO_IBATIS2);
 		} else {
 		
 			if (daoSet.contains(CommonConstants.DAO_QUERY)

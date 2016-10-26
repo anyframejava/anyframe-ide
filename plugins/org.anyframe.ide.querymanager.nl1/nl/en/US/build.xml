@@ -9,7 +9,7 @@
 
 	<!-- Plug-in Information -->
 	<property name="bundle.id" value="org.anyframe.querymanager.eclipse.core" />
-	<property name="bundle.version" value="2.8.0" />
+	<property name="bundle.version" value="2.9.0" />
 	<property name="bundle.about" location="${basedir}/about_files" />
 	<property name="bundle.src" location="${basedir}/src/main/java" />
 	<property name="bundle.doc" location="${basedir}/doc" />

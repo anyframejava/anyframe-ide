@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.anyframe.ide.codegenerator;singleton:=true
-Bundle-Version: 2.8.0
+Bundle-Version: 2.9.0
 Bundle-Activator: org.anyframe.ide.codegenerator.CodeGeneratorActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

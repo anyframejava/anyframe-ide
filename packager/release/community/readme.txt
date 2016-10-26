@@ -1,4 +1,4 @@
-﻿Anyframe Java IDE, release 2.8.0 (2013.04)
+﻿Anyframe Java IDE, release 2.9.0 (2013.06)
 ------------------------------------------------
 http://www.anyframejava.org
 
@@ -13,9 +13,9 @@ Anyframe Java IDE 관련 문서는 포탈 사이트의 문서 메뉴 내의 매�
 2. Anyframe Java IDE Plugin 상세
 
 1) Anyframe Java IDE - Eclipse Plugin
-   . Common : org.anyframe.ide.common_2.8.0.jar
-   . Code Generator : org.anyframe.ide.codegenerator_2.8.0.jar
-   . Query Manager : org.anyframe.ide.querymanager_2.8.0.jar
+   . Common : org.anyframe.ide.common_2.9.0.jar
+   . Code Generator : org.anyframe.ide.codegenerator_2.9.0.jar
+   . Query Manager : org.anyframe.ide.querymanager_2.9.0.jar
 
 2) Anyframe Java IDE - Ctip Integration
    . Ctip for Integration : anyframe-ide-ctip-integration-2.7.0.jar

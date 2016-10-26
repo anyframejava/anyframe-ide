@@ -1,4 +1,4 @@
-﻿Anyframe Java IDE(Enterprise Ed.), release 2.8.0 (2013.04)
+﻿Anyframe Java IDE(Enterprise Ed.), release 2.9.0 (2013.06)
 ------------------------------------------------
 http://www.anyframe-ent.com
 
@@ -15,18 +15,18 @@ Anyframe Java IDE 관련 문서는 포탈 사이트의 문서 메뉴 내의 매�
 2. Anyframe Java IDE Plugin 상세
 
 1) Anyframe Java IDE(Community Ed.) - Eclipse Plugin
-   . Common : org.anyframe.ide.common_2.8.0.jar
-   . Code Generator : org.anyframe.ide.codegenerator_2.8.0.jar
-   . Query Manager : org.anyframe.ide.querymanager_2.8.0.jar
+   . Common : org.anyframe.ide.common_2.9.0.jar
+   . Code Generator : org.anyframe.ide.codegenerator_2.9.0.jar
+   . Query Manager : org.anyframe.ide.querymanager_2.9.0.jar
 
 2) Anyframe Java IDE(Enterprise Ed.) - Eclipse Plugin
-   . Common : com.anyframe.ide.common._2.8.0.jar
-   . DAO Manager : com.anyframe.ide.daomanager_2.8.0.jar
-   . VO Manager : com.anyframe.ide.daomanager_2.8.0.jar
-   . VO Manager DDInfo Connector : com.anyframe.ide.vomanager.ddinfo.connector.anyframe_2.8.0.jar
-   . VO Manager Message Connector : com.anyframe.ide.vomanager.message.connector.anyframe_2.8.0.jar
-   . DB Explorer : com.anyframe.ide.dbexplorer_2.8.0.jar
-   . UnitTest Manager : com.anyframe.ide.unittestmanager_2.8.0.jar
+   . Common : com.anyframe.ide.common._2.9.0.jar
+   . DAO Manager : com.anyframe.ide.daomanager_2.9.0.jar
+   . VO Manager : com.anyframe.ide.daomanager_2.9.0.jar
+   . VO Manager DDInfo Connector : com.anyframe.ide.vomanager.ddinfo.connector.anyframe_2.9.0.jar
+   . VO Manager Message Connector : com.anyframe.ide.vomanager.message.connector.anyframe_2.9.0.jar
+   . DB Explorer : com.anyframe.ide.dbexplorer_2.9.0.jar
+   . UnitTest Manager : com.anyframe.ide.unittestmanager_2.9.0.jar
 
 4. 라이센스 정책
 
