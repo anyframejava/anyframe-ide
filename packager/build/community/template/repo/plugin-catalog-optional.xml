@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugins>
+	<plugin name="async-support" description="anyframe-async-support-pi plugin" latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-async-support-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="cache"
+		description="Cache Plugin consists of sample code that provides guidelines on how to use Cache Service developed based on OSCache of opensymphony, and reference libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-cache-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="chart"
+		description="Chart Plugin consists of functions that provides fusionchart-free support with JAXB Model class, and reference libraries necessary to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-chart-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="excel" description="Excel Plugin consists of sample code that provides guidelines on how to use Apache POI that provides Excel Download and Upload etc."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-excel-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="fileupload"
+		description="FileUpload plugin consists of sample code that provides functionality Multipart Request handling within Spring using the Commons Fileupload."
+		latestVersion="1.2.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-fileupload-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.1.0</version>
+			<version>1.2.0</version>
+			<version>1.2.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="flex-query"
+		description="Flex-Query Plugin consists of BlazeDS installation for communicating Flex Client and Server, and libraries and configuration file for integrating Spring to BlazeDS."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-flex-query-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.1.0</version>
+			<version>1.2.0</version>
+			<version>1.2.1</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="generic"
+		description="Generic Plugin was developed based on Generics concept which is supported from Java 5 onwards, and provides functions that can directly use or inherit classes which implemented basic CRUD method functions."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-generic-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="hibernate"
+		description="Hibernate Plugin consists of sample code which is to guide how to use Hibernate and reference libraries which are needed to use these open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-hibernate-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="i18n" description="i18n plugin consists of sample code that provides functionality LocaleResolver handling Internalization."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-i18n-pi</artifactId>
+		<versions>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="idgen" description="Idgen Plugin consists of reference libraries and configurations needed to use Id generation service provided by Anyframe."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-idgen-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="jdbc-support" description="log SQL and replace SQL with the given pattern for preventing SQL Injection" latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-jdbc-support-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="jquery" description="jQuery Plugin consists of sample code, libraries and configurations needed to use jquery with Anyframe."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-jquery-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="logback" description="Logback Plugin consists sample code, libraries and configurations needed to use logback with Anyframe."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-logback-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="logging-sql" description="Logging SQL Plugin consists of reference libraries needed for logging SQL using log4jdbc." latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-logging-sql-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="logmanager" description="Log Manager Plugin is sample application that connected with Log Manager" latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-logmanager-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="mip-query"
+		description="Mip-Query Plugin consists of sample code that provides basic guidelines on how to use MiPlatform connection modules and common server modules provided by Anyframe, and reference libraries needed to use open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-mip-query-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="mybatis"
+		description="mybatis Plugin consists of sample code that provides basic guidelines on how to use iBatis2 which is a Data Mapper framework for persistence layer development and reference libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-mybatis-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="oscache"
+		description="OSCache Plugin consists of sample code that provides guidelines on how to use OSCache Service developed based on OSCache of opensymphony, and reference libraries needed to use these open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-oscache-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="query"
+		description="Query Plugin consists of sample code that provides basic guidelines on how to use QueryService provided by Anyframe and reference libraries to use these open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-query-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.1.0</version>
+			<version>1.1.1</version>
+			<version>1.1.2</version>
+			<version>1.1.3</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="query-ria" description="Query-Ria Plugin consists of reference libraries needed to use Rich Internet Application like MiPlatform, XPlatform, Gauce etc."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-query-ria-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="remoting"
+		description="Remoting Plugin consists of sample code that provides basic guidelines on how to use HTTP Invoker among Remoting services supported by Spring, and reference libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-remoting-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.0.5</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="routingdatasource" description="RoutingDataSource Plugin consists of simple code that provides basic guidelines on how to use AbstractRoutingDataSource by Spring."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-routingdatasource-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="scheduling"
+		description="Scheduling Plugin consists of sample code that provides guidelines on scheduling specific works by connecting Spring with Quartz, and reference libraries needed to use these open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-scheduling-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="sockjs" description="anyframe-sockjs-pi plugin" latestVersion="1.0.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-sockjs-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="springrest"
+		description="SpringREST Plugin consists of sample code that provides guidelines on how to use the support for building RESTful applications provided in Spring MVC, and libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-springrest-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="stomp" description="anyframe-stomp-pi plugin" latestVersion="1.0.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-stomp-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="test" description="Test Plugin consists of the reference libraries needed to support test-driven development of java code with mock objects using jMock."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-test-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="tiles"
+		description="Tiles Plugin consists of sample code that provides basic guidelines on how to use Apache Tiles which is a templating framework built to simplify the development of web application user interfaces and reference libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-tiles-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="util"
+		description="Util Plugin consists of sample code that provides basic guidelines on how to use utility of Date, Digest, Number, String, Validation and reference libraries needed to use these open sources."
+		latestVersion="1.1.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-util-pi</artifactId>
+		<versions>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.1.0</version>
+			<version>1.1.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="util-system"
+		description="Util System Plugin consists of sample code that provides dashboard-style UI for System Resource usages with Util-System services which using Sigar, and reference libraries needed to use these open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-util-system-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="websocket" description="anyframe-websocket-pi plugin" latestVersion="1.0.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-websocket-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="xp-query"
+		description="XP-Query Plugin consists of sample code that provides basic guidelines on how to use XPlatform connection modules and common server modules provided by Anyframe, and reference libraries needed to use open sources."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-xp-query-pi</artifactId>
+		<versions>
+			<version>1.0.3</version>
+			<version>1.0.4</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+	<plugin name="xplatform"
+		description="XPLATFORM plugin consists of sample code that provides basic guidelines on how to use XPLATFORM connection modules with basic Spring MVC architecture."
+		latestVersion="1.6.1-SNAPSHOT">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-xplatform-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.5.0</version>
+			<version>1.5.1</version>
+			<version>1.6.0</version>
+			<version>1.6.1-SNAPSHOT</version>
+		</versions>
+	</plugin>
+</plugins>

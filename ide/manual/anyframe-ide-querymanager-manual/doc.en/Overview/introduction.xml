@@ -1,0 +1,44 @@
+<section id="overview_introduction">
+	<title>Introduction</title>
+
+	<mediaobject>
+		<imageobject>
+			<title>Introduction</title>
+			<imagedata fileref="../image/Overview/introduction-concept.jpg"
+				align="center" />
+		</imageobject>
+	</mediaobject>
+
+
+	<para>
+		Anyframe Query Manager is an Eclipse Plugin which enables the easier management and utilization of database Query statement 
+		needed for Query Service in Anyframe, Samsung SDS application framework.
+		Anyframe Query Manager is expected to speed up development and enhance productivity though the following functions.
+		<itemizedlist>
+			<listitem>
+				<para>
+					It can easily check whether Query ID is used or duplicated through Query Explorer,
+					and can check the entire outline of mapping xml file.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					By providing GUI-based query writing and test/validation way through Query Test Editor,
+					it eases query writing and reduces the additional test cost of the query.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					It monitors whether Query ID is duplicated or used and shows the result.
+					For existing Query ID, it provides convenient navigation function between the Query mapping xml file where the Query exists and Java code.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					It enhances development productivity by searching numerous Query IDs in Eclipse workspace and providing 
+					navigation function with Query mapping xml.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+</section>

@@ -1,0 +1,27 @@
+<section id="gettingstarted_preferences">
+	<title>Preferences</title>
+
+	<para>
+		The environment setting of Anyframe Query Manager is done through the Eclipse Preferences window. 
+		The prefix and suffix defined during environment setting is used to execute 
+		<link linkend="workingwithqueries_usingcontentassist">Content Assist</link> for the DAO 
+		of the Anyframe Query Manager that inherited AbstractDAO.
+	</para>
+
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="../image/GettingStarted/preferences-prefixsuffix.png"
+				align="center" />
+		</imageobject>
+	</mediaobject>
+
+	<para>
+		The information saved through environment setting 
+		should apply contents that customized prefix and suffix of Query or VO (Value Object), etc. defined in AbstractDAO 
+		in a specific development environment. 
+		For your information, "customization of prefix and suffix" is done through bean setting of AbstractDAO, 
+		and the user can apply related contents through the environment setting window of Anyframe Query Manager 
+		without modifying other codes. 
+	</para>
+
+</section>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<project name="Define plugin information for distribution internally" basedir=".">
+	<property name="internal-plugins" value="mysingle"/>
+	<property name="mysingle" value="1.0.2"/>	
+</project>

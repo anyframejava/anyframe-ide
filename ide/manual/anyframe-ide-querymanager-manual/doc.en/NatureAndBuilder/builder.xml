@@ -1,0 +1,58 @@
+<section id="natureandbuilder_builder">
+	<title>Anyframe Builder</title>
+
+	<para>
+		Anyframe Builder finds out <link linkend="natureandbuilder_duplicatedqueryidmarker">Duplicated Query ID</link> in Eclipse project
+		and if duplicated Query ID exists, it shows red color Error mark at the Query statement of <link linkend="gettingstarted_querymanagereditor">Query Manager Editor</link>
+		and shows the error to Proplems View in Eclipse.		
+	</para>
+
+	<para>
+		Likewise, if a specific Query is not utilized in any DAO, yellow-color Warning mark is shown 
+		in Query Manager Editor and Problems View.	
+	</para>
+
+
+	<section id="natureandbuilder_builder_condition">
+		<title>Condition for Anyframe Builder task</title>
+
+		<para>
+			When <link linkend="natureandbuilder_nature">Anyframe Query Manager Nature</link> is applied to (activated; "Context
+			Menu: Anyframe Query Manager > Add
+			Anyframe Query Manager Nature") for the project, Anyframe Builder task is performed when the following conditions are satisfied.			
+		</para>
+
+		<orderedlist numeration="Arabic" inheritnum="inherit">
+			<listitem>
+				<para>
+					When resource Add event occurred in project 					
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When resource Update event occurred in project 				
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When resource Delete event occurred in project 				
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When Copy and Paste specific resource occurred from within project or outside 					
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When Refresh Query Explorer View occurred			
+				</para>
+			</listitem>
+		</orderedlist>
+		<para>
+			For all the cases above, "resource" means Mapping XML file, and Error or Warning marks do not go away until
+			users directly solve the problems.
+		</para>
+	</section>
+
+</section>

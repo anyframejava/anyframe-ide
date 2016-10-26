@@ -1,0 +1,992 @@
+﻿Anyframe Java Core CHANGELOG
+==========================
+http://www.anyframejava.org
+
+Changes in version 5.5.0.RC1 (2012-10-19)
+-------------------------------------
+* 주요 변경 내역
+1) 공통
+  - 모든 Service API 호출시 발생하는 오류에 대해 Checked Exception이 아닌 Runtime Exception으로 throw하도록 변경하여
+    어플리케이션 개발시 Anyframe Java Core에서 throw한 Exception을 명시적으로 catch하지 않도록 개선  
+  - Java5 특징 중의 하나인 Generics를 지원하도록 Service API 변경
+
+2) Plugin
+  - 기존 util-demo plugin을 util plugin으로 변경
+  - 기존 util-system과 util-system-demo plugin을 통합한 util-system plugin 제공
+  - 기존 login plugin을 i18n plugin으로 변경하고 DBMessageSource, LocaleResolver를 활용하여 국제화 처리 사례 제시  
+  - logback 매뉴얼 상세화
+
+3) Service
+  - QueryService에서 SQLLoader를 injection하여 사용할 수 있도록 SQLLoader 구조를 개선하여 Query Mapping 정보가 파일이 아닌 
+    다른 형태로 존재할 경우에도 쉽게 처리할 수 있도록 확장 포인트 제공
+  - Mip Query, XP Query를 이용하여 정의된 Procedure를 실행하였을 경우 NullPointerException이 발생하는 문제 조치
+  - Miplatform/Xplatform 기반일 경우, 조회된 대량의 데이터를 사용자가 정의한 데이터 개수만큼씩 분할하여 화면으로 전달할 수 있도록 개선
+    . Firstrow 방식 응답 처리 구현
+  - Util 클래스 내의 다양한 메소드에 대한 리팩토링 수행  
+    . 메소드 로직의 중복 구현 제거
+    . 일관된 메소드명 부여
+    . 다른 이름을 가졌으나 동일한 로직을 수행하는 메소드 통합 등
+  - 테이블 기반으로 Unique Id를 생성하고자 할 때, 해당 테이블의 컬럼명을 직접 수정할 수 있도록 개선
+  - Maven Repository에 소스 코드 라이브러리도 배포시킴으로써 해당 Service를 사용하는 개발자에게 Debugging 편의 제공
+  
+4) IDE
+  - Plugin의 구성 요소에 대해 정의한 plugin-build.xml의 구조를 직관적이고 명시적으로 정의하고 해당 파일 처리 로직 변경
+  - Plugin 삭제시 프로젝트에서 개별적으로 추가한 리소스들이 삭제되지 않도록 특정 Plugin 설치로 인해 추가된 리소스들만 삭제
+  - 다른 Logging Framework을 설치하였을 때 기 설치된 Logging Framework과 관련된 정보 제거
+
+* 참조 라이브러리 변경 내역
+  - cxf-services-sts-core-2.6.1.jar 파일 추가  
+  - cxf-services-wsn-api-2.6.1.jar 파일 추가 
+  - cxf-services-wsn-core-2.6.1.jar 파일 추가
+  - js-1.7R2.jar 파일 추가
+  - opensaml-2.5.1-1.jar 파일 추가
+  - openws-1.4.2-1.jar 파일 추가
+  - xmltooling-1.3.2-1.jar 파일 추가
+  - jetty-security-7.5.4.v20111024.jar 파일 추가
+  - cxf-xjc-runtime-2.6.0.jar 파일 추가
+  - isorelax-20030108.jar 파일 추가
+  - mimepull-1.7.jar 파일 추가
+  - msv-core-2011.1.jar 파일 추가
+  - relaxngDatatype-20020414.jar 파일 추가
+  - xsdlib-2010.1.jar 파일 추가
+  - oauth-20100527.jar 파일 추가
+  - oauth-provider-20100527.jar 파일 추가
+  - jackson-xc-1.9.7.jar 파일 추가
+  - 기존의 logback-core-1.0.3.jar 파일을 logback-core-1.0.7.jar로 버전 변경
+  - 기존의 logback-classic-1.0.3.jar 파일을 logback-classic-1.0.7.jar로 버전 변경
+  - 기존의 cxf-2.5.2.jar 파일을 cxf-2.6.1.jar로 버전 변경
+  - 기존의 cxf-manifest-2.5.2.jar 파일을 cxf-manifest-2.6.1.jar로 버전 변경  
+  - 기존의 jaxb-api-2.2.3.jar 파일을 jaxb-api-2.2.6.jar로 버전 변경 
+  - 기존의 jaxb-impl-2.2.4-1.jar 파일을 jaxb-impl-2.2.5.jar로 버전 변경
+  - 기존의 joda-time-1.6 파일을 joda-time-1.6.2.jar로 버전 변경
+  - 기존의 neethi-3.0.1.jar 파일을 neethi-3.0.2.jar로 버전 변경
+  - 기존의 woodstox-core-asl-4.1.1.jar 파일을 woodstox-core-asl-4.1.2.jar로 버전 변경
+  - 기존의 wss4j-1.6.4.jar 파일을 wss4j-1.6.6.jar로 버전 변경
+  - 기존의 xmlschema-core-2.0.1.jar 파일을 xmlschema-core-2.0.2.jar로 버전 변경
+  - 기존의 xmlsec-1.4.6.jar 파일을 xmlsec-1.5.2.jar로 버전 변경
+  - 기존의 asm-3.3.jar 파일을 asm-3.3.1.jar로 버전 변경
+  - 기존의 commons-io-1.4.jar 파일을 commons-io-2.0.jar로 버전 변경
+  - 기존의 commons-collections-3.2.jar 파일을 commons-collections-3.2.1.jar로 버전 변경
+  - 기존의 cxf-xjc-boolean-2.4.0.jar 파일을 cxf-xjc-boolean-2.6.0.jar로 버전 변경 
+  - 기존의 cxf-xjc-bug671-2.4.0.jar 파일을 cxf-xjc-bug671-2.6.0.jar로 버전 변경
+  - 기존의 cxf-xjc-dv-2.4.0.jar 파일을 cxf-xjc-dv-2.6.0.jar로 버전 변경
+  - 기존의 cxf-xjc-ts-2.4.0.jar 파일을 cxf-xjc-ts-2.6.0.jar로 버전 변경
+  - 기존의 jaxb-xjc-2.2.4-1.jar 파일을 jaxb-xjc-2.2.5.jar로 버전 변경
+  - 기존의 saaj-impl-1.3.12.jar 파일을 saaj-impl-1.3.18.jar로 버전 변경
+  - 기존의 velocity-dep-1.6.2.jar 파일을 velocity-dep-1.7.jar로 버전 변경
+  - 기존의 jsch-0.1.44.jar 파일을 jsch-0.1.48.jar로 버전 변경
+  
+ * 참조 파일 변경 내역 
+  - superfish 1.4.8 추가
+  - 기존의 jqgrid 4.1.2를 jqgrid 4.4.0으로 버전 변경
+  - 기존의 uploadify 2.1.4를 uploadify 3.1.1로 버전 변경 
+  - 기존의 jQuery UI 1.8.16을 jQuery UI 1.8.22로 버전 변경
+  - 기존의 jQuery 1.6.2를 jQuery 1.7.2로 버전 변경
+  
+ * 테스트 내역
+  -  Anyframe Java Core 5.5.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5 (단, WAS가 WebLogic 11g(10.3.6), Tomcat 7.0.4일 경우 JDK 1.6 기반)
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . WAS : JEUS 6.0(Fix#8), WebLogic 10g(10.1)/11g(10.3.6)/12c(12.1.1), Tomcat 6.0.35/7.0.4, JBoss AS7, WebSphere 8
+    . Eclipse 3.5.2, Eclipse 3.6.2, Eclipse 3.7.2
+
+* 해결된 이슈 목록
+  [AF-224] QueryService SQLLoader 구조 개선
+  [AF-259] Service Archetype의 LoggingAspect class에서 사용된 commons-logging API를 slf4j로 수정
+  [AF-260] mip-query의 MiPService.execute(프로시져 호출 메소드) 호출 결과값이 화면으로 전송되지 않는 문제 조치 
+  [AF-261] parent pom 내의 속성 정의중 cycling 제거  
+  [AF-193] Service 개선 및 개발
+    - [AF-197] 테이블 기반 IdGen. 서비스 개선
+    - [AF-198] Miplatform/Xplatform 기반일 경우, 조회된 대량의 데이터 전달 방식 보완
+    - [AF-200] Service 라이브러리 배포시 소스 코드 라이브러리 포함 
+    - [AF-201] Service Exception 변경 (-> RuntimeException)
+    - [AF-202] Generics 지원
+    - [AF-203] Util 클래스 정리 (Util 클래스 메소드 리팩토링)
+    - [AF-204] Apache CXF 버전 업그레이드 (2.6.x) 
+  [AF-194] Plugin 개선 및 개발
+    - [AF-205] idgen 개선
+    - [AF-206] jquery 개선 
+    - [AF-207] mip-query 개선
+    - [AF-208] scheduling 개선 
+    - [AF-209] util-demo plugin명 변경 (util-demo -> util)
+    - [AF-210] util-system과 util-system-demo 통합  (util-system-demo plugin 제거)
+    - [AF-211] xp-query 개선 
+    - [AF-212] logback 보완 (매뉴얼 상세화)
+    - [AF-213] login plugin명 변경 (login -> i18n)
+    - [AF-214] Exception 변경 사항 반영 (Service Exception 변경 사항 반영)
+    - [AF-215] Generics 변경 사항 반영
+    - [AF-217] cxf jax-rs 개선
+    - [AF-218] cxf jax-ws 개선
+    - [AF-222] PluginArchitecture 변경 사항 반영 
+    - [AF-223] Util plugin 개선 
+  [AE-84] Plugin Architect 개선 및 개발
+    - [AE-85] Plugin 속성 정의 XML 보완 (plugin-build.xml 구조 단순화)
+    - [AE-86] Plugin 삭제 개선
+    - [AE-87] File Content Replace 로직 리팩토링
+    - [AE-88] Logging Framework 변경
+    - [AE-90] i18n 플러그인 추가로 인한 MessageSource 변경 부분 로직 추가
+    - [AE-91] change-db command 실행 시 src/test/resources/context.properties 파일 변경되도록 개선   
+  [AF-227] Service Broker 구조 개선  
+    - [AF-237] Spring Integration 검토 및 AS-IS Service Broker 분석, Requirement 도출 
+    - [AF-238] Service Broker Architecture 설계
+    - [AF-239] 기본 Adapter 정의 및 개발 
+  [AF-228] JDBC, TxManager 구조 개선
+    - [AF-241] To-Be JDBC, TXManager Architecture 설계 
+    - [AF-242] DaoSupport 및 참조 클래스 구조 개선 및 리팩토링  
+  [AF-229] LogBack 적용을 위한 online enterprise 내부코드 리팩토링   
+    - [AF-244] 내부에서 사용하는 Logging API 변경 (-> slf4j)    
+  [AF-230] SystemPropertyService 기능 정리
+    - [AF-245] SystemPropertyService 리팩토링   
+  [AF-231] Event, Task 관련 클래스 리팩토링 
+    - [AF-246] Event, Task 관련 클래스 리팩토링
+  [AF-232] anyframe-enterprise-online-runtime TestCase 설정 파일 정비 
+    - [AF-247] TestCase 실행을 위한 설정 파일 분리    
+    
+Changes in version 5.2.0 (2012-06-15)
+-------------------------------------
+* 변경 내역
+1) 공통
+  - Spring Framework 3.0.5 -> 3.1.1 업그레이드
+    
+2) Plugin
+  - mybatis plugin(Anyframe Java와 MyBatis 연계) 추가 제공
+  - logback plugin(Anyframe Java와 Logback 연계) 추가 제공
+  - xplatform plugin(XPLATFORM의 DataSet을 Map, VO로 변환하여 의존성을 최소화하는 연계 구조) 추가 제공
+  - 기존 xp-query plugin 내에 화면 샘플 추가 제공
+  - Cache Abstraction 기능을 활용한 ehcache 기반의 cache plugin 추가 제공 
+    . 기존 oscache 기반 cache 기능은 oscache plugin 으로 이관
+  - DB 기반의 scheduling 설정 기능을 제공하는 scheduling plugin 추가 제공 
+  - cxf plugin에서 참조하고 있는 Apache CXF 2.3.0 -> 2.5.2 업그레이드
+    
+3) Service
+  - QueryService Mapping XML File Reload 시점에 컬럼 정보 및 캐싱 정보 갱신 로직 개선
+  - QueryService에서 제공하는 AbstractDao 클래스를 개선한 QueryServiceDaoSupport 클래스 신규 제공
+  - Scheduling Service 기능 신규 제공
+    . quartz api를 이용한 Job 등록, 조회, 수정, 삭제 기능 지원
+    . Job의 저장소 변경 기능 지원(file, database)
+    . Job 수행 결과 조회 기능 지원 
+  - Spring MVC의 @EnableWebMvc를 확장한 @EnableWebMvcAnyframe 신규 제공
+  - 요청받은 View를 직관적으로 서비스 할 수 있는 SimpleMediaTypeViewResolver 클래스 신규 제공
+  - Test Case를 JUnit3 형식에서 JUnit4 형식으로 변경
+  - Anyframe Java, Anyframe Enterprise Java 유틸리티 클래스 통합
+    . StringUtil, DateUtil, NumberUtil 의 API 통합 및 변경
+      (http://dev.anyframejava.org/docs/anyframe/plugin/optional/util-demo/1.0.2/reference/htmlsingle/util-demo.html)
+ 
+    
+4) IDE
+  - Anyframe IDE 설치시 함께 설치되는 m2eclipse(Eclipse Plugin) 버전을 0.10.X에서 0.12.X로 변경
+  - MS SQL 기반의 DB Configuration 기능 지원 
+  - CRUD 소스 코드 생성시 Sample Data를 DB에 insert할 것인지 선택할 수 있는 기능 지원
+  - CRUD 소스 코드 생성 템플릿 변경
+    . Mybatis 기반의 DAO Framework을 지원하는 Mybatis 템플릿 추가 제공 
+    . XPlatform UI 기반의 소스 코드 생성 템플릿 추가 제공
+    . Map Type의 템플릿 삭제
+  - CTIP 연계시 Hudson과 함께 Jenkins 연계 추가 지원
+
+
+* 참조 라이브러리 변경 내역
+  - jcl-over-slf4j-1.6.4.jar 파일 추가
+  - mybatis-3.1.0.jar 파일 추가
+  - mybatis-spring-1.1.0.jar 파일 추가
+  - myfaces-jsf-api-1.0.9.jar 파일 추가
+  - logback-core-1.0.3.jar 파일 추가 
+  - logback-classic-1.0.3.jar 파일 추가 
+  - commons-compiler-2.6.1.jar 파일 추가
+  - janino-2.6.1.jar 파일 추가
+  - 기존의 commons-lang-2.5.jar 파일을 commons-lang-2.6.jar로 버전 변경
+  - 기존의 ehcache-core-2.2.0.jar 파일을 ehcache-core-2.5.0.jar로 버전 변경
+  - 기존의 junit-4.7.jar 파일을 junit-4.9.jar로 버전 변경
+  - 기존의 slf4j-api-1.6.1.jar 파일을 slf4j-api-1.6.4.jar로 버전 변경
+  - 기존의 slf4j-log4j12-1.6.1.jar 파일을 slf4j-log4j12-1.6.4.jar로 버전 변경
+  - 기존의 spring-aop-3.0.5.RELEASE.jar 파일을 spring-aop-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-asm-3.0.5.RELEASE.jar 파일을 spring-asm-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-aspects-3.0.5.RELEASE.jar 파일을 spring-aspects-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-beans-3.0.5.RELEASE.jar 파일을 spring-beans-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-context-3.0.5.RELEASE.jar 파일을 spring-context-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-context-support-3.0.5.RELEASE.jar 파일을 spring-context-support-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-core-3.0.5.RELEASE.jar 파일을 spring-core-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-expression-3.0.5.RELEASE.jar 파일을 spring-expression-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-instrument-3.0.5.RELEASE.jar 파일을 spring-instrument-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-instrument-tomcat-3.0.5.RELEASE.jar 파일을 spring-instrument-tomcat-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-jdbc-3.0.5.RELEASE.jar 파일을 spring-jdbc-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-jms-3.0.5.RELEASE.jar 파일을 spring-jms-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-orm-3.0.5.RELEASE.jar 파일을 spring-orm-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-oxm-3.0.5.RELEASE.jar 파일을 spring-oxm-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-struts-3.0.5.RELEASE.jar 파일을 spring-struts-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-test-3.0.5.RELEASE.jar 파일을 spring-test-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-tx-3.0.5.RELEASE.jar 파일을 spring-tx-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-web-3.0.5.RELEASE.jar 파일을 spring-web-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-webmvc-3.0.5.RELEASE.jar 파일을 spring-webmvc-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 spring-webmvc-portlet-3.0.5.RELEASE.jar 파일을 spring-webmvc-portlet-3.1.1.RELEASE.jar로 버전 변경 
+  - 기존의 jackson-core-asl-1.5.6.jar 파일을 jackson-core-asl-1.9.7.jar로 버전 변경 
+  - 기존의 jackson-mapper-asl-1.5.6.jar 파일을 jackson-mapper-asl-1.9.7.jar로 버전 변경
+  - 기존의 jaxb-impl-2.2.1.1.jar 파일을 jaxb-impl-2.2.4-1.jar로 버전 변경
+  - 기존의 jettison-1.2.jar 파일을 jettison-1.3.1.jar 파일로 버전 변경
+  - 기존의 commons-lang-2.5.jar 파일을 commons-lang-2.6.jar로 버전 변경
+  - 기존의 cxf-2.3.0.jar 파일을 cxf-2.5.2.jar로 버전 변경
+  - 기존의 cxf-manifest-2.3.0.jar 파일을 cxf-manifest-2.5.2.jar로 버전 변경
+  - 기존의 cxf-xjc-boolean-2.3.0.jar 파일을 cxf-xjc-boolean-2.4.0.jar로 버전 변경
+  - 기존의 cxf-xjc-bug671-2.3.0.jar 파일을 cxf-xjc-bug671-2.4.0.jar로 버전 변경
+  - 기존의 cxf-xjc-dv-2.3.0.jar 파일을 cxf-xjc-dv-2.4.0.jar로 버전 변경
+  - 기존의 cxf-xjc-ts-2.3.0.jar 파일을 cxf-xjc-ts-2.4.0.jar로 버전 변경
+  - 기존의 ehcache-core-2.2.0.jar 파일을 ehcache-core-2.5.jar로 버전 변경
+  - 기존의 FastInfoset-1.2.8.jar 파일을 FastInfoset-1.2.9.jar로 버전 변경
+  - 기존의 geronimo-jaxws_2.2_spec-1.0.jar 파일을 geronimo-jaxws_2.2_spec-1.1.jar로 버전 변경
+  - 기존의 jaxb-impl-2.2.1.1.jar 파일을 jaxb-impl-2.2.4-1.jar로 버전 변경
+  - 기존의 jaxb-xjc-2.2.1.1.jar 파일을 jaxb-xjc-2.2.4-1.jar로 버전 변경
+  - 기존의 jettison-1.2.jar 파일을 jettison-1.3.1.jar로 버전 변경
+  - 기존의 jetty-continuation-7.1.6.v20100715.jar 파일을 jetty-continuation-7.5.4.v20111024.jar로 버전 변경
+  - 기존의 jetty-http-7.1.6.v20100715.jar 파일을 jetty-http-7.5.4.v20111024.jar로 버전 변경
+  - 기존의 jetty-io-7.1.6.v20100715.jar 파일을jetty-io-7.5.4.v20111024.jar 로 버전 변경
+  - 기존의 jetty-server-7.1.6.v20100715.jar 파일을 jetty-server-7.5.4.v20111024.jar로 버전 변경
+  - 기존의 jetty-util-7.1.6.v20100715.jar 파일을 jetty-util-7.5.4.v20111024.jar로 버전 변경
+  - 기존의 js-1.7R1.jar 파일을 js-1.7R2.jar로 버전 변경
+  - 기존의 neethi-2.0.4.jar 파일을 neethi-3.0.1.jar로 버전 변경
+  - 기존의 saaj-api-1.3.2.jar 파일을 saaj-api-1.3.4.jar로 버전 변경
+  - 기존의 saaj-impl-1.3.2.jar 파일을 saaj-impl-1.3.12.jar로 버전 변경
+  - 기존의 stax2-api-3.0.2.jar 파일을 stax2-api-3.1.1.jar로 버전 변경
+  - 기존의 woodstox-core-asl-4.0.8.jar 파일을 woodstox-core-asl-4.1.1.jar로 버전 변경
+  - 기존의 wss4j-1.5.8.jar 파일을 wss4j-1.6.4.jar로 버전 변경
+  - 기존의 xmlbeans-2.4.0.jar 파일을 xmlbeans-2.5.0.jar로 버전 변경
+  - 기존의 xmlschema-core-1.4.5.jar 파일을 xmlschema-core-2.0.1.jar로 버전 변경
+  - 기존의 xmlsec-1.4.3.jar 파일을 xmlsec-1.4.6.jar로 버전 변경
+  - 기존의 quartz-1.6.2.jar 파일을 quartz-2.1.3.jar로 버전 변경
+  - 기존의 commons-logging-1.1.1.jar 파일 삭제
+  
+ * 테스트 내역
+  - Anyframe 5.2.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5 (단, WAS가 WebLogic 11g(10.3.6), Tomcat 7.0.4일 경우 JDK 1.6 기반)
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0, MS SQL Server 2008
+    . WAS : JEUS 6.0(Fix#8), WebLogic 10g(10.1)/11g(10.3.6)/12c(12.1.1), Tomcat 6.0.35/7.0.4, JBoss AS7, WebSphere 8
+    . Eclipse 3.5.2, Eclipse 3.6.2, Eclipse 3.7.2
+
+* 해결된 이슈 목록
+  [AE-69] Jenkins 기반 Servlet 개발
+  [AE-70] m2eclipse upgrade 및 IDE 정상 동작 확인
+  [AE-71] SQL Explorer upgrade 및 Query Manager 동작확인
+  [AE-72] Basic/Service Archetype 자체 버전 및 참조관계 버전 업데이트
+  [AE-73] 현 IDE 템플릿 파일 수정
+  [AE-74] mybatis IDE 템플릿 작성
+  [AE-75] XPlatform 템플릿 추가
+  [AE-76] Anyframe 버젼 업그레이드에 따른 IDE 수정
+  [AE-78] XP 템플릿 추가에 따른 maven mojo 변경
+  [AE-79] Eclipse Plugin Library 정리
+  [AE-80] Jenkins 기반 CTIP 서버 구성
+  [AE-81] Anyframe IDE 테스트 및 문서화
+  [AF-106] Business Layer 개발 및 개선
+    - [AF-111] Spring 3.1 관련 라이브러리 업데이트 및 기능 확인 테스트
+    - [AF-136] Spring 3.1.1 New Feature를 반영한 Core Plugin 개발
+    - [AF-138] Spring 3.1.1 관련 라이브러리 업데이트 및 기능 확인 테스트
+    - [AF-147] Spring 3.1 based Core plugin
+    - [AF-166] Spring 3.1.1 New Feature를 반영한 Core Sample 개발
+    - [AF-172] Apache CXF 2.5.2 통합 - CXF Plugin 수정
+    - [AF-175] 공통(Core) 변경 내용 적용
+    - [AF-184] Busniess Layer 개발 표준 반영 작업
+    - [AF-186] Busniess Layer 문서화
+  [AF-107] Common Service 개발 및 개선
+    - [AF-137] Spring 3.1 Integration
+    - [AF-152] Quartz Job CRUD API 개발
+    - [AF-153] Quartz Job CRUD 결과 저장 API 개발
+    - [AF-154] Job 수행 결과 저장 API 개발
+    - [AF-155] Scheduling Plugin 수정
+    - [AF-156] Spring 3.1.X, Quartz 2.1.X 반영
+    - [AF-157] Job 수행 결과 확인 API 개발
+    - [AF-159] API, 매뉴얼 작성
+    - [AF-167] Logging API replacement
+    - [AF-168] Cache Abstraction
+    - [AF-170] login-pi 에서 DatabaseMessageSource 사용시 locale 처리 오류
+    - [AF-173] MessageSource 샘플 개발
+    - [AF-174] System Utility Javadoc API modification
+    - [AF-181] Common Layer 개발 표준 반영 작업
+    - [AF-183] mysingle plugin test
+    - [AF-188] Common Layer 문서화
+    - [AF-190] Anyframe Logback Plugin 개발
+  [AF-108] Presentation Layer 개발 및 개선
+    - [AF-112] XPLATFORM Plugin 개발
+    - [AF-113] UI Sample 개발
+    - [AF-114] 디자인 템플릿 작성
+    - [AF-115] 매뉴얼 작성
+    - [AF-116] Spring MVC 3.1 통합
+    - [AF-117] Spring MVC 3.1 라이브러리 업데이트
+    - [AF-118] Spring-REST 플러그인 보강작업
+    - [AF-119] 플러그인 매뉴얼 보강 작업
+    - [AF-120] Spring 3.1 and MVC Testing Support 적용
+    - [AF-125] XPLATFORM 연계 구조 추가
+    - [AF-126] XPLATFORM - 연계 아키텍쳐 설계
+    - [AF-127] XPLATFORM - UI Sample 개발
+    - [AF-128] XPLATFORM - 매뉴얼 작성
+    - [AF-151] XP-Query 설치 관련 기능 오류
+  [AF-109] Persistence Layer 개발 및 개선
+    - [AF-189] QueryService 매뉴얼 개선
+    - [AF-182] auto-config 항목에 mssql 추가
+    - [AF-180] MSSQL Page Generator 버그
+    - [AF-171] QueryServiceDaoSupport 개발
+    - [AF-164] idgen plugin 기능 개선
+    - [AF-163] idgen Service 기능 개선
+    - [AF-162] mybatis plugin 기능 개선
+    - [AF-161] QueryService plugin 기능 개선
+    - [AF-160] QueryService Spring 3.1 통합
+    - [AF-158] Hibernate Plugin - Spring 3.1 통합
+    - [AF-150] Hibernate Service - Spring 3.1 통합
+    - [AF-149] QueryService Test Case 변경
+    - [AF-148] SimpleJdbcDaoSupport 클래스 Deprecated에 따른 core plugin 변경
+    - [AF-144] flex-query plugin 기능 개선
+    - [AF-143] xp-query plugin 기능 개선
+    - [AF-142] mip-query plugin 기능 개선
+    - [AF-141] query-ria plugin 기능 개선
+    - [AF-140] ibatis2 plugin 기능 개선
+    - [AF-139] jdbc-support plugin 기능 개선
+    - [AF-135] 조회 쿼리에 대한 컬럼정보 캐싱에대한 성능 개선점 파악
+    - [AF-134] Mapping XML File Reload 시 컬럼정보에 대한 캐싱데이터 삭제 로직 추가
+    - [AF-131] mybatis manual 작성
+    - [AF-130] mybatis sample 개발
+    - [AF-129] mybatis plugin 개발
+  [AF-110] Integration Layer 개발 및 개선
+    - [AF-146] Apache CXF 2.5.2 Integration
+    - [AF-169] CXF Plugin modification
+    - [AF-185] Integration Layer 개발 표준 반영 작업
+    - [AF-187] Integration Layer 문서화
+  [AF-190] Anyframe Logback Plugin 개발
+  
+Changes in version 5.1.0 (2011-10-21)
+-------------------------------------
+* 변경 내역
+  - Anyframe Plugin 샘플 코드로 제공되는 화면 및 IDE 툴을 통해 자동 생성되는 화면에 대해 웹표준 적용 
+  - login plugin(로그인 수행 후 사용자 정보 세션 저장/로케일 설정/ThreadLocal 활용) 추가 제공 
+  - routingdatasource plugin(다중으로 정의된 DB를 동적으로 변경하여 접근) 추가 제공
+  - jquery plugin(jqgrid, quickpager, jstree, jquery-ui, uploadify) 추가 제공 
+  - 기존 core plugin 내에 messageSource bean 클래스를 Anyframe에서 제공하던 EncodingResourceBundleMessageSource 클래스 대신 Spring에서 제공하는 ReloadableResourceBundleMessageSource 클래스로 변경 
+  - 기존 miplatform plugin 내에 FileUpload 등의 기능 추가 제공, miplatform 버전을 3.2에서 3.3으로 변경
+  - 기존 flex plugin 내에 기본 CRUD, HTTP 통신, FileUpload 등의 기능 추가 제공, flex 버전을 3에서 4.5로 변경, UI 및 Flex DataService 개선
+  - 기존 fileupload plugin 내에 다중 파일 첨부 및 FTP를 이용한 파일 서버 저장 기능 추가 제공  
+  - 기존 scheduling plugin 내에 simple trigger 사용 예제 추가 제공 
+  
+* 참조 라이브러리 변경 내역
+  - poi-3.6.jar를 poi-3.7.jar 파일로 버전 변경
+  - spring-flex-1.0.3.jar를 spring-flex-1.5.0.jar 파일로 버전 변경
+  - activemq-all-5.4.2.jar 파일 추가  
+  - activemq-spring-5.4.2.jar 파일 추가  
+  - activemq-core-5.4.2.jar 파일 추가  
+
+* 해결된 이슈 목록
+  [AF-102] Flex Plugin 개선 - 버전 업그레이드(3->4.5)/ 화면 개선/ FlexService 개선 
+  [AF-101] Anyframe Plugin 웹표준 적용 
+  [AF-100] ojdbc6.jar 사용 시 OraclePagingJdbcTemplate batchUpdate reflection 호출 오류 
+  [AF-99] AbstractDao 를 사용한 isDynamic="false" 인 쿼리 실행 시 paging 적용 에러 발생  
+  [AF-94] Login Plugin 신규 개발 
+  [AF-93] RoutingDataSource Plugin 신규 개발
+  [AF-92] Scheduling Plugin 개선(Simple Trigger 샘플 추가)  
+  [AF-90] Core Plugin 개선(MessageSource 기능 확인 및 개선) 
+  [AF-89] Core Plugin 개선(Exception 처리 방식 개선) 
+  [AF-88] FileUpload Plugin 개선(다중 파일 첨부, FTP 이용 파일 서버 저장) 
+  [AF-87] jQuery Plugin 신규 개발(Grid, Tree, FileUpload 등)  
+  [AF-86] MiPlatform Plugin 샘플 개선(버전 업그레이드, FileUpload 추가)  
+  [AF-85] Flex Plugin 샘플 개선(기본 CRUD, HTTP 통신, FileUpload 추가) 
+  [AF-83] DB MessageSource 사용 시 messageTable 속성에 대한 디폴트 값 설정 문제  
+  
+Changes in version 5.0.1 (2011-07-06)
+-------------------------------------
+* 변경 내역
+  - jdbc-support plugin(SQL Injection 보안 위험 방어 기능 및 최종 실행 쿼리에 대한 로깅(재처리) 기능 제공) 추가 제공 
+  - hibernate plugin이 설치된 이후 Transaction Manager 속성이 HibernateTransactionManager로 변경되지 않는 현상 조치
+  - DynamicHibernateService 내부에서 HibernateTemplate을 이용하도록 로직을 변경함으로써 요청 로직 종료 후, Session이 정상적으로 Close되도록 조치 
+  - simpleweb-jquery plugin 내의 IdGen 서비스 사용 관련 오류 조치
+  - ibatis2 plugin 내의 Dynamic 쿼리문 정의 변경 
+  - cxf-jaxrs, cxf-jaxws plugin 내의 테스트코드 삭제
+  - cache, core, cxf, cxf-jaxrs, cxf-jaxws, hibernate, remoting, scheduling plugin 매뉴얼과 연결된 샘플 프로젝트를 최신 버전 기준으로 업데이트
+  
+* 참조 라이브러리 변경 내역
+  - hibernate-3.6.0-Final.jar를 hibernate-core-3.6.5.Final.jar 파일로 버전 변경
+  - hibernate-commons-annotations-3.2.0.Final.jar 파일 추가
+  - hibernate-ehcache-3.5.6-Final.jar 파일 추가   
+
+* 해결된 이슈 목록
+  [AF-82] Oracle 기반일 경우 CLOB, BLOB 처리 오류를 조치한 Hibernate 3.6.5.Final로 버젼 업그레이드
+  [AF-80] Query Service를 통해 Stored Procedure에 대한 batch update 처리 기능 추가 
+  [AF-79] Query Namespace의 auto-config 사용하여 다른 종류의 DB를 사용하는 QueryService Bean을 여러개 정의할 경우 Bean id 중복 발생
+  [AF-78] QueryService batchUpdate 관련 메소드 입력 인자의 Generic 타입 부정확 
+  [AF-77] 여러 타입의 MessageSource(DB, File 기반 등)를 이용한 I18N 기능 수행 지원
+  [AF-76] QueryService PreparedStatementArgTypeSetter Constructor 실행시 발생한 오류 메시지 상세화
+  [AF-75] 로컬 변수로 생성하여 사용하고 있는 StringBuffer를 StringBuilder 형태로 사용 
+  [AF-73] ibatis2 plugin의 sql mapping xml 파일 명을 mapping-ibatis2-[domain name].xml로 변경
+  [AF-72] ibatis2 plugin의 DAO 클래스를 SqlMapClientDaoSupport를 extends 받는 형태로 변경
+  [AF-70] I18N 기능 수행을 위한 Resource를 DB로 관리할 수 있도록 기능 제공 
+  
+Changes in version 5.0.0_b20110601 (2011-06-01)
+-------------------------------------
+* 해결된 이슈 목록
+  [AF-69] Log4jdbc 라이브러리가 없는 경우 OraclePagingJdbcTemplate 실행시 런타임 오류 조치
+  [AF-68] QueryService 속성 정의 간편화를 위해 <query:auto-config ... /> 신규 제공 
+  [AF-67] Ria QueryService, Mip QueryService를 이용할 경우에도 쿼리문별로 MaxFatchSize를 적용할 수 있도록 보완
+  [AF-65] IdGenService가 DB에 정의된 초기값이 없을 때 Exception을 던지지 않고, 초기값을 생성하도록 개선
+  [AF-64] TimestampStrategy를 제공함으로써 IdGenService을 이용한 timestamp + sequence 형식의 신규 Id 생성 지원
+  [AF-63] Query Mapping File의 스키마 타입 변경 (DTD -> XSD)
+  [AF-61] QueryService JavaDoc 보완
+  [AF-60] Query Mapping File 내에 정의된 쿼리문별로 최대 조회 결과수를 제한할 수 있도록 maxFetchSize 속성 처리 추가
+  [AF-59] 조회된 값이 없을 경우 조회 칼럼 정보를 추출할 수 있는 findColInfo() 메소드의 실행 오류 조치 
+  [AF-58] findBy~()에 의해 입력된 쿼리문, Dynamic이 아닌 쿼리문 수행시 QueryService의 속성으로 정의한 maxFetchSize가 적용되지 않는 오류 조치 
+  [AF-72] ibatis2 plugin의 DAO 클래스를 SqlMapClientDaoSupport를 extends 받는 형태로 변경
+  [AF-73] ibatis2 plugin의 sql mapping xml 파일 명을 mapping-ibatis2-[domain name].xml로 변경
+  [AE-58] QueryManager 툴에 의해 생성되는 Query Mapping File의 스키마 타입 변경 (DTD -> XSD)
+  [AE-59] MiPlatform template으로 CRUD 소스 코드 생생 시 MipDao 클래스 패키지명 변경
+  [AE-60] iBATIS template DAO 클래스에서 SqlMapClientDaoSupport를 extends 받는 형태로 변경
+  [AE-61] Query template mapping query 에서 queryservice XSD 사용하는 것으로 변경
+  [AE-62] IDE Editor 내 Configuration Tab에서 DAO Framework 선택에서 ibatis2를 iBATIS2로 명칭 변경
+  [AE-63] plugin uninstall 시 삭제된 리소스들을 백업하는 폴더의 이름을 .installed로 변경
+  
+Changes in version 5.0.0 (2011-05-02)
+-------------------------------------
+* 변경 내역
+1) 공통
+  - Anyframe 형상관리 리파지토리(http://dev.anyframejava.org/subv/anyframe-opensource/anyframe) 구조 개편
+    . 프로젝트 유형별로 그룹핑하여 archetype, ide, plugin, packager로 구분
+    . plugin 폴더 하위에서는 plugin을 중심으로 관련된 plugin 프로젝트와 서비스 프로젝트 관리  
+  - 서비스 프로젝트명 변경 (ex. anyframe.hibernate -> anyframe-hibernate)
+  - Plugin 프로젝트명 변경 (ex. anyframe.plugin.hibernate -> anyframe-hibernate-pi)
+  - 패키지 변경 
+    . 기존 anyframe...에서 org.anyframe....과 같은 형태로 변경 (ex. anyframe.core.query... -> org.anyframe.query...)
+  - Anyframe 라이브러리 변경에 대한 상세한 내용은 "changes to projects.pdf"와 "changes to classes.pdf" 참조 
+
+2) Plugin
+  - Plugin 프로젝트 구조 변경
+    . 기존에는 Plugin 프로젝트가 Velocity Template 형태의 Resource들로 구성되어 있어 Plugin 설치 이후에만 Plugin Resource에 대한 테스트가 가능하였음. 이를 개선하여 Plugin 프로젝트를 실행 가능한 웹어플리케이션 형태로 구성
+  - Plugin을 essential과 optional로 구분하여 제공
+    . 모든 Plugin을 위해 필수적으로 필요한 Plugin과 선택적으로 필요한 Plugin으로 구분하여 essential과 optional로 제공
+    . 4개(core,datasource,logging,spring)의 essential plugin 제공
+    . 38개(hibernate,ibatis2,query,cxf.. 등)의 optional plugin 제공
+  - 프로젝트에 적합한 DAO Framework 적용을 쉽게 하고 유연한 Plugin 조합을 위해 기존 Foundation Plugin을 Core, Query, Tiles, FileUpload Plugin 등으로 분리
+  - Miplatform Plugin과 Mipsample Plugin을 통합하여 Mip-Query Plugin으로 제공
+  - Plugin 이름 변경
+    . Simpleweb-JSON Plugin에서 Simpleweb-jQuery Plugin으로 변경
+    . Japser Plugin에서 Jasperreports Plugin으로 변경
+    . SpringOptional Plugin에서 Spring-Optional Plugin으로 변경
+  - Chart, CXF, Datasource, Excel, Fileupload, iBatis2, Idgen, Logging, Logging-SQL, Query-RIA, Simpleweb, Util-Demo, Util-System, Util-System-Demo Plugin 추가
+
+3) Service
+  - 기존 String, Date 처리를 위한 Utility 이외에 Number, Digest, Validation 관련 Utility 추가 제공
+  - 다음과 같은 기능을 제공하는 Util-System 기능 추가 제공
+    . sigar api를 이용한 System, Network, FileSystem 정보 조회
+    . Shell script를 이용한 System 정보 조회
+    . File 조작 및 다양한 포맷의 File 압축을 지원하는 Utility 지원
+    . 특정 Folder/File을 Monitoring 할 수 있는 Utility 지원
+  - 오픈 소스 Chart 기능을 제공하는 FusionChart Free를 활용하여 Ajax 기법으로 웹 페이지 내에서 Chart 기능을 쉽게 사용할 수 있도록 Chart 서비스 추가 제공
+  - Service 속성 정의 간편화를 위해 Idgen, Properties, Query Service의 속성 정의시 anyframe-core-service-2.0.xsd내에 정의된 <config:configuration>가 아닌 spring-beans-2.5.xsd 내에 정의된 <property>를 사용할 수 있도록 변경
+  - Anyframe에서 자체 개발한 Service 기능 실행 중 Exception이 발생하였을 때 MessageResource를 통해 Exception Message를 처리하던 방식에서 직접적으로 Message를 처리하는 방식으로 변경함. 따라서 MessageResource Bean 정의시 Anyframe Service 관련된 MessageResource Bundle 정의 불필요
+  - Apache Commons Validator를 사용했을 경우 message 인코딩 변환 로직이 두번 실행됨에 따라 한글 메세지 깨짐 현상 수정
+  - Query Service 사용 시 Result Class를 정의했을 때 Column Name, Column Type, Column Size 등의 정보를 얻을 수 있도록 기능 추가
+  - Query Service 사용 시 Result Class를 별도로 정의하지 않았을 경우 조회 결과가 없이도 컬럼 정보를 얻을 수 있도록 기능 개선
+  - RIA QueryService Dynamic Query 기능 추가
+    . #for~#each 문 사용 지원
+  - RIA QueryService StoredProcedure 기능 추가
+    . function, package, prodedure 실행 지원
+  - RIA QueryService Code Refactoring
+    . 중복되거나 불필요한 소스 코드 제거, 클래스명 변경, 프로젝트 구조 변경, 정의 가능한 속성 변경
+    . MiPQueryServiceImpl에서 RiaQueryServiceImpl을 Injection하는 방식에서 AbstractRiaQueryService를 상속받는 구조로 변경
+    . MiPQueryService 프로젝트와 MiPService 프로젝트를 mip-query 프로젝트로 통합
+  - flex-query 패키지 구조 및 클래스명 변경에 따른 binding action script 파일(*.as) 수정
+
+4) IDE
+  - Plugin 간의 Dependency 관계를 기반으로 특정 Plugin과 참조 관계에 놓인 모든 Plugin들을 설치할 수 있는 기능 지원
+  - Maven Repository가 아닌 다른 폴더에 존재하는 Plugin 라이브러리 파일을 이용하여 특정 Plugin을 설치할 수 있는 기능 지원
+  - Plugin 간의 Dependency 관계를 기반으로 특정 Plugin을 삭제할 수 있는 기능 지원
+  - 개발중인 특정 어플리케이션을 쉽게 Plugin화할 수 있도록 Plugin 프로젝트로의 전환/패키징/배포/Plugin Catalog 등록 기능 지원
+  - EclipseIDE 내에서 Archetype 버전을 선택할 수 있는 기능 추가
+    . Preferences 화면을 통해 Basic/Service Archetype Version 설정
+  - EclipseIDE 내에서 Maven/Ant 기반 Command 수행 시 콘솔 화면에 나오는 로그 메시지 레벨을 선택할 수 있는 기능 추가
+    . Preferences 화면을 통해 로그 레벨 설정
+  - CRUD 소스 코드 생성 템플릿으로 SpringJDBC와 iBatis2 기반의 DAO 클래스 생성 템플릿 추가
+  - AnyframeIDE와 Query Manager Eclipse Plugin UI 메뉴 통합
+    . Anyframe Common Plugin 4.0.0 버전 기준으로 Properties, Preferences 변경
+    . Project Context 메뉴에서 AnyframeIDE와 Query Manager Nature 메뉴를 Anyframe Tools 하위로 통합
+    . Query Manager Nature 설정을 위한 메뉴를 Enable/Disable에서 Activate/Deactivate로 변경
+
+* 참조 라이브러리 변경 내역
+  - bouncycastle-jce-jdk13-112.jar 파일 추가
+  - commons-codec-1.3.jar 파일 추가 
+  - commons-httpclient-2.0.2.jar 파일 추가
+  - commons-httpclient-3.1.jar 파일 추가
+  - emma-2.1.5320.jar 파일 추가
+  - slide-webdavlib-2.1.jar 파일 추가
+  - sigar-1.6.4.jar 파일 추가
+  - xml-im-exporter-1.1.jar 파일 추가
+  - commons-compress-1.1.jar 파일 추가
+  - ibatis-sqlmap-2.3.4.726.jar 파일 추가
+  - jackrabbit-webdav-1.6.0.jar 파일 추가
+  - maven-archiver-2.4.1.jar 파일 추가
+  - poi-3.6.jar 파일 추가
+  - plexus-archiver-1.0.jar 파일 추가
+  - plexus-digest-1.0.jar 파일 추가
+  - plexus-io-1.0.jar 파일 추가
+  - plexus-interpolation-1.13.jar 파일 추가 
+  - maven-install-plugin-2.3.1.jar 파일 추가
+  - maven-plugin-testing-harness-1.0-beta-1.jar 파일 추가
+  - velocity-tools-2.0.jar 파일 추가 
+  - wagon-webdav-1.0-beta-2.jar 파일 추가
+  - 기존의 log4jdbc3-1.2beta2.jar 파일을 log4jdbc3-1.2alpha2.jar로 버전 변경
+  - 기존의 ant-1.6.2.jar 파일 삭제
+  - 기존의 ant-1.7.1.jar 파일 삭제
+  - 기존의 agent-2.4.1.jar 파일 삭제
+  - 기존의 jboss-serialization-1.0.1.GA.jar 파일 삭제
+  - 기존의 rome-1.0.jar 파일 삭제
+  - 기존의 strutstest-2.1.4.jar 파일 삭제
+  - 기존의 tagishauth-1.0.3.jar 파일 삭제
+  - 기존의 trove-1.0.2.jar 파일 삭제
+  - 기존의 spring-security-cas-client-3.0.2.RELEASE.jar 파일 삭제
+  - 기존의 spring-security-ldap-3.0.2.RELEASE.jar 파일 삭제
+  - 기존의 spring-security-openid-3.0.2.RELEASE.jar 파일 삭제
+  - 기존의 wagon-http-lightweight-1.0-beta-2.jar 파일 삭제
+  - 기존의 wagon-http-shared-1.0-beta-2.jar 파일 삭제
+  - 기존의 wagon-ssh-1.0-beta-2.jar 파일 삭제
+  - 기존의 wagon-ssh-common-1.0-beta-2.jar 파일 삭제
+  - 기존의 wagon-ssh-external-1.0-beta-2.jar 파일 삭제
+
+* 테스트 내역
+  - Anyframe 5.0.0 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5 (단, WAS가 WebLogic 10.3, Tomcat 7.0.4일 경우 JDK 1.6 기반)
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0
+    . WAS : JEUS 6.0, WebLogic 9.2, 10.0, 10.3, Tomcat 6.0.20, 7.0.4, JBoss AS6 
+    . Eclipse 3.5.2
+
+* 해결된 이슈 목록
+  [AF-57] QueryService findWithColInfo 메소드 기능 개선
+  [AF-54] Apache Commons Validator와 함께 Spring의 MessageSource 사용 시 Argument에 대한 메시지 인코딩 처리 지원
+  [AF-43] Ria Service 추가 - XP Query
+  [AF-31] RIA QueryService Code Refactoring
+    - [AF-37] QueryService SQLLoader getMappingInfo()변경에 따른 소스 코드변경
+  [AF-14] System 관련 Utility 성 요소기술 기능 확보
+    - [AF-26] Sigar(System 정보 처리를 위한 오픈소스) 도입 및 간편 설정 방안 제공
+    - [AF-25] ZipUtils 개발
+    - [AF-24] FileMonitor 개발
+    - [AF-23] NetworkStateUtils 개발
+    - [AF-22] SystemInfoUtils 개발
+    - [AF-21] FileSystemUtils 개발
+  [AF-13] 일반 Utility 성 요소기술 기능 확보
+    - [AF-20] DigestUtils 개발
+    - [AF-19] ValidationUtils 개발
+    - [AF-18] NumberUtils 개발
+    - [AF-17] DateUtils 개발
+    - [AF-16] StringUtils 개발
+    - [AF-15] UtilBase 공통 기반
+  [AF-12] utility 성 편의 기능을 프레임워크 자산으로 표준화하여 확보
+  [AF-10] RIA QueryService - Dynamic Query 실행 기능 개선
+  [AF-8] RIA QueryService  - StoredProcedure 실행 기능 개선
+  [AF-1] Anyframe 형상관리 리파지토리 개선
+    - [AF-6] Anyframe Sample Project 보완 및 정리
+    - [AF-5] Anyframe Class NamingRule 정의 및 반영
+    - [AF-4] Anyframe Parent Pom 파일 개선
+    - [AF-3] Anyframe 패키지 변경 내역 정리
+    - [AF-2] 형상관리 리파지토리 구조 변경
+  [AE-57] DB Table 기반 도메인 클래스 생성 시 일부 테이블 컬럼명에 대해 정상적인 CamelCased 형태의 어트리뷰트 생성 못함
+  [AE-54] Plugin Dependency 관리 기능 구현으로 인해 변경된 API, Plugin 구조로 인해 영향받는 Mojo, Task 코드 보완 및 테스트
+    - [AE-56] CommonTask, CodeGenTask, ModelGenTask, DialectChangeTask, DBConfigChangeTask 컴파일 에러 조치 및 로직 보완, 테스트
+    - [AE-55] AbstractPluginTask, GenerateArchetypeTask, InstallPluginTask, Show~Task, UninstallPluginTask, UpdatePluginCatalogTask 컴파일 에러 조치 및 로직 보완, 테스트
+  [AE-50] QueryManager Plugin 통합
+  [AE-49] AnyframeIDE - Plugin Dependency 관리 기능 반영
+  [AE-17] Plugin 목록조회 기능 개선
+    - [AE-33] Catalog File 다운로드 기능 개발
+    - [AE-31] Plugin 목록조회 기능 개발
+  [AE-15] Plugin 상세조회 기능 개선
+    - [AE-42] Plugin 상세조회 기능 개발
+    - [AE-25] Core Plugin 여부 확인 기능 개발
+    - [AE-24] Plugin 설치 여부 확인 기능 개발
+    - [AE-23] Plugin Dependency Library 조회 기능 개발
+    - [AE-22] 특정 Plugin이 참조하는 Plugin 목록 조회 기능 개발
+    - [AE-21] Plugin Version 간 부합 여부 확인 기능 개발
+    - [AE-20] 특정 Plugin을 참조하는 Plugin 목록 조회 기능 개발
+  [AE-14] Plugin 삭제 기능 개선
+  [AE-13] Plugin 설치 기능 개선
+  [AE-12] Plugin Builder 개발
+    - [AE-47] Plugin 패키징 기능 개발
+    - [AE-46] Plugin 빌드 파일 삭제 기능 개발
+    - [AE-45] Plugin 빌드 파일 생성 기능 개발
+  [AE-1] Plugin Dependency 관리
+
+Changes in version 4.6.1 (2010-12-03)
+-------------------------------------
+* 서비스 변경 내역
+  - Spring의 <mvc:annotation-driven> tag를 확장한 Namespace를 제공하여 Double Submit 방지 기능을 위한 설정 방법 추가
+  - 쿼리 수행으로 조회된 칼럼의 정확한 Alias명을 추출할 수 있도록 하기 위해 기존의 ResultSetMetaData.getColumnName() 부분을 ResultSetMetaData.getColumnLabel()과 같이 변경
+  - 쿼리서비스 내에 포함된 SQLGenerator에서 로직 수행을 위해 필요한 값을 멤버 변수에 할당하는 방법으로 처리하고 있음. 이는 QueryService가 Singleton 방식으로 동작하므로 동시에 쿼리문 수행을 요청할 때 잘못된 수행 결과를 초래할 수 있음. 따라서, AbstractPagingSQLGenerator 내에 정의된 멤버 변수를 제거하고, SQLGenerator로부터 쿼리 인자값 및 타입을 추출하는 로직을 변경함.
+  - GenericService에 페이징 처리없는 목록 조회 기능, SearchVO가 아닌 Domain 객체를 이용한 목록 조회 기능 등 추가 구현
+
+* Archetype/Plugin 변경 내역
+  - 참조 라이브러리 버전 변경을 위해 다음 plugin 변경
+    . Archetype : basic, service
+    . Plugin : foundation, hibernate, cache, japser, miplatform, mipsample, scheduling, simpleweb-json, simpleweb-map, simplemap-vo, spring-optional, struts, flex
+  - Apache CXF 기반의 웹서비스 및 RESTful 웹서비스 샘플 보완을 위해 다음 plugin 변경
+    . 기존의 cxf plugin을 cxf-jaxws plugin으로 변경
+    . 기존의 restweb plugin을 springrest plugin으로 변경
+    . cxf-jaxrs plugin 신규 추가
+  - Generic Service 활용 샘플을 포함한 generic plugin 신규 추가
+  - security plugin을 삭제하고 Anyframe IAM 활용 샘플을 포함한 iam plugin 신규 추가
+
+* IDE 변경 내역
+  - 기존 HSQLDB, Oracle, MySQL, Sybase 데이터베이스 외 DB2 데이터베이스 지원 기능 추가  
+  - 각 DB 별 테이블 컬럼 타입 별로 도메인 클래스 및 CRUD 생성 시 유의사항 매뉴얼 내용에 추가 
+  - Spring 3.0.5 버전 기준으로 CRUD 소스코드 생성되도록 템플릿 변경
+  - CRUD 소스 코드 생성 시 DBUnit을 이용하여 샘플데이터를 DB에 Insert 하게 되는데 이때 에러 발생 시 경고 메시지가 출력되도록 변경
+  - CRUD 소스 코드 생성 시 숫자 타입의 샘플 데이터 생성 시 DB 컬럼의 precision과 scale 정보를 이용하여 생성하도록 변경    
+  - IDE Editor UI에서 Update와 Refresh 버튼 이미지를 각각 별도의 이미지로 변경
+
+* 참조 라이브러리 변경 내역
+  - geronimo-stax-api_1.0_spec-1.0.1.jar 파일 추가
+  - geronimo-ws-metadata_2.0_spec-1.1.3.jar 파일 추가
+  - jetty-continuation-7.1.6.v20100715.jar 파일 추가
+  - jetty-http-7.1.6.v20100715.jar 파일 추가
+  - jetty-io-7.1.6.v20100715.jar 파일 추가
+  - jetty-server-7.1.6.v20100715.jar 파일 추가
+  - stax2-api-3.0.2.jar 파일 추가
+  - 기존의 asm-2.2.3.jar 파일을 asm-3.3.jar로 버전 변경 
+  - 기존의 bcprov-jdk15-140.jar 파일을 bcprov-jdk15-1.43.jar로 버전 변경 
+  - 기존의 commons-lang-2.4.jar 파일을 commons-lang-2.5.jar로 버전 변경 
+  - 기존의 cxf-2.2.7.jar 파일을 cxf-2.3.0.jar로 버전 변경 
+  - 기존의 cxf-manifest-2.2.7.jar 파일을 cxf-manifest-2.3.0.jar로 버전 변경 
+  - 기존의 cxf-xjc-boolean-2.2.7.jar 파일을 cxf-xjc-boolean-2.3.0.jar로 버전 변경 
+  - 기존의 cxf-xjc-bug671-2.2.7.jar 파일을 cxf-xjc-bug671-2.3.0.jar로 버전 변경 
+  - 기존의 cxf-xjc-dv-2.2.7.jar 파일을 cxf-xjc-dv-2.3.0.jar로 버전 변경 
+  - 기존의 cxf-xjc-ts-2.2.7.jar 파일을 cxf-xjc-ts-2.3.0.jar로 버전 변경 
+  - 기존의 geronimo-activation_1.1_spec-1.0.2.jar 파일을 geronimo-activation_1.1_spec-1.1.jar로 버전 변경 
+  - 기존의 geronimo-javamail_1.4_spec-1.6.jar 파일을 geronimo-javamail_1.4_spec-1.7.1.jar로 버전 변경 
+  - 기존의 geronimo-jaxws_2.1_spec-1.0.jar 파일을 geronimo-jaxws_2.2_spec-1.0.jar로 버전 변경 
+  - 기존의 geronimo-servlet_2.5_spec-1.2.jar 파일을 geronimo-servlet_3.0_spec-1.0.jar로 버전 변경 
+  - 기존의 hsqldb-1.8.0.10.jar 파일을 hsqldb-2.0.0.jar로 버전 변경 
+  - 기존의 javassist-3.8.0.GA.jar 파일을 javassist-3.12.0.GA.jar로 버전 변경 
+  - 기존의 jaxb-api-2.1.jar 파일을 jaxb-api-2.2.jar로 버전 변경 
+  - 기존의 jaxb-impl-2.1.12.jar 파일을 jaxb-impl-2.2.1.1.jar로 버전 변경 
+  - 기존의 jaxb-xjc-2.1.12.jar 파일을 jaxb-xjc-2.2.1.1.jar로 버전 변경 
+  - 기존의 jetty-util-6.1.21.jar 파일을 jetty-util-7.1.6.v20100715.jar로 버전 변경 
+  - 기존의 jfreechart-1.0.0.jar 파일을 jfreechart-1.0.12.jar로 버전 변경 
+  - 기존의 log4jdbc3-1.2alpha2.jar 파일을 log4jdbc3-1.2beta2.jar로 버전 변경 
+  - 기존의 slf4j-api-1.5.3.jar 파일을 slf4j-api-1.6.1.jar로 버전 변경 
+  - 기존의 slf4j-log4j12-1.5.3.jar 파일을 slf4j-log4j12-1.6.1.jar로 버전 변경 
+  - 기존의 spring-aop-3.0.4.RELEASE.jar 파일을 spring-aop-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-asm-3.0.4.RELEASE.jar 파일을 spring-asm-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-aspects-3.0.4.RELEASE.jar 파일을 spring-aspects-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-beans-3.0.4.RELEASE.jar 파일을 spring-beans-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-context-3.0.4.RELEASE.jar 파일을 spring-context-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-context-support-3.0.4.RELEASE.jar 파일을 spring-context-support-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-core-3.0.4.RELEASE.jar 파일을 spring-core-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-expression-3.0.4.RELEASE.jar 파일을 spring-expression-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-instrument-3.0.4.RELEASE.jar 파일을 spring-instrument-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-instrument-tomcat-3.0.4.RELEASE.jar 파일을 spring-instrument-tomcat-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-jdbc-3.0.4.RELEASE.jar 파일을 spring-jdbc-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-jms-3.0.4.RELEASE.jar 파일을 spring-jms-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-orm-3.0.4.RELEASE.jar 파일을 spring-orm-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-oxm-3.0.4.RELEASE.jar 파일을 spring-oxm-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-struts-3.0.4.RELEASE.jar 파일을 spring-struts-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-test-3.0.4.RELEASE.jar 파일을 spring-test-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-tx-3.0.4.RELEASE.jar 파일을 spring-tx-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-web-3.0.4.RELEASE.jar 파일을 spring-web-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-webmvc-3.0.4.RELEASE.jar 파일을 spring-webmvc-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 spring-webmvc-portlet-3.0.4.RELEASE.jar 파일을 spring-webmvc-portlet-3.0.5.RELEASE.jar로 버전 변경 
+  - 기존의 wss4j-1.5.8.jar 파일을 wss4j-1.5.9.jar로 버전 변경 
+  - 기존의 woodstox-core-asl-3.2.9.jar 파일을 woodstox-core-asl-4.0.8.jar로 버전 변경 
+  - 기존의 XmlSchema-1.4.5.jar 파일을 XmlSchema-1.4.7.jar로 버전 변경 
+  - 기존의 abdera-core-0.4.0-incubating.jar 파일 삭제
+  - 기존의 abdera-extensions-json-0.4.0-incubating.jar 파일 삭제
+  - 기존의 abdera-extensions-main-0.4.0-incubating.jar 파일 삭제
+  - 기존의 abdera-parser-0.4.0-incubating.jar 파일 삭제
+  - 기존의 abdera-i18n-0.4.0-incubating.jar 파일 삭제
+  - 기존의 axiom-api-1.2.7.jar 파일 삭제
+  - 기존의 axiom-impl-1.2.7.jar 파일 삭제
+  - 기존의 mondrian-3.1.1.12687.jar 파일 삭제
+  - 기존의 jaxen-1.1.jar 파일 삭제
+  - 기존의 jetty-6.1.21.jar 파일 삭제
+  - 기존의 stax-api-1.2.jar 파일 삭제
+
+* 테스트 내역
+  - Anyframe 4.6.1 버전은 다음과 같은 환경에서 테스트를 거침
+    . JDK : 1.5 (단, WAS가 WebLogic 10.3, Tomcat 7.0.4일 경우 JDK 1.6 기반)
+    . DB : Hsqldb 2.0.0, Oracle 10g, MySQL 5.0, DB2 9.7, Sybase Anywhere 12.0
+    . WAS : JEUS 6.0, WebLogic 9.2, 10.0, 10.3, Tomcat 6.0.20, 7.0.4 
+    . Eclipse 3.5.2
+
+* 해결된 이슈 목록
+  [ANFRM-283] QueryService에 메소드 실행 요청을 동시에 두개 발생시킬 때 가끔 실행 결과가 잘못 출력되는 현상 발생
+  [ANFRM-280] restweb Plugin을 springrest Plugin으로 Plugin명 변경
+  [ANFRM-275] cxf-jax-rs Plugin 개발 
+  [ANFRM-274] cxf-jax-ws Plugin으로 Plugin명 변경
+  [ANFRM-273] Maven 기반으로 CLI 상에서 create project 실행 시 디폴트디비인 HSQL DB에 대한 driver jar path 설정 필요
+  [ANFRM-272] IDE Editor 내 CTIP tab 내용 중 Hudson URL 등록 팝업 창 메시지 처리
+  [ANFRM-271] Anyframe Plugin/Service 참조 라이브러리 버전 업그레이드
+  [ANFRM-270] Generic 서비스에서 제공하는 메소드 추가 구현
+  [ANFRM-269] Generic 서비스를 사용하는 샘플 플러그인 개발
+  [ANFRM-266] <mvc:annotation-driven> tag를 확장하여 Double Submit 방지 기능을 위한 설정 방법 추가
+  [ANFRM-265] Map 기반 CRUD 코드 생성을 위한 템플릿을 Spring 3.0.5 버전 대상으로 테스트 후 수정
+  [ANFRM-264] CRUD 소스 코드 생성 시 함께 생성되는 샘플데이터를 DBUnit을 통해 Insert 수행 시 에러 발생하는 경우 경고처리한다.
+  [ANFRM-263] CRUD 소스 코드 생성 시 함께 생성되는 샘플데이터의 숫자 타입 생성 로직 수정
+  [ANFRM-262] DB2 Database Support
+  [ANFRM-261] Configure 팝업에서 Remove으로 URL 삭제시 삭제여부 확인없이 바로 삭제됨.
+  [ANFRM-260] 메시지 내용 중 용어의 일관성이 필요함.
+  [ANFRM-259] 프로젝트 디테일 정보중 빌드 스케쥴 필드의 입력값 체크가 없으며, 빌드 처리시 실패 원인에 대한 적절한 메시지 처리 안됨.
+  [ANFRM-258] 동일한 이미지가 2개의 다른 기능의 버튼에 사용되거나, 버튼 이미지가 누락됨.
+  [ANFRM-256] 메시지 내용에 오탈자 있음 
+
+Changes in version 4.6.0 (2010-09-28)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Subversion 소스 코드 리파지토리 구조 변경 
+    : http://dev.anyframejava.org/subv/anyframe-opensource/anyframe/tags 내의 archetype, ide, plugin, service 폴더 내에서 배포 라이브러리 개별로 버전 관리 수행
+    : http://dev.anyframejava.org/subv/anyframe-opensource/gen 소스 코드를 http://dev.anyframejava.org/subv/anyframe-opensource/anyframe 하위의 ide 로 통합
+    
+* 참조 라이브러리 변경
+  - 기존의 spring-aop-3.0.3.RELEASE.jar, spring-asm-3.0.3.RELEASE.jar, spring-aspects-3.0.3.RELEASE.jar, spring-beans-3.0.3.RELEASE.jar, spring-context-3.0.3.RELEASE.jar, spring-context-support-3.0.3.RELEASE.jar, spring-core-3.0.3.RELEASE.jar, spring-expression-3.0.3.RELEASE.jar, spring-instrument-3.0.3.RELEASE.jar, spring-instrument-tomcat-3.0.3.RELEASE.jar, spring-jdbc-3.0.3.RELEASE.jar, spring-jms-3.0.3.RELEASE.jar, spring-orm-3.0.3.RELEASE.jar, spring-oxm-3.0.3.RELEASE.jar, spring-struts-3.0.3.RELEASE.jar, spring-test-3.0.3.RELEASE.jar, spring-tx-3.0.3.RELEASE.jar, spring-web-3.0.3.RELEASE.jar, spring-webmvc-3.0.3.RELEASE.jar, spring-webmvc-portlet-3.0.3.RELEASE.jar 파일을 다음과 같이 버전 변경
+    : spring-aop-3.0.4.RELEASE.jar, spring-asm-3.0.4.RELEASE.jar, spring-aspects-3.0.4.RELEASE.jar, spring-beans-3.0.4.RELEASE.jar, spring-context-3.0.4.RELEASE.jar, spring-context-support-3.0.4.RELEASE.jar, spring-core-3.0.4.RELEASE.jar, spring-expression-3.0.4.RELEASE.jar, spring-instrument-3.0.4RELEASE.jar, spring-instrument-tomcat-3.0.4.RELEASE.jar, spring-jdbc-3.0.4.RELEASE.jar, spring-jms-3.0.4.RELEASE.jar, spring-orm-3.0.4.RELEASE.jar, spring-oxm-3.0.4.RELEASE.jar, spring-struts-3.0.4.RELEASE.jar, spring-test-3.0.4.RELEASE.jar, spring-tx-3.0.4.RELEASE.jar, spring-web-3.0.4.RELEASE.jar, spring-webmvc-3.0.4.RELEASE.jar, spring-webmvc-portlet-3.0.4.RELEASE.jar
+  - 기존의 hibernate-validator-4.0.2.GA.jar 파일을 hibernate-validator-4.1.0.Final.jar로 버전 변경
+  - 기존의 ehcache-1.6.2.jar 파일을 ehcache-2.2.0.jar로 버전 변경
+
+* 추가된 기능
+  - 기존 Anyframe GEN을 Anyframe 내에 통합하고 Anyframe IDE로 명명함. Anyframe을 통해 Maven, Ant 기반에서 Command Line Interface 또는 Eclipse Plugin(Anyframe IDE Plugin)을 이용하여 프로젝트 생성 및 코드 생성, 빌드를 포함한 개발 라이프사이클 전 영역 지원
+  - Maven, Ant 기반에서 다음과 같은 기능 동일하게 수행 지원
+    : 프로젝트 생성, Plugin 설치/삭제/수정, 테이블 기반 도메인 클래스 생성, 도메인 클래스 기반 CRUD 코드 생성, DB 변경, 참조 라이브러리 WEB-INF/lib 폴더로 복사, Plugin 목록 조회, 설치된 Plugin 목록 조회, Plugin Catalog 최신 업데이트, Anyframe 버전 확인
+
+* 해결된 이슈 목록
+  [ANFRM-253] 화면 레이아웃을 Tiles 대신 Frameset을 이용하여 SimpleWeb 기능 사용이 가능하도록 Anyframe Tag 확장
+  [ANFRM-249] IDE를 포함한 ATS 내 Anyframe 개발 환경 구성을 위한 폴더 구조 변경
+  [ANFRM-248] 도메인 클래스 및 CRUD 소스코드 생성 시 사용되는 Freemarker template을 Velocity template 사용하는 방식으로 변경
+  [ANFRM-247] IDE Editor내 Installation Tab에 Update Anyframe Plugin 기능 추가
+  [ANFRM-246] CLI AntRunner 통합 작업
+  [ANFRM-245] CRUD 소스코드 생성 command 변경(Ant Task)
+  [ANFRM-244] Model Class 생성 command 변경(Ant Task)
+  [ANFRM-243] DB 정보 변경 command 변경(Ant Task)
+  [ANFRM-242] Anyframe Plugin 수정 사항 반영
+  [ANFRM-235] 동일한 IDE Eclipse Plugin UI에서 프로젝트 빌드 타입 별로 Maven, Ant command 호출 하여 사용
+  [ANFRM-234] Anyframe IDE Editor 사용 시 Hudson 연결하지 않도록 변경  
+  [ANFRM-233] Maven, Ant 빌드도구 선택 기능을 Preference 화면에서 수행
+  [ANFRM-232] DB Schema 정보 선택 위치 변경 및 최초 Editor 사용 시 Domain 화면에서 DB 연결을 하지 않도록 한다.
+  [ANFRM-231] Maven Build 수행 결과 메시지창 이용하여 출력
+  [ANFRM-230] Anyframe Plugin 설치 시 DB 데이터 스크립트 수행
+  [ANFRM-229] repo 폴더 제거하고 maven local repository 사용하도록 변경
+  [ANFRM-228] anyframe 명령어를 service 프로젝트에서도 지원하며, 존재하지 않는 폴더를 경로로 지정하는 경우 폴더를 생성한다.
+  [ANFRM-227] maven 프로젝트일 경우 driver에 대한 dependency 정보가 입력되어야 한다.
+  [ANFRM-224] Ant Build 스크립트 통합
+  [ANFRM-223] DB 설정 정보 통합
+  [ANFRM-222] Ant Task와 Maven Mojo 공통 기능 통합
+  [ANFRM-221] Ant Task와 Maven Mojo 공통 기능 통합 
+  [ANFRM-220] CRUD 소스코드 생성 command 추가(Mojo)
+  [ANFRM-219] Model Class 생성 command 추가(Mojo)
+  [ANFRM-218] DB 정보 변경 command 추가(Mojo)
+  [ANFRM-216] foundation, miplatform 플러그인에 singleconfig archetype 에서 반영했던 사항을 적용한다.
+  [ANFRM-214] 프라퍼티 변동사항을 ide eclipse 플러그인에 반영한다.
+  [ANFRM-213] help message 수정
+  [ANFRM-212] DB 정보 Properties 이용 방식으로 변경 
+  [ANFRM-211] service archetype 추가
+  [ANFRM-210] basic archetype 수정
+
+Changes in version 4.5.1 (2010-08-05)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - QueryService에서는 Spring JdbcTemplate을 이용하여 정의된 StoredProcedure를 실행하기 위해 "OUT" 또는 "INOUT" 타입의 인자에 대해 SqlOutParameter 객체로 처리하고 있는데 이 과정에서 무조건 typeName을 셋팅하고 있다. 이 로직을 다음과 같이 개선하여 Oracle11g에서도 StoredProcedure가 정상적으로 처리될 수 있도록 하였다. 
+    : "OUT" 또는 "INOUT" 타입의 인자가 "DISTINCT, STRUCT, JAVA_OBJECT, ARRAY, REF" 타입인 경우에 대해서는 typeName을 셋팅해주고 그렇지 않을 경우에는 typeName을 셋팅하지 않도록 로직 보완 
+  - Weblogic Server에서 웹개발 영역 단순화를 위해 추가된 Anyframe Tag Library 사용 시 tag body content 처리할 수 있도록 태그 클래스 수정
+
+* 참조 라이브러리 변경
+  - N/A
+
+* 추가된 기능
+  - 기존의 Servlet Spec. 2.5에서뿐만 아니라 Servlet Spec. 2.4를 지원하는 WAS에서도 Tiles2의 EL Expression 기능 사용 가능
+  - 웹개발 영역 단순화를 위해 제공되는 공통 콘트롤러를 사용하여 서비스의 메소드를 호출할 때 여러 개의 메소드 파라미터 자동 바인딩 기능
+
+* 해결된 이슈 목록
+  [ANFRM-209] Servlet 2.4 Spec.을 지원하는 WAS에서 Tiles2의 EL expression 기능을 사용할 수 있도록 기능 추가
+  [ANFRM-208] SimpleWeb 기능 중 데이터 바인딩 시 자동 설정되는 input/output 어트리뷰트 명을 전체 소문자 형태가 아닌 CamelCase 형태로 변경
+  [ANFRM-207] Weblogic Server에서 SimpleWeb tag library 사용 시 tag body content 처리 오류 조치
+  [ANFRM-206] Oracle10g(ojdbc6.jar)를 사용하여 QueryService의 executeBySQL 메소드를 이용하는 경우 프로시져 호출 시 return 결과가 null 인 현상
+  [ANFRM-205] Plugin 샘플에서 checkbox에 대한 디폴트 값 처리 방식 변경
+  [ANFRM-142] 웹 프레임워크 강화 기능 가이드 작성 및 리뷰 사항 반영 
+  [ANFRM-126] 공통 콘트롤러를 통해 서비스를 호출할때 service parameter argument 제약 문제 해결 필요
+
+Changes in version 4.5.0 (2010-07-15)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Plugin 설치로 생성되는 샘플 코드의 도메인을 Product Management에서 MovieFinder로 변경하고 Tiles 기반으로 재구성
+  - Spring 3 기반으로 Plugin Resources 재구성 
+  - MiPQueryService execute() 메소드의 리턴 타입 변경(void -> DatasetList)
+
+* 참조 라이브러리 변경
+  - 기존의 spring-2.5.6.jar, spring-test-2.5.6.jar, spring-webmvc-2.5.6.jar, spring-agent-2.5.6.jar, spring-aspects-2.5.6.jar, spring-webmvc-portlet-2.5.6.jar, 
+    spring-tomcat-weaver-2.5.6.jar, spring-modules-validation-0.9.jar, spring-webmvc-struts-2.5.6.jar 파일을 다음과 같이 변경
+    : spring-aop-3.0.3.RELEASE.jar, spring-asm-3.0.3.RELEASE.jar, spring-beans-3.0.3.RELEASE.jar, spring-context-3.0.3.RELEASE.jar, spring-core-3.0.3.RELEASE.jar, 
+      spring-expression-3.0.3.RELEASE.jar, spring-jdbc-3.0.3.RELEASE.jar, spring-test-3.0.3.RELEASE.jar, spring-tx-3.0.3.RELEASE.jar, spring-web-3.0.3.RELEASE.jar,
+      spring-webmvc-3.0.3.RELEASE.jar, spring-orm-3.0.3.RELEASE.jar, spring-context-support-3.0.3.RELEASE.jar, spring-aspects-3.0.3.RELEASE.jar, spring-instrument-3.0.3.RELEASE.jar
+      spring-instrument-tomcat-3.0.3.RELEASE.jar, spring-jms-3.0.3.RELEASE.jar, spring-oxm-3.0.3.RELEASE.jar, spring-webmvc-portlet-3.0.3.RELEASE.jar,
+      spring-struts-3.0.3.RELEASE.jar
+  - 기존의 spring-binding-2.0.7.RELEASE.jar 파일을 spring-binding-2.0.9.RELEASE.jar 파일로 버전 변경
+  - 기존의 spring-js-2.0.7.RELEASE.jar 파일을 spring-js-2.0.9.RELEASE.jar 파일로 버전 변경
+  - 기존의 spring-webflow-2.0.7.RELEASE.jar 파일을 spring-webflow-2.0.9.RELEASE.jar 파일로 버전 변경
+  - 기존의 aspectjrt-1.6.4.jar 파일을 aspectjrt-1.6.8.jar 파일로 버전 변경
+  - 기존의 aspectjweaver-1.6.5.jar 파일을 aspectjweaver-1.6.8.jar 파일로 버전 변경
+  - 기존의 jpa-1.0.jar 파일을 hibernate-jpa-2.0-api-1.0.0.Final.jar 파일로 변경
+  - 기존의 junit-4.4.jar 파일을 junit-4.7.jar 파일로 버전 변경
+  - 기존의 xercesImpl-2.6.2.jar 파일을 xercesImpl-2.8.1.jar 파일로 버전 변경
+  - 기존의 servlet-api-2.4.jar 파일을 servlet-api-2.5.jar 파일로 버전 변경
+  - 기존 hibernate-3.3.1.GA.jar, hibernate-annotations-3.4.0.GA.jar, hibernate-commons-annotations-3.1.0.GA.jar 파일을 hibernate-3.5.3-Final.jar 파일로 버전 변경
+  - 기존의 cxf-2.1.3.jar 파일을 cxf-2.2.7.jar 파일로 버전 변경
+  - 기존의 cxf-manifest-2.1.3.jar 파일을 cxf-manifest-2.2.7.jar 파일로 버전 변경
+  - 기존의 FastInfoset-1.2.2.jar 파일을 FastInfoset-1.2.7.jar 파일로 버전 변경
+  - 기존의 geronimo-javamail_1.4_spec-1.3.jar 파일을 geronimo-javamail_1.4_spec-1.6.jar 파일로 버전 변경
+  - 기존의 stax-api-1.0.1.jar 파일을 stax-api-1.2.jar 파일로 버전 변경
+  - 기존의 jaxb-impl-2.1.jar 파일을 jaxb-impl-2.1.12.jar 파일로 버전 변경
+  - 기존의 jaxb-xjc-2.1.7.jar 파일을 jaxb-xjc-2.1.12.jar 파일로 버전 변경
+  - 기존의 jettison-1.0.1.jar 파일을 jettison-1.2.jar 파일로 버전 변경
+  - 기존의 jetty-6.1.9.jar 파일을 jetty-6.1.21.jar 파일로 버전 변경
+  - 기존의 jetty-util-6.1.9.jar 파일을 jetty-util-6.1.21.jar 파일로 버전 변경
+  - 기존의 jsr311-api-0.8.jar 파일을 jsr311-api-1.0.jar 파일로 버전 변경
+  - 기존의 wss4j-1.5.4.jar 파일을 wss4j-1.5.8.jar 파일로 버전 변경
+  - 기존의 wstx-asl-3.2.6.jar 파일을 wstx-asl-3.2.9.jar 파일로 버전 변경
+  - 기존의 XmlSchema-1.4.2.jar 파일을 XmlSchema-1.4.5.jar 파일로 버전 변경
+  - 기존의 xmlsec-1.4.0.jar 파일을 xmlsec-1.4.3.jar 파일로 버전 변경
+  - 기존의 spring-security-acl-2.0.4.jar 파일을 spring-security-acl-3.0.2.RELEASE.jar 파일로 버전 변경
+  - 기존의 spring-security-core-2.0.4.jar 파일을 spring-security-core-3.0.2.RELEASE.jar 파일로 버전 변경
+  - 기존의 spring-security-taglibs-2.0.4.jar 파일을 spring-security-taglibs-3.0.2.RELEASE.jar 파일로 버전 변경
+  - commons-digester-1.8.jar 파일 추가
+  - javax.inject-1.jar 파일 추가
+  - validation-api-1.0.0.GA.jar 파일 추가
+  - joda-time-1.6.jar 파일 추가
+  - tiles-api-2.2.1.jar, tiles-core-2.2.1.jar, tiles-jsp-2.2.1.jar, tiles-servlet-2.2.1.jar, tiles-template-2.2.1.jar, tiles-el-2.2.1.jar 파일 추가
+  - hibernate-validator-4.0.2.GA.jar 파일 추가
+  - ant-1.7.1.jar 파일 추가
+  - cxf-xjc-boolean-2.2.7.jar 파일 추가
+  - cxf-xjc-bug671-2.2.7.jar 파일 추가
+  - cxf-xjc-dv-2.2.7.jar 파일 추가
+  - cxf-xjc-ts-2.2.7.jar 파일 추가
+  - js-1.7R1.jar 파일 추가
+  - oro-2.0.8.jar 파일 추가
+  - xmlbeans-2.4.0.jar 파일 추가
+  - spring-security-config-3.0.2.RELEASE.jar 파일 추가
+  - spring-security-web-3.0.2.RELEASE.jar 파일 추가
+  - displaytag-1.2.jar 파일 제거
+  - 기존 apache-log4j-extras-1.0.jar 파일 제거
+  - 기존 org.springplugins.web-1.0.0.jar 파일 제거
+  - 기존 tagishauth-1.0.3.jar 파일 제거
+  - 기존 geronimo-servlet_2.5_spec-1.2.jar 파일 제거
+  - 기존 hessian-3.1.3.jar 파일 제거
+  - 기존 jetty-6.1.9.jar 파일 제거
+  - 기존 jetty-util-6.1.9.jar 파일 제거 
+  - 기존의 abdera-extensions-html-0.4.0-incubating.jar 파일 제거
+  - 기존의 abdera-server-0.4.0-incubating.jar 파일 제거
+  - 기존의 jdom-1.0.jar 파일 제거
+  - 기존의 stax-utils-20060502.jar 파일 제거
+  - 기존의 spring-security-core-tiger-2.0.4.jar 파일 제거
+
+* 추가된 기능
+  - Number 타입에 대한 Spring 3 Custom Converter (StringToNumberConverterFactory) 제공 
+  - Spring 3 New Feature에 대한 매뉴얼 컨텐츠 보완
+  - Spring 3에서 새롭게 선보인 REST Style 웹어플리케이션 구성을 위한 Plugin 제공
+  - 웹개발 영역 단순화를 위해 추가된 기능을 활용한 SimpleWeb-Map, SimpleWeb-VO, SImpleWeb-JSON Plugin 제공 
+  - 기존 Foundation Plugin을 Anyframe 기반 기본 프로젝트 구조를 갖춘 basic archetype과 Spring/SpringMVC/Query 활용 리소스를 포함한 foundation plugin으로 분리하여 구성
+  - 설치된 Plugin의 버전을 최신 버전으로 update할 수 있는 기능
+  - 로컬에 존재하는 버전별 Plugin Catalog 파일을 최신 내용으로 업데이트할 수 있는 기능
+  - 로컬에 설치된 Plugin의 Master Version을 확인할 수 있는 기능
+
+* 해결된 이슈 목록
+  [ANFRM-203] MiPQueryService의 execute() 메소드 Multi Row Dataset에 대한 처리
+  [ANFRM-198] MiPlatform CSV방식 일 경우에 사용하는 MiPPrintWriterRowCallbackHandler의 기능 추가
+  [ANFRM-197] QueryService 설정시 property 적용 순서에 따른 의존성 이슈
+  [ANFRM-183] ANT를 이용해서 라이브러리 검색 시, MAVEN과 동일한 방식으로 검색되도록 한다.(ex.json-lib-2.2.3-jdk15.jar)
+  [ANFRM-169] PropertiesService 에서 관리하는 Property 들의 key 목록 도출시 오류
+  [ANFRM-168] QueryService를 통해 수행되는 쿼리문의 Result Local Mapping시 Column 처리 로직 수정
+  [ANFRM-164] PropertiesService 에서 관리하는 Property 파일에 대한 Reload 기능 추가
+
+Changes in version 4.2.0 (2010-05-18)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - QueryService의 ReflectionResultSetMapper 클래스 내에서 조회 결과값을 특정 객체로 매핑할 때 조회된 칼럼 목록에 대해 loop을 돌면서 해당 객체가 가진 모든 attribute를 대상으로 하여 매핑 정보를 찾고 있음. 이럴때 매핑을 위해 특정 객체가 가진 attribute가 많은 경우 최대 칼럼 개수 * attribute 개수만큼의 loop이 수행되어 성능에 영향을 미침. 따라서, 특정 객체가 가진 attribute 정보를 Map으로 처리하고 Map의 contains() 메소드를 활용하는 형태로 로직을 개선함.
+  - 다국어 지원을 위해 메새지 리소스 파일의 인코딩 설정을 지정하여 사용할 수 있도록 하는 EncodingResourceBundleMessageSource 클래스 추가됨. (유니코드로 메시지 리소스 파일 저장 불필요해짐)
+
+* 참조 라이브러리 변경
+  - N/A
+
+* 추가된 기능
+  - N/A
+
+* 해결된 이슈 목록
+  [ANFRM-154] QueryService 매뉴얼 보완 (about 복합객체일 경우 Example, ResultSetMapper 활용 Example) 
+  [ANFRM-150] QueryService 내의 조회 결과값 매핑 로직 개선 
+  [ANFRM-147] Maven 기반의 Plugin 설치시 발생된 오류에 대해 Warning 레벨의 Log 처리 
+  [ANFRM-144] Source 내 Exception message 출력 수정
+  [ANFRM-122] Gen에서 Plugin 설치시 라이브러리만 설치한 경우를 식별할 수 있도록 Meta 정보 추가 
+  [ANFRM-121] 일부 Plugin 설치시 BUILD SUCCESSFUL 메시지 없이 작업이 완료되는 현상 조치
+  [ANFRM-119] Transaction Service 매뉴얼 컨텐츠 내에 JEUS 기반일 경우 설정 추가 
+  [ANFRM-117] DynamicHibernateService 매뉴얼 컨텐츠 내에 NativeSQL 관련 상세 설명 추가 
+  [ANFRM-101] PluginInfo 내에 SampleCode 포함 여부를 나타내는 속성 추가 정의 
+
+Changes in version 4.1.0 (2010-02-25)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Anyframe의 모든 소스/테스트 코드에 대해 JDK 1.5 기반에서 컴파일. 따라서, Anyframe 4.1.0 이후부터 Anyframe 기반
+    어플리케이션은 JDK 1.5 이상에서만 동작 가능함.
+  - 4.0.0에서 제공된 모든 Plugin의 리소스들을 Annotation 기반으로 변경
+  - QueryService 사용시 PagingSQLGenerator를 필수적으로 지정하도록 하기 위해 QueryServiceImpl, RiaQueryServiceImpl 내에
+    afterPropertiesSet() 메소드 추가 구현함. 사용하는 DB에 적합한 PagingSQLGenerator가 없을 경우 별도로 구현하거나 
+    QueryService에서 제공하는 DefaultPagingSQLGenerator를 사용할 수 있음. 단, DefaultPagingSQLGenerator를 사용하는 경우
+    쿼리 조건에 해당하는 전체 데이터를 모두 fetch한 이후 ResultSet Cursor를 움직여서 특정 페이지에 속한 목록 정보를
+    조회하게 되므로 어플리케이션의 성능에 심각한 영향을 초래할 수 있음을 인지해야 함.
+  - QueryService에서 ResultSet으로부터 검색 결과를 꺼낼때 칼럼명이 아닌 칼럼Index를 활용하도록 로직을 변경함으로써 목록
+    조회시 성능 개선
+
+* 참조 라이브러리 변경
+  - N/A
+
+* 추가된 기능
+  - Flex 기반 비즈니스 레이어 개발시 공통적으로 활용할 수 있도록 기본 CRUD 기능을 구현한 anyframe.ria.flex 추가
+  - 특정 어플리케이션에 대한 모니터링 기능을 수행하기 위해 필요한 리소스를 설치해주는 Monitoring Plugin 추가
+  - mvn anyframe:list 수행시 설치가능한 Plugin 정보를 선택적으로 조회할 수 있도록 showall property 추가
+  - WebServices를 통해 통신하기 위해 JAXB Databinding을 수행하는 경우 JAXB 표준에서 List 형태의 타입은 지원하나 
+    Map 형태의 타입에 대해서는 Databinding을 기본적으로 지원하지 않음. 따라서, Map 형태의 타입을 이용하여 Databinding하기 
+    위해서는 XmlAdapter 클래스 추가 개발이 필요함. 이를 위해 공통적으로 활용할 수 있는 CXFMapAdater 클래스를 생성하여 
+    anyframe.common에 추가
+
+* 해결된 이슈 목록
+  [ANFRM-78] MiPQueryServiceTest 소수점이 포함된 double type 테스트케이스 추가 
+  [ANFRM-76] ResultSet으로부터 검색 결과를 꺼낼때 칼럼명이 아닌 칼럼Index를 활용하도록 로직 수정 
+  [ANFRM-75] QueryService 사용시 반드시 SQLGenerator를 지정하도록 로직 변경 
+  [ANFRM-74] 설치 가능한 plugin 목록 조회 기능에 option을 추가하여 정보를 간단화하여 볼 수 있도록 개선 
+  [ANFRM-73] Apache CXF Plugin에 포함되어 있던 CXF Map Adaptor를 Anyframe Common 기능으로 추가 
+  [ANFRM-72] anyframe:inplace 수행시 uninstall된 plugin의 dependency 라이브러리가 삭제되지 않고 남아 있는 현상 
+  [ANFRM-71] Annotation 기반으로 Plugin 리소스 변경 
+  [ANFRM-70] DynamicHibernateService를 통해 mapping XML load시 XML Parsing 에러 
+  [ANFRM-69] API 문서 한글 깨짐 
+  [ANFRM-68] Monitoring Plugin을 위한 템플릿 정의 
+
+Changes in version 4.0.0 (2009-11-18)
+-------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - QueryService를 이용하여 목록 조회 결과를 특정 객체에 매핑할 때 반복 수행되는 로직을 제거하기 위해, SQLLoader에서 한 번 처리한 ResultMapping 정보를 관리하도록 로직 보완. 따라서 조회되는 칼럼 정보가 쿼리문 실행시마다 변경될 수 있는 동적 쿼리문에 대해서는 별도로 Mapper 클래스를 정의해 주어야 함.
+    . Result가 Map일 경우 기본 적용되는 DefaultCallbackResultSetMapper 클래스 추가
+    . Result가 VO일 경우 기본 적용되는 DefaultReflectionResultSetMapper 클래스 추가
+    . ColumnUtil 클래스 추가
+    . QueryServiceImpl, SQLLoader 클래스의 ResultSetMapper 관련 로직 보완
+  - StoredProcedure 수행시 CamelCase, Lower, Upper와 같은 Result Mapping Style을 적용할 수 있도록 MappingStyleColumnMapRowMapper 클래스 추가
+  - 모든 소스 프로젝트에 대한 Maven Parent Project 변경 (anyframe.root -> anyframe.common.maven.root)
+
+* 참조 라이브러리 변경
+  - 기존의 log4j-1.3alpha8.jar 파일을 log4j-1.2.15.jar 파일로 버전 변경
+  - 기존의 velocity-1.5.jar 파일을 velocity-1.6.2.jar 파일로 버전 업그레이드
+  - 기존의 commons-pool-1.4.jar 파일을 commons-pool-1.5.3.jar 파일로 버전 업그레이드
+  - 기존의 aspectjweaver-1.6.4.jar 파일을 aspectjweaver-1.6.5.jar 파일로 버전 업그레이드
+  - 기존의 jasperreports-2.0.2.jar 파일을 jasperreports-3.1.0.jar 파일로 버전 업그레이드
+
+* 추가된 기능
+  - Plugin 기반으로 프로젝트에 최적화된 개발 환경을 구성할 수 있도록 Anyframe 설치 방법 대폭 개선
+    . Plugin 15종 제공 - foundation, cache, cxf, dynamicmodule, hibernate, jasper, miplatform, mipsample, remoting, scheduling, security, spring-optional, struts, test, webflow  
+    . Maven을 이용한 Plugin 설치/삭제, Plugin 설치 현황 조회 기능 등 제공
+  - Miplatform 기반에서 기본 CRUD 기능을 수행하는 서비스 클래스들을 제공하며 QueryService를 이용하는 DAO 클래스들도 함께 제공 
+  - Dynamic Hibernate Service를 통해 Dynamic Native SQL 처리할 수 있도록 기능 추가
+  - 기존 온라인 상에서만 접근 가능하던 매뉴얼을 PDF 형태로 제공할 수 있도록 전면 개편
+
+* 해결된 이슈 목록
+
+  [CORE-130] MiPQuerySerivce 사용 시 Query에 정의된 Column이 Dataset에 없을 경우 Message처리 오류 
+  [CORE-129] MiPQueryService에서 Dataset row의 status와 상관없이 insert/update/delete 가능한 메소드 추가
+  [CORE-128] QueryService 기반에서 조회 결과 매핑시 칼럼명을 Camel-Case 형태로 변경하는 로직에서 실행 시간이 많이 소요되는 현상 제거
+  [CORE-127] MiPQueryService에 Callablestatement 처리 기능 추가 
+  [CORE-125] Properties Service에서 properties 파일 내에 정의된 정보를 읽어들일때, '\,' 와 같이 정의되었음에도 ','가 escape 되지 않음 
+  [CORE-124] IdGenerationService에서 DataSource Connection을 직접 Handling하지 않도록 로직 보완 
+  [CORE-123] Miplatform 기반에서 비즈니스 레이어 개발시 공통으로 활용할 수 있는 Anyframe Ria Mip 서비스 추가
+  [CORE-122] QueryService에서 Stored procedure 수행 시 mapping style 적용 필요함 
+  [CORE-121] Transfer Object 객체 내에 boolean type의 attribute가 있을 경우 getter 를 찾지 못해 NULL 셋팅됨. 
+  [CORE-120] 객체를 이용하여 batch로 CUD 수행시 칼럼값이 NULL로 셋팅되는 현상 발생 
+  [CORE-118] Basis Service QueryDAOUtil 클래스 내 메소드에서 예외처리 메시지 처리 필요 
+  [CORE-117] Basis Service의 Service와 DAO 클래스 디폴트 생성자 필요 
+  [CORE-116] MiPQueryServie의 update메소드 실행 순서의 문제 수정 

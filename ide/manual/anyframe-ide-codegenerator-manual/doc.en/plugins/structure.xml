@@ -1,0 +1,222 @@
+<chapter id="plugins_structure">
+	<title>Plugin Structure</title>
+	<para>
+		To install/uninstall plugins such as Core, Hibernate, CXF and Monitoring using anyframe-maven-plugin after installing Anyframe archetype, 
+		Plugins have similar appearances to Maven Archetype but actually different types of folder structures and files. 
+	</para>		
+	<para>
+		The following is the structure of main components of the distributed Core Plugin.
+	</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="../image/installation/core_structure.jpg" align="center" />
+		</imageobject>
+	</mediaobject>	
+	<para>
+		In META-INF folder, there is plugin.xml file containing the information of the plugin, and in plugin-resources folder there are pom.xml file and resource template files.	
+	</para>
+	<para>
+		In pom.xml file, the reference libraries are defined necessary to execute the functions that will be added by installing the relevant plugin.
+	</para>
+	<para>
+		Also, plugin.xml file manages Meta information of the resources that should be added when a sample project is generated using the resource template defined.  
+		It is used to define whether to designate the main package when the resources defined in the folder under plugin-resources are added in the sample project, 
+		and whether to add the resources that merged resource templates and the values entered by the user using Velocity. 
+		The following is the example of plugin.xml file of Core Plugin.
+	</para>
+	<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="core" description="Core Plugin is the basic plugin ...">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-core-pi</artifactId>
+  <version>x.x.x</version>
+  <dependent-plugins>
+    <dependent-plugin name="datasource" version="1.0.0-SNAPSHOT&lt;=*"/>
+    <dependent-plugin name="logging" version="1.0.0-SNAPSHOT&lt;=*"/>
+    <dependent-plugin name="spring" version="1.0.0-SNAPSHOT&lt;=*"/>
+  </dependent-plugins>
+  <resources>
+    <resource dir="src/main/java" filtered="true" packaged="true">
+      <include name="**/*.java"/>
+    </resource>
+   ...
+  </resources>
+  <samples>true</samples>
+  <essential>true</essential>
+</plugin>]]></programlisting>
+	<para>
+		In the file above, it can be seen that in <![CDATA[<resource/>]]> filtered and package property values are defined for the file group that belongs to a specific directory. 
+		Let us assume that MovieService.java, which is one of the resource files, is constituted as follows.
+	</para>
+		<programlisting language="java">package ${package}.core.moviefinder.service;
+
+import ${package}.core.domain.Movie;
+
+public interface MovieService {
+
+	Movie get(String movieId) throws Exception;
+
+	void create(Movie movie) throws Exception;
+
+	void update(Movie movie) throws Exception;
+
+	void remove(String movieId) throws Exception;
+}</programlisting>	
+		<para>
+			When the property value of filtered is true, the part defined as ${package} will be interpreted by Velocity Engine, 
+			and if the value of package is 'anyframe', it will be recombined into 'package anyframe.core.moviefinder.service;' 
+			and MovieService.java file will be added in the sample project. 
+			When the property value of filtered is false, MovieService.java file will be added without changes in all the parts defined.
+		</para>			
+		<para>
+			Let us look at the property value of packaged. 
+			Let us assume that a resource named core/moviefinder/service/MovieService.java is defined under plugin-resources/src/main/java. 
+			If the value of package is 'anyframe' when the property value of packaged is true, 
+			the resource will be added under src/main/java/<emphasis role="bold">anyframe</emphasis>/core/moviefinder/service in the sample project.  
+			That is, the location to generate resources is designated by reflecting the package structure according to the property value of packaged.
+		</para>	
+		<para>
+			The following is the explanation of the folder under plugin-resources.
+		</para>		
+		<informaltable>
+			<tgroup cols="2">
+				<colspec colnum="1" colname="col1" colwidth="1*"/>
+				<colspec colnum="2" colname="col2" colwidth="5*"/>
+				<thead>
+					<row>
+						<entry align="center">Folder</entry>
+						<entry align="center">Description</entry>
+					</row>
+				</thead>
+				<tbody>	
+					<row>
+						<entry>db/resources</entry>
+						<entry>
+							Used when the relevant plugin contains the resources that should be changed according to the DB type. 
+							For example, as for QueryService, the PagingSQLGenerator implementation to be used varies depending on the DB type, 
+							so the definition of the property of QueryService should be different depending on the DB type when Query Plugin is installed.  
+							For this, the DB name can be used as the folder name under db/resources folder, 
+							and under the folder, the location of the relevant resources and the files that should be changed can be defined. 
+							As for Core Plugin, since there is no file to be changed according to the DB type, there is no resources folder to be managed.
+							<important>
+								<title>Note for definition of DB resources</title>
+								<para>
+									Anyframe provides the function that can change DB related information in case it is necessary to use the DB other than the one set first during constitution of development environment. 
+									The following rules are followed when DB resources are defined 
+									to change only the DB related information in relevant resources, maintaining the information of the jobs that the developer has conducted thus far as much as possible when the DB related information is changed. 
+									
+								</para>
+								<programlisting language="xml"><![CDATA[...
+    <!--query-propertyLobHandler-START-->		
+    <property name="lobHandler" ref="lobHandler"/>
+    <!--query-propertyLobHandler-END-->	
+
+    <!--query-generator-START-->
+    <bean id="pagingSQLGenerator" class="org.anyframe.query.impl.jdbc.generator.OraclePagingSQLGenerator"/>
+    <!--query-generator-END-->
+
+    <!--query-lobHandler-START-->
+    <bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
+        <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor"/>
+    </bean>
+    <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" lazy-init="true"/>
+    <!--query-lobHandler-END-->						
+</beans>]]></programlisting>
+								<para>
+									What is shown above is part of the DB resource file for Oracle defined in Query Plugin. 
+									It can be seen that there is the <![CDATA[<!--query-xxx-START--> ... <!--query-xxx-END-->]]> section in the middle. 
+									This section is the part that will be replaced when DB is changed. 
+									Therefore, in the DB resources of the plugin, the section that should be changed when DB is changed should be separated with <![CDATA[<!--{plugin name}-xxx-START--> ... <!--{plugin name}-xxx-END-->]]>, 
+									and xxx should be set with a unique id value in the relevant file. 
+								</para>
+							</important>
+						</entry>
+					</row>
+					<row>
+						<entry>db/scripts</entry>
+						<entry>
+							Contains the DB scripts to be executed in case the functions to be added by installing the relevant Plugin require the data other than the basic DB data.  
+							Currently, the scripts for each DB type necessary for each plugin are provided. 
+							The scripts for HSQL DB are basically provided, and the DB scripts for Oracle, MySQL, DB2 and Sybase are additionally provided.
+						</entry>
+					</row>
+					<row>
+						<entry>src/main/java</entry>
+						<entry>
+							Manages source codes. All source code packages should be defined to start with the plugin name.
+						</entry>
+					</row>	
+					<row>
+						<entry>src/main/resources</entry>
+						<entry>
+							Manages the property definition file for execution of applications based on Spring and SpringMVC, the message file, 
+							the mapping XML file that defines query statements, hibernate.cfg.xml file that will be used to automatically generate Domain/CRUD source codes. 
+							The name of the property definition file of Spring should be defined as context-{plugin name}-xxx.xml, and the name of the SpringMVC property definition file as {plugin name}-servlet.xml. 
+							When a resources file is additionally required, a folder with the same name as the Plugin name should be generated and managed.
+						</entry>
+					</row>	
+					<row>
+						<entry>src/main/webapp</entry>
+						<entry>
+							Manages web resources (*.jsp, *.css, *.js ...) for web applications. 
+							JSP file should be managed in the folder generated with the same name as the plugin name under WEB-INF/jsp.
+							Under src/main/webapp folder there are resources that contain the information that should be integrated in the generated sample application 
+							even though they are not included in the definition in plugin.xml file because they are not the resources to be installed. 
+							Let us look at how to define each of them in the following paragraphs. 
+							<itemizedlist>
+								<listitem>
+									<para>
+										When it is required to define the property of WebApplication to run Plugins, it can be defined in the following type in src/main/webapp/WEB-INF/web.xml file.
+									</para>
+									<programlisting language="xml"><![CDATA[<servlet>
+    <servlet-name>struts</servlet-name>
+    <servlet-class>org.anyframe.struts.action.DefaultActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>struts/struts-config-common.xml ,struts/struts-config-movie.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>character-encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>struts</servlet-name>
+        <url-pattern>*.action</url-pattern>
+    </servlet-mapping>]]></programlisting>			
+								<para>
+									What is shown above is the WebApplication property information added by installing Struts Plugin, 
+									and as for Struts, since the requests of the user should be handled through DefaultActionServlet unlike SpringMVC, 
+									it can be seen that the servlet and servlet-mapping information are defined for this. 
+									After Struts Plugin is installed, what is defined above is integrated in src/main/webapp/WEB-INF/web.xml file of the sample project, and it becomes possible to run the sample application based on Struts.
+								</para>						
+							</listitem>
+							<listitem>
+								<para>
+									When the menu related to the plugin should be added in the sample application after the Plugin is installed, 
+									define the menu name and access URL in src/main/webapp/anyframe.jsp file as follows. 
+									
+								</para>
+								<programlisting language="xml"><![CDATA[<!--query-menu-START-->
+    <a href="${ctx}/queryMovieFinder.do?method=list"><font size="2">- Query 1.0.0</font></a><br/>
+<!--query-menu-END-->]]></programlisting>			
+								<para>
+									What is shown above is the information of the menu added by installing Query Plugin. 
+									If Query Plugin is installed, the menu named Query 1.0.0 will be added, 
+									and the request http://${ctx}/queryMovieFinder.do?method=list will be handled when this menu is clicked.
+								</para>							
+							</listitem>
+						</itemizedlist>
+					</entry>
+				</row>						
+				<row>
+					<entry>src/test/java</entry>
+					<entry>Manages test codes. The test code package should be defined to start with the plugin name.</entry>
+				</row>	
+				<row>
+					<entry>src/test/resources</entry>
+					<entry>Manages the resources necessary to run test codes. Defines resources according to the same rule as src/main/resources.</entry>
+				</row>																																									
+			</tbody>
+		</tgroup>
+	</informaltable>				
+</chapter>

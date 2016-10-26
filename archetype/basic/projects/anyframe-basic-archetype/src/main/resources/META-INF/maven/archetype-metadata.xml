@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor name="foundation">
+	<fileSets>
+		<fileSet filtered="true" packaged="false">
+			<directory></directory>
+			<includes>
+				<include>.classpath</include>
+				<include>.project</include>
+			</includes>
+		</fileSet>	
+		<fileSet filtered="false" packaged="false">
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.java</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="false" packaged="false">
+			<directory>src/test/java</directory>
+			<includes>
+				<include>**/*.java</include>
+			</includes>
+		</fileSet>	
+		<fileSet filtered="false" packaged="false">
+			<directory>src/test/resources</directory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+		</fileSet>				
+		<fileSet filtered="false" packaged="false">
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+		</fileSet>	
+		<fileSet filtered="false" packaged="false">
+			<directory>src/main/webapp</directory>
+			<excludes>
+				<exclude>**/WEB-INF/**/*.*</exclude>
+			</excludes>
+		</fileSet>				
+		<fileSet filtered="false" packaged="false">
+			<directory>src/main/webapp/WEB-INF</directory>
+			<excludes>
+			
+				<exclude>**/jsp/**/*.*</exclude>
+			</excludes>
+		</fileSet>	
+		<fileSet filtered="false" packaged="false">
+			<directory>src/main/webapp/WEB-INF/jsp</directory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>																							
+		<fileSet filtered="true" packaged="false">
+			<directory>.settings</directory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="false" packaged="false">
+			<directory>db</directory>
+			<includes>
+				<include>**/*.cmd</include>
+				<include>**/*.sh</include>
+				<include>**/*.script</include>
+				<include>**/*.jar</include>
+			</includes>
+		</fileSet>	
+		<fileSet filtered="true" packaged="false">
+			<directory>META-INF</directory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>		
+	</fileSets>
+	
+</archetype-descriptor>

@@ -1,0 +1,158 @@
+<chapter id="ctip_integration">
+	<title>Build Server(Hudson) Connection</title>
+	<para>
+	Anyframe IDE Editor provides the function of connecting Hudson and executing jobs by registering them in Hudson.  
+	This function is not provided through Anyframe IDE CLI, but through Eclipse Plugin. 
+	Let us look at how to conduct the connecting task through Anyframe IDE Eclipse Plugin. 
+	</para>
+<orderedlist numeration="arabic" inheritnum="inherit">
+<listitem>
+    <para>After selecting the project, right-click &gt;&gt; <emphasis role="bold">Anyframe Tools &gt;&gt; Anyframe IDE</emphasis> is selected.</para>
+</listitem>
+<listitem>
+    <para>When select the CTIP tab in the Anyframe IDE Editor, we can see the below category.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Hudson URL</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-url.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>URL: Hudson url for accessing the server</para></listitem>
+	      	<listitem><para>Configure...: Calling the popup screen for managing the registering, modifying, removing, etc. of the url accessing the Hudson server</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Hudson Configuration</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-configuration.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>MAVEN_HOME: Shown when Maven build tool is used by the project, and should be set with the path where Maven is installed.
+	      	If it is not properly set, modify Managed Hudson menu &gt;&gt; Configure System &gt;&gt; Maven in Hudson Server.</para></listitem>
+	      	<listitem><para>ANT_HOME: Shown when Ant build tool is used by the project, and should be set with the path where Ant is installed. 
+	      	If it is not properly set, modify Managed Hudson menu &gt;&gt; Configure System &gt;&gt; Ant in Hudson Server.</para></listitem>	      	
+	      	<listitem><para>Hudson URL in Email: url to be used for Hudson Email Notification</para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+       <listitem>
+          <para>All projects</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-allpjt.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Project name: ctip job name</para></listitem>
+	      	<listitem><para>Status: the "building" message is outputted in the case of building the job in the job operation status </para></listitem>
+	      	<listitem><para>New : new job addition </para></listitem>
+	      	<listitem><para>Remove : remove the job </para></listitem>
+	      	<listitem><para>Run : run the job </para></listitem>
+	      </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Project Details</para>
+          <mediaobject>
+	        <imageobject>
+	          <imagedata align="center" fileref="../image/eclipseplugin/ctip-pjtdetails.jpg" />
+	        </imageobject>
+	      </mediaobject>
+	      <itemizedlist>
+	      	<listitem><para>Build Type* : build carries out the build and creates the deploy file. 
+	      	Report carries out the reporting functions such as Junit test, Emma, JDepend, PMD, etc</para>
+	      	<table>
+								<title>Build Type</title>
+	
+								<tgroup cols="3">
+									<colspec colnum="1" colname="col1" colwidth="1*"/>
+									<colspec colnum="2" colname="col2" colwidth="5*"/>
+									<colspec colnum="3" colname="col3" colwidth="1*"/>
+									<thead>
+										<row>
+											<entry align="center">Type</entry>
+											<entry align="center">build</entry>
+											<entry align="center">report</entry>
+										</row>
+									</thead>
+									<tbody>
+										<row>
+											<entry>
+												Ant(target)
+											</entry>
+											<entry align="center">
+												deploy
+											</entry>
+											<entry align="center">all</entry>
+										</row>
+										<row>
+											<entry>
+												Maven(goal)
+											</entry>
+											<entry align="center">
+												package
+											</entry>
+											<entry align="center">clean site package</entry>
+										</row>
+									</tbody>
+								</tgroup>
+							</table>	      	
+	      	</listitem>
+	      	<listitem><para>Project Name* : Hudson job name</para></listitem>
+	      	<listitem><para>Custom Workspace : workspace path definition</para></listitem>
+	      	<listitem><para>SCM Server Type : subversion, cvs, none, among three types, choose</para></listitem>
+	      	<listitem><para>SCM Server URL : SCM server url</para></listitem>
+	      	<listitem><para>Poll SCM schedule : job execution schedule definition</para></listitem>
+	      	<listitem><para>Build other project : after the appropriate job operation, name specification for the carried out job</para></listitem>
+	      </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      
+</listitem>
+<listitem>
+  <para>We select the job to carry out the build from the category. We press the Run button to carry out the build.</para>
+
+      <para>If the build is carried out, the Status shows as “building”. For the build status, the scheduling is not set, so for the build result, we click the 
+      <emphasis role="bold">refresh button to check</emphasis>.</para>
+	  <para>If the build is all carried out, there is an image for the build result as we press the refresh button. The success is green, and the failure is red.</para>
+
+      <para>In the case of web type project, the appropriate plugin and the sample are together installed. 
+      We can check by executing the sample project with the applied appropriate plugin. In the case of service type project, 
+      only the appropriate plugin’s library is installed.</para>
+</listitem>
+</orderedlist>  
+<note>
+<title>Note</title>
+<para>By the above screen, the FAILURE occurs when building after creating the job about the project without the test case. 
+This is not an error, for recording for the test case, this is a message by the junit, emma plugin, 
+in the case of not using the test case, we have to set to not use the appropriate plugin. 
+We uncheck the "Publish JUnit test result report", "Record Emma coverage report" action in the configure of "[project name]_report" job.
+</para>
+</note> 
+
+<note>
+<title>When failed due to out of memory during job build</title>
+<para>When executing build for registered job, set MAVEN_OPTS as -Xmx1024m in environment setting when the following error occurs.</para>
+
+<itemizedlist>
+  <listitem><para>Set environment variable 
+  <programlisting language="xml"><![CDATA[Variable name : MAVEN_OPTS
+Variable value : -Xmx1024m]]></programlisting>  
+  </para></listitem>
+  <listitem><para>Error log shown in console 
+  <programlisting language="xml"><![CDATA[Error occurred during initialization of VM
+Could not reserve enough space for object heap
+Could not create the Java virtual machine
+...]]></programlisting> 
+  </para></listitem>
+</itemizedlist>
+</note>   
+</chapter>

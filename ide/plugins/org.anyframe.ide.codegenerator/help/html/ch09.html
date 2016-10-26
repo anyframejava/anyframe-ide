@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html lang="ko"><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>9.Creating All CRUD Classes</title><link href="anyframe.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.73.2" name="generator"><link rel="start" href="index.html" title="Anyframe Java IDE Code Generator"><link rel="up" href="pt03.html" title="III.How to use"><link rel="prev" href="ch08.html" title="8.Creating a New Project"><link rel="next" href="ch10.html" title="10.Anyframe Plugin Installation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><th align="center" colspan="3">9.Creating All CRUD Classes</th></tr><tr><td align="left" width="20%"><a accesskey="p" href="ch08.html">&#51060;&#51204;</a>&nbsp;</td><th align="center" width="60%">III.How to use</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch10.html">&#45796;&#51020;</a></td></tr></table><hr></div><div class="chapter" lang="ko"><div class="titlepage"><div><div><a name="howtouse_domain"><h2 class="title">9.Creating All CRUD Classes</h2></a></div></div></div><p>Code Generator&#47484; &#51060;&#50857;&#54644; Anyframe Java Core &#44592;&#48152;&#51032; &#53364;&#47000;&#49828;&#47484; &#49373;&#49457;&#54644;&#48376;&#45796;.</p><p>DB &#53580;&#51060;&#48660; &#44592;&#48152;&#51004;&#47196; Domain &#53364;&#47000;&#49828;&#47484; &#49373;&#49457;&#49884;&#53412;&#44592; &#46412;&#47928;&#50640; JDBC &#49444;&#51221;&#51060; &#51228;&#45824;&#47196; &#46104;&#50632;&#45716;&#51648; [<a class="link" href="ch07.html#installation_configuration_property_databases" title="7.2.3.Databases">Databases</a>]&#51012; &#52280;&#51312;&#54616;&#50668; &#54869;&#51064; &#54620; &#54980;, Anyframe Java Core &#44592;&#48152;&#51032; &#53364;&#47000;&#49828;&#47484;
+  &#49373;&#49457;&#54616;&#46020;&#47197; &#54620;&#45796;.</p><div class="itemizedlist"><ul type="disc"><li><p><a class="link" href="ch09.html#installation_installation_domain" title="9.1.Domain &#49373;&#49457;">Domain &#49373;&#49457;</a></p></li><li><p><a class="link" href="ch09.html#installation_installation_crud" title="9.2.CRUD &#49373;&#49457;">CRUD &#49373;&#49457;</a></p></li></ul></div><div class="section" lang="ko"><div class="titlepage"><div><div style="clear: both"><a name="installation_installation_domain"><h2 class="title">9.1.Domain &#49373;&#49457;</h2></a></div></div></div><div class="orderedlist"><ol type="1"><li><p>Project &#49440;&#53469; &#54980; File &gt;&gt; New &gt;&gt; Other.. &gt;&gt; Anyframe &gt;&gt;
+        Domain/VO Classes from DB Tables &#47484; &#49440;&#53469;
+     </p></li><li><p>
+   		Base Package &#50640;&#49436; Domain &#53364;&#47000;&#49828;&#47484; &#50612;&#45712; &#49548;&#49828; &#53076;&#46300; &#54056;&#53412;&#51648; &#54616;&#50948;&#47196; &#49373;&#49457;&#49884;&#53420; &#44163;&#51064;&#51648;&#47484; &#49440;&#53469;&#54620;&#45796;.
+   		Refresh &#48260;&#53948;&#51012; &#49688;&#54665;&#54616;&#47732; &#54788;&#51116; &#49440;&#53469; &#44032;&#45733;&#54620; DB Table&#51060; &#53944;&#47532; &#54805;&#53468;&#47196; &#51312;&#54924;&#46104;&#47728; Domain &#53364;&#47000;&#49828;&#47196; &#49373;&#49457;&#54616;&#44256;&#51088;&#54616;&#45716; Table&#51012; &#49440;&#53469;&#54620;&#45796;. 
+   		&#49440;&#53469;&#54620; Table&#47196; Domain &#53364;&#47000;&#49828;&#47484; &#49373;&#49457; &#54624; &#44221;&#50864; Finish &#48260;&#53948;&#51012; &#53364;&#47533;&#54620;&#45796;.</p><div class="itemizedlist"><ul type="disc"><li><p>Base Package: Edit &#48260;&#53948;&#51004;&#47196; &#54644;&#45817; &#54532;&#47196;&#51229;&#53944;&#50640; &#51080;&#45716; &#49548;&#49828; &#53076;&#46300; &#54056;&#53412;&#51648; &#44221;&#47196;&#44032; &#51312;&#54924;&#46104;&#44256; &#49688;&#51221;&#51060; &#44032;&#45733;&#54616;&#45796;.(src/main/java &#49548;&#49828; &#54260;&#45908;&#50640; &#54620;&#54632;)</p></li><li><p>Select Tables: JDBC &#44396;&#49457;&#50640; &#46384;&#46972; &#50672;&#44208;&#46108; DB&#51032; &#53580;&#51060;&#48660; &#47785;&#47197;&#51060; &#51312;&#54924;&#46108;&#45796;.</p></li></ul></div></li><li><p>Domain &#53364;&#47000;&#49828; &#49373;&#49457; &#51089;&#50629;&#51060; &#50756;&#47308;&#46104;&#47732;, Console &#52285;&#51012; &#53685;&#54644;
+   Build Successful &#51060;&#46972;&#45716; &#47700;&#49464;&#51648;&#44032; &#52636;&#47141;&#46108;&#45796;.
+   Domain &#53364;&#47000;&#49828;&#44032; &#51228;&#45824;&#47196; &#49373;&#49457;&#46104;&#50632;&#45716;&#51648; &#54869;&#51064;&#54616;&#44592; &#50948;&#54644; 
+   Domain &#53364;&#47000;&#49828; &#49373;&#49457;&#49884; &#51648;&#51221;&#54620; &#54056;&#53412;&#51648; &#54616;&#50948;&#47196; Domain &#53364;&#47000;&#49828;&#46308;&#51060; &#50948;&#52824;&#54616;&#44256; &#51080;&#45716;&#51648; &#54869;&#51064;&#54620;&#45796;.
+   &#49373;&#49457;&#46108; Domain &#53364;&#47000;&#49828;&#45716; Annotation &#49444;&#51221;&#51012; &#53685;&#54644; DB Table, Column &#51221;&#48372;&#46308;&#51012; &#44032;&#51648;&#44256; &#51080;&#45796;.
+      </p><pre class="programlisting">
+/**
+ * @Table BOARD
+ * @author SDS
+ */
+public class Board implements Serializable {
+    
+   /**
+	* @ColumnName BOARD_ID
+	* @ColumnType INTEGER
+	* @Length(32)
+	* @Key
+	*/
+    private int boardId;
+    
+   /**
+	* @ColumnName BOARD_MASTER_ID
+	* @ColumnType INTEGER
+	* @Length(32)
+	* @Key
+	*/
+	private int boardMasterId;
+    
+    &#51473;&#47029;...
+    
+    public BoardId getBoardId() {
+        return boardId;
+    }
+    public void setBoardId(int boardId) {
+       this.boardId = boardId;
+    }
+    public int getBoardMasterId() {
+        return boardMasterId;
+    }
+    public void setBoardMasterId(int boardMasterId) {
+        this.boardMasterId = boardMasterId;
+    }
+    &#51473;&#47029;...
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+        sb.append(" [");
+		sb.append("boardId").append("='").append(getBoardId()).append("', ");
+		sb.append("boardMasterId").append("='").append(getBoardMasterId()).append("', ");
+		sb.append("boardName").append("='").append(getBoardName()).append("', ");
+		sb.append("boardDesc").append("='").append(getBoardDesc()).append("', ");
+		sb.append("boardOrder").append("='").append(getBoardOrder()).append("', ");
+		sb.append("boardTopics").append("='").append(getBoardTopics()).append("', ");
+		sb.append("regDate").append("='").append(getRegDate()).append("'");
+		sb.append("] ");
+        return sb.toString();
+    }
+}</pre></li></ol></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">&#52280;&#44256;</h3><p>&#50948;&#50640;&#49436; &#49444;&#47749;&#54620; &#44592;&#45733; &#49688;&#54665; &#46020;&#51473;&#50640;&#45716; &#54532;&#47196;&#51229;&#53944; &#49373;&#49457;, &#53076;&#46300; &#49373;&#49457; &#48143; DB &#48320;&#44221; &#46321;&#44284; &#44057;&#51008; 
+  Anyframe Java IDE&#51032; &#44592;&#45733;&#51012; &#46041;&#49884;&#50640; &#49688;&#54665;&#49884;&#53420; &#49688; &#50630;&#51004;&#48064;&#47196; &#50976;&#51032;&#54616;&#46020;&#47197; &#54620;&#45796;. 
+(Background &#49892;&#54665;&#51012; &#53685;&#54620; &#44592;&#45733; &#49688;&#54665; &#49884;) </p></div></div><div class="section" lang="ko"><div class="titlepage"><div><div style="clear: both"><a name="installation_installation_crud"><h2 class="title">9.2.CRUD &#49373;&#49457;</h2></a></div></div></div><p>Code Generator&#47484; &#51060;&#50857;&#54644; CRUD&#47484; &#49373;&#49457;&#54644;&#48376;&#45796;.</p><p>Domain &#53364;&#47000;&#49828;&#47484; &#51473;&#49900;&#51004;&#47196; CRUD&#50640; &#45824;&#54620; &#44592;&#48376; &#53076;&#46300; &#48143; Sample UI&#47484; &#49373;&#49457;&#54616;&#44256; &#51088;&#46041;&#51004;&#47196; &#53580;&#49828;&#53944; &#53076;&#46300;&#50752; &#53580;&#49828;&#53944; &#45936;&#51060;&#53552;&#47484;
+		&#49373;&#49457;&#54644;&#51468;&#51004;&#47196;&#50024;
+		&#49373;&#49457;&#46108; &#53076;&#46300;&#51032; &#44592;&#45733; &#54869;&#51064;&#44620;&#51648; &#49552;&#49789;&#44172; &#54624; &#49688; &#51080;&#45796;. &#46384;&#46972;&#49436;, CRUD &#49373;&#49457; &#44592;&#45733;&#51012; &#49324;&#50857;&#54616;&#44592; &#51204;&#50640;
+		Domain &#49373;&#49457; &#44592;&#45733;&#51012; &#51060;&#50857;&#54616;&#50668;, &#50672;&#44208;&#46108; DB &#53580;&#51060;&#48660; &#44592;&#48152;&#51032; Domain &#53364;&#47000;&#49828;&#47484; &#47676;&#51200; &#49373;&#49457;&#54616;&#46020;&#47197; &#54620;&#45796;.
+	</p><div class="orderedlist"><ol type="1"><li><p>Project &#49440;&#53469; &#54980; File &gt;&gt; New &gt;&gt; Other.. &gt;&gt; Anyframe &gt;&gt; All CRUD Classes &#47484; &#49440;&#53469;
+			</p></li><li><p>&#49373;&#49457;&#46108; Wizard &#50640;&#49436; &#54788;&#51116; &#49440;&#53469; &#44032;&#45733;&#54620; Domain Model &#53364;&#47000;&#49828; &#47785;&#47197;&#51060; &#51312;&#54924;&#46108;&#45796;.</p></li><li><p>CRUD &#44592;&#45733;&#51012; &#44396;&#54788;&#54616;&#44256; &#49910;&#51008; Domain Model &#53364;&#47000;&#49828;&#47484; &#49440;&#53469;&#54616;&#44256;, CRUD Project Configuration
+				&#45236;&#50857;&#51012; &#51077;&#47141;&#54620;&#45796;.</p><div class="itemizedlist"><ul type="disc"><li><p>Base Package: CRUD&#44032; &#49373;&#49457;&#46112; &#54056;&#53412;&#51648; &#51060;&#47492;&#51060;&#47728;, &#53945;&#51221; &#49436;&#48652; &#49884;&#49828;&#53596; &#54616;&#50948;&#47196; &#53076;&#46300;&#47484; &#49373;&#49457;&#54616;&#44256; &#49910;&#45796;&#47732; &#51473;&#44036;
+						&#54056;&#53412;&#51648;
+						&#51221;&#48372;&#47484; &#54632;&#44760; &#51077;&#47141;&#54616;&#47732; &#46108;&#45796;. (ex. sub.categories)</p></li><li><p>Template Type: CRUD&#44032; &#49373;&#49457;&#49884; &#51060;&#50857;&#54624; Template Type&#51012; &#49440;&#53469;&#54620;&#45796;.</p></li><li><p>Web source code generation: &#48708;&#51592;&#45768;&#49828; &#47112;&#51060;&#50612;&#50640; &#54644;&#45817;&#54616;&#45716; &#49548;&#49828; &#49104; &#50500;&#45768;&#46972; &#54532;&#47532;&#51232;&#53580;&#51060;&#49496;
+						&#47112;&#51060;&#50612; &#49548;&#49828; &#53076;&#46300;&#46308;&#46020; &#54632;&#44760; &#49373;&#49457;&#54616;&#44256;&#51088; &#54620;&#45796;&#47732; &#52404;&#53356; &#48149;&#49828;&#50640; &#52404;&#53356;&#54616;&#46020;&#47197; &#54620;&#45796;. </p></li><li><p>Insert sample data into a database: &#49368;&#54540; &#45936;&#51060;&#53552;&#47484; &#49373;&#49457;&#54616;&#44256;&#51088; &#54620;&#45796;&#47732; &#52404;&#53356; &#48149;&#49828;&#50640; &#52404;&#53356;&#54616;&#46020;&#47197; &#54620;&#45796;.</p></li></ul></div></li><li><p>
+				Finish &#48260;&#53948;&#51012; &#53364;&#47533;&#54620; &#54980;, CRUD &#49548;&#49828;&#53076;&#46300; &#49373;&#49457; &#51089;&#50629;&#51060; &#50756;&#47308;&#46104;&#47732;, Console &#52285;&#51012; &#53685;&#54644;
+   				Build Successful &#51060;&#46972;&#45716; &#47700;&#49464;&#51648;&#44032; &#52636;&#47141;&#46108;&#45796;.
+				CRUD &#49548;&#49828;&#53076;&#46300;&#44032; &#51228;&#45824;&#47196; &#49373;&#49457;&#46104;&#50632;&#45716;&#51648; &#54869;&#51064;&#54616;&#44592; &#50948;&#54644; 
+				Domain &#53364;&#47000;&#49828;&#50640; &#45824;&#54620; &#48708;&#51592;&#45768;&#49828; &#49436;&#48708;&#49828; &#51064;&#53552;&#54168;&#51060;&#49828;,&#44396;&#54788; &#53364;&#47000;&#49828;, DAO &#53364;&#47000;&#49828;,
+				Spring &#49444;&#51221; &#54028;&#51068;&#46308;, &#53580;&#49828;&#53944;
+				&#53076;&#46300;, &#53580;&#49828;&#53944; &#45936;&#51060;&#53552; &#46321;&#51012; &#54869;&#51064;&#54644;&#48376;&#45796;. &#46608;&#54620; Spring MVC
+				Controller &#53364;&#47000;&#49828;, Spring
+				MVC &#49444;&#51221; &#54028;&#51068;, &#53580;&#49828;&#53944; &#53076;&#46300;, JSP &#54168;&#51060;&#51648; &#46321;&#51060; &#49373;&#49457;&#46108;&#45796;.
+				&#46608;&#54620;, Build Successful &#51060;&#46972;&#45716; &#47700;&#49464;&#51648;&#44032; &#52636;&#47141;&#46104;&#50632;&#51020;&#50640;&#46020;, CRUD &#49548;&#49828; &#53076;&#46300;&#44032; &#51221;&#49345;&#51201;&#51004;&#47196; &#49373;&#49457;&#46104;&#51648; &#50506;&#50520;&#45796;&#47732;,
+				[&#54532;&#47196;&#51229;&#53944; Home]/target/classes &#50640; CRUD &#49548;&#49828;&#53076;&#46300; &#45824;&#49345;&#51064; Domain &#53364;&#47000;&#49828;&#50640; &#45824;&#54620; &#52980;&#54028;&#51068;&#51060; &#51221;&#49345;&#51201;&#51060;&#51648; &#50506;&#44144;&#45208;,
+				CRUD &#49548;&#49828;&#53076;&#46300; &#49688;&#54665; &#49884; &#54596;&#49688;&#51201;&#51004;&#47196; &#54596;&#50836;&#54620; &#54260;&#45908;&#45208; &#54028;&#51068;&#51060; &#51316;&#51116;&#54616;&#51648; &#50506;&#51012; &#49688;&#46020; &#51080;&#44592; &#46412;&#47928;&#50640;
+				&#54532;&#47196;&#51229;&#53944;&#50640; &#45824;&#54620; &#48716;&#46300;&#47484; &#49688;&#54665;&#54616;&#44144;&#45208;, Console &#52285;&#51032; &#47196;&#44536;&#47484; &#54869;&#51064;&#54616;&#50668; &#54596;&#49688;&#51201;&#51004;&#47196; &#54596;&#50836;&#54620; &#54260;&#45908;&#45208; &#54028;&#51068;&#46308;&#51012; &#54869;&#51064;&#54616;&#46020;&#47197; &#54620;&#45796;.
+				</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">CRUD &#49373;&#49457; &#54980; src/test/java&#50640; &#50724;&#47448;&#44032; &#48156;&#49373;&#54624; &#44221;&#50864;</h3><p>
+						CRUD &#49373;&#49457; &#54980; &#49548;&#49828;&#54028;&#51068;&#50640;
+						<span class="inlinemediaobject"><img src="../image/eclipseplugin/createapp-error.jpg" align="middle" alt="eclipse project &#50724;&#47448; &#54364;&#49884;"></span>
+						&#54364;&#49884;&#44032; &#46888;&#45716; &#44221;&#50864;&#45716;, Anyframe Test Plugin&#51060; &#50630;&#44592; &#46412;&#47928;&#51060;&#45796;. Plugin Installation View &#50640;&#49436;
+						Anyframe Test Plugin&#51012; &#49444;&#52824;&#54616;&#47732; &#50640;&#47084;&#44032; &#54644;&#44208;&#46108;&#45796;.
+					</p></div><div class="itemizedlist"><ul type="disc"><li><p>
+						<span class="bold"><strong>&#49436;&#48708;&#49828;&#51064;&#53552;&#54168;&#51060;&#49828;</strong></span>
+						(src/main/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/service/[Entity
+						&#53364;&#47000;&#49828;&#47749;]Service.java)
+					</p><pre class="programlisting">public interface BoardService{
+    void create(Board board) throws Exception;
+    void remove(BoardId id) throws Exception; 
+    &#51473;&#47029;...           
+}</pre></li><li><p>
+						<span class="bold"><strong>&#49436;&#48708;&#49828;&#44396;&#54788;&#53364;&#47000;&#49828;</strong></span>
+						(src/main/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/service/impl/[Entity
+						&#53364;&#47000;&#49828;&#47749;]ServiceImpl.java)
+					</p><pre class="programlisting">@Service("boardService")
+@Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
+public class BoardServiceImpl implements BoardService {
+	    
+    @Inject
+    @Named("boardDao")
+    private BoardDao boardDao;
+	
+    public void create(Board board) throws Exception{
+        this.boardDao.create(board);
+    }
+    
+    public void remove(BoardId id) throws Exception {
+        this.boardDao.remove(id);
+    }
+    &#51473;&#47029;...    
+}</pre></li><li><p>
+						<span class="bold"><strong>DAO&#53364;&#47000;&#49828;</strong></span>
+						(src/main/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/service/impl/[Entity
+						&#53364;&#47000;&#49828;&#47749;]Dao.java)
+					</p><pre class="programlisting">@Repository("boardDao")
+public class BoardDaoQueryImpl extends QueryServiceDaoSupport {
+
+    @Value("#{contextProperties['pageSize'] ?: 10}")
+    int pageSize;
+    
+    @Value("#{contextProperties['pageUnit'] ?: 10}")
+    int pageUnit;
+    
+    @Inject
+    public void setQueryService(IQueryService queryService) {
+        super.setQueryService(queryService);
+    }
+	
+    /** {@inheritDoc} */
+    public void create(Board board) throws Exception {
+        super.create("createBoard", board);
+    }
+    /** {@inheritDoc} */
+    public void remove(BoardId id) throws Exception {
+        Board board = new Board();        
+        board.setId(id);    
+        super.remove("removeBoard", board);
+    }
+    &#51473;&#47029;...
+}</pre></li><li><p>
+						<span class="bold"><strong>&#47588;&#54609;&#53244;&#47532;&#47928;</strong></span>
+						(src/main/resources/sql/query/mapping-query-[Entity &#53364;&#47000;&#49828;&#47749;].xml)
+					</p><pre class="programlisting">&lt;queryservice&gt;
+  &lt;queries&gt;
+    &lt;query id="createBoard"&gt;
+      &lt;statement&gt;
+        INSERT INTO BOARD (BOARD_ID, BOARD_DESC, BOARD_MASTER_ID, BOARD_NAME, 
+               BOARD_ORDER, BOARD_TOPICS, REG_DATE) 
+        VALUES (:vo.id.boardId, :vo.boardDesc, :vo.id.boardMasterId, :vo.boardName, 
+               :vo.boardOrder, :vo.boardTopics, :vo.regDate)
+      &lt;/statement&gt;
+    &lt;/query&gt;
+    &#51473;&#47029;...
+  &lt;/queries&gt;
+&lt;/queryservice&gt;</pre></li><li><p>
+						<span class="bold"><strong>MessageSoruce</strong></span>
+						(src/main/resources/message/message-generation.properties)
+					</p><pre class="programlisting"># -- Board-START
+board.id.boardId=Board Id		
+board.id.boardMasterId=Board Master Id		
+board.boardDesc=Board Desc
+board.boardName=Board Name
+board.boardOrder=Board Order
+board.boardTopics=Board Topics
+board.regDate=Reg Date
+
+# -- success messages -- 
+success.board.create=Board has been added successfully.
+success.board.update=Board has been updated successfully.
+success.board.delete=Board has been deleted successfully.
+
+# -- error messages --
+error.boardserviceimpl.create=Board data not created
+error.boardserviceimpl.create.solution=Enter correct data for mandatory field 
+or enter data according to formats means date format as yyyy-mm-dd
+error.boardserviceimpl.create.reason=Entered incorrect data for Board
+&#51473;&#47029;...</pre></li><li><p>
+						<span class="bold"><strong>&#53685;&#54633; test case</strong></span>
+						(src/test/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/service/[Entity
+						&#53364;&#47000;&#49828;&#47749;]ServiceTest.java)
+					</p><pre class="programlisting">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "file:./src/main/resources/spring/context-*.xml" })
+public class BoardServiceTest{
+
+    @Inject
+    @Named("boardDao")
+    private BoardDao boardDao;
+
+    @Test
+    @Rollback(value=true)	    
+    public void manageBoard() throws Exception {
+        // 1. create a new board
+        Board board = getBoard();
+            
+        if(boardService.get(board.getId()) != null)
+                boardService.remove(board.getId());
+
+        boardService.create(board);
+         &#51473;&#47029;...
+    }
+    &#51473;&#47029;...
+}</pre></li><li><p>
+						<span class="bold"><strong>&#52968;&#53944;&#47204;&#47084;</strong></span>
+						(src/main/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/web/[Entity
+						&#53364;&#47000;&#49828;&#47749;]Controller.java)
+					</p><pre class="programlisting">@Controller
+@RequestMapping("/board.do")
+public class BoardController {
+
+    /**
+     * Resource Injection on BoardService
+     */
+    @Inject
+    @Named("boardService")
+    private BoardService boardService;
+
+    &#51473;&#47029;...    
+
+    /**
+     * Display form for adding Board.
+     * @param model model containing control data
+     * @return the prepared form view
+     * @throws Exception in case of an invalid new form object
+     */ 
+    @RequestMapping(params = "method=createView")  
+    public String createView(Model model) throws Exception 
+    {        
+        model.addAttribute(new Board());
+		        
+        return "genViewBoard";        
+    }
+}</pre></li><li><p>
+						<span class="bold"><strong>UI JSP &#54028;&#51068;</strong></span>
+						(src/main/webapp/WEB-INF/jsp/[Entity &#53364;&#47000;&#49828; &#47749;]/*.jsp)
+					</p><pre class="programlisting">&lt;%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %&gt;
+&lt;%@ include file="/sample/common/top.jsp"%&gt;
+		&lt;div class="location"&gt;&lt;a href="&lt;c:url value='/anyframe.jsp'/&gt;"&gt;Home&lt;/a&gt; &amp;gt; &lt;a href="&lt;c:url value='/boardF.do?method=list'/&gt;"&gt;Board&lt;/a&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;hr /&gt;
+&lt;script type="text/javascript" src="&lt;c:url value='/sample/javascript/CommonScript.js'/&gt;"&gt;&lt;/script&gt;    
+&lt;script type="text/javascript"&gt;
+	function fncCreateBoardView() {
+		document.location.href="&lt;c:url value='/board.do?method=createView'/&gt;";
+	}		
+&#51473;&#47029;...</pre></li><li><p>
+						<span class="bold"><strong>&#45800;&#50948; test case</strong></span>
+						(src/test/java/[&#45824;&#54364;&#54056;&#53412;&#51648;]/[-package &#44050;]/web/[Entity
+						&#53364;&#47000;&#49828;&#47749;]ControllerTest.java)
+					</p><pre class="programlisting">@RunWith(JMock.class)
+public class BoardControllerTest {
+
+    private BoardController controller;
+    private String SUCCESS_CREATEVIEW = "genViewBoard";
+    private String SUCCESS_CREATE = "redirect:/board.do?method=list";
+    private String SUCCESS_GET = "genViewBoard";
+    private String SUCCESS_UPDATE = "redirect:/board.do?method=list";
+    private String SUCCESS_LIST = "genListBoard";
+    private String SUCCESS_REMOVE = "redirect:/board.do?method=list";
+    private Mockery context = new JUnit4Mockery();
+    private BoardService mockService = null;
+	
+    @Before   
+    public void setUp() throws Exception {
+        System.setProperty("log4j.configuration", "log4j-test.xml");
+
+        this.mockService = context.mock(BoardService.class);                
+        this.controller = new BoardController();
+        this.controller.setBoardService(this.mockService);       
+    }
+    
+    public void setBoardController(BoardController controller) {
+        this.controller = controller;
+    }
+        
+    @Test
+    public void testCreateView() throws Exception{
+        String viewName = this.controller.createView(new ExtendedModelMap());
+        
+        assertEquals("returned correct view name", SUCCESS_CREATEVIEW, viewName);
+   }
+        &#51473;&#47029;...</pre></li></ul></div></li></ol></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">&#52280;&#44256;</h3><p>&#50948;&#50640;&#49436; &#49444;&#47749;&#54620; &#44592;&#45733; &#49688;&#54665; &#46020;&#51473;&#50640;&#45716; &#54532;&#47196;&#51229;&#53944; &#49373;&#49457;, &#53076;&#46300; &#49373;&#49457; &#48143; DB &#48320;&#44221; &#46321;&#44284; &#44057;&#51008;
+			Code Generator &#51032; &#44592;&#45733;&#51012;
+			&#46041;&#49884;&#50640; &#49688;&#54665;&#49884;&#53420; &#49688; &#50630;&#51004;&#48064;&#47196; &#50976;&#51032;&#54616;&#46020;&#47197; &#54620;&#45796;.
+			(Background &#49892;&#54665;&#51012; &#53685;&#54620; &#44592;&#45733; &#49688;&#54665; &#49884;) </p></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08.html">&#51060;&#51204;</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="pt03.html">&#50948;&#47196;</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch10.html">&#45796;&#51020;</a></td></tr><tr><td valign="top" align="left" width="40%">8.Creating a New Project&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">&#52376;&#51020;&#51004;&#47196;</a></td><td valign="top" align="right" width="40%">&nbsp;10.Anyframe Plugin Installation</td></tr></table></div></body></html>

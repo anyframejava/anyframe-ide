@@ -1,0 +1,202 @@
+<chapter id="howtouse_anyframeplugin">
+	<title>Anyframe Plugin Installation</title>
+
+	<para>Code Generator는 Anyframe Plugin을 Install/Uninstall 하기 위해서 Plugin
+		Installation View를
+		제공한다. Plugin을 설치하면 해당 Plugin과 연관된 라이브러리가 설치되며, 일부 Plugin의 경우 샘플코드를 제공하고 있다.
+		제공되는 샘플코드를 라이브러리와 함께 설치하고 싶은 경우, Plugin Installation View pull down
+		menu 에서 "Install plugins with sample"에 체크한다.</para>
+
+	<orderedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>
+				Window >> Show View >> other... >> Anyframe >> Plugin Installation 을 선택한다.
+				(Package Explorer 또는 Project Explorer 에서 선택된 Project 기준으로 정보가 보여지며,
+				선택된 Project 가 없을 경우
+				맨위의 Project 기준으로 정보가 보여진다. 또한 View 상단에 기준되는 Project 명이 표시된다.) 
+    </para>
+		</listitem>
+		<listitem>
+			<para>Plugin Installation View 가 오픈되면 다음과 같은 항목이 보인다.</para>
+
+			<itemizedlist>
+				<listitem>
+					<para>체크박스: Install/Uninstall 할 대상을 체크하는 부분으로 다수의 Plugin을 선택할 수 있다.
+					</para>
+				</listitem>
+
+				<listitem>
+					<para>Plugin Name: Plugin 명</para>
+				</listitem>
+
+				<listitem>
+					<para>Group Id: Plugin Library의 Group Id</para>
+				</listitem>
+
+				<listitem>
+					<para>Artifact Id: Plugin Library의 Artifact Id</para>
+				</listitem>
+
+				<listitem>
+					<para>Latest: Plugin의 최신 Version</para>
+				</listitem>
+
+				<listitem>
+					<para>Installed: 설치된 Plugin Version</para>
+				</listitem>
+
+				<listitem>
+					<para>Description: Plugin의 상세 정보</para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+
+		<listitem>
+			<para>Plugin Installation View 가 재공하는 Tool Bar Menu는 다음과 같다.</para>
+
+			<itemizedlist>
+				<listitem>
+					<para>
+						Install : 선택한 Plugin들을 Project에 설치한다.   
+          </para>
+				</listitem>
+				<listitem>
+					<para>
+						Uninstall : 선택한 Plugin들을 Project에서 제거한다.   
+          </para>
+				</listitem>
+				<listitem>
+					<para>
+						Refresh : Plugin List 및 Pull Down Menu의 Project List를 갱신하고자 할 때 사용한다.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+
+		<listitem>
+			<para>Plugin Installation View가 제공하는 Pull Down Menu는 다음과 같다.</para>
+
+			<itemizedlist>
+				<listitem>
+					<para>
+						Select a project : 기능을 수행하고 하는 Project를 변경 할 때 사용한다.   
+          </para>
+				</listitem>
+				<listitem>
+					<para>
+						Update Catalog List : Remote Anyframe Repository로 부터 Anyframe Plugin 목록
+						파일을 Update 받는 기능이 수행된다.
+						디폴트로 Update된 파일(plugin-catalog-x.x.x.xml)은 [사용자 계정 홈 디렉토리]/.anyframe
+						폴더 하위에 존재하게 된다. 
+          </para>
+				</listitem>
+				<listitem>
+					<para>Install plugins with sample: 샘플코드를 라이브러리와 함께 설치하고 싶은 경우 체크박스에
+						체크 한다. 
+           </para>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+		<listitem>
+			<para>설치 또는 제거할 Plugin 항목을 체크한 후, Install 혹은 Uninstall 메뉴를 클릭한다.
+				만약 WAS에 배포하여 사용중이라면, WAS는 stop 시킨 상태에서 수행하도록 한다. 그렇지 않은경우,
+				동작은 정상적으로 수행되나, 아래 6번 내용과 같은 에러가 발생하게 된다.
+  </para>
+
+			<itemizedlist>
+				<listitem>
+					<para>Install :
+						해당 Plugin과 샘플이 함께 설치된 경우,
+						적용된 Plugin 샘플은 프로젝트를 실행시켜봄으로써 확인할 수 있다.
+  		</para>
+					<itemizedlist>
+						<listitem>
+							<para>metadata 정보확인: 프로젝트 폴더 &gt;&gt; META-INF 폴더&gt;&gt;
+								plugin-installed.xml 파일에 설치한 Plugin에 대한 정보가 추가된다.
+  				</para>
+							<programlisting><![CDATA[<plugins>
+  <plugin name="core">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-core-pi</artifactId>
+    <version>x.x.x</version>
+    <essential>true</essential>
+    <checked>false</checked>
+  </plugin>
+</plugins>]]></programlisting>
+						</listitem>
+						<listitem>
+							<para>Ant 프로젝트</para>
+							<itemizedlist>
+								<listitem>
+									<para>프로젝트 Web App Libraries에 라이브러리 추가.</para>
+								</listitem>
+							</itemizedlist>
+						</listitem>
+						<listitem>
+							<para>Maven 프로젝트 : 설치한 Plugin과 관련된 라이브러리 정보가 pom.xml 의
+								&lt;dependency&gt;에 추가됨.</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+
+				<listitem>
+					<para>Uninstall : Installed 항목에서 X표시가 되며, 다음과 같은 방법으로 확인 할 수 있다.
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>metadata 정보확인: 프로젝트 폴더 &gt;&gt; META-INF 폴더&gt;&gt;
+								plugin-installed.xml 파일에서 해당 Plugin에 대한 정보가 제거된다.
+  				</para>
+						</listitem>
+						<listitem>
+							<para>Ant 프로젝트</para>
+							<itemizedlist>
+								<listitem>
+									<para>프로젝트 Web App Libraries에 라이브러리 삭제.</para>
+								</listitem>
+							</itemizedlist>
+						</listitem>
+						<listitem>
+							<para>Maven 프로젝트 : 설치한 Plugin과 관련된 라이브러리 정보가 pom.xml 의
+								&lt;dependency&gt;에 삭제됨.</para>
+						</listitem>
+						<listitem>
+							<para>프로젝트 하위로 uninstalled 폴더가 생겨나고, 그 하위로 "yyyyMMddHHmmss" 패턴에
+								해당하는 시간 별 폴더가 생겨나고 이 폴더 내에 uninstall 대상이 되는 파일들이 백업용으로 남게 된다.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+		</listitem>
+
+
+		<listitem>
+			<para>Plugin Install/Uninstall 시에 다음 그림과 같은 메시지가 뜨는 경우는 tomcat이 실행된
+				상태에서
+				tomcat이 인식하고 있는 파일에 변경이 있는 경우에 발생하는 것이다.</para>
+
+			<para>아래와 같은 메시지는 Plugin Install/Uninstall/update 전에 tomcat 동작을 stop
+				시킬 경우에는 뜨지
+				않는다.</para>
+
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/eclipseplugin/installation-jar-lock.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>Tomcat 기동 시 발생 경고창</phrase>
+				</textobject>
+			</mediaobject>
+		</listitem>
+	</orderedlist>
+	<note>
+		<title>참고</title>
+		<para>위에서 설명한 기능 수행 도중에는 프로젝트 생성, 코드 생성 및 DB 변경 등과 같은
+			Anyframe Java IDE의 기능을 동시에 수행시킬 수 없으므로 유의하도록 한다.
+			(Background 실행을 통한 기능 수행 시)  
+</para>
+	</note>
+
+</chapter>

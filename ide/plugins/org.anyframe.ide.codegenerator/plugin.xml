@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.NewApplicationWizard" name="%Wizard_Menu_Project"
+			icon="images/icon_project.gif" project="true">
+			<description>
+           		%Wizard_Desc_Project
+         	</description>
+		</wizard>
+		<!--
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.vo.NewVOClassWizard"
+			id="org.anyframe.ide.codegenerator.wizards.vo.NewVOClassWizard" name="Domain/VO Class"
+			icon="images/icon_vo.gif" project="false">
+			<description>
+           		Generate a VO class with Anyframe template
+         	</description>
+		</wizard>
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.dao.NewDAOClassWizard"
+			id="org.anyframe.ide.codegenerator.wizards.dao.NewDAOClassWizard" name="DAO Class"
+			icon="images/icon_dao.gif" project="false">
+			<description>
+           		Generate a DAO class with Anyframe template
+         	</description>
+		</wizard>
+		-->
+		
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.generation.domain.DomainGenerationWizard" name="%Wizard_Menu_VOClasses"
+			icon="images/icon_domain.png" project="false">
+    		<description>
+           		%Wizard_Desc_VOClasses
+         	</description>
+		</wizard>
+		<wizard category="org.anyframe.ide.common.wizards.anyframe"
+			class="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard"
+			id="org.anyframe.ide.codegenerator.wizards.generation.crud.CRUDGenerationWizard" name="%Wizard_Menu_CRUDClasses"
+			icon="images/icon_crud.png" project="false">
+    		<description>
+           		
+         	</description>
+		</wizard>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.anyframe.ide.common.preferences.anyframe"
+			class="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
+			id="org.anyframe.ide.codegenerator.preferences.IdePreferencesPage"
+			name="%Preferences_Menu_Build">
+		</page>
+	</extension>
+
+	
+	<extension point="org.eclipse.help.toc">		
+		<toc
+			file="help/toc.xml" primary="true">
+		</toc>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            id="org.anyframe.ide.codegenerator.command.maven.AnyframeMavenLaunchDelegate"
+            delegate="org.anyframe.ide.codegenerator.command.maven.AnyframeMavenLaunchDelegate"
+            name="Maven Build"
+            modes="run" public="true"/>
+   </extension>
+ <extension
+       point="org.anyframe.ide.common.database">
+    <database
+          class="org.anyframe.ide.codegenerator.dialogs.DBSettingDialogExtra">
+    </database>
+ </extension>
+ 	<extension point="org.eclipse.ui.views">
+		<view category="org.anyframe.ide.common.views.anyframe" 
+			class="org.anyframe.ide.codegenerator.views.CtipView" 
+			icon="images/icon_building.png" 
+			id="org.anyframe.ide.codegenerator.views.CtipView" 
+			name="%Views_Menu_CTIP" />
+	  <view
+	        category="org.anyframe.ide.common.views.anyframe"
+	        class="org.anyframe.ide.codegenerator.views.InstallationView"
+	        icon="images/icon_plugin.png"
+	        id="org.anyframe.ide.codegenerator.views.InstallationView"
+	        name="%Views_Menu_Plugin">
+	  </view>
+	 </extension>
+</plugin>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<project name="Define plugin information for enterprise ed. distribution" basedir=".">
+	<property name="enterprise-plugins" value="online"/>
+
+	<property name="enterprise-services" value="online-core,online-runtime,online-runtime-jdbc,online-runtime-orm,online-runtime-tx,online-runtime-management,online-runtime-admin"/>
+
+	<property name="online" value="4.7.3-SNAPSHOT"/>
+
+	<property name="online" value="4.7.3-SNAPSHOT"/>
+	<property name="online-core" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime-jdbc" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime-orm" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime-tx" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime-management" value="4.7.3-SNAPSHOT"/>
+	<property name="online-runtime-admin" value="4.7.3-SNAPSHOT"/>
+
+</project>

@@ -1,0 +1,7 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--${domain.name}-START-->
+			<li><a href="${ctx}/#getDomainNameLower(${domain.name})XPView.do?method=list">${domain.name} XP List</a></li>
+<!--${domain.name}-END-->		
+<!--Add new crud generation menu here-->

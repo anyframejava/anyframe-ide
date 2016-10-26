@@ -1,0 +1,8 @@
+Please refer to the Ant manual under Installing Ant / Library
+Dependencies for a list of the jar requirements for various optional
+tasks and features.
+
+* ant.jar : Anyframe provided this ant.jar file which was changed to fix ant file util bug, 
+            but Anyframe didn't change ant.jar file name because of hudson ant home validation function.
+            This ant.jar file is same with anyframe.ide.command.aspect-1.0.1.jar.
+            

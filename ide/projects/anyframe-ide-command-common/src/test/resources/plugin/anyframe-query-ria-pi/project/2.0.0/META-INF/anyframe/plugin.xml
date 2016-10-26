@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="query-ria">
+  <groupId>org.anyframe.plugin</groupId>
+  <artifactId>anyframe-query-ria-pi</artifactId>
+  <version>2.0.0</version>
+  <dependent-plugins>
+    <dependent-plugin name="query" version="1.0.0 &lt; * &lt;= 2.0.0"/>
+  </dependent-plugins>
+  <samples>false</samples>
+</plugin>

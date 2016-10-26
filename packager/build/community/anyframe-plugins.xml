@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<project name="Define plugin information for community ed. distribution" basedir=".">
+	<property name="essential-plugins" value="core,datasource,logging,spring" />
+	<property name="optional-plugins" value="async-support,cache,chart,excel,fileupload,flex-query,generic,hibernate,i18n,idgen,jdbc-support,jquery,logback,logging-sql,logmanager,mip-query,mybatis,oscache,query,query-ria,remoting,routingdatasource,scheduling,sockjs,stomp,springrest,test,tiles,util,util-system,websocket,xp-query,xplatform" />
+	<property name="archetypes" value="basic"/>
+
+	<property name="services" value="chart,core,cxf,flex-query,generic,hibernate,idgen,jdbc-support,logmanager,mip-query,oscache,query,query-ria,scheduling,tiles,util-system,xp-query,xplatform"/>
+
+	<property name="basic" value="5.6.1-SNAPSHOT"/>
+
+	<property name="async-support" value="1.1.1-SNAPSHOT"/>
+	<property name="cache" value="1.1.1-SNAPSHOT"/>
+	<property name="chart" value="1.1.1-SNAPSHOT"/>
+	<property name="core" value="1.6.1-SNAPSHOT"/>
+	<property name="datasource" value="1.1.1-SNAPSHOT"/>
+	<property name="excel" value="1.1.1-SNAPSHOT"/>
+	<property name="fileupload" value="1.2.1-SNAPSHOT"/>
+	<property name="flex-query" value="1.6.1-SNAPSHOT"/>
+	<property name="generic" value="1.6.1-SNAPSHOT"/>
+	<property name="hibernate" value="1.6.1-SNAPSHOT"/>
+	<property name="i18n" value="1.1.1-SNAPSHOT"/>
+	<property name="idgen" value="1.6.1-SNAPSHOT"/>
+	<property name="jdbc-support" value="1.1.1-SNAPSHOT"/>
+	<property name="jquery" value="1.1.1-SNAPSHOT"/>
+	<property name="logback" value="1.1.1-SNAPSHOT"/>
+	<property name="logging" value="1.1.1-SNAPSHOT"/>
+	<property name="logging-sql" value="1.1.1-SNAPSHOT"/>
+	<property name="logmanager" value="1.1.1-SNAPSHOT"/>
+	<property name="mip-query" value="1.6.1-SNAPSHOT"/>
+	<property name="mybatis" value="1.1.1-SNAPSHOT"/>
+	<property name="oscache" value="1.6.1-SNAPSHOT"/>
+	<property name="query" value="1.6.1-SNAPSHOT"/>
+	<property name="query-ria" value="1.6.1-SNAPSHOT"/>
+	<property name="remoting" value="1.1.1-SNAPSHOT"/>
+	<property name="routingdatasource" value="1.1.1-SNAPSHOT"/>
+	<property name="scheduling" value="1.6.1-SNAPSHOT"/>
+	<property name="sockjs" value="1.0.1-SNAPSHOT"/>
+	<property name="spring" value="1.1.1-SNAPSHOT"/>
+	<property name="springrest" value="1.1.1-SNAPSHOT"/>
+	<property name="stomp" value="1.0.1-SNAPSHOT"/>
+	<property name="test" value="1.1.1-SNAPSHOT"/>
+	<property name="tiles" value="1.1.1-SNAPSHOT"/>
+	<property name="util" value="1.1.1-SNAPSHOT"/>
+	<property name="util-system" value="1.6.1-SNAPSHOT"/>
+	<property name="websocket" value="1.0.1-SNAPSHOT"/>
+	<property name="xp-query" value="1.6.1-SNAPSHOT"/>
+	<property name="xplatform" value="1.6.1-SNAPSHOT"/>
+
+	<!-- parking plugins -->
+	<!--
+	<property name="board" value="1.1.1-SNAPSHOT"/>
+	<property name="cxf" value="1.1.0"/>
+	<property name="cxf-jaxrs" value="1.1.0"/>
+	<property name="cxf-jaxws" value="1.1.0"/>
+	<property name="spring-optional" value="1.0.2"/>
+	<property name="monitoring" value="1.0.2"/>
+	<property name="iam" value="1.0.3"/>
+	<property name="struts" value="1.0.3"/>
+	<property name="jasperreports" value="1.0.2"/>
+	<property name="simpleweb" value="1.0.2"/>
+	<property name="simpleweb-jquery" value="1.0.3"/>
+	<property name="simpleweb-map" value="1.0.2"/>
+	<property name="simpleweb-vo" value="1.0.2"/>	
+	<property name="webflow" value="1.0.2"/>
+	<property name="ibatis2" value="0.0.8"/>
+	-->
+
+</project>

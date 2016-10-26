@@ -1,0 +1,71 @@
+<section id="workingwithqueries_removingaquery">
+	<title>Removing a Query</title>
+
+	<para>
+		There are largely three ways of removing existing Query in Query Mapping XML file.	
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_removingaquery_queryexplorerview">Removing through Query Explorer View</link>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_removingaquery_context">Removing through Context Menu</link>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<link linkend="workingwithqueries_removingaquery_editor">Direct removing through Query Manager Editor
+						</link>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<section id="workingwithqueries_removingaquery_queryexplorerview">
+		<title>Removing througg Query Explorer</title>
+		<para>
+			When removing Query statement through Query Explorer, select the Query ID at Query Explorer View,
+			then execute "Remove Query" on Context Menu.		
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/WorkingWithQueries/remove-explorermenu.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</section>
+
+	<section id="workingwithqueries_removingaquery_context">
+		<title>Removing through vContext Menu</title>
+		<para>
+			When removing Query statement through Context Menu, select the Query at Design tab of Query Manager Editor,
+			then execute "Remove" on Context Menu.		
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/WorkingWithQueries/remove-contextmenu.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</section>
+
+	<section id="workingwithqueries_removingaquery_editor">
+		<title>Direct removing through Query Manager Editor</title>
+		<para>
+			When directly removing Query statement,
+			select the Query at Source tab of <link linkend="gettingstarted_querymanagereditor">Query Manager Editor</link>.
+			In this case, it is the range between <![CDATA[<query>]]>and <![CDATA[ </query>]]> where the Query statement to delete 
+			is included.
+			
+		</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/WorkingWithQueries/remove-editor.png"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</section>
+</section>

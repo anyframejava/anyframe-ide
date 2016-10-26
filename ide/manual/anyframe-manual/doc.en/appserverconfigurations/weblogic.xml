@@ -1,0 +1,433 @@
+<chapter id="app_server_configurations_weblogic">
+	<title>WebLogic</title>
+	<para>
+		Let us check the configuration that we should be careful about when deploying the sample application where Anyframe plugins are installed in WebLogic.
+	</para>
+	<note id="app_server_configurations_weblogic_ie8">
+		<title>WebLogic + IE8</title>
+		<para>
+			When the sample application is tested, deployed in the WebLogic server listed below, 
+			the session is not maintained if 'localhost' is used in URL as in 'http://localhost:8080/myproject' 
+			when Internet Explorer 8 is used as the web browser. 
+			In this case, it is recommended to use IP such as http://127.0.0.1:8080/myproject for the test URL.
+			</para>
+	</note>
+	<section id="app_server_configurations_weblogic_core">
+		<title>When core plugin is used</title>
+		<itemizedlist>
+			<listitem>
+				<para>10.1 : As WebLogic 10.1 which supports JavaEE 5 contains JPA 1.0 library as standard, the following problems can occur. 
+				</para>
+				<para>
+					Sample project created by Core Plugin installation utilizes Hibernate Validator 4.1.0 library 
+					to execute Model Validation based on JSR-303 Annotation. This library refers to JPA 2.0 library. 
+					However, as WebLogic 10.1 provides PersistenceProvider based on JPA 1.0 library, 
+					java.lang.AbstractMethodError at javax.persistence.Persistence$1.isLoaded error occurs when using Model Validation. 
+				</para>
+				<para>
+					This issue cannot be solved even by adjusting prefer-web-inf-classes to true in weblogic.xml. You can avoid this problem by doing the following.
+				</para> 
+				<itemizedlist>
+					<listitem>
+						<para>
+							Remove hibernate-jpa-2.0-api-1.0.0.Final.jar file from WEB-INF/lib under sample project folder, and instead, deploy javax.persistence_2.0.1.vxxx.jar. 
+							This jar file can be downloaded from  <ulink url="http://www.eclipse.org/eclipselink/">EclipseLink(Eclipse Persistence Services Project, http://www.eclipse.org/eclipselink/) 
+						 	website</ulink>. After downloading EclipseLink 2.x version Installer Zip file and extracting the file, you can check the jar file. 
+						</para>     					
+					</listitem>
+					<listitem>
+						<para>Copy javax.persistence_2.0.1.vxxx. and antlr-2.7.7.jar file in [WebLogic installation Home]/common/lib directory.</para>
+					</listitem>
+					<listitem>
+						<para>Add the following content to setDomainEnv.cmd(or setDomainEnv.sh) file in [User Domain Home]/bin folder. </para>
+						<programlisting language="xml"><![CDATA[set PRE_CLASSPATH=%WL_HOME%/common/lib/antlr-2.7.7.jar;%WL_HOME%/common
+/lib/javax.persistence_2.0.1.vxxx.jar
+
+(UNIX sh : set PRE_CLASSPATH="${WL_HOME}/common/lib/antlr-2.7.6.jar:
+${WL_HOME}/common/lib/javax.persistence_2.0.1.vxxx.jar")]]></programlisting>
+					</listitem>
+				</itemizedlist>	     					  						
+			</listitem> 
+			<listitem>
+				<para>As WebLogic 10.3.3 which supports JavaEE 6 contains JPA 1.0 library as standard, the following problems can occur. 
+				</para>
+				<para>
+					Sample project created by Core Plugin installation utilizes Hibernate Validator 4.1.0 library to 
+					execute Model Validation based on JSR-303 Annotation. This library refers to JPA 2.0 library. 
+					However, as WebLogic 10.3.3 provides PersistenceProvider based on JPA 1.0 library, 
+					java.lang.AbstractMethodError at javax.persistence.Persistence$1.isLoaded error occurs when using 
+					Model Validation. 
+				</para>
+				<para>
+					Such problems can be avoided with the following approach. 
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>Compose EAR Folder. For example, if you are working on a project named 'myproject' as ear, it can be composed in two types of folders.</para>
+						<programlisting language="xml"><![CDATA[myproject.ear/ META-INF
+	         / myproject]]></programlisting>
+	             	</listitem>
+	             	<listitem>
+						<para>Deploy application.xml in META-INF folder. Refer to the following example. </para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems,Inc.//DTD J2EE Application 1.3//EN"
+   "http://java.sun.com/dtd/application_1_3.dtd">
+<application>
+    <display-name>Myproject</display-name>
+    <module>
+        <web>
+            <web-uri>myproject</web-uri>
+            <context-root>myproject</context-root>
+        </web>
+    </module>
+</application>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Deploy weblogic-application.xml file in META-INF folder. Set library in WEB-INF/lib folder 
+							as priority referring target for javax.persistence package. Refer to the following example. 
+						</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application>
+    <prefer-application-packages>
+	    <package-name>javax.persistence.*</package-name>
+    </prefer-application-packages>
+</weblogic-application>]]></programlisting>     						 
+			     	</listitem>
+					<listitem>
+						<para>
+							Deploy weblogic.xml file in WEB-INF under myproject folder. Set libraries and class files in 
+							web application as priority reference target. Refer to the following example. 
+						</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<weblogic-web-app>
+  	 <container-descriptor>
+	     <prefer-web-inf-classes>true</prefer-web-inf-classes>
+	 </container-descriptor>
+</weblogic-web-app>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Remove hibernate-jpa-2.0-api-1.0.0.Final.jar from WEB-INF/lib in myproject folder, and instead, deploy javax.persistence_2.0.1.vxxx.jar file. 
+							This jar file can be downloaded from <ulink url="http://www.eclipse.org/eclipselink/">EclipseLink(Eclipse Persistence Services Project, http://www.eclipse.org/eclipselink/) website</ulink>. 
+							Download and extract Installer Zip file of EclipseLink 2.x version and check jar file. 
+			     		</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		<para>
+			When executing sample application based on WebLogic, although the number of slf4j-log4j-x.x.x.jar files under WEB-INF/lib of the relevant application is one, 
+			warming message that begins with "SLF4J: Class path contains multiple SLF4J bindings." can appear. 
+			This is <ulink url="http://bugzilla.slf4j.org/show_bug.cgi?id=138">known bug existing in SLF4J</ulink>, 
+			but can be ignored as it does not cause any problems in application execution. 
+		</para>
+	</section>
+	
+	<section id="app_server_configurations_weblogic_cxf">
+		<title>When cxf plugin is used</title>
+		<para>
+			Apache CXF supports JDK 1.5 onwards, so WebLogic server version should be WebLogic 9.2(JDK 1.5), 10.1(JDK 1.5), 10.3(JDK 1.6). Refer to
+			 <ulink url="http://www.oracle.com/appserver/index.html">here</ulink> for information on WebLogic and downloading. 
+		</para>
+     	<para>
+			Yet, if it is a sample application generated by installing plugins, 
+			refer to the notes for each installed plugin first to check the measures for each WAS to use open sources.
+     	</para>
+     	<itemizedlist>
+     		<listitem>
+     			<para>
+     				9.2 : The below additional work is needed for resolving library problems when installing CXF-JAXWS Plugin. 
+     				You can choose between <emphasis role="bold">how to compose web application with EAR file [1]</emphasis> and   
+				<emphasis role="bold">how to copy geronimo-ws-metadata_2.0_spec-1.1.2.jar file [2]</emphasis>.
+     			</para>
+     			<itemizedlist>
+     				<listitem>
+     					<para>[1] How to compose web application with EAR file </para>
+     					<itemizedlist>
+							<listitem>
+								<para>
+									However, Plugins provided in Anyframe are developed based on Jetty, so they basically use 8080 port. 
+									Therefore, when using JEUS, open cxf-jaxws-servlet.xml file, and change the 'http://localhost:8080/...' 
+									part to 'http://localhost:{Weblogic use port}/...'. 
+								</para>					
+							</listitem>			
+							<listitem>
+								<para>Create EAR Folder. For instance, the following two folders can be 
+								created when project named 'myproject' will be packaged with ear.</para>
+									<programlisting language="xml"><![CDATA[myproject.ear/ META-INF
+		 / myproject]]></programlisting>     						  
+							</listitem>
+							<listitem>
+								<para>Deploy application.xml file in META-INF folder. Refer to the below as an example.</para>
+								<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems,Inc.//DTD J2EE Application 1.3//EN"
+    "http://java.sun.com/dtd/application_1_3.dtd">
+<application>
+    <display-name>Sample</display-name>
+    <module>
+        <web>
+            <web-uri>myproject</web-uri>
+            <context-root>/myproject</context-root>
+        </web>
+    </module>
+</application>]]></programlisting>
+							</listitem>
+							<listitem>
+								<para>
+									Deploy weblogic-application.xml file in META-INF folder. 
+									Define so that library in WEB-INF/lib folder for javax.jws package is referred to first. Refer to 
+								<ulink
+									url="http://cwiki.apache.org/CXF20DOC/application-server-specific-configuration-guide.html#ApplicationServerSpecificConfigurationGuide-WebLogic">here</ulink>
+								on how to define weblogic-application.xml.
+								</para>
+								<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application xmlns="http://www.bea.com/ns/weblogic/90">
+    <prefer-application-packages>
+	    <package-name>javax.jws.*</package-name>
+    </prefer-application-packages>
+</weblogic-application>]]></programlisting>
+							</listitem>
+							<listitem>
+								<para>Deploy weblogic.xml file in WEB-INF inside myproject folder. 
+								Define so that library and class files in web application are referred to first. 
+								Refer to the below as an example.</para>
+								<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<weblogic-web-app xmlns="http://www.bea.com/ns/weblogic/90">
+  	 <container-descriptor>
+	     <prefer-web-inf-classes>true</prefer-web-inf-classes>
+	 </container-descriptor>
+</weblogic-web-app>]]></programlisting>
+							</listitem>	
+							<listitem>
+								<para>
+									Remove xmlbeans-x.x.x.jar file in WEB-INF/lib folder inside myproject folder.
+								</para>
+							</listitem>						
+						</itemizedlist>
+     				</listitem>
+     				
+     				<listitem>
+     					<para>[2] How to copy geronimo-ws-metadata_2.0_spec-1.1.2.jar file </para>
+     					<itemizedlist>		
+							<listitem>
+								<para>
+									Copy geronimo-ws-metadata_2.0_spec-1.1.2.jar file in JDK_HOME/jre/lib/endorsed folder. 
+								</para>
+							</listitem>
+							<listitem>					
+								<para>
+									Check the location of JDK 1.5 set when installing WebLogic server, 
+									create endorsed folder under JDK_HOME/jre/lib folder, and copy geronimo-ws-metadata_2.0_spec-1.1.2.jar file, 
+									under WEB-INF/lib folder of web application currently deployed, to endorsed folder.
+				          		</para>
+				          		<para>[Reference] In this case, note that the above work influences the entire WebLogic server.</para>
+				          	</listitem>
+						</itemizedlist>
+     				</listitem>
+     			</itemizedlist>
+     		</listitem>
+     		
+     		<listitem>
+     			<para>
+     				10.1 : The below additional work is needed for resolving library problems when installing CXF-JAXWS Plugin. 
+     			</para>
+     			<itemizedlist>
+					<listitem>
+						<para>
+							However, Plugins provided in Anyframe are developed based on Jetty, so they basically use 8080 port. 
+							Therefore, open cxf-jaxws-servlet.xml file, and change the 'http://localhost:8080/...' part to 
+							'http://localhost:{Weblogic use port}/...'. 
+						</para>					
+					</listitem>			
+					<listitem>
+						<para>Create EAR Folder. For instance, the following two folders can be created when project named myproject is packaged with ear.</para>
+							<programlisting language="xml"><![CDATA[myproject.ear/ META-INF
+	       / myproject]]></programlisting>     						  
+					</listitem>
+					<listitem>
+						<para>Deploy application.xml file in META-INF folder. Refer to the below as an example.</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems,Inc.//DTD J2EE Application 1.3//EN"
+    "http://java.sun.com/dtd/application_1_3.dtd">
+<application>
+    <display-name>Sample</display-name>
+    <module>
+        <web>
+            <web-uri>myproject</web-uri>
+            <context-root>/myproject</context-root>
+        </web>
+    </module>
+</application>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Deploy weblogic-application.xml file in META-INF folder. 
+							Define so that library in WEB-INF/lib folder for javax.jws package is referred to first. 
+							Refer to the below as an example.
+						</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application>
+    <prefer-application-packages>
+    	<package-name>javax.persistence.*</package-name>
+	    <package-name>javax.jws.*</package-name>
+    </prefer-application-packages>
+</weblogic-application>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>Deploy weblogic.xml file in WEB-INF inside myproject folder. 
+						Define so that library and class files in web application are referred to first. 
+						Refer to the below as an example.</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<weblogic-web-app>
+  	 <container-descriptor>
+	     <prefer-web-inf-classes>true</prefer-web-inf-classes>
+	 </container-descriptor>
+</weblogic-web-app>]]></programlisting>
+					</listitem>	
+					<listitem>
+						<para>
+							Remove xmlbeans-x.x.x.jar file in WEB-INF/lib folder inside myproject folder. 
+						</para>
+					</listitem>						
+				</itemizedlist>
+     		</listitem>
+     		
+     		<listitem>
+     			<para>
+					10.3.3 : The below additional work is needed for resolving library problems when installing cxf-jaxws Plugin.
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							However, Plugins provided in Anyframe are developed based on Jetty, so they basically use 8080 port. 
+							Therefore, open cxf-jaxws-servlet.xml file, and change the 'http://localhost:8080/...' part to 
+							'http://localhost:{Weblogic use port}/...'. 
+						</para>					
+					</listitem>			
+					<listitem>
+						<para>Create EAR Folder. For instance, the following two folders can be created when project named myproject is packaged with ear.</para>
+							<programlisting language="xml"><![CDATA[myproject.ear/ META-INF
+	         / myproject]]></programlisting>     						  
+					</listitem>
+					<listitem>
+						<para>Deploy application.xml file in META-INF folder. Refer to the below as an example.</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems,Inc.//DTD J2EE Application 1.3//EN"
+    "http://java.sun.com/dtd/application_1_3.dtd">
+<application>
+    <display-name>Sample</display-name>
+    <module>
+        <web>
+            <web-uri>myproject</web-uri>
+            <context-root>/myproject</context-root>
+        </web>
+    </module>
+</application>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Deploy weblogic-application.xml file in META-INF folder. Refer to the below as an example.
+						</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application>
+    <prefer-application-packages>
+    	<package-name>javax.persistence.*</package-name>
+    </prefer-application-packages>
+</weblogic-application>]]></programlisting>
+					</listitem>
+					<listitem>
+						<para>Deploy weblogic.xml file in WEB-INF inside myproject folder. 
+						Set so that library and class files in web application are referred to first. 
+						Refer to the below as an example.</para>
+						<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<weblogic-web-app>
+  	 <container-descriptor>
+	     <prefer-web-inf-classes>true</prefer-web-inf-classes>
+	 </container-descriptor>
+</weblogic-web-app>]]></programlisting>
+					</listitem>	
+					<listitem>
+						<para>
+							Using Apache CXF 2.3: The currently deployed Anyframe CXF-JAXWS Plugin depends on Apache CXF 2.3 version. 
+							In this case, remove xercesImpl-x.x.x.jar file in WEB-INF/lib folder, and deploy in lib folder under 
+							Weblogic domain to be used.  
+	   					</para>
+						<para>
+							[Reference] Using Apache CXF 2.2.7 : Previous version of Anyframe CXF Plugin depends on Apache CXF 2.2.7 version. 
+							In this case, remove xercesImpl-x.x.x.jar and stax-api-x.x.jar files in WEB-INF/lib folder, 
+							and deploy xercesImpl-x.x.x.jar file only in lib folder under Weblogic domain to be used. 
+	   					</para>   					
+					</listitem>				
+					<listitem>
+						<para>
+							Remove xmlbeans-x.x.x.jar and geronimo-stax-api_1.0_spec-x.x.x.jar files in WEB-INF/lib folder inside myproject folder. 
+						</para>
+					</listitem>			
+				</itemizedlist>
+     		</listitem>
+		</itemizedlist>
+	</section>
+	
+	<section id="app_server_configurations_weblogic_hibernate">
+		<title>When hibernate plugin is used</title>
+		<itemizedlist>
+   			<listitem>
+   				<para>
+   					10.1 : As WebLogic 10.1 which supports JavaEE 5 contains JPA 1.0 library as standard, the following problems can occur.
+   				</para>
+				<para>
+					Sample application project created by Hibernate Plugin installation utilizes Hibernate 3.6.0 library 
+					to execute Movie management information based on Hibernate. This library refers to JPA 2.0 library. 
+					However, WebLogic 10.1 runs based on JPA 1.0 library, so NoSuchMethodException occurs when 
+					javax.persistence.OneToMany.orphanRemoval() is executed. 
+				</para>
+				<para>
+					This issue cannot be solved even by adjusting prefer-web-inf-classes to true in weblogic.xml. 
+					You can avoid this problem by referring to <link linkend="app_server_configurations_weblogic_core">when core plugin is used</link>.
+   				</para>			    			
+     		</listitem>
+   			<listitem>
+   				<para>
+   					10.3.3 : As WebLogic 10.3.3 which supports JavaEE 6 contains JPA 1.0 library as standard, the following problems can occur.
+				</para>
+  				<para>
+					Sample application project created by Hibernate Plugin installation utilizes Hibernate 3.6.0 library 
+					to execute Movie management information based on Hibernate. This library refers to JPA 2.0 library. However, WebLogic 10.1 runs based on JPA 1.0 library, so NoSuchMethodException occurs when javax.persistence.OneToMany.orphanRemoval() is executed.     		     						
+   				</para>
+   				<para>
+     				You can avoid this problem by referring to <link linkend="app_server_configurations_weblogic_core">when core plugin is used</link>.
+     			</para>
+     		</listitem>
+     	</itemizedlist>
+	</section>
+	
+	<section id="app_server_configurations_weblogic_tiles">
+		<title>When tiles plugin is used</title>
+		<itemizedlist>
+			<listitem>
+				<para>
+					9.2: The page of the sample application of tiles plugin is composed based on Tiles,  
+					and to use EL(Expression Language) when Tiles is defined, it adopts tiles-config_2_1.dtd. 
+					Since this function is provided from Servlet Spec. 2.5, and WebLogic 9.2 is a WAS that implements Servlet Spec. 2.4,  
+					it has a problem in processing this function. 
+					Therefore, open src/main/resources/spring/tiles-servlet.xml file under the sample project,  
+					and change the tilesInitializer property definition in 'tilesConfigurer' Bean definition to Servlet Spec. 2.4 
+					and add <ulink url="http://seam-forum.googlecode.com/files/el-api.jar">el-api.jar</ulink> to WEB-INF/lib under the sample application.
+					The property of the modified 'tilesConfigurer' Bean is as follows.
+					<programlisting language="xml"><![CDATA[<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+    <property name="tilesInitializer">
+        <bean class="anyframe.web.tiles2.Servlet24ELTilesInitializer">
+            <property name="definitions">
+                <list>
+                    <value>/WEB-INF/tiles-views.xml</value>
+                </list>
+            </property>
+        </bean>
+    </property>
+</bean>]]></programlisting>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</chapter>

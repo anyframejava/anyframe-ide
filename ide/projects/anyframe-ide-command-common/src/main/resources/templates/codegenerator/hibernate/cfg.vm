@@ -1,0 +1,4 @@
+<!--${domain.name}-START-->
+<mapping class="${domain.packagaName}.${domain.name}" />
+<!--${domain.name}-END-->
+<!--Add new mapping class name here-->

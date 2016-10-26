@@ -1,0 +1,37 @@
+<section id="gettingstarted_querytesteditor">
+	<title>Query Test Editor</title>
+
+	<para>
+		Query Test Editor is an editor used for adding or editing Query ID.
+		You can check the result of the Query statement at Result View by executing test.	
+	</para>
+
+	<section id="gettingstarted_querytesteditor_open">
+		<title>Opening Query Test Editor</title>
+		<para>You can open Query Test Editor through Query Explorer View.</para>
+
+		<section id="gettingstarted_querytesteditor_open_add">
+			<title>Add Query Editor</title>
+			<para>You can add Query ID through Context Menu of the Mapping file.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/GettingStarted/addquery-editorstep1.png"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+			<para>For how to use, see <link linkend="workingwithqueries_addingaquery">Adding a Query</link>.</para>
+		</section>
+
+		<section id="gettingstarted_querytesteditor_open_edit">
+			<title>Edit Query Editor</title>
+			<para>You can edit Query information through Context Menu of the Query ID.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/GettingStarted/modifyquery-editorstep1.png"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+			<para>For how to use, see <link linkend="workingwithqueries_modifyingaquery">Modifying a Query</link>.</para>
+		</section>
+	</section>
+</section>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+<!--jdbc configuration here -->
+<!--jdbc configuration-START-->
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@70.7.105.55:1521:orcl" />
+        <property name="username" value="anyframegen" />
+        <property name="password" value="anyframegen" />
+<!--jdbc configuration-END-->
+        <property name="defaultAutoCommit" value="true" />
+<!-- SQL logging using driver spy-START
+        <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/sampledb"/> 
+             SQL logging using driver spy-END-->
+    </bean>
+<!-- DataSource for ID GenerationService -->
+    <bean id="dataSourceForIdGen" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+<!--jdbc configuration for idgen here -->
+<!--jdbc configuration for idgen-START-->
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@70.7.105.55:1521:orcl" />
+        <property name="username" value="anyframegen" />
+        <property name="password" value="anyframegen" />
+<!--jdbc configuration for idgen-END-->
+        <property name="defaultAutoCommit" value="false" />
+    </bean>
+</beans>

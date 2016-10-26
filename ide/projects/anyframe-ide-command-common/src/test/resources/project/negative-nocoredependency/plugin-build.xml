@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="remoting">
+	<groupId>org.anyframe.plugin</groupId>
+	<artifactId>anyframe-remoting-pi</artifactId>
+	<version>1.0.0</version>
+	<interceptor>
+		<class>test.intercepter.TestInterceptor</class>
+		<dependencies>
+			<dependency>
+				<groupId>org.anyframe</groupId>
+				<artifactId>anyframe-core</artifactId>
+				<version>5.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.anyframe</groupId>
+				<artifactId>anyframe-idgen</artifactId>
+				<version>5.0.0</version>
+			</dependency>
+		</dependencies>
+	</interceptor>
+	<samples>true</samples>
+	<resources>
+		<resource dir="src/main/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+		</resource>
+		<resource dir="src/test/java" filtered="true" packaged="true">
+			<include name="**/*.java" />
+		</resource>
+		<resource dir="src/main/resources" filtered="true" packaged="false">
+			<include name="**/*.xml" />
+		</resource>
+		<resource dir="src/test/resources" filtered="true" packaged="false">
+			<include name="**/*.xml" />
+		</resource>
+		<resource dir="src/main/webapp/WEB-INF/jsp" filtered="false" packaged="false">
+			<include name="**/*.*" />
+		</resource>
+	</resources>
+</plugin>

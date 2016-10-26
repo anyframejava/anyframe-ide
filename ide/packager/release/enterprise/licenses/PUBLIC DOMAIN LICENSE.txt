@@ -1,0 +1,26 @@
+License Text
+Public Domain Licenses
+This project's license is described as a Public Domain License. Users should be aware that a public domain license does not legally place a project in the public domain. Therefore, it does not grant all the same rights as software in the public domain.
+
+Under US law, a work which is protectable by copyright law becomes protected by copyright merely by fixing the work in a tangible medium (for example, typing it on a keyboard and saving the results on a disk). This means that most any work which is protectable by copyright will be protected by copyright. Generally, once a work is protected by copyright there is no law under which someone can pledge a work to the 'public domain.'
+
+The public domain exists for works that were never protectable by copyright to begin with, or for works for which the copyright protections have naturally expired. Currently, the copyright term under US law is the life of the creator plus 70 years. Certain government works are automatically placed into public domain.
+
+In part as a result of the restricted ability to enter the public domain, there have been attempts by some organizations to allow the creators of works to contractually grant 'public domain-like' rights in their works. These contracts cannot actually place a work in the public domain. Instead, they work to grant rights similar to those one would have if they truly were in the public domain.
+
+Because there is no legal means to place a work into the public domain, some groups have expressed concerns that a 'Public Domain License': 
+
+might be revoked at any time. 
+provides no protection for the creator against any damages caused by a work. 
+places no restriction on the future use or distribution of the work. 
+Each company will need to decide on a case-by-case basis which Public Domain projects and licenses are right for them.
+
+For more information:
+
+Please see http://en.wikipedia.org/wiki/Public domain for more information about Public domain and licenses.
+
+Please see http://en.wikipedia.org/wiki/Copyleft for information about copyleft licensing.
+
+Please see http://freshmeat.net/faq/view/48/ for an overview of all the different license types used by Open Source projects.
+
+Please see http://www.linuxjournal.com/article/6225 for Lawrence Rosen's article about Public Domain licensing.

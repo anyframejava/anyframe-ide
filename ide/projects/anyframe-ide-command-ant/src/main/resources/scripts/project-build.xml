@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<project name="Anyframe Module Build ANT" default="shared:default" basedir=".">
+	
+	<xmlproperty file = "${basedir}/.settings/anyframe/org.anyframe.ide.common.config.xml"/>
+	<property name="anyframe.home" value="${anyframe.ant.anyframe-home}"/>
+	
+	<property file="${anyframe.home}/ide/cli/scripts/project-build.properties" />
+	
+	<import file="${anyframe.home}/ide/cli/scripts/anyframe-path.xml" />
+	<import file="${basedir}/build.xml" />
+
+	<path id="web.classpath">
+		<fileset dir="${web.lib.dir}" includes="**/*.jar" />
+		<fileset dir="${anyframe.home}/ide/cli/lib" includes="**/servlet-api-2.5.jar" />
+		<fileset dir="${anyframe.home}/ide/cli/lib" includes="**/jsp-api-2.1.jar" />
+	</path>
+
+	<path id="service.classpath">
+		<fileset dir="${service.lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<taskdef resource="emma_ant.properties" classpathref="anyframe.reportpath" description="this loads &lt;emma&gt; and &lt;emmajava&gt; custom tasks:" />
+
+	<target name="depend">
+		<depend srcdir="${src.dir}" destdir="${bin.dir}" cache="${target.dir}/depcache" closure="yes" />
+	</target>
+
+	<target name="shared:clean">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<delete failonerror="false" dir="${basedir}/dist" />
+		<delete failonerror="false" dir="${target.dir}" />
+		<delete failonerror="false" dir="${web.bin.dir}" includeemptydirs="true" />
+	</target>
+
+	<target name="shared:init">
+		<mkdir dir="${basedir}/dist" />
+		<mkdir dir="${target.dir}/temp/lib" />
+		<mkdir dir="${target.dir}/temp/instrlib" />
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${testbin.dir}" />
+		<mkdir dir="${artifactsDir}/test-results/xml" />
+	</target>
+
+	<target name="shared:resources">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<move todir="${web.bin.dir}" overwrite="true">
+			<fileset dir="${bin.dir}">
+				<include name="**/log4j.xml" />
+				<include name="**/META-INF/*.*" />
+			</fileset>
+		</move>
+		<copy todir="${bin.dir}">
+			<fileset dir="${resources.dir}">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="shared:compile" depends="depend">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<javac debug="true" encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeAntRuntime="false">
+			<classpath>
+				<path location="${bin.dir}" />
+				<path refid="web.classpath" />
+			</classpath>
+		</javac>
+		<copy todir="${web.bin.dir}">
+			<fileset dir="${bin.dir}">
+				<include name="**/*.*" />
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="shared:test-resources">
+		<copy todir="${testbin.dir}">
+			<fileset dir="${testresources.dir}">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="shared:test-compile">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<javac debug="true" encoding="UTF-8" srcdir="${testsrc.dir}" destdir="${testbin.dir}" includeAntRuntime="false">
+			<classpath>
+				<path location="${bin.dir}" />
+				<path location="${testbin.dir}" />
+				<path refid="web.classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="shared:package">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<jar destfile="./dist/${anyframe.pjtname}-${version}.jar">
+			<zipfileset dir="${bin.dir}" includes="**/*" />
+		</jar>
+		<copy todir="${basedir}/target/temp/lib">
+			<fileset dir="${basedir}/dist/">
+				<include name="${anyframe.pjtname}-${version}.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${basedir}/target/temp/instrlib">
+			<fileset dir="${basedir}/dist/">
+				<include name="${anyframe.pjtname}-${version}.jar" />
+			</fileset>
+		</copy>
+		<war destfile="${basedir}/dist/${anyframe.ant.context-root}.war" webxml="${web.src.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.src.dir}">
+				<include name="**/*.*" />
+				<include name="**/*" />
+			</fileset>
+		</war>
+		<delete failonerror="false">
+			<fileset dir="${basedir}/dist/" includes="${anyframe.pjtname}-${version}.jar" />
+		</delete>
+	</target>
+
+	<target name="shared:extract">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />		
+		<unzip src="${basedir}/dist/${anyframe.ant.context-root}.war" dest="${basedir}/dist/${anyframe.ant.context-root}" />
+	</target>
+
+	<target name="shared:emma-jars" description="Uses Emma to instrument the jar files">
+		<emma enabled="true">
+			<instr mode="fullcopy" outdir="${basedir}/target/temp" merge="yes" filter="${anyframe.package}.*" metadatafile="${artifactsDir}/test-coverage/coverage.em">
+				<instrpath>
+					<fileset dir="${basedir}/target/temp/instrlib" includes="${anyframe.pjtname}-${version}.jar" />
+				</instrpath>
+			</instr>
+		</emma>
+	</target>
+
+	<target name="shared:test">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+		<var name="test.libpath" value="web.classpath" />
+
+		<property name="max.memory" value="256M" />
+		<junit maxmemory="${max.memory}" printsummary="true" fork="true" dir="${basedir}" errorProperty="test.failed" failureProperty="test.failed">
+			<classpath>
+				<path location="${testbin.dir}" />
+				<fileset dir="${basedir}/target/temp/lib" includes="${anyframe.pjtname}-${version}.jar" />
+				<path refid="${test.libpath}" />
+				<path refid="anyframe.reportpath" />
+			</classpath>
+			<formatter type="xml" />
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="yes" todir="${artifactsDir}/test-results/xml">
+				<fileset dir="${basedir}/src/test/java">
+					<include name="**/*Test.java" />
+					<include name="**/*TestCase.java" />
+					<exclude name="**/Abstract*.java" />
+				</fileset>
+				<formatter type="xml" />
+			</batchtest>
+		</junit>
+
+		<!-- 1.Junit Test Result Report  -->
+		<junitreport todir="${artifactsDir}/test-results">
+			<fileset dir="${artifactsDir}/test-results/xml">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${artifactsDir}/test-results" />
+		</junitreport>
+
+		<antcall target="shared:fail" />
+
+	</target>
+
+	<target name="shared:report">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="anyframe.antpath" />
+
+		<!-- 2.Test Code Coverage Report  -->
+		<move file="${basedir}/coverage.ec" todir="${artifactsDir}/test-coverage" failonerror="false" />
+		<available file="${artifactsDir}/test-coverage" type="dir" property="test-coverage.present" />
+		<if>
+			<equals arg1="${test-coverage.present}" arg2="true" />
+			<then>
+				<emma description="now we can generate the emma report" enabled="true">
+					<report sourcepath="${basedir}/src/main/java" sort="+name,+method,+class" metrics="method:70,line:80,class:100" depth="method" columns="name,class,method,line" encoding="UTF-8">
+						<infileset dir="${artifactsDir}/test-coverage" includes="*.em, *.ec" />
+						<html outfile="${basedir}/${artifactsDir}/test-coverage/coverage.html" />
+						<xml outfile="${basedir}/${artifactsDir}/test-coverage/coverage.xml" />
+					</report>
+				</emma>
+			</then>
+			<else>
+			</else>
+		</if>
+		<mkdir dir="${artifactsDir}/code-analysis/xml" />
+
+		<!-- 3.CheckStyle Report  -->
+		<taskdef resource="checkstyletask.properties" classpathref="anyframe.reportpath" />
+		<checkstyle config="${basedir}/.settings/anyframe/inspection/checkstyle/anyframe_checks.xml" failOnViolation="false">
+			<fileset dir="${basedir}/src/main/java" includes="**/*.java" />
+			<formatter type="xml" toFile="${artifactsDir}/code-analysis/xml/checkstyle-report.xml" />
+			<classpath>
+				<path location="${basedir}/${bin.dir}" />
+				<fileset dir="${anyframe.repo}" includes="**/*.jar" excludes="**/${anyframe.pjtname}-${version}.jar" />
+			</classpath>
+		</checkstyle>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="checkstyle-report.xml" style="${basedir}/.settings/anyframe/inspection/checkstyle/xslt/checkstyle-simple.xsl" />
+
+		<!-- 4.Architecture Review with JDepend Report -->
+		<jdepend format="xml" outputfile="${artifactsDir}/code-analysis/xml/jdepend-report.xml" classpathref="anyframe.reportpath">
+			<exclude name="java.*" />
+			<exclude name="javax.*" />
+			<exclude name="anyframe.*" />
+			<exclude name="org.*" />
+			<exclude name="com.tagish.*" />
+			<exclude name="com.cortexeb.*" />
+			<exclude name="com.nitobi.*" />
+			<classespath>
+				<pathelement location="${basedir}/${bin.dir}" />
+			</classespath>
+		</jdepend>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" extension=".dot" style="${basedir}/.settings/anyframe/inspection/jdepend/xslt/jdepend2dot.xsl" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="jdepend-report.xml" style="${basedir}/.settings/anyframe/inspection/jdepend/xslt/jdepend.xsl" />
+
+		<!-- 5.Code Duplication Detection Report -->
+		<taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="anyframe.reportpath" />
+		<cpd minimumTokenCount="100" format="xml" encoding="utf-8" outputFile="${artifactsDir}/code-analysis/xml/duplicated-code-report.xml">
+			<fileset dir="${basedir}/src/main/java">
+				<include name="**/*.java" />
+			</fileset>
+		</cpd>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="duplicated-code-report.xml" style="${basedir}/.settings/anyframe/inspection/pmd/xslt/cpdhtml.xslt" />
+
+		<!-- 6. pmd -->
+		<property name="pmd.root" value="${basedir}/.settings/anyframe/inspection/pmd" />
+		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="anyframe.reportpath" />
+
+		<pmd shortFilenames="false" rulesetfiles="${pmd.root}/ruleset/pmd-ruleset-v3-3.2.3over.xml">
+			<formatter type="xml" toFile="${artifactsDir}/code-analysis/xml/pmd-report.xml" />
+			<fileset dir="./src/main/java">
+				<include name="**/*.java" />
+			</fileset>
+		</pmd>
+
+		<xslt in="${artifactsDir}/code-analysis/xml/pmd-report.xml" style="${pmd.root}/xslt/corley-pmd-report.xslt" out="${artifactsDir}/code-analysis/pmd-report.html" />
+
+	</target>
+
+
+	<target name="shared:fail" if="test.failed">
+		<fail message="Tests failed in project ${anyframe.pjtname}." />
+	</target>
+
+	<target name="shared:default" depends="shared:init, shared:resources, shared:compile, shared:package" />
+	<target name="shared:deploy" depends="shared:default, shared:extract" />
+	<target name="shared:all" depends="shared:clean, shared:init, shared:resources, shared:compile,
+		         shared:test-resources, shared:test-compile, shared:package, shared:emma-jars, shared:test, shared:report" />
+
+</project>

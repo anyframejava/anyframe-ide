@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[
+<!ENTITY introduction_overview SYSTEM "introduction/overview.xml">
+<!ENTITY introduction_license SYSTEM "introduction/license.xml">
+<!ENTITY introduction_techsupport SYSTEM "introduction/techsupport.xml">
+<!ENTITY introduction_maintenance SYSTEM "introduction/maintenance.xml">
+<!ENTITY introduction_systemrequirements SYSTEM "introduction/systemrequirements.xml">
+
+<!ENTITY installation_installation SYSTEM "installation/installation.xml">
+<!ENTITY installation_configuration SYSTEM "installation/configuration.xml">
+
+<!ENTITY howtouse_newproject SYSTEM "howtouse/newproject.xml">
+<!ENTITY howtouse_allcrudclasses SYSTEM "howtouse/allcrudclasses.xml">
+<!--<!ENTITY howtouse_newclasses SYSTEM "howtouse/newclasses.xml">-->
+<!ENTITY howtouse_anyframeplugin SYSTEM "howtouse/anyframeplugin.xml">
+<!ENTITY howtouse_ctip SYSTEM "howtouse/ctip.xml">
+<!ENTITY howtouse_projectbuild SYSTEM "howtouse/projectbuild.xml">
+<!ENTITY references_referencesite SYSTEM "References/referencesite.xml">
+]
+>
+
+<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+-->
+    
+<book lang="ko">
+	<title>Anyframe Java IDE Code Generator</title>
+	
+	<bookinfo>
+		<copyright>
+			<year>2008-2013</year>
+			<holder>삼성SDS</holder>
+		</copyright>
+		<releaseinfo>3.1.1-SNAPSHOT</releaseinfo>
+
+		<productname>Anyframe Java IDE Code Generator</productname>
+
+		<authorgroup>
+			<corpauthor></corpauthor>
+		</authorgroup>
+
+		<mediaobject>
+			<imageobject>
+				<!-- logo 변경 -->
+				<imagedata fileref="../image/common/logo_pdf.jpg"/>
+			</imageobject>
+			<textobject>
+				<phrase>Anyframe 로고</phrase>
+			</textobject> 
+		</mediaobject>
+		<legalnotice>
+			<para>본 문서의 저작권은 삼성SDS에 있으며 Anyframe 오픈소스 커뮤니티 활동의 목적하에서 자유로운 이용이 가능합니다.
+			본 문서를 복제, 배포할 경우에는 저작권자를 명시하여 주시기 바라며 본 문서를 변경하실 경우에는 원문과 변경된 내용을 표시하여 주시기 바랍니다. 
+			원문과 변경된 문서에 대한 상업적 용도의 활용은 허용되지 않습니다. 본 문서에 오류가 있다고 판단될 경우 이슈로 등록해 주시면 적절한 조치를 취하도록 하겠습니다.
+			</para>
+		</legalnotice>
+	</bookinfo>
+	
+	<part id="introduction">
+		<title>Introduction</title>
+		<partintro id="introduction-intro">
+			<para>
+                Anyframe Java Core는 Spring 기반에서 다양한 best-of-breed 오픈 소스를 통합 및 확장하여 구성한 어플리케이션 프레임워크, MVC 아키텍처를 
+                준수하여 웹 어플리케이션의 프리젠테이션 레이어를 구조적으로 개발할 수 있도록 지원하는 웹 프레임워크를 제공하며 프레임워크 기반의 업무용 프로그램 개발을 
+                효과적으로 진행할 수 있도록 기술 공통 서비스, 템플릿 기반의 프로젝트 구조 및 샘플 코드, 매뉴얼 등을 제공한다.		
+                또한 Eclipse Plugin 형태의 Code Generator를 제공함으로써 기존 방식보다 훨씬 쉽고 빠르게 Anyframe 기반 개발 환경을 구성할 수 있도록 Scaffolding, 코드 생성 기능 
+                등을 지원한다.
+			</para>
+		</partintro>
+		&introduction_overview;
+		&introduction_license;
+		&introduction_techsupport;
+        &introduction_maintenance;
+        &introduction_systemrequirements;
+	</part>
+	
+	<part id="installation">
+		<title>Installation and Configuration</title>
+		<partintro id="installation-intro">
+			<para>
+				Code Generator 툴의 기능은 Command Line 기반으로도 제공되며, Eclipse Plugin 형태로도 제공된다. 여기서는 Eclipse를 위한
+				Code Generator를 설치하는 방법에 대해서 설명하고 있다. 
+			</para>
+		</partintro>
+		&installation_installation;
+		&installation_configuration;
+	</part>
+	
+	<part id="howtouse">
+		<title>How to use</title>
+		<partintro id="howtouse-intro">
+			<para>
+				Eclipse를 사용해서 Anyframe 기반의 프로젝트 생성, VO/Domain 클래스 및 CRUD 소스 코드 생성, DB 정보 설정 및 변경, 
+				Anyframe Plugin 설치/삭제, CTIP 연계 등의 작업을 할 수 있다. 프로젝트 및 클래스 소스 코드는 Eclipse Wizard를 통해서 생성되며 Anyframe Plugin 설치/삭제 및 CTIP 연계 등의 작업은 Eclipse View 화면을 통해 이루어진다.
+			</para>
+		</partintro>
+		&howtouse_newproject;
+		&howtouse_allcrudclasses;
+<!-- 	&howtouse_newclasses; -->
+		&howtouse_anyframeplugin;
+		&howtouse_ctip;
+		&howtouse_projectbuild;
+	</part>
+	
+	<part id="references">
+		<title>References</title>
+		<partintro id="references-intro">
+			<para>
+				본 장에서는 Code Generator 를 개발하기 위해 직접적으로 사용하거나 외부 라이브러리로 활용한 오프소스에 대해 기술한다.
+			</para>
+		</partintro>
+		&references_referencesite;
+	</part>
+</book>

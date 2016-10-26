@@ -1,0 +1,93 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/#getDomainNameLower(${domain.name}).do?method=list'/>">${domain.name} List</a></div>
+    </div>
+    <hr />    
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+<script type="text/javascript">
+	function fncCreate${domain.name}View() {
+		document.location.href="<c:url value='/#getDomainNameLower(${domain.name}).do?method=createView'/>";
+	}	
+	function fncSearch${domain.name}() {
+		document.searchForm.action="<c:url value='/#getDomainNameLower(${domain.name}).do?method=list'/>";
+	   	document.searchForm.submit();						
+	}			
+</script>
+  	<div id="container">
+<!--************************** begin of contents *****************************-->
+	<form:form modelAttribute="search" method="post" name="searchForm">  
+    	<div class="cont_top">
+        	<h2><spring:message code='#getDomainNameLower(${domain.name})List.title'/></h2>
+      		<div class="search_list">
+                <fieldset>
+                    <legend>Search</legend>
+                    <label for="searchCondition" class="float_left margin_right5">
+					<form:select path="searchCondition" id="searchCondition" cssClass="w_search">
+						<form:option value="All">ALL</form:option>
+#foreach($column in $domain.columns)
+#if($column.isKey)
+						<form:option value="${column.fieldName}"><spring:message code="#getDomainNameLower(${domain.name}).${column.fieldName}"/></form:option>
+#end
+#end			
+				</form:select>
+					</label>
+                    <label for="searchKeyword" class="float_left margin_right5">
+                    	<form:input path="searchKeyword" id="searchKeyword" cssClass="w_search" cssErrorClass="text medium error" maxlength="255"/></label>
+                    <label for="btnSearch" class="float_left">
+                    	<input type="image" id="btnSearch" name="searchBtn" alt="Search" onclick="javascript:fncSearch${domain.name}();" src="<c:url value='/sample/images/btn_search_i.gif'/>"/>
+                    </label>
+                </fieldset>
+            </div>
+      	</div>
+        <div class="list">
+      		<table summary="This is list of <spring:message code="#getDomainNameLower(${domain.name})List.#getDomainNameLower(${domain.name})"/>">
+            	<caption><spring:message code="#getDomainNameLower(${domain.name})List.title"/></caption>
+                <colgroup>
+#foreach($column in $domain.columns)
+        			<col style="width:15%;" />
+#end
+                </colgroup>
+                <thead>
+                    <tr>
+#foreach($column in $domain.columns)
+        			<th><spring:message code="#getDomainNameLower(${domain.name}).${column.fieldName}" /></th>
+#end                      
+                    </tr>
+                </thead>
+                <tbody>
+                	<c:forEach var="#getDomainNameLower(${domain.name})" items="${#getDomainNameLower(${domain.name})List}">
+	                	<tr>
+#foreach($column in $domain.columns)
+#if($column.isKey)
+							<td><a href="${ctx}/#getDomainNameLower(${domain.name}).do?method=get#foreach($column in $domain.columns)#if($column.isKey)&amp;${column.fieldName}=${#getDomainNameLower(${domain.name}).${column.fieldName}}#end#end">${#getDomainNameLower(${domain.name}).${column.fieldName}}</a></td>
+#else
+        					<td>${#getDomainNameLower(${domain.name}).${column.fieldName}}</td>
+#end
+#end
+	                    </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        
+<!--************************** begin of paging navigation/buttons *****************************-->        
+        <div class="listunder_container">           
+            <div class="list_paging">
+                <anyframe:pagenavigator linkUrl="javascript:fncSearch${domain.name}();" pages="${resultPage}"/>
+            </div>
+            <!--<div class="list_underbtn_right">
+                <a href="javascript:fncCreate${domain.name}View();">
+                <span class="button default icon">   
+                    <span class="add">&nbsp;</span>
+                    <span class="none_a txt_num3"><spring:message code="movie.button.add" /></span>
+                </span>
+                </a>                
+            </div> -->
+        </div>
+        </form:form>
+	</div>
+    <hr />
+<%@ include file="/sample/common/bottom.jsp"%>

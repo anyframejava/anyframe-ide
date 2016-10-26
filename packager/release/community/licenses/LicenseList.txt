@@ -1,0 +1,295 @@
+Anyframe Java Core(Community Ed.) 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 
+아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
+
+1. Dependent Libraries - Anyframe Service/Plugin Project
+1) Avalon Framework 4.0 : http://avalon.apache.org/closed.html, Apache Software License 2.0
+2) JavaBeans Activation Framework 1.1 : http://www.oracle.com/technetwork/java/javase/tech/index-jsp-138795.html, Sun Microsystems, Inc. ENTITLEMENT for SOFTWARE for JavaBeans Activation Framework
+3) Java Architecture for XML Binding (JAXB) Implementation 2.2.4-1 : http://jaxb.java.net/, Common Development and Distribution License Version 1.0
+4) Apache Geronimo stax API SPEC 1.0.1 : http://geronimo.apache.org/, The Apache Software License, Version 2.0
+5) Spring Framework 3.1.1.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+6) cglib 2.2 nodep : http://cglib.sourceforge.net/, Apache Software License 2.0
+7) Apache Commons BeanUtils 1.8.0 : http://commons.apache.org/beanutils/, Apache Software License 2.0
+8) Apache Commons Collections 3.2 : http://commons.apache.org/collections/, Apache Software License 2.0
+9) Apache Commons DBCP 1.2.2 : http://commons.apache.org/dbcp/, Apache Software License 2.0
+10) Apache Commons Pool 1.5.3 : http://commons.apache.org/pool/, Apache Software License 2.0
+11) Ehcache Core 2.5.0 : http://ehcache.sourceforge.net, Apache Software License 2.0
+12) Simple Logging Facade for Java API 1.6.4 : http://www.slf4j.org , MIT Licence
+13) SLF4J LOG4J-12 Binding 1.6.4 : http://www.slf4j.org, MIT Licence
+14) JCL 1.1.1 implementation over SLF4J 1.6.4 : http://www.slf4j.org , MIT Licence
+15) Javax Servlet API 2.5 : http://www.oracle.com/technetwork/java/javaee/servlet/index.html, Sun Microsystems, Inc.  Binary Code License
+16) Javax Inject 1 : http://code.google.com/p/atinject/, Apache Software License 2.0
+17) Java Architecture for XML Binding (JAXB) 2.2 : http://jaxb.java.net/, Common Development and Distribution License Version 1.0
+18) Rome 1.0 : http://rometools.org/, Apache Software License 2.0
+19) Joda Time 1.6.2 : http://joda-time.sourceforge.net/, Apache Software License 2.0
+20) JUnit 4.9 : http://www.junit.org/, Common Public License 1.0
+21) Log4j 1.2.15 : http://logging.apache.org/log4j, Apache Software License 2.0
+22) Xerces Java Parser 2.8.1 : http://xerces.apache.org/xerces2-j/, Apache License 2.0
+23) AspectJ weaver 1.6.8 : http://www.aspectj.org, Eclipse Public License - v 1.0
+24) JSR 250 1.0 : http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
+25) Hibernate Validator 4.1.0.Final : http://www.hibernate.org/subprojects/validator.html, Apache License Version 2.0
+26) Jakarta Taglibs 1.1.2 : http://tomcat.apache.org/taglibs/standard/, Apache License Version 2.0
+27) JavaServer Pages Standard Tag Library 1.1.2 : http://www.oracle.com/technetwork/java/jstl-137486.html, Apache License V2.0
+28) Hibernate Jpa 2.0-api-1.0.0-Final : http://www.hibernate.org/, GNU Lesser General Public License, version 2.1
+29) Bean Validation API 1.0.0.GA : http://www.jcp.org/en/jsr/detail?id=303, Apache Software License 2.0
+30) Java Transaction API (JTA 1.1) : http://java.sun.com/javaee/technologies/jta/index.jsp, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
+31) JSP(JavaServer Pages Technology) 2.1  : http://www.oracle.com/technetwork/java/javaee/jsp/index.html, Sun Microsystems, Inc. Binary Code License
+32) HSQLDB 2.0.0 : http://www.hsqldb.org/, Hsqldb License
+33) AspectJ runtime 1.6.8 : http://www.aspectj.org, Eclipse Public License - v 1.0
+34) AOP Alliance 1.0 : http://aopalliance.sourceforge.net, Public Domain License
+35) oauth 20110527 : https://code.google.com/p/oauth/, Apache License 2.0
+36) oauth provider 20110527 : https://code.google.com/p/oauth/, Apache License 2.0
+37) JSR 311 :  http://jsr311.java.net/, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
+38) Jettison (A JSON STAX Implementation) 1.3.1 : http://jettison.codehaus.org/, Apache Software License 2.0
+39) SOAP with Attachments API for Java (SAAJ) Implementation 1.3.18 : http://home.java.net/, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE(CDDL)
+40) JDOM 1.0 : http://www.jdom.org/, Jdom License
+41) Java Architecture for XML Binding (JAXB) XJC 2.2.5 : http://jaxb.java.net/, Common Development and Distribution License Version 1.0
+42) Project MSV core 2011.1 : http://msv.java.net/, BSD license
+43) ASM 3.3.1 : http://asm.objectweb.org, BSD License
+44) Apache Geronimo WS Metadata 2.0 SPEC 1.1.3 : http://geronimo.apache.org/, Apache Software License 2.0
+45) Apache Geronimo JAX-WS 2.2 SPEC 1.1 : http://geronimo.apache.org/, Apache Software License 2.0
+46) Apache Geronimo Javamail 1.4 SPEC 1.7.1 : http://geronimo.apache.org/, Apache Software License 2.0
+47) Apache CXF XJC boolean 2.6.0 : http://cxf.apache.org/, Apache Software License 2.0
+48) Apache CXF XJC bug671 2.6.0 : http://cxf.apache.org/, Apache Software License 2.0 
+49) Apache CXF XJC ts 2.6.0 : http://cxf.apache.org/, Apache Software License 2.0 
+50) Apache CXF XJC runtime 2.6.0 : http://cxf.apache.org/, Apache Software License 2.0 
+51) Apache CXF XJC dv 2.6.0 : http://cxf.apache.org/, Apache Software License 2.0 
+52) Multi-Schema XML Validator(MSV) xsdlib 2010.1 : https://github.com/kohsuke/msv, BSD License
+53) SOAP with Attachments API for Java (SAAJ) 1.3.4 : http://java.sun.com/webservices/saaj/reference/index.html, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE(CDDL)
+54) RelaxngDatatype 20020414 : http://sourceforge.net/projects/relaxng/, BSD License
+55) ISO RELAX 20030108 :  http://sourceforge.net/projects/iso-relax/, MIT License
+56) MIME pull 1.7 : http://mimepull.java.net/, COMMON DEVELOPMENT AND DISTRIBUTION LICENSE(CDDL) 1.1
+57) Apache Commons Lang 2.6 : http://commons.apache.org/lang/, Apache Software License 2.0
+58) OpenSAML 2.5.1-1 : https://wiki.shibboleth.net/confluence/display/OpenSAML/Home/, Apache Software License 2.0
+59) OpenSAML openws 1.4.2-1 : https://wiki.shibboleth.net/confluence/display/OpenSAML/Home/, Apache Software License 2.0
+60) XMLSchema core 2.0.2 : http://ws.apache.org/commons/xmlschema20/, Apache Software License 2.0
+61) Apache CXF Manifest 2.6.1 : http://cxf.apache.org/, Apache Software License 2.0
+62) The Legion of the Bouncy Castle bcprov-jdk15 1.43 : http://www.bouncycastle.org/licence.html, The Legion Of The Bouncy Castle License(Adaptation of MIT License)
+63) Woodstox ASL 4.1.1 : http://woodstox.codehaus.org/Download, Apache Software License 2.0 and LGPL 2.1
+64) Xalan-Java 2.7.1 : http://xml.apache.org/xalan-j/, Apache Software Licnese 2.0
+65) Rhino js 1.7R2 : https://developer.mozilla.org/en-US/docs/Rhino, Mozilla Public License
+66) Geronimo JMS 1.1 SPEC 1.1.1 : http://geronimo.apache.org/, Apache Software Licnese 2.0
+67) XML Security(XMLsec) 1.5.2 : http://santuario.apache.org, Apache Software Licnese 2.0
+68) A technology for accessing XML by binding it to Java types 2.4.0 : http://xmlbeans.apache.org/, Apache Software License 2.0
+69) Apache CXF service sts core 2.6.1 : http://cxf.apache.org/, Apache Software Licnese 2.0
+70) Apache Velocity project dep 1.7 : http://velocity.apache.org/engine/devel/, Apache Software Licnese 2.0
+71) Apache Geronimo Activation 1.1 SPEC 1.1 : http://geronimo.apache.org/, Apache Software Licnese 2.0
+72) Apache Geronimo Servlet 3.0 SPEC 1.1 : http://geronimo.apache.org/, Apache Software Licnese 2.0
+73) Apache CXF service wsn core 2.6.1 : http://cxf.apache.org/, Apache Software Licnese 2.0
+74) Apache CXF service wsn api 2.6.1 : http://cxf.apache.org/, Apache Software Licnese 2.0
+75) Antlr 2.7.7 : http://www.antlr2.org/, ANTLR 3 License
+76) Jetty Security 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+77) Jetty IO 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+78) Apache Neethi 3.0.2 : http://ws.apache.org/commons/neethi/, Apache Software License 2.0
+79) OpenSAML xmltooling 1.3.2-1 : https://wiki.shibboleth.net/confluence/display/OpenSAML/Home/, Apache Software License 2.0
+80) Apache Xalan XML serializer 2.7.1 : http://xml.apache.org/xalan-j/, Apache Software License 2.0
+81) stax2-api 3.1.1 : http://woodstox.codehaus.org/StAX2, BSD License
+82) Apache Geronimo stax api 1.0 SPEC 1.0.1 : http://geronimo.apache.org/, Apache Software Licnese 2.0
+83) Apache Geronimo Annotation 1.0 SPEC 1.1.1 : http://geronimo.apache.org/, Apache Software Licnese 2.0
+84) The Web Services Description Language for Java Toolkit (WSDL4J) 1.6.2 : http://sourceforge.net/projects/wsdl4j/, Common Public License 1.0
+85) Jetty continuation 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+86) XML Resolver 1.2 : http://xml.apache.org/commons/components/resolver/, The Apache Software License 2.0
+87) Jetty server 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+88) Jetty util 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+89) Jetty http 7.5.4.v20111024 : http://www.mortbay.org/jetty/, Apache Software License 2.0
+90) Apache CXF 2.6.1 : http://cxf.apache.org/, Apache Software License 2.0
+91) Apache Web Services Security for Java (WSS4J) 1.6.6 : http://ws.apache.org/wss4j/index.html, Apache Software License 2.0
+92) Fast Infoset Project 1.2.9 : http://fi.java.net, Apache Software License 2.0
+93) Apache Commons IO 1.4 : http://commons.apache.org/io/, Apache Software License 2.0
+94) Apache POI 3.7 : http://poi.apache.org/, Apache Software License 2.0
+95) Apache Commons Fileupload 1.2 : http://commons.apache.org/fileupload/, Apache Software License 2.0
+96) Apache Commons VFS 1.0 : http://commons.apache.org/vfs/, Apache Software License 2.0
+97) Apache Commons NET 3.0.1 : http://commons.apache.org/net/, Apache Software License 2.0
+98) JSch 0.1.44-1 : http://www.jcraft.com/jsch/, BSD License
+99) Apache ActiveMQ 5.4.2 http://activemq.apache.org/, Apache Software License 2.0
+100) Apache ActiveMQ spring 5.4.2 http://activemq.apache.org/, Apache Software License 2.0
+101) Spring Framework Spring-Flex 1.5.0.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+102) BlazeDS Messaging Proxy 4.0.0.14931 : http://sourceforge.net/adobe/wiki/Projects/, Lesser General Public License (LGPL v3)
+103) Quartz 1.6.4 : http://www.opensymphony.com/quartz, Apache Software License 2.0
+104) BlazeDS Messaging OPT 4.0.0.14931 : http://sourceforge.net/adobe/wiki/Projects/, Lesser General Public License (LGPL v3)
+105) BlazeDS Messaging Common 4.0.0.14931 : http://sourceforge.net/adobe/wiki/Projects/, Lesser General Public License (LGPL v3)
+106) BlazeDS Messaging Remoting 4.0.0.14931 : http://sourceforge.net/adobe/wiki/Projects/, Lesser General Public License (LGPL v3)
+107) BlazeDS Messaging core 4.0.0.14931 : http://sourceforge.net/adobe/wiki/Projects/, Lesser General Public License (LGPL v3)
+108) Hibernate core 3.6.5.Final : http://www.hibernate.org/, LGPL
+109) Hibernate Commons Annotations 3.2.0.Final : http://www.hibernate.org/, LGPL
+110) Hibernate Ehcache 3.5.6-Final : http://www.hibernate.org/, LGPL
+111) Beanlib hibernate 5.0.1beta : http://beanlib.sourceforge.net/, Apache Software License 2.0
+112) Gilead Hibernate-util 1.2 : http://sourceforge.net/projects/gilead/, Apache Software License 2.0
+113) JavaAssist(Java Programming Assistant) 3.12.0.GA : http://www.csg.is.titech.ac.jp/~chiba/javassist/, MPL and the LGPL.
+114) DOM4J 1.6.1 : http://www.dom4j.org/, BSD style license
+115) Gilead Adapter Core 1.2 : http://sourceforge.net/projects/gilead/, Apache Software License 2.0
+116) Spring Framework Security core 3.0.2.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+117) Spring Framework Security acl 3.0.2.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+118) Spring Framework Security config 3.0.2.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+119) Spring Framework Security web 3.0.2.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+120) Spring Framework Security taglibs 3.0.2.RELEASE : http://www.springsource.org/, Apache Software License 2.0
+121) iBatis sqlmap 2.3.4.726 : http://ibatis.apache.org/, Apache Software License 2.0
+122) iTextAsian-1.0.jar : http://itextpdf.sourceforge.net/, MPL and LGPL
+123) JasperReports 3.1.0 : http://community.jaspersoft.com/project/jasperreports-library, GNU LESSER GENERAL PUBLIC LICENSE(LGPL)
+124) JFreeChart 1.0.12 : http://www.jfree.org/jfreechart/, GNU LESSER GENERAL PUBLIC LICENSE(LGPL)
+125) iText 1.3.1 : http://itextpdf.com/ , MPL and LGPL
+126) Apache POI 3.2-FINAL-20081019 : http://poi.apache.org/, Apache Software License 2.0
+127) Apache Commons Digester 1.8 : http://commons.apache.org/digester/, Apache Software License 2.0
+128) jcommon 1.0.15 : http://www.jfree.org/jcommon/, GNU Lesser General Public License Version(LGPL) 2.1
+129) PngEncoder 1.5 : http://catcode.com/pngencoder/ , GNU Lesser General Public License(LGPL)
+130) p6spy 1.3 : http://sourceforge.net/projects/p6spy/, P6Spy Software License Version 1.1
+131) Jackson JSON processor(JACKSON) mapper asl 1.9.7 : http://jackson.codehaus.org, Apache Software License 2.0
+132) EZMorph 1.0.6 : http://ezmorph.sourceforge.net, Apache License Version 2.0
+133) Log4jdbc3 1.2beta2 : http://log4jdbc.sourceforge.net, Apache Software License 2.0
+134) JSON-lib 2.2.3 : http://json-lib.sourceforge.net/, The Apache Software License 2.0
+135) Spring Json View 1.2 : http://spring-json.sourceforge.net/, The Apache Software License 2.0
+136) Jackson JSON processor(JACKSON) core asl 1.9.7 : http://jackson.codehaus.org, Apache Software License 2.0
+137) Logback classinc 1.0.3 : http://logback.qos.ch/ , Eclipse Public License - v 1.0
+138) Logback core 1.0.3 : http://logback.qos.ch/ , Eclipse Public License - v 1.0
+139) Commons Compiler 2.6.1 : http://docs.codehaus.org/display/JANINO/Home, New BSD License
+140) Janino 2.6.1 : http://docs.codehaus.org/display/JANINO/Home, New BSD License
+141) The MongaDB Java Driver 2.7.2 : http://www.mongodb.org/, The Apache Software License 2.0
+142) jMock 2.4.0 : http://www.jmock.org/, jMock BSD License
+143) Log4mongo java 0.7.0 : http://log4mongo.org/display/PUB/Home, Apache License version 2.0
+144) Hamcrest All 1.1 : http://code.google.com/p/hamcrest/,  BSD License
+145) jMock junit4 2.4.0 : http://www.jmock.org/, jMock BSD License
+146) Infrared 2.5.BETA : http://infrared.sourceforge.net/versions/latest, Apache Software License 2.0
+147) Mybatis 3.1.0 :  http://blog.mybatis.org/, Apache Software License 2.0
+148) Mybatis-spring 1.1.0 : http://www.mybatis.org/spring/, Apache Software License 2.0
+149) OSCache 2.4 : http://www.opensymphony.com/oscache, OpenSymphony Software License (uses a modified Apache license)
+150) Velocity 1.7 : http://velocity.apache.org/engine/releases/velocity-1.7/ , Apache Software License 2.0
+151) Spring Web Flow 2.0.9.RELEASE: http://www.springsource.org/webflow, Apache Software License 2.0
+152) Simplify Old Java Objects 1.0.0 : http://sojo.sourceforge.net, Apache Software License 2.0
+153) JBoss El 2.0.1.GA : http://anonsvn.jboss.org/repos/jboss-el/tags/2.0.1.GA/, Lesser GNU Public License(LGLP)
+154) Struts tiles 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+155) Struts extras 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+156) Struts scripting 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+157) Struts mailreader-dao 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+158) Struts el 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+159) Struts taglib 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+160) Struts core 1.3.10 : http://struts.apache.org/1.3.10 , Apache License Version 2.0
+161) StrutsTestCase 2.1.4 : http://strutstestcase.sourceforge.net/ , Apache Software License 1.1
+162) Apache Myfaces Project jsf-api 1.0.9 : http://myfaces.apache.org/, Apache Software License 2.0
+163) Apache Commons Chain 1.2 : http://commons.apache.org/chain/, Apache Software License 2.0
+164) Apache Commons Validator 1.3.1 : http://commons.apache.org/validator/,  Apache Software License 2.0
+165) Apache Tiles API 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+166) Apache Tiles jsp 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+167) Apache Tiles servlet 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+168) Apache Tiles el 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+169) Apache Tiles core 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+170) Apache Tiles template 2.2.1 : http://tiles.apache.org/, Apache Software License 2.0
+171) Xerces Java Parser 2.8.1 Implementation : http://xerces.apache.org/xerces-j/, Apache License 1.1
+172) Hyperic SIGAR 1.6.4: http://support.hyperic.com/display/SIGAR/Home, Apache License Version 2.0
+173) Apache Commons Compress 1.1, http://commons.apache.org/compress/, Apache Software License 2.0
+174) OpenSymphony ognl 2.6.9 : http://www.opensymphony.com/ognl/, The OpenSymphony Software License, Version 1.1
+175) Spring Web Flow Spring-webflow 2.0.9.RELEASE: http://www.springsource.org/webflow, Apache Software License 2.0
+176) Spring Web Flow Spring-binding 2.0.9.RELEASE: http://www.springsource.org/webflow, Apache Software License 2.0
+177) Expression Language API 1.0 : http://www.oracle.com/technetwork/java/javaee/jsp/index.html, Sun Microsystems, Inc.  Binary Code License
+178) Maven Wagon webdav 1.0-beta-2 : http://maven.apache.org/, Apache Software License 2.0
+179) Maven compiler plugin 2.3.2 : http://maven.apache.org/, Apache Software License 2.0
+180) Mortbay Jetty maven jetty plugin 6.1.26 : http://www.eclipse.org/jetty, Apache Software License 2.0
+181) Maven War plugin 2.0 : http://maven.apache.org/, Apache Software License 2.0
+182) Maven Eclipse plugin 2.9 : http://maven.apache.org/plugins, Apache Software License 2.0
+183) Maven Site plugin 2.0.1 : http://maven.apache.org/plugins, Apache Software License 2.0
+184) Maven Surefire plugin 2.5 : http://maven.apache.org/surefire, Apache Software License 2.0
+185) Maven Surefire Report plugin 2.5 : http://maven.apache.org/surefire, Apache Software License 2.0
+186) Emma Maven plugin 1.0-alpha-2 : http://mojo.codehaus.org/emma-maven-plugin, Apache Software License 2.0
+187) Maven PMD Plugin 2.5 : http://maven.apache.org/plugins, Apache Software License 2.0
+188) Maven JDepend plugin 2.0-beta-2 : http://mojo.codehaus.org, BSD License
+189) Maven Checkstyle plugin 2.5 : http://maven.apache.org/plugins, Apache Software License 2.0
+190) Maven JXR plugin 2.2 : http://maven.apache.org, Apache Software License 2.0
+191) Plexus Utils 1.5.1 : http://plexus.codehaus.org/plexus-utils , Apache Software License 2.0
+192) Maven Resource plugin 2.4.3 : http://maven.apache.org/plugins, Apache Software License 2.0
+193) Maven Jar plugin 2.4.3 : http://maven.apache.org/plugins, Apache Software License 2.0
+194) Maven Source plugin 2.0.4 : http://maven.apache.org/plugins, Apache Software License 2.0
+
+2. Dependent Libraries - Anyframe Command Project
+1) Apache Ant 1.8.1 : http://ant.apache.org/ , The Apache Software License, Version 2.0
+2) Apache Ant Launcher  1.8.1 : http://ant.apache.org/ , The Apache Software License, Version 2.0
+3) Apache Ant Nodeps 1.8.1 : http://ant.apache.org/ , The Apache Software License, Version 2.0
+4) Apache Ant-Contrib Tasks 1.0b3 : http://ant-contrib.sourceforge.net/ , The Apache Software License, Version 2.0
+5) AntLR Parser Generator 2.7.7 : http://www.antlr.org/license.html , BSD License
+6) ASM 3.3 : http://asm.ow2.org/ , BSD License
+7) cglib 2.2 nodep : http://cglib.sourceforge.net , The Apache Software License, Version 2.0
+8) Classworlds 1.1-alpha-2 : http://classworlds.codehaus.org/ , Classworlds Project License
+9) JSch 0.1.48 : http://www.jcraft.com/jsch/ , BSD-style license
+10) cloning 1.5 : http://code.google.com/p/cloning/  , The Apache Software License, Version 2.0
+11) XStream 1.3 : http://xstream.codehaus.org/ , BSD license
+12) Apache Commons BeanUtils 1.8.0 : http://commons.apache.org/beanutils/ , The Apache Software License, Version 2.0
+13) Apache Commons Codec 1.3 : http://commons.apache.org/codec/ , The Apache Software License, Version 2.0
+14) Apache Commons Collections 3.2 : http://commons.apache.org/collections/ , The Apache Software License, Version 2.0
+15) Apache Commons Digester 1.8 : http://commons.apache.org/digester/ , The Apache Software License, Version 2.0
+16) Apache HttpClient 3.1 : http://hc.apache.org/httpclient-3.x/ , The Apache Software License, Version 2.0
+17) Apache Commons IO 2.0 : http://commons.apache.org/io/ , The Apache Software License, Version 2.0
+18) Apache Commons Lang 2.6 : http://commons.apache.org/lang/ , The Apache Software License, Version 2.0
+19) Apache Commons Validator 1.3.1 : http://commons.apache.org/validator/ , The Apache Software License, Version 2.0
+20) DOM4J 1.6.1 : http://dom4j.sourceforge.net/ , BSD style license
+21) EMMA 2.0.5312 : http://emma.sourceforge.net , Common Public License
+22) Freemarker 2.3.8 : http://freemarker.sourceforge.net/ , BSD-style license
+23) HSQLDB 2.0.0 : http://www.hsqldb.org/ , Hsqldb License
+24) Jalopy 1.5.rc3 : http://jalopy.sourceforge.net/ , BSD license
+25) JSP(JavaServer Pages Technology) 2.1 : http://www.oracle.com/technetwork/java/javaee/jsp/ , Sun Microsystems, Inc. Binary Code License Agreement
+26) Javax Servlet API 2.5 :http://www.oracle.com/technetwork/java/javaee/servlet/ , Sun Microsystems, Inc. Binary Code License Agreement
+27) Jaxen 1.1-beta-8 : http://jaxen.codehaus.org/ , Jaxen License 1.5
+28) JBoss [Morpheus] 5.0.0alpha-200607201-119 : http://www.jboss.org/serialization/ , LGPL 2.1
+29) JDOM 1.0 : http://www.jdom.org/ , Jdom License
+30) Joda Time 1.6.2 : http://joda-time.sourceforge.net/ , The Apache Software License, Version 2.0
+31) JUnit 4.9 : http://www.junit.org/ , Common Public License Version 1.0
+32) Log4j 1.2.16 : http://logging.apache.org/log4j , The Apache Software License, Version 2.0
+33) Jackrabbit WebDAV Library 1.6.0 : http://jackrabbit.apache.org/ , The Apache Software License, Version 2.0
+34) Maven Ant Tasks 2.0.10 : http://maven.apache.org/ant-tasks/ , The Apache Software License, Version 2.0
+35) Maven Archiver 2.4.1 : http://maven.apache.org/shared/maven-archiver/ , The Apache Software License, Version 2.0
+36) Maven Artifact 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-artifact/index.html , The Apache Software License, Version 2.0
+37) Maven Core 2.0.8 : http://maven.apache.org/ref/2.0.8/maven-core/index.html , The Apache Software License, Version 2.0
+38) Maven Profile Model 2.0.8 : http://maven.apache.org/ref/2.2.1/maven-profile/index.html , The Apache Software License, Version 2.0
+39) Maven Plugin API 2.0.8 : http://maven.apache.org/ref/3.0.4/maven-plugin-api/ , The Apache Software License, Version 2.0
+40) Maven Project 2.0.8 : http://maven.apache.org/ , The Apache Software License, Version 2.0
+41) Maven Archetype Common 2.0-alpha-4 : http://maven.apache.org/archetype/archetype-common/ , The Apache Software License, Version 2.0
+42) Doxia Core 1.0-alpha-9 : http://maven.apache.org/doxia/doxia/doxia-core/ , The Apache Software License, Version 2.0
+43) Maven Archetype Plugin 2.0-alpha-4 : http://maven.apache.org/archetype/maven-archetype-plugin/ , The Apache Software License, Version 2.0
+44) Maven Compiler Plugin 2.3.2 : http://maven.apache.org/plugins/maven-compiler-plugin/ , The Apache Software License, Version 2.0
+45) Maven Install Plugin 2.3.1 : http://maven.apache.org/plugins/maven-install-plugin/ , The Apache Software License, Version 2.0
+46) Maven Reporting API 2.0.8 : http://maven.apache.org/ref/2.0.4/maven-reporting/maven-reporting-api/index.html, The Apache Software License, Version 2.0
+47) Maven Reporting Implementation 2.0.4 : http://maven.apache.org/shared/maven-reporting-impl/ , The Apache Software License, Version 2.0
+48) Maven Process Invoker 2.0.8 : http://maven.apache.org/plugins/maven-invoker-plugin/                           The Apache Software License, Version 2.0
+49) Maven Plugin Testing Mechanism 1.0-beta-1 : http://maven.apache.org/plugin-testing/maven-plugin-testing-harness/            The Apache Software License, Version 2.0
+50) Maven Wagon webdav 1.0-beta-2 : http://maven.apache.org/wagon/wagon-providers/wagon-webdav-jackrabbit/          The Apache Software License, Version 2.0
+51) Apache Velocity 1.6.2 : http://velocity.apache.org/ , The Apache Software License, Version 2.0
+52) Apache Velocity  No dep 1.6.2 : http://velocity.apache.org/ , The Apache Software License, Version 2.0
+53) Apache Velocity Tools 2.0 : http://velocity.apache.org/tools/releases/2.0/ , The Apache Software License, Version 2.0
+54) AspectJ runtime 1.6.8 : http://www.aspectj.org , Eclipse Public License - v 1.0
+55) Appfuse Maven Plugin 2.1.0-M1 : http://static.appfuse.org/plugins/appfuse-maven-plugin/ , The Apache Software License, Version 2.0
+56) AspectJ compiler Maven Plugin 1.3 : http://mojo.codehaus.org/aspectj-maven-plugin/ , The MIT License
+57) Emma Maven plugin 1.0-alpha-2 : http://mojo.codehaus.org/emma-maven-plugin/ , The Apache Software License, Version 2.0
+58) Hibernate3 Maven Plugin 2.1 : http://mojo.codehaus.org/maven-hibernate3/hibernate3-maven-plugin/ , The Apache Software License, Version 2.0
+59) Maven Hibernate3 API 2.1 : http://mojo.codehaus.org/hibernate3/ , The Apache Software License, Version 2.0
+60) Maven Hibernate3 Implementation - JDK14 : http://mojo.codehaus.org/hibernate3/ , The Apache Software License, Version 2.0
+61) Maven Hibernate3 Implementation - JDK15 : http://mojo.codehaus.org/hibernate3/ , The Apache Software License, Version 2.0
+62) Plexus Archiver Component 1.0 : http://plexus.codehaus.org/plexus-components/plexus-archiver/ , The Apache Software License, Version 2.0
+63) Plexus Container Default 1.0-alpha-9-stable-1 : http://plexus.codehaus.org/plexus-containers/plexus-container-default/ , The Apache Software License, Version 2.0
+64) Plexus Default Interactivity Handler 1.0-alpha-5 : http://plexus.codehaus.org/plexus-components/plexus-interactivity/ , The Apache Software License, Version 2.0
+65) Plexus Interpolation API 1.13 : http://plexus.codehaus.org/plexus-components/plexus-interpolation/ , The Apache Software License, Version 2.0
+66) Plexus IO Components 1.0 : http://plexus.codehaus.org/plexus-components/plexus-io/ , The Apache Software License, Version 2.0
+67) Plexus Maven Plugin 1.3.8 : http://plexus.codehaus.org/plexus-maven-plugin/ , The Apache Software License, Version 2.0
+68) Plexus Utils 1.4.6 : http://plexus.codehaus.org/plexus-utils/ , The Apache Software License, Version 2.0
+69) Plexus Velocity Component 1.1.3 : http://plexus.codehaus.org/plexus-components/plexus-velocity , The Apache Software License, Version 2.0
+70) DbUnit Framework 2.4.5 : http://dbunit.sourceforge.net/ , LGPL 2.1
+71) Hibernate Entitity Manager EJB3 Persistence 1.0.2.: http://www.hibernate.org/ , LGPL 2.1
+72) Hibernate Core Aggregator 3.3.1.GA : http://www.hibernate.org/ , LGPL 2.1
+73) Hibernate Annotations 3.4.0.GA : http://www.hibernate.org/ , LGPL 2.1
+74) Hibernate Commons Annotations 3.2.0.Final : http://www.hibernate.org/ , LGPL 2.1
+75) Hibernate core 3.6.5.Final : http://www.hibernate.org/ , LGPL 2.1
+76) Hibernate Entitity Manager 3.4.0.GA : http://www.hibernate.org/ , LGPL 2.1
+77) Hibernate Tools 3.2.4.CR2 : http://www.hibernate.org/subprojects/tools.html , LGPL 2.1
+78) Jtidy r8-20060801 : http://jtidy.sourceforge.net/ , Java HTML Tidy License
+79) Objenesis 1.1 : http://objenesis.googlecode.com/svn/docs/index.html, The Apache Software License, Version 2.0
+80) JCL implementation over SLF4J 1.6.4 : http://www.slf4j.org , MIT License
+81) Simple Logging Facade for Java API 1.6.4 : http://www.slf4j.org , MIT License
+82) SLF4J LOG4J-12 Binding 1.6.4 : http://www.slf4j.org , MIT License
+83) Spring Framework Core 3.1.1.RELEASE : http://www.springsource.org/ , The Apache Software License, Version 2.0
+84) Spring Framework Test 3.1.1.RELEASE : http://www.springsource.org/ , The Apache Software License, Version 2.0
+85) oro 2.0.8 : http://jakarta.apache.org/oro/ , The Apache Software License, Version 2.0
+86) Xml Pull Parser 3rd Edition (XPP3) 1.1.3.4.O : http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/ , Indiana University Extreme! Lab Software License, vesion 1.1.1
+
+3. Anyframe Report Libraries
+1) Checkstyle 5.1 : http://checkstyle.sourceforge.net, GNU Lesser General Public License
+2) EMMA 2.0.5312: http://emma.sourceforge.net, Common Public License v1.0
+3) CCL 21.41 - JavaNCSS CCL Library : http://www.kclee.de/clemens/java/ccl,  Mozilla Public License
+4) JDepend 2.9 :  http://www.clarkware.com/software/JDepend.html, BSD License
+5) PMD 4.2.5 : http://pmd.sourceforge.net/, BSD-style license
+6) Jaxen 1.1.1 : http://jaxen.org/, Jaxen License 1.5
+7) ASM 3.1 : http://asm.objectweb.org, BSD License

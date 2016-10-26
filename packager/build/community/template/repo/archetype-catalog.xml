@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-catalog>
+	<archetypes>
+		<archetype>
+			<groupId>org.anyframe.archetype</groupId>
+			<artifactId>anyframe-basic-archetype</artifactId>
+			<version>5.6.1-SNAPSHOT</version>
+			<description>Basic archetype for Anyframe Java Core (nightly build version with JDK6 is 5.6.1-SNAPSHOT)</description>
+		</archetype>
+	</archetypes>
+</archetype-catalog>

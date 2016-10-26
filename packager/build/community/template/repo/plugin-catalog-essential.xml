@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugins>
+  <plugin name="core" description="Core Plugin is the basic plugin which is the basis of all plugins provided by Anyframe, and consists of sample code to guide how to use Spring MVC, Spring, etc. and reference libraries to use these open sources." latestVersion="1.6.1-SNAPSHOT">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-core-pi</artifactId>
+    <versions>
+      <version>1.0.0</version>
+      <version>1.0.1</version>
+      <version>1.0.2</version>
+      <version>1.0.3</version>
+      <version>1.0.4</version>
+      <version>1.5.0</version>
+      <version>1.5.1</version>
+	  <version>1.6.0</version>
+	  <version>1.6.1-SNAPSHOT</version>
+    </versions>
+  </plugin>
+  <plugin name="datasource" description="Datasource Plugin is the basic plugin which is the basis of all plugins provided by Anyframe, and consists of the reference libraries needed to use Apache Commons DBCP Datasource." latestVersion="1.1.1-SNAPSHOT">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-datasource-pi</artifactId>
+    <versions>
+      <version>1.0.0</version>
+      <version>1.0.1</version>
+      <version>1.0.2</version>
+	  <version>1.0.3</version>
+      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
+    </versions>
+  </plugin>
+  <plugin name="logging" description="Logging Plugin is the basic plugin which is the basis of all plugins provided by Anyframe, and consists of the reference libraries needed to use logging service." latestVersion="1.1.1-SNAPSHOT">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-logging-pi</artifactId>
+    <versions>
+      <version>1.0.0</version>
+      <version>1.0.1</version>
+      <version>1.0.2</version>
+      <version>1.0.3</version>
+      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
+    </versions>
+  </plugin>
+  <plugin name="spring" description="Spring Plugin is the basic plugin which is the basis of all plugins provided by Anyframe, and consists of the reference libraries needed to use Spring framework." latestVersion="1.1.1-SNAPSHOT">
+    <groupId>org.anyframe.plugin</groupId>
+    <artifactId>anyframe-spring-pi</artifactId>
+    <versions>
+      <version>1.0.0</version>
+      <version>1.0.1</version>
+      <version>1.0.2</version>
+      <version>1.0.3</version>
+      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
+    </versions>
+  </plugin>
+</plugins>

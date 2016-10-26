@@ -1,0 +1,16 @@
+    <servlet>
+        <servlet-name>Ctip Gen Servlet</servlet-name>
+        <servlet-class>org.anyframe.ide.ctip.integration.CtipGenServlet</servlet-class>
+        <init-param>
+            <param-name>hudsonHome</param-name>
+            <param-value>..\hudson</param-value>
+        </init-param>
+        <init-param>
+            <param-name>hudsonJobDir</param-name>
+            <param-value>..\hudson\jobs</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Ctip Gen Servlet</servlet-name>
+        <url-pattern>/anyframe/api/*</url-pattern>
+    </servlet-mapping>

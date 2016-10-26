@@ -1,0 +1,445 @@
+<chapter id="installation_installation">
+	<title>Installation</title>
+
+	<para>
+		Code Generator는 Eclipse Update Site와, Anyframe Portal에 압축 파일로 각각
+		배포하고 있다. 
+	</para>
+
+	<warning>
+		<title>설치 전 확인</title>
+		<para>
+			Code Generator는 내부적으로 Eclipse Data Tools Platform 플러그인을 사용하고
+			있으므로 해당 플러그인을 설치할 수 있는 환경을 구성해야 한다.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Eclipse Data Tools Platform 설치</para>
+				<para>
+					Eclipse Data Tools Platform은 Ecipse IDE for Java EE Developers
+					Package에 기본 설치되어 있으며, 그렇지 않은 경우 각 Eclipse 버전에 따른 Update Site를 통해
+					설치할 수 있다.
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			Code Generator는 Ant/Maven 기반의 프로젝트를 생성하며, Maven 기반의 프로젝트로 생성할 경우
+			m2e Eclipse Plugin을 설치하여야
+			Eclipse에서 정상적으로 프로젝트를 사용할 수 있다. 
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Eclipse m2e / m2e-wtp</para>
+				<para>
+					Eclipse m2e는 Eclipse IDE for Java EE Developers Package의 Eclipse 일부 버전에는 해당 버전에 따른 Update Site에 포함되어 있다.
+				</para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>Eclipse Juno(4.2)</para>
+							<para>
+								이미 등록되어 있는 Update Site URL(http://download.eclipse.org/releases/juno)을 통해 
+								Collaboration &gt;&gt; m2e - Maven Integration for Eclipse를 선택, 설치한다.
+							</para>
+						</listitem>
+						<listitem>
+							<para>Eclipse Indigo(3.7)</para>
+							<para>
+								이미 등록되어 있는 Update Site URL(http://download.eclipse.org/releases/indigo)을 통해 
+								Collaboration &gt;&gt; m2e - Maven Integration for Eclipse를 선택, 설치한다.
+							</para>
+						</listitem>
+						<listitem>
+							<para>Eclipse Helois(3.6)</para>
+							<para>
+								이미 등록되어 있는 Update Site URL에는 m2e가 포함되어 있지 않으므로 
+								Indigo Update Site URL(http://download.eclipse.org/releases/indigo)을 등록한 후 Indigo(3.7)의 설치 방법과 동일하게 진행한다.
+							</para>
+						</listitem>
+						<listitem>
+							<para>Run As 시 library 인식시키기</para>
+							<para>
+								m2e-wtp를 사용하는 이유는 Eclipse에서 Tomcat을 통해 Web Application을 동작시켜보기 위함인데, Maven Project의 경우 해당 jar 파일이 물리적으로 존재하지 않으므로,
+								pom.xml파일의 내용을 통해 배포하도록 하기 위해 다음과 같은 방법으로 해결하도록 한다. 단, Maven 프로젝트로 인식(Maven Dependencies라는 Build Path가 적용되어 있어야 한다.)
+								<para>
+									Project Properties &gt;&gt; Deployment Assembly &gt;&gt; Add &gt;&gt; Referenced Projects Classpath Entries(혹은 Java Build Path Entries 등) &gt;&gt; Next &gt;&gt; 
+									Maven Dependencies 선택 &gt;&gt; Finish 
+								</para>
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</warning>
+
+	<itemizedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para>
+				<link linkend="installation_installation_updateSite">Update Site에서 설치</link>
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<link linkend="installation_installation_localPc">로컬 PC에서 설치</link>
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<link linkend="installation_installation_jenkins">[참고]CTIP 서버 설치</link>
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<section id="installation_installation_updateSite">
+
+		<title>Update Site에서 설치</title>
+		<orderedlist>
+			<listitem>
+				<para>Code Generator 플러그인 설치는 Anyframe Plugin Update Site를 통해서 설치할 수
+					있다.
+					외부 인터넷 연결이 안되거나 네트웍에 문제가 있는 경우 아래의
+					[로컬 PC에서 설치] 내용을 참고하여 설치하도록
+					한다.
+				</para>
+
+				<orderedlist>
+					<listitem>
+						<para>Eclipse의 Help > Install New Software... 메뉴를 선택한다.</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: 우측 상단의 Add...버튼을 클릭하여 Anyframe
+							Plugin Update Site를 추가하도록 한다. 이때 Name에는 Anyframe Plugin Update
+							Site를, Location에는 http://dev.anyframejava.org/update를 입력한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							[Available Software] 화면: 중앙에 Anyframe Plugin Update Site 를
+							루트로 하는
+							Plugin Tree가 나타난다.
+							여기서 하단 항목 중 "Contact all
+							update sites
+							during
+							install to find
+							required software" 체크 박스를 해제하여
+							다른 Plugin이 함께
+							설치되는
+							것을 방지한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] 화면: Plugin Tree 중 Anyframe Java IDE
+							Code Generator을 선택하고
+							하단의 Next 버튼을 클릭한다.</para>
+						<para>
+							최신 버전인 Anyframe Java IDE의 Code Generator임을 유의한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Review Licenses] 화면: 좌측의 Plugin을 선택하면 우측에 License text가
+							나온다.
+							Anyframe Java IDE에 대해서 우측 하단의 "I accept the terms
+							of the
+							license agreements" 구문에 동의하고 Finish 버튼을 클릭한다.
+			       </para>
+					</listitem>
+					<listitem>
+						<para>[Security Warning] 화면: 팝업창에서 설치 진행 여부 물을 때 OK 버튼을 선택한다.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Software Updates] 화면: 팝업창이 뜨고, "Would you like to restart
+							now?" 질문에 Yes 버튼을 선택한다.</para>
+					</listitem>
+				</orderedlist>
+
+				<warning>
+					<title>Anyframe Plugin Update Site를 이용한 설치 전 주의 사항</title>
+					<para>
+						Code Generator Plugin이 설치하려고 하는 Eclipse의 dropins나 plugins 혹은
+						addins 폴더 에
+						이미 설치되어 있다면 Update Site를 통해 설치될 Plugin과 중복되어 문제를 일으킬 수
+						있으므로
+						반드시
+						dropins나 plugins 혹은 addins 폴더에 Code Generator Plugin이 설치되어
+						있는지 확인하고 설치되어 있다면
+						제거한 후, Update Site를 통해 설치하도록 한다.
+						Update Site를 통해
+						설치한 경우 물리적인
+						Code Generator Plugin 파일은 plugins 폴더 하위에 위치하게
+						된다.
+					</para>
+				</warning>
+			</listitem>
+
+			<listitem>
+				<para>
+					<emphasis role="bold">"Help &gt; About Eclipse &gt;
+						Installation
+						Details , Plug-ins 탭"</emphasis>
+					을 통해 정상적으로 설치되었는 지
+					확인한다.
+				</para>
+
+				<para>☞ About Eclipse 메뉴는 Windows용
+					Eclipse의 경우 Help 메뉴에서,
+					Mac OS X용
+					Eclipse의 경우 Eclipse 메뉴에서 확인할 수
+					있다.
+				</para>
+				<para>☞ Eclipse 루트 폴더 하위의 plugins 폴더 내로
+					org.anyframe.ide.common_x.x.x.jar와
+					org.anyframe.ide.codegenerator_x.x.x.jar 파일이 설치된 것을 확인해볼 수 있다.
+				</para>
+			</listitem>
+
+			<listitem>
+				<para>Code Generator의 설치가 완료되었다. Code Generator의
+					기능을 사용하여 개발하기 이전에
+					반드시 Eclipse Preferences 설정 내용을 참고하여 환경 설정을 모두
+					끝마치도록
+					한다.</para>
+			</listitem>
+		</orderedlist>
+	</section>
+
+
+	<section id="installation_installation_localPc">
+		<title>로컬 PC에서 설치</title>
+		<para>Anyframe Java IDE 플러그인은 Anyframe 포탈사이트에서 다운받은
+			anyframe-ide-x.x.x.zip 파일을
+			이용해서 설치할 수 있다.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Local Update Site 구성</para>
+				<para>
+					압축을 풀고 updatesite 폴더를 한글이 포함되지 않은 로컬에 위치시킨다.
+				</para>
+				<para>
+					Eclipse의 Update Site를 추가한다. Location을 지정할 때, Local 버튼을 통해 로컬에
+					위치시킨 updatesite 폴더를 지정한다. 
+				</para>
+			</listitem>
+			<listitem>
+				<para>Eclipse 폴더의 dropins 이용</para>
+				<para>압축을 풀고 updatesite 폴더 내에 있는
+					2개의 폴더를 "[eclipse 설치폴더]/dropins"에
+					"anyframe-ide" 폴더를 생성한 후 그 아래에 복사한다.</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section id="installation_installation_jenkins">
+		<title>[참고]CTIP 서버 설치</title>
+		<para>
+			<ulink url="http://jenkins-ci.org/">Jenkins 사이트</ulink>
+			로부터 Jenkins의 WAR 파일을 다운로드 받은 후, 단독 실행시키거나 Servlet Container에 배포하여
+			구동시키도록 한다. Jenkins의 설치에 대한 자세한 내용은
+			<ulink url="http://jenkins-ci.org/">Jenkins 사이트</ulink>
+			를 참고하도록 한다.
+			현재 Anyframe은 Jenkins 1.464 버전에 대해서 테스트되었으며 아래 표에 나타난
+			Jenkins Plugin들을
+			설치하여 구성되었다. 기본적으로 설치되는 Jenkins Plugin들외 추가시킨 Jenkins
+			Plugin들도 있으므로
+			Plugin 전체 목록을 확인해보도록 한다.
+			각 Jenkins Plugin의 버전에 따라 설치된
+			Jenkins 서버에서 정상적으로 동작하지 않을 수도 있으므로
+			Jenkins Plugin 버전에 유의하도록 한다.
+			만약 최신
+			버전의 Jenkins Plugin 설치 시 정상적으로 동작하지 않는다면
+			<ulink url="http://jenkins-ci.org/">Jenkins Plugin 다운로드 사이트</ulink>
+			에서
+			해당 Plugin의 버전을 찾아서 따로 설치해주도록 한다.
+		</para>
+		<informaltable>
+			<caption>Jenkins Plug in 목록</caption>
+			
+			<tgroup cols="4">
+				<colspec colname="col1" colnum="1" colwidth="3*" />
+				<colspec colname="col2" colnum="2" colwidth="2*" />
+				<colspec colname="col3" colnum="3" colwidth="4*" />
+				<colspec colname="col4" colnum="4" colwidth="1*" />
+				<thead>
+					<row>
+						<entry align="center">Plugin Name</entry>
+						<entry align="center">Plugin ID</entry>
+						<entry align="center">Description</entry>
+						<entry align="center">Version</entry>
+					</row>
+				</thead>
+
+				<tbody>
+					<row>
+						<entry vlign="center">javadoc</entry>
+						<entry vlign="center">javadoc</entry>
+						<entry vlign="center">This plugin adds Javadoc support to Jenkins.
+							This functionality used to be a part of the core, but as of
+							Jenkins 1.431, it was split off into separate plugins.</entry>
+						<entry vlign="center" align="center">1.0</entry>
+					</row>
+					<row>
+						<entry>Maven 2 Project Plugin</entry>
+						<entry>maven-plugin</entry>
+						<entry>This plugin is part of the core Jenkins distribution. See
+							Building a maven2 project for more information on Maven 2
+							projects in Jenkins.</entry>
+						<entry align="center">1.462</entry>
+					</row>
+					<row>
+						<entry>ant</entry>
+						<entry>ant</entry>
+						<entry>
+							This plugin adds Apache Ant support to Jenkins. This
+							functionality
+							used to be a part of the core, but as of Jenkins
+							1.431, it was
+							split off into separate plugins. 
+					</entry>
+						<entry align="center">1.1</entry>
+					</row>
+
+					<row>
+						<entry>Static Code Analysis Plug-ins</entry>
+						<entry>analysis-core</entry>
+						<entry>
+							This plug-in provides utilities for the static code
+							analysis
+							plug-ins.
+					</entry>
+						<entry align="center">1.40</entry>
+					</row>
+
+					<row>
+						<entry>Checkstyle Plugin</entry>
+						<entry>checkstyle</entry>
+						<entry>
+							This plugin generates the trend report for Checkstyle, an
+							open source
+							static code analysis program.
+					</entry>
+						<entry align="center">3.26</entry>
+					</row>
+
+					<row>
+						<entry>FindBugs Plugin</entry>
+						<entry>findbugs</entry>
+						<entry>
+							This plugin generates the trend report for FindBugs, an
+							open source
+							program which uses static analysis to look for bugs in
+							Java code.
+						</entry>
+						<entry align="center">4.39</entry>
+					</row>
+
+					<row>
+						<entry>PMD Plugin</entry>
+						<entry>pmd</entry>
+						<entry>
+							This plugin generates the trend report for PMD, an open
+							source static
+							code analysis program.
+					</entry>
+						<entry align="center">3.27</entry>
+					</row>
+
+					<row>
+						<entry>Analysis Collector Plugin</entry>
+						<entry>analysis-collector</entry>
+						<entry>
+							TThis plug-in is an add-on for the plug-ins Checkstyle,
+							Dry, FindBugs,
+							PMD, Task Scanner, and Warnings: the plug-in
+							collects the
+							different analysis results and shows the results in a
+							combined
+							trend graph.
+							Additionally, the plug-in provides health
+							reporting and build stability based
+							on these combined results.
+						</entry>
+						<entry align="center">1.26</entry>
+					</row>
+
+					<row>
+						<entry>CVS Plugin</entry>
+						<entry>cvs</entry>
+						<entry>
+							his bundled plugin integrates Jenkins with CVS version
+							control
+							system.
+					</entry>
+						<entry align="center">1.6</entry>
+					</row>
+
+					<row>
+						<entry>Emma Plugin</entry>
+						<entry>emma</entry>
+						<entry>
+							his plugin allows you to capture code coverage report from
+							Emma.
+							Jenkins will generate the trend report of coverage.
+					</entry>
+						<entry align="center">1.27</entry>
+					</row>
+
+					<row>
+						<entry>Jenkins JDepend Plugin</entry>
+						<entry>jdepend</entry>
+						<entry>
+							The JDepend Plugin is a plugin to generate JDepend reports
+							for
+							builds.
+					</entry>
+						<entry align="center">1.2.3</entry>
+					</row>
+
+					<row>
+						<entry>Jenkins SSH Slaves plugin</entry>
+						<entry>ssh-slaves</entry>
+						<entry>
+							This plugin allows you to manage slaves running on *nix
+							machines over
+							SSH.
+					</entry>
+						<entry align="center">0.21</entry>
+					</row>
+
+					<row>
+						<entry>Subversion Plugin</entry>
+						<entry>subversion</entry>
+						<entry>
+							This plugin adds the Subversion support (via SVNKit) to
+							Jenkins.
+						</entry>
+						<entry align="center">1.34</entry>
+					</row>
+					<row>
+						<entry>Translation Assistance Plugin</entry>
+						<entry>translation</entry>
+						<entry>
+							This plugin adds an additional dialog box in every page,
+							which
+							enables people to contribute localizations for the messages
+							they
+							are seeing in the current page.
+					</entry>
+						<entry align="center">1.8</entry>
+					</row>
+					<row>
+						<entry>Jenkins Violations plugin</entry>
+						<entry>violations</entry>
+						<entry>
+							This plugin does reports on checkstyle, csslint, pmd, cpd,
+							fxcop,
+							pylint, jcReport, and findbugs violations.
+					</entry>
+						<entry align="center">0.7.11-SNAPSHOT</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</informaltable>
+	</section>
+</chapter>

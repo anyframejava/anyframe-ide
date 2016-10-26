@@ -1,0 +1,55 @@
+<section id="workingwithqueries_mappingxmlfile">
+	<title>Creating a New Query Mapping XML File</title>
+
+	<para>
+		Users can create Query Mapping XML file through Eclipse Menu or Context Menu.	
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Opening through Eclipse Menu</emphasis>
+				</para>
+				<para>
+					Select "File > New > SQL XML File"
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Opening through Context Menu</emphasis>
+				</para>
+				<para>
+					Select "New > SQL XML
+					File"  on Context Menu at Eclipse Package Explorer, etc.					
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<para>
+		When creating new Query Mapping XML file, check the following items.	
+		<itemizedlist>
+			<listitem>
+				<para>
+					Check Eclipse project and folder name. Query Mapping XML file is created in the defined location.			
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					The extension of Query Mapping XML file must be ".xml".					
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Check whether unique file name was given. The name of Query Mapping XML file must be unique in the defined project
+					and folder, and which will be validated automatically at file creation.					
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="../image/WorkingWithQueries/create-duplicatedname.jpg"
+					align="center" />
+			</imageobject>
+		</mediaobject>
+	</para>
+</section>

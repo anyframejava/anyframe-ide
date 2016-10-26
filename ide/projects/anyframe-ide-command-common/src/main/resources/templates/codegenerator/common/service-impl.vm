@@ -1,0 +1,50 @@
+package ${package}.service.impl;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+
+import ${domain.packageName}.${domain.name};
+import ${package}.service.${domain.name}Service;
+
+/**
+ * ${domain.name}Service implementation class
+ * @author $author
+ */
+@Service("#getDomainNameLower(${domain.name})Service")
+@Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
+public class ${domain.name}ServiceImpl implements ${domain.name}Service {
+	       
+    @Inject
+    @Named("#getDomainNameLower(${domain.name})Dao")
+	private ${domain.name}Dao #getDomainNameLower(${domain.name})Dao;	
+	
+	public void update(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+    	this.#getDomainNameLower(${domain.name})Dao.update(#getDomainNameLower(${domain.name}));
+	}    
+    
+  	public ${domain.name} get(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		return this.#getDomainNameLower(${domain.name})Dao.get(#getDomainNameLower(${domain.name}));
+	}
+    
+  	public void remove(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+    	this.#getDomainNameLower(${domain.name})Dao.remove(#getDomainNameLower(${domain.name}));
+	}    
+    
+  	public void create(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+    	this.#getDomainNameLower(${domain.name})Dao.create(#getDomainNameLower(${domain.name}));
+	}
+		    
+	public Page getPagingList(SearchVO searchVO) throws Exception {
+		return this.#getDomainNameLower(${domain.name})Dao.getPagingList(searchVO);
+	}              
+}

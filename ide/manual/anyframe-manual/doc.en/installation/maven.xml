@@ -1,0 +1,335 @@
+<chapter id="installation_maven">
+	<title>Maven</title>
+	
+	<para>
+		This chapter will explain how to constitute the development environment based on Anyframe easily using CLI when Maven has been adopted as the build tool for the project. 
+		To constitute the development environment based on Maven, the following process is needed.
+	</para>
+	
+	<itemizedlist numeration="arabic" inheritnum="inherit">
+		<listitem>
+			<para><link linkend="installation_maven_configuration">Maven installation and configuration</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_generate_archetype">project structure generation</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_install_plugin">Plugin installation</link></para>
+		</listitem>
+		<listitem>
+			<para><link linkend="installation_maven_run">Running applications</link></para>
+		</listitem>
+	</itemizedlist>
+	
+	<section id="installation_maven_configuration">
+		<title>Maven installation and configuration</title>
+		<para>
+			Here the tasks will be explained that should precede constitution of the development environment based on Anyframe when Maven is used as the build tool.
+		</para>
+		<para>
+			<ulink url="http://maven.apache.org/">Maven(http://maven.apache.org/)</ulink> is an open source tool that supports build, reporting and documentation based on POM(Project Object Model) information. 
+		        First, install Maven. Then we will look at how to set the configuration for installation of Anyframe. 
+			
+		</para>
+		<orderedlist numeration="arabic" inheritnum="inherit">
+			<listitem>
+				<para>
+					Install Maven if Maven has not been installed in the PC to install Anyframe. (In this document the installation will be based on Maven Ver.2.2.1.) 
+					After downloading Maven(apache-maven-2.2.1-bin.xxx) from <ulink url="http://maven.apache.org/">Maven website</ulink>, 
+					extract it in a desired location.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When proceeding with installation of Anyframe based on the installed Maven, 
+					open [MAVEN installation folder]/conf/settings.xml file and define the property as follows so that reference libraries can be downloaded from Anyframe Repository (http://dev.anyframejava.org/maven/repo). 
+					(If you want to download settings.xml file, refer to <link linkend="installation_maven_settings_resources">here</link>.)
+				</para>
+				<programlisting language="xml"><![CDATA[<profiles>
+    <profile>
+        <id>myprofile</id>
+        <repositories> 
+            <repository>
+                <id>anyframe-repository</id>
+                <url>http://dev.anyframejava.org/maven/repo</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>	
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>anyframe-plugin</id> 
+                <name>repository for Anyframe</name>       
+                <url>http://dev.anyframejava.org/maven/repo</url>           
+            </pluginRepository>
+            <pluginRepository>
+                <id>central</id> 
+                <name>Internal Mirror of Central Plugins Repository</name>       
+                <url>http://www.ibiblio.org/maven2/plugins</url>           
+            </pluginRepository>
+            <pluginRepository>
+                <id>remote</id> 
+                <name>Internal Mirror of Central Plugins Repository</name>       
+                <url>http://repo1.maven.org/maven2</url>           
+            </pluginRepository>    
+        </pluginRepositories>  
+    </profile>
+</profiles>
+...
+<activeProfiles>
+    <activeProfile>myprofile</activeProfile>
+</activeProfiles>]]></programlisting>
+			</listitem>
+			<listitem>
+				<para>
+					For MAVEN to be recognized in the relevant PC, <emphasis role="bold">add MAVEN_HOME as a system parameter, set [MAVEN installation folder] as its value</emphasis>.
+					
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/setting_maven_home.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+				
+				<para>
+					Also, add <emphasis role="bold">the following '%MAVEN_HOME%/bin' in the path</emphasis> of the system parameter.
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/setting_system_path.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If installation and configuration are done, check whether Maven has been successfully installed. 
+					Open the Command window and check whether the following information is shown without errors after entering the command <emphasis role="bold">mvn -version</emphasis>.
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/installation/maven/check_maven_version.jpg"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Now, it is possible to constitute the development environment based on Anyframe by using Command Line Interface based on Maven. 
+				</para>
+			</listitem>
+		</orderedlist>
+	</section>
+	
+	<section id="installation_maven_generate_archetype">
+		<title>Project structure generation</title>
+		<para>
+			Let us generate the basic structure of the project first to constitute the development environment based on Anyframe.
+			Open the Command window, and install anyframe-basic-archetype by entering Maven Command as follows.
+			(For details on Anyframe Archetype, refer to the explanation of <link linkend="commands_maven_generate_archetype">Archetype</link> in this manual.) 
+		</para>
+		<programlisting language="java"><![CDATA[mvn archetype:generate 
+	    -DarchetypeCatalog="http://dev.anyframejava.org/maven/repo/archetype-catalog.xml"]]></programlisting>
+	    
+	    <para>
+			When the command is entered as above, the list of Maven Archetype defined in http://dev.anyframejava.org/maven/repo/archetype-catalog.xml file defined as archetypeCatalog property value will be presented in the Command window.  
+			Among the list of Maven Archetype presented, select the number ('4'), which is the newest anyframe-basic-archetype.
+			When there are several registered versions of anyframe-basic-archetype, the list of versions will be presented for selection. Here, the newest version 5.0.0. will be chosen. 
+			<programlisting language="java"><![CDATA[Choose archetype:
+1: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe.plugin.foundation (foundation plugin (latest release is 4.2.0))
+2: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable 4.6.1))
+3: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable 1.0.1))
+4: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-basic-archetype (anyframe basic archetype (latest stable x.x.x))
+5: http://dev.anyframejava.org/maven/repo/archetype-catalog.xml -> anyframe-service-archetype (anyframe service archetype (latest stable x.x.x))
+Choose a number: : 4
+Choose version:
+1: 5.0.0.RC1
+2: 5.0.0
+Choose a number: 2: 2]]></programlisting>
+		</para>
+		
+		<para>				
+			Enter the value for each parameter to generate a sample project as follows. 
+			<programlisting language="java"><![CDATA[Define value for property 'groupId': : myapp
+Define value for property 'artifactId': : myproject
+Define value for property 'version': 1.0-SNAPSHOT: 1.0.0
+Define value for property 'package': myapp: anyframe
+Confirm properties configuration:
+groupId: myapp
+artifactId: myproject
+version: 1.0.0
+package: anyframe
+Y: y]]></programlisting>
+		</para>
+		<para>
+			A sample project named 'myproject' will be generated based on the entered property value. The following is the basic structure of the sample project made by installing anyframe-basic-archetype.
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/myproject_structure.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		
+		<para>
+			Now, moving to the directory of the generated project, you can continue to install various plugins provided by Anyframe. 
+			<programlisting language="java"><![CDATA[cd myproject]]></programlisting>
+		</para>
+	</section>
+	
+	<section id="installation_maven_install_plugin">
+		<title>Plugin installation</title>
+		<para>
+			From Anyframe 4.6.0, the collection of template-based sample codes that integrated various open sources and reference libraries is called plugin, 
+			and various types of plugins are provided.
+		</para>
+		
+		<para>
+			Let us install core plugin, which is basically necessary to run other plugins of Anyframe. 
+		</para>
+		<para>
+			Open the Command window and start hsqldb provided as a sample by double-clicking start.cmd (or start.sh) file after moving to the previously installed [sample project installation folder]/db/hsqldb folder. 
+			If addition of DB data is required to run the plugin, DB should be started first since addition of DB data is also carried out when the selected plugin is installed. 
+			If DB has not been started when the selected plugin is installed, directly execute ([sample project installation folder]/db/scripts/{plugin name-insert-data-db name}.sql), which is a DB script file provided after the plugin is installed. 
+			To install plugins based on DB other than hsqldb provided as a sample, refer to <link linkend="commands_maven_db">DB change</link>.
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/start_hsqldb.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<para>
+			Open the Command window and enter the following command, moving to the sample project installation folder.
+			(For details on installing Plugins, refer to the Maven-based <link linkend="commands_maven_install">install</link> command.)
+		</para>
+		<programlisting language="java"><![CDATA[mvn anyframe:install -Dname=core]]></programlisting>
+		<para>
+			Since datasource, logging and spring plugins are required to run core plugin, the following will be displayed. To continue with installation, enter 'y'.
+		</para>
+		<programlisting language="java"><![CDATA[Resolving plugin dependencies ...
+Dependencies Resolved.
+------------------------------------------------------------------------------
+ <action>  <name>	<version>
+ Install   datasource	1.0.0
+ Install   spring	1.0.0
+ Install   core	1.0.0
+ Install   logging	1.0.0
+------------------------------------------------------------------------------
+Is this OK? (y, n):]]></programlisting>
+		
+		<para>
+			By entering the following command, you can check the list of plugins installed in the sample project.
+			<programlisting language="java"><![CDATA[mvn anyframe:installed]]></programlisting>
+			<programlisting language="java"><![CDATA[<name>		<current>	<latest>
+ core		1.0.0	1.0.0
+ datasource	1.0.0	1.0.0
+ spring		1.0.0	1.0.0
+ logging		1.0.0	1.0.0]]></programlisting>
+		</para>
+		<para>
+			Other plugins can be additionally installed in the same way as core plugin.
+			To search for the list of plugins that can be installed, use the following command. 
+			<programlisting language="java"><![CDATA[mvn anyframe:list]]></programlisting>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/show_plugin_list.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<important>
+			<title>Notes for the existing Maven users</title>
+			<para>
+				Anyframe deploys libraries to Anyframe Repository disconnecting reference relations among the libraries 
+				to prevent all of Anyframe and 3rd party libraries in reference relations from being downloaded at one time 
+				when Anyframe related libraries are downloaded based on Maven. 
+				Thus, the existing Maven users can have errors when installing Anyframe due to problems in the reference relations of 3rd party libraries that already exist in Local Repository.  
+				Therefore, when there are problems during installation, it is recommend to delete and re-install Local Repository. 
+			</para>
+		</important>
+	</section>
+		
+	<section id="installation_maven_run">
+		<title>Running applications</title>
+		<para>
+			To check whether the sample application constituted after a certain plugin has been installed runs properly, 
+			Anyframe provides a command that can directly deploy and execute the application in the Jetty server.
+		</para>
+		<para>
+			By opening the Command window and entering the following Maven command, moving to the sample project installation folder, 
+			the sample application can be started based on Jetty.
+		</para>
+		<programlisting language="java"><![CDATA[mvn clean jetty:run]]></programlisting>
+	
+		<para>
+			If Jetty runs properly, 'Started Jetty Server,' a log message at the INFO level will be displayed in the console window.
+		</para>		
+	
+		<para>
+			If WAS has started properly, open the web browser and check whether the sample application runs properly by entering http://localhost:8080/myproject (http://localhost:8080/${sample project name}) in the address bar.  
+			The following is the initial page of the sample application when only core plugin has been installed. 
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_initial.jpg"
+						align="center" />
+				</imageobject>
+			</mediaobject>
+		</para>
+		<para>
+			By clicking Core link on the page, you can move to the page that manages movie information. 
+		</para>
+		<para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../image/installation/maven/sample_core_initial.jpg"
+						align="center" />
+				</imageobject>					
+			</mediaobject>	
+		</para>	
+	</section>
+	
+	<section id="installation_maven_settings_resources">
+		<title>Resources</title>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>Download</para>
+					<para>
+						The following is Maven's settings.xml file previously mentioned. 
+						After downloading settings.xml file, copy it in [MAVEN installation folder]/conf.
+					</para>
+					<table>
+						<title>Download List</title>
+						<tgroup cols="2">
+							<colspec colnum="1" colname="col1" colwidth="4*" />
+							<colspec colnum="2" colname="col2" colwidth="6*" />
+							<thead>
+								<row>
+									<entry align="center">Name</entry>
+									<entry align="center">Download</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry align="center">settings.xml</entry>
+									<entry align="center">
+										<ulink
+											url="http://dev.anyframejava.org/docs.en/anyframe/5.0.1/reference/download/installation/settings.xml">Download</ulink>
+									</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+
+</chapter>

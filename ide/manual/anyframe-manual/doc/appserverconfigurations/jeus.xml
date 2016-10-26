@@ -1,0 +1,33 @@
+<chapter id="app_server_configurations_jeus">
+	<title>JEUS</title>
+	<para>
+		Anyframe의 plugin이 설치된 샘플 어플리케이션을 JEUS에 deploy할 경우 주의해야 할 설정에 대해서 알아보자.
+	</para>
+	
+	<section id="app_server_configurations_jeus_core">
+		<title>Core plugin 사용 시</title>
+		<itemizedlist>
+			<listitem>
+				<para>6.0 : Core Plugin 설치로 생성된 샘플 프로젝트는 Model Validation 기능을 수행하기 위해 JSR-303 Annotation을 활용하여 도메인 클래스를 구성하고
+					있다. 이 때 JSR-303 Provider로 Hibernate Validator 4.0.2.GA 라이브러리를 활용하고 있으며 이 라이브러리는 JPA 2.0 라이브러리를 참조한다.
+					그런데 JEUS 6.0은 JPA 1.0 라이브러리를 포함하고 있고, WAS 시작 시점에 JPA 라이브러리를 필요로 하므로 다음과 같은 처리가 필요하다.
+				</para>
+				<itemizedlist>
+					<listitem>
+						 <para>[JEUS 설치 Home]/lib/system 폴더 내의 javaee.jar 파일에서 javax.persistence 제거</para>
+					</listitem>
+					<listitem>
+						<para>[JEUS 설치 Home]/lib/system 폴더 내의 toplink-*.jar 파일 삭제</para>
+					</listitem>
+					<listitem>
+						<para>[JEUS 설치 Home]/lib/system 폴더 내의 eclipselink.jar 파일 삭제</para>
+					</listitem>
+					<listitem>
+						<para>[JEUS 설치 Home]/lib/system 폴더 내에 [샘플 프로젝트]/src/main/webapp/WEB-INF/lib/hibernate-jpa-2.0-api-1.0.0.Final.jar 파일 복사</para>
+					</listitem>
+				</itemizedlist>     						
+			</listitem>
+		</itemizedlist>
+	</section>
+	
+</chapter>

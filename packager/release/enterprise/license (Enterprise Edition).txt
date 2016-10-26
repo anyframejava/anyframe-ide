@@ -1,0 +1,51 @@
+Commerical License Agreement
+         
+Anyframe Java Core(Enterprise Ed.) Version 4.5.0
+Copyright (C) 2012 Samsung SDS CO., Ltd. All Rights Reserved
+
+
+This license agreement governs  Anyframe Java Core(Enterprise Ed.) ("Software").  
+
+1. DEFINITIONS
+
+In this Commerical License Agreement, unless the contrary intention appears:
+
+1.1. "CLA" means this Commercial License Agreement. 
+1.2. "Licensor" means Samsung SDS CO., Ltd. 
+1.3. "Licensee" means YOU, or the organization (if any) on whose behalf YOU are taking the CLA. 
+1.4. "SOFTWARE PRODUCT" or "SOFTWARE" means Anyframe Java Core(Enterprise Ed.) which includes computer software and associated media and printed materials, and may include online or electronic documentation. 
+
+2. GRANT OF LICENSE
+
+Subject to the terms and conditions of this Agreement, Licensor hereby grants you a limited, nonexclusive license to install and use the binary version of the Software, a copy of which is provided herewith per core. You will identify the number of cores per server for each qualified server.
+
+3. ADDITIONAL RIGHTS AND LIMITATIONS
+
+You must retain all copyright and related notices of Licensor's ownership and other rights in the Software in the product, labeling and documentation provided.
+3.1. you may not  modify, translate, de-compile, reverse engineer, disassemble or otherwise decode the Software.
+3.2. you may not copy any of the Software other than as reasonably required for your own personal use of the Software in accordance with this Agreement. 
+3.3 you may not sublicense, sell, rent, lend, transfer, post, transmit, distribute or otherwise make the Software available to anyone else, except that you may permanently transfer the Software and accompanying materials provided you retain no copies and the recipient agrees to the terms of this Agreement.
+
+4. ASSIGNMENT
+
+YOU may only assign all your rights and obligations under this CLA to another party if YOU supply to the transferee a copy of this CLA and all other documentation including proof of ownership. Your license is then terminated.
+
+5. TERMINATION
+
+Without prejudice to any other rights, Licensor may terminate this CLA if YOU fail to comply with the terms and conditions. Upon termination YOU or YOUR representative shall destroy all copies of the SOFTWARE PRODUCT and all of its component parts or otherwise return or dispose of such material in the manner directed by Licensor.
+
+
+6. LIMITATION OF LIABILITY
+
+IN NO EVENT WILL LICENSOR BE LIABLE FOR ANY DAMAGES, INCLUDING LOSS OF DATA, LOST OPPORTUNITY OR PROFITS, COST OF COVER OR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, DIRECT OR INDIRECT DAMAGES ARISING FROM OR RELATING TO THE USE OF THE SOFTWARE, HOWEVER CAUSED ON ANY THEORY OF LIABILITY.  THIS LIMITATION WILL APPLY EVEN IF LICENSOR HAS BEEN ADVISED OR GIVEN NOTICE OF THE POSSIBILITY OF SUCH DAMAGE.  THE ENTIRE RISK AS TO THE USE OF THE SOFTWARE IS ASSUMED BY THE USER. BECAUSE SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CERTAIN INCIDENTAL, CONSEQUENTIAL OR OTHER DAMAGES, THIS LIMITATION MAY NOT APPLY TO YOU.
+
+
+7. DISCLAIMER OF WARRANTY
+
+TO THE EXTENT PERMITTED BY APPLICABLE LAW ALL LICENSOR SOFTWARE, INCLUDING THE IMAGES AND/OR COMPONENTS, IS PROVIDED "AS IS" AND WITHOUT EXPRESS OR IMPLIED WARRANTY OF ANY KIND BY EITHER LICENSOR OR ANYONE ELSE WHO HAS BEEN INVOLVED IN THE CREATION, PRODUCTION OR DELIVERY OF SUCH SOFTWARE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, NONINFRINGEMENT OR FITNESS FOR A PARTICULAR PURPOSE.  NO COVENANTS, WARRANTIES OR INDEMNITIES OF ANY KIND ARE GRANTED BY LICENSOR TO THE USER.
+
+8. TRADEMARKS
+
+All names of products and companies used in this CLA, the SOFTWARE PRODUCT, or the enclosed documentation may be trademarks of their corresponding owners. Their use in this CLA is intended to be in compliance with the respective guidelines and licenses.
+
+

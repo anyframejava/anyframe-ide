@@ -1,0 +1,69 @@
+<plugins>
+	<plugin name="cxf" latestVersion="1.0.0" description="cxf plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-cxf-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>
+	<plugin name="cxf-jaxws" latestVersion="1.0.0" description="cxf-jaxws plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-cxf-jaxws-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>
+	<plugin name="cxf-jaxrs" latestVersion="1.0.0" description="cxf-jaxrs plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-cxf-jaxrs-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>
+	<plugin name="remoting" latestVersion="1.0.0" description="remoting plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-remoting-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+			<version>0.9.0</version>
+		</versions>
+	</plugin>	
+	
+	<!-- for testing -->
+	<plugin name="latest-libraries" latestVersion="1.0.0" description="for testing about latest libraries">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-latest-libraries-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>	
+	
+	<plugin name="match-remoting" latestVersion="1.0.0" description="for testing about matching with remoting plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-match-remoting-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>	
+	
+	<plugin name="mismatch-remoting" latestVersion="1.0.0" description="for testing about mismatching with remoting plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-mismatch-remoting-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>	
+	
+	<plugin name="mismatch-core" latestVersion="1.0.0" description="for testing about mismatching with core plugin">
+		<groupId>org.anyframe.plugin</groupId>
+		<artifactId>anyframe-mismatch-core-pi</artifactId>
+		<versions>
+			<version>1.0.0</version>
+		</versions>
+	</plugin>	
+</plugins>
+
+
+
+
+

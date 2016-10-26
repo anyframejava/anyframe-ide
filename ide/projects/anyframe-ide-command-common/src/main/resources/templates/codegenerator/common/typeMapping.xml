@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<anyframe>
+	<db-to-java>
+		<type name="NUMERIC">java.lang.Float</type>
+		<type name="NUMBER">java.lang.Float</type>
+		<type name="SMALLINT">java.lang.Short</type>
+		<type name="BIGINT">java.lang.Long</type>
+		<type name="INTEGER">int</type>
+		<type name="INT">int</type>
+		<type name="DECIMAL">java.lang.Float</type>
+		<type name="FLOAT">java.lang.Float</type>
+		<type name="DOUBLE">java.lang.Float</type>
+		<type name="VARCHAR">java.lang.String</type>
+		<type name="VARCHAR2">java.lang.String</type>
+		<type name="CHAR">java.lang.String</type>
+		<type name="CHARACTER">java.lang.String</type>
+		<type name="BLOB">byte[]</type>
+		<type name="CLOB">java.lang.String</type>
+		<type name="TIME">java.sql.Time</type>
+		<type name="DATE">java.sql.Date</type>
+		<type name="DATETIME">java.sql.Timestamp</type>
+		<type name="TIMESTAMP">java.sql.Timestamp</type>
+	</db-to-java>
+</anyframe>

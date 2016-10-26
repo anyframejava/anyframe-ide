@@ -1,0 +1,79 @@
+<settings>
+  <localRepository>C:/temp/repo</localRepository>
+
+  <proxies>
+  	<proxy>
+		<id>sds_proxy</id>
+		<active>true</active>
+		<protocol>http</protocol>
+		<host>70.10.15.10</host>
+		<port>8080</port>
+		<nonProxyHosts>70.*.*.*|33.*.*.*|localhost|127.0.0.1</nonProxyHosts>
+	</proxy>
+  </proxies>
+
+  <servers>
+  	<server>
+      <id>anyframe-commercial</id>
+      <username>anyframe</username>
+      <password>sds</password>
+      <filePermissions>664</filePermissions>
+      <directoryPermissions>755</directoryPermissions> 
+    </server> 
+  </servers>
+
+  <mirrors>
+  </mirrors>
+  
+  <profiles>  
+	<profile>
+       <id>myprofile</id>
+       <repositories> 
+            <repository>
+                <id>anyframe</id>
+                <name>repository for Anyframe</name>                 
+                <url>http://dev.anyframejava.org/maven/repo</url>           
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+             </repository>
+            <repository>
+                <id>anyframe-commercial</id>
+                <name>commercial repository for Anyframe</name>                 
+                <url>http://dev.anyframejava.org/sds/maven/repo</url>           
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+             </repository>                         
+              </repositories>   
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>anyframe</id> 
+                    <name>Anyframe Plugins Repository</name>       
+                    <url>http://dev.anyframejava.org/maven/repo</url>           
+                </pluginRepository>   
+                <pluginRepository>
+                    <id>anyframe-commercial</id> 
+                    <name>Anyframe Plugins Commercial Repository</name>       
+                    <url>http://dev.anyframejava.org/sds/maven/repo</url>           
+                </pluginRepository>                          
+                <pluginRepository>
+                    <id>central</id> 
+                    <name>Internal Mirror of Central Plugins Repository</name>       
+                    <url>http://www.ibiblio.org/maven2/plugins</url>           
+                </pluginRepository>
+                <pluginRepository>
+                    <id>remote</id> 
+                    <name>Internal Mirror of Central Plugins Repository</name>       
+                    <url>http://repo1.maven.org/maven2</url>           
+                </pluginRepository>    
+              </pluginRepositories>
+   	</profile>    
+  </profiles>
+
+  <activeProfiles>
+   <activeProfile>myprofile</activeProfile>
+ </activeProfiles>
+   
+</settings>

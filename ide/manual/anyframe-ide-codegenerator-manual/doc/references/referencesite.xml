@@ -1,0 +1,18 @@
+<chapter id="references_referencesite">
+	<title>Reference Site</title>
+
+	<itemizedlist>
+		<listitem>
+			<para><ulink url="http://www.anyframejava.org/project/anyframe">Anyframe Java Core</ulink></para>
+		</listitem>
+		<listitem>
+			<para><ulink url="http://www.eclipse.org/">Eclipse</ulink></para>
+		</listitem>
+		<listitem>
+			<para><ulink url="http://eclipse.org/m2e/">M2Eclipse</ulink></para>
+		</listitem>
+		<listitem>
+			<para><ulink url="http://appfuse.org/display/APF/Home">AppFuse</ulink></para>
+		</listitem>
+	</itemizedlist>
+</chapter>

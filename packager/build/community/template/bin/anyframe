@@ -1,0 +1,8 @@
+#!/bin/sh
+arg_list=
+for arg in "$@" ; do
+ arg_list="$arg_list $arg"
+done
+
+java $ANYFRAME_OPTS -classpath $CLASSPATH $MAINCLASS $arg_list 
+

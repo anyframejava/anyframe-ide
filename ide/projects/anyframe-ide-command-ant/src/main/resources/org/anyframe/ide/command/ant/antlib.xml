@@ -1,0 +1,14 @@
+<antlib>
+	<typedef name="create-project" classname="org.anyframe.ide.command.ant.task.GenerateArchetypeTask" />
+	<typedef name="install" classname="org.anyframe.ide.command.ant.task.InstallPluginTask" />
+	<typedef name="uninstall" classname="org.anyframe.ide.command.ant.task.UninstallPluginTask" />
+	<typedef name="installed" classname="org.anyframe.ide.command.ant.task.ShowInstalledPluginsTask" />	
+	<typedef name="info" classname="org.anyframe.ide.command.ant.task.ShowPluginInfoTask" />
+	<typedef name="list" classname="org.anyframe.ide.command.ant.task.ShowPluginsTask" />	
+	<typedef name="list-update" classname="org.anyframe.ide.command.ant.task.ShowUpdatablePluginsTask" />	
+	<typedef name="update-catalog" classname="org.anyframe.ide.command.ant.task.UpdatePluginCatalogTask" />
+	<typedef name="change-db" classname="org.anyframe.ide.command.ant.task.ChangeDBTask" />
+	<typedef name="create-model" classname="org.anyframe.ide.command.ant.task.GenerateModelTask" />
+	<typedef name="create-crud" classname="org.anyframe.ide.command.ant.task.GenerateCodeTask" />
+	<typedef name="log" classname="org.anyframe.ide.command.ant.task.LogLevelTask" />
+</antlib>

@@ -1,0 +1,69 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+package ${package}.service.impl;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+
+import org.anyframe.pagination.Page;
+import org.anyframe.datatype.SearchVO;
+import org.anyframe.util.NumberUtil;
+import org.anyframe.util.StringUtil;
+import org.anyframe.query.dao.QueryServiceDaoSupport;
+import org.anyframe.query.QueryService;
+
+import ${domain.packageName}.${domain.name};
+
+/**
+ * ${domain.name}Dao implementation class with QueryService
+ * @author $author
+ */
+@Repository("#getDomainNameLower(${domain.name})Dao")
+public class ${domain.name}Dao extends QueryServiceDaoSupport {
+  
+  	@Value("#{contextProperties['pageSize'] ?: 10}")
+	int pageSize;
+
+	@Value("#{contextProperties['pageUnit'] ?: 10}")
+	int pageUnit;
+		
+	@Inject
+	public void setQueryService(QueryService queryService) {
+		super.setQueryService(queryService);
+	}
+	
+	public void create(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.create("create${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+	
+	public void remove(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.remove("remove${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+
+	public void update(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		super.update("update${domain.name}", #getDomainNameLower(${domain.name}));
+	}
+
+	public ${domain.name} get(${domain.name} #getDomainNameLower(${domain.name})) throws Exception {
+		return (${domain.name}) super.findByPk("find${domain.name}ByPk", #getDomainNameLower(${domain.name}));
+	}
+	
+	public Page getPagingList(SearchVO searchVO) throws Exception {
+        int pageIndex = searchVO.getPageIndex();
+
+        String searchCondition = StringUtil.nullToString(searchVO.getSearchCondition());
+        String searchKeyword = StringUtil.nullToString(searchVO.getSearchKeyword());
+        String isNumeric = NumberUtil.isNumber(searchKeyword) ? "true" : "false";
+        
+        Object[] args = new Object[4];		            
+        args[0] = "condition=" + searchCondition;
+        args[1] = "keywordStr=%" + searchKeyword + "%";
+        args[2] = "keywordNum=" + searchKeyword + "";
+        args[3] = "isNumeric=" + isNumeric;
+
+        return super.findListWithPaging("find${domain.name}List", args, pageIndex, pageSize, pageUnit);
+	}    
+}

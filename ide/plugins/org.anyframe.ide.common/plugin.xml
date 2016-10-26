@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+
+<plugin>
+
+	<extension-point id="database" name="databases extension ponit"	schema="schema/database.exsd"/>
+	<extension-point id="property" name="property extension ponit"	schema="schema/property.exsd"/>
+	
+	<extension point="org.eclipse.ui.views">    
+		<category id="org.anyframe.ide.common.views.anyframe" name="Anyframe" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+        adaptable="true"
+        class="org.anyframe.ide.common.properties.PropertyPage"
+        id="org.anyframe.ide.common.properties.anyframe"
+        name="Anyframe"
+        objectClass="org.eclipse.core.resources.IProject">
+		</page>
+  <page
+        adaptable="true"
+        category="org.anyframe.ide.common.properties.anyframe"
+        class="org.anyframe.ide.common.properties.DataBasesPropertyPage"
+        id="org.anyframe.ide.common.properties.DataBasesPropertyPage"
+        name="%Property_Menu_Databases"
+        objectClass="org.eclipse.core.resources.IProject">
+  </page>
+  <page
+        adaptable="true"
+        category="org.anyframe.ide.common.properties.anyframe"
+        class="org.anyframe.ide.common.properties.ConfigPropertyPage"
+        id="org.anyframe.ide.common.properties.ConfigPropertyPage"
+        name="%Property_Menu_Config"
+        objectClass="org.eclipse.core.resources.IProject">
+  </page>
+	</extension>
+	
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page class="org.anyframe.ide.common.preferences.PreferencePage"
+			id="org.anyframe.ide.common.preferences.anyframe" name="Anyframe" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.newWizards" id="nodeContextAction">
+		<category id="org.anyframe.ide.common.wizards.anyframe" name="Anyframe" />
+	</extension>
+	
+	<extension
+       point="org.eclipse.wst.xml.core.catalogContributions">
+	    <catalogContribution>
+			<system 
+				systemId="http://www.anyframejava.org/schema/query/mapping/anyframe-query-mapping-1.0.xsd"
+				uri="xsds/anyframe-query-mapping-1.0.xsd">
+			</system> 
+			<public 
+	              publicId="http://www.anyframejava.org/schema/service" 
+	              uri="xsds/anyframe-core-service-2.0.xsd" 
+	              webURL="http://www.anyframejava.org/schema/service/anyframe-core-service-2.0.xsd"> 
+			</public>
+			<public 
+				publicId="http://www.anyframejava.org/schema/mvc" 
+				uri="xsds/anyframe-spring-mvc-4.5.xsd" 
+				webURL="http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-4.5.xsd">
+			</public> 
+			<public 
+				publicId="http://www.anyframejava.org/schema/mvc" 
+				uri="xsds/anyframe-spring-mvc-5.2.xsd" 
+				webURL="http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.2.xsd">
+			</public>
+			<public 
+				publicId="http://www.anyframejava.org/schema/mvc" 
+				uri="xsds/anyframe-spring-mvc-5.3.xsd" 
+				webURL="http://www.anyframejava.org/schema/mvc/anyframe-spring-mvc-5.3.xsd">
+			</public>
+			<public 
+				publicId="http://www.anyframejava.org/schema/query" 
+				uri="xsds/anyframe-query-1.0.xsd" 
+				webURL="http://www.anyframejava.org/schema/query/anyframe-query-1.0.xsd">
+			</public>
+			<public 
+				publicId="http://www.anyframejava.org/schema/query" 
+				uri="xsds/anyframe-query-1.1.xsd" 
+				webURL="http://www.anyframejava.org/schema/query/anyframe-query-1.1.xsd">
+			</public>
+	       <public
+	             publicId="-//ANYFRAME//DTD QUERYSERVICE//EN"
+	             uri="dtds/anyframe-core-query-mapping-3.2.dtd">
+	       </public>
+	       <public
+	             publicId="-//ANYFRAME//DTD QUERYSERVICE//EN"
+	             uri="dtds/anyframe-core-query-mapping-3.1.dtd">
+	       </public>
+	       <public
+	             publicId="-//ANYFRAME//DTD QUERYSERVICE//EN"
+	             uri="dtds/anyframe-core-query-mapping.dtd">
+	       </public>
+	       <public
+	             publicId="-//ANYFRAME//DTD QUERYSERVICE//EN"
+	             uri="dtds/anyframe-query-mapping-1.0.dtd">
+	       </public>
+	    </catalogContribution>
+	 </extension>
+	 <extension
+	       point="org.eclipse.ui.popupMenus">
+	    <objectContribution
+	          adaptable="true"
+	          id="org.anyframe.ide.common.popupGroup"
+	          objectClass="org.eclipse.core.resources.IProject">
+	       <menu
+	             id="anyframe"
+	             label="Anyframe"
+	             path="additions">
+	          <separator
+	                name="anyframeCodeGenSeparator">
+	          </separator>
+  	          <separator
+	                name="anyframeDaoManagerSeparator">
+	          </separator>
+	          <separator
+	                name="anyframeQueryManagerSeparator">
+	          </separator>
+	       </menu>
+	    </objectContribution>
+	 </extension>
+	
+</plugin>

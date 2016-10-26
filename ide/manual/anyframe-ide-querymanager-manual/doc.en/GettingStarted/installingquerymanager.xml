@@ -1,0 +1,169 @@
+<section id="gettingstarted_installingquerymanager">
+	<title>Installing Query Manager</title>
+
+	<section id="gettingstarted_installingquerymanager_installation">
+		<title>Installation</title>
+
+		<para>
+			Anyframe Query Manager is deployed in compressed file in Eclipse Update Site and Anyframe Portal.			
+		</para>
+
+		<section
+			id="gettingstarted_installingquerymanager_installation_updatesite">
+			<title>Eclipse Update Site</title>
+			<para>
+				Add <emphasis role="bold">http://dev.anyframejava.org/update
+				</emphasis>, Anyframe Update Site, through <emphasis role="bold">Help > Install New Software</emphasis> on Eclipse.				
+			</para>
+
+			<note>
+				<title>Note : Update Site</title>
+				<para>
+					For Anyframe Query Manager installation, Anyframe Common(4.0.2) must be installed.					
+				</para>
+			</note>
+			
+			<note>
+				<title>Note : Upgrading Anyframe Query Manager 2.1.7 to 2.1.8</title>
+				<para>Query Manager that grew in the package, Anyframe Query Manager 2.1.7 and 
+				Anyframe Query Manager 2.1.8 is recognized as a separate plug-in, 
+				delete the existing 2.1.7 version of the plug-in is installed after. 
+				This Anyframe Common(4.0.2) is applied equally.
+				</para>
+			</note>
+		</section>
+
+		<section id="gettingstarted_installingquerymanager_installation_zipfile">
+			<title>Deploying compressed file</title>
+			<para>Install the Anyframe Query Manager deployed in compressed file as the following order.</para>
+
+			<orderedlist numeration="Arabic" inheritnum="inherit">
+				<listitem>
+					<para>
+						For Anyframe Query Manager installation, check 
+						<link linkend="gettingstarted_installingquerymanager_requirements">System Requirements</link>.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Check the latest deployment version of 
+						<ulink
+							url="http://www.anyframejava.org/en/project/querymanager#downloads">Anyframe Query Manager
+						</ulink>.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Download the latest deployment version of Anyframe Query Manager ("anyframe.querymanager.eclipse_x.x.x-bin.zip") to user's computer.						
+				</para>
+				</listitem>
+				<listitem>
+					<para>
+						Extract the compression file of the latest deployment version to the user-defined folder.					
+				</para>
+				</listitem>
+				<listitem>
+					<para>
+						Move the extracted Plugin package file ("anyframe.querymanager.eclipse_x.x.x.jar") at 
+						"[eclipse installation folder]/dropins/anyframe/eclipse/plugins" or "[eclipse installation
+						folder]/plugins".			
+				</para>
+				</listitem>
+				<listitem>
+					<para>
+						If Eclipse is in use, restart it.					
+				</para>
+				</listitem>
+				<listitem>
+					<para>
+						Check whether the installation was successful through "About Eclipse Platform (or About Eclipse SDK) > Plug-in Details".						
+				</para>
+					<para>
+						☞ For Eclipse Platform (or About Eclipse SDK) menu, you can check Help menu at Windows Eclipse and Eclipse menu at Mac OS X Eclipse.						
+				</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../image/GettingStarted/install-installedplugins.png"
+								align="center" />
+						</imageobject>
+					</mediaobject>
+				</listitem>
+				<listitem>
+					<para>
+						Anyframe Query Manager was installed successfully.
+				</para>
+				</listitem>
+			</orderedlist>
+		</section>
+
+	</section>
+
+	<section id="gettingstarted_installingquerymanager_update">
+		<title>Upgrade from the Previous Version</title>
+
+		<para>
+			When upgrading Anyframe Query Manager 2.0.0  version or under to 2.1.0 onwards, 
+			do the following order.			
+		</para>
+
+		<orderedlist numeration="Arabic" inheritnum="inherit">
+			<listitem>
+				<para>
+					Eclipse SQL Explorer version upgrade : Delete exisiting  3.5 RC version through "[eclipse folder]/dropins/[Eclipse
+					SQL Explorer installation folder]"or "Help > About Eclipse" and install 3.5.1 version.				
+				</para>
+				<para>
+					☞ It is recommended to install Eclipse SQL Explorer 3.5.1 version by using Eclipse Software Updates due to package composition error.					
+				</para>
+			</listitem>
+		</orderedlist>
+	</section>
+
+	<section id="gettingstarted_installingquerymanager_requirements">
+		<title>System Requirements</title>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Anyframe Query Manager requirements </emphasis>
+				</para>
+				<para>
+					For Anyframe Query Manager 2.1.0 version onwards, the following requirements must be satisfied. 
+				</para>
+				<programlisting><![CDATA[Eclipse IDE for Java EE Developers (Galileo)
+Anyframe Common 4.0.2
+Eclipse SQL Explorer 3.5.1]]></programlisting>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">When using Package other than Eclipse IDE for Java EE Developers </emphasis>
+				</para>
+				<para>
+					Compared with other packages, Eclipse IDE for Java EE Developers contains various Plugins useful for developers
+					and is recommended package for Anyframe-based development.
+					However, if you need to install Anyframe Query Manager to Eclipse IDE package, check the following Plug-ins dependencies and install and use Anyframe Query 
+					Manager after installing the plugin.					
+				</para>
+				<programlisting><![CDATA[org.eclipse.ui,
+org.eclipse.core.runtime,
+org.eclipse.core.resources,
+org.eclipse.ui.views,
+org.eclipse.ui.ide,
+org.eclipse.ui.editors,
+org.eclipse.ui.workbench.texteditor,
+org.eclipse.jface.text,
+org.eclipse.jdt.ui,
+org.eclipse.jdt.core,
+org.eclipse.wst.xml.ui,
+org.eclipse.wst.xml.core,
+org.eclipse.wst.sse.core,
+org.eclipse.wst.sse.ui,
+org.eclipse.search,
+net.sourceforge.sqlexplorer,
+org.eclipse.core.filesystem,
+org.eclipse.ui.forms,
+org.anyframe.common.eclipse.core]]></programlisting>
+			</listitem>
+		</itemizedlist>
+	</section>
+</section>

@@ -1,0 +1,65 @@
+<section id="gettingstarted_querymanagerperspective">
+	<title>Query Manager Perspective</title>
+
+	<para>
+		<emphasis role="bold">Query Manager Perspective</emphasis>
+		composes and shows various forms of View and Editor necessary for utilizing Anyframe Query Manager, and the format is
+		similar to the following figure.
+	</para>
+
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="../image/GettingStarted/perspective-querymanager.png"
+				align="center" />
+		</imageobject>
+	</mediaobject>
+
+
+	<para>
+		The main components of Query Manager are as the following.
+		<itemizedlist>
+			<listitem>
+				<para>
+					Query Explorer View: provides Query search and read for all the Eclipse project of user.	
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Query Results View: shows Query test result.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Query Manager Editor: writes Query mapping XML file.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Query Test  Editor: adds/edits Query ID.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Connections View: sets and manages database connection as an extended function of  Eclipse SQL Explorer.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Database Structure View: checks database structure as an extended function of Eclipse SQL Explorer. 
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+
+	<para>
+		You can open Query Manager Perspective of Anyframe Query Manager at "Window > Open Perspective
+		> Other..." or "Open Perspective" icon at the top right of Eclipse window. 
+	</para>
+	
+	<mediaobject>
+		<imageobject>
+			<imagedata fileref="../image/GettingStarted/perspective-open.jpg"
+				align="center" />
+		</imageobject>
+	</mediaobject>
+</section>

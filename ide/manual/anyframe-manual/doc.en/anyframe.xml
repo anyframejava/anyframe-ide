@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[
+<!ENTITY introduction_overview SYSTEM "introduction/overview.xml">
+<!ENTITY introduction_license SYSTEM "introduction/license.xml">
+<!ENTITY introduction_techsupport SYSTEM "introduction/techsupport.xml">
+<!ENTITY introduction_maintenance SYSTEM "introduction/maintenance.xml">
+<!ENTITY introduction_systemrequirements SYSTEM "introduction/systemrequirements.xml">
+
+<!ENTITY installation_maven SYSTEM "installation/maven.xml">
+<!ENTITY installation_ant SYSTEM "installation/ant.xml">
+<!ENTITY installation_eclipseide SYSTEM "installation/eclipseide.xml">
+
+<!ENTITY commands_maven SYSTEM "commands/maven.xml">
+<!ENTITY commands_ant SYSTEM "commands/ant.xml">
+<!ENTITY commands_eclipseide SYSTEM "commands/eclipseide.xml">
+
+<!ENTITY plugins_list SYSTEM "plugins/list.xml">
+<!ENTITY plugins_structure SYSTEM "plugins/structure.xml">
+<!ENTITY plugins_creatingplugin SYSTEM "plugins/creatingplugin.xml">
+
+<!ENTITY ctip_installation SYSTEM "ctip/installation.xml">
+<!ENTITY ctip_integration SYSTEM "ctip/integration.xml">
+<!ENTITY ctip_reporting SYSTEM "ctip/reporting.xml">
+
+<!ENTITY app_server_configurations_weblogic SYSTEM "appserverconfigurations/weblogic.xml">
+<!ENTITY app_server_configurations_jeus SYSTEM "appserverconfigurations/jeus.xml">
+<!ENTITY app_server_configurations_jboss SYSTEM "appserverconfigurations/jboss.xml">
+]
+>
+
+<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+-->
+    
+<book lang="en">
+	<title>Anyframe</title>
+	
+	<bookinfo>
+		<copyright>
+			<year>2008-2011</year>
+			<holder>Samsung SDS</holder>
+		</copyright>
+		<releaseinfo>Version 5.0.1</releaseinfo>
+
+		<productname>Anyframe</productname>
+
+		<authorgroup>
+			<corpauthor></corpauthor>
+		</authorgroup>
+
+		<mediaobject>
+			<imageobject>
+				<!-- logo 변경 -->
+				<imagedata fileref="../image/common/logo_pdf.jpg"/>
+			</imageobject>
+		</mediaobject>
+		<legalnotice>
+			<para>The copyright of this document is the property of Samsung SDS. Permission is granted to use this document for free only for the purpose of open source community activity.
+                The copyright holder should be clearly stated in case this document is copied or distributed, and changed contents should be specified.
+                Permission is not granted for the commercial use of the original document and its modification.      
+                Should there be parts considered to have errors in this document, please register the issue for which we will take proper action.
+			</para>
+		</legalnotice>
+	</bookinfo>
+	
+	<part id="introduction">
+		<title>Introduction</title>
+		<partintro id="introduction-intro">
+			<para>
+                Anyframe provides web frameworks that support developing presentation layers of web applications structurally
+                by complying with application frameworks and MVC architecture constituted by integrating and extending various best-of-breed open sources based on Spring, 
+                and technologically common services, template-based project structures and sample codes and manuals so that development of framework-based business programs can be executed effectively.
+                It also supports Scaffolding and code generating functions by providing Anyframe IDE of Eclipse Plugin type 
+                so that development environment much easier and faster than the existing ways can be created based on Anyframe. 
+              
+			</para>
+		</partintro>
+		&introduction_overview;
+		&introduction_license;
+		&introduction_techsupport;
+        &introduction_maintenance;
+        &introduction_systemrequirements;
+	</part>
+	
+	<part id="installation">
+		<title>Installation</title>
+		<partintro id="installation-intro">
+			<para>
+				Anyframe supports automatic constitution of project structures and sample codes based on templates where various open sources required when applications are developed based on them are integrated using Maven/Ant 
+				since 4.6.0. Thus, the time required to create the development environment in line with the characteristics of the project at the beginning of the application development can be significantly reduced, and the most optimal samples necessary for the project  
+				can be provided.
+			</para>
+		</partintro>
+		&installation_maven;
+		&installation_ant;
+		&installation_eclipseide;
+	</part>
+	
+	<part id="commands">
+		<title>Commands</title>
+		<partintro id="commands-intro">
+			<para>
+				Tasks such as generation of projects based on Maven or Ant, installation/uninstallation of Plugin, and generation, build and execution of Domain/CRUD source codes can be performed by using only Command Line Interface(CLI).
+				(It should be noted that when Command is directly input and executed based on CLI, it may not work properly if the necessary Command Argument defined in this manual is omitted or values other than Command Arguments are set.)
+			</para>
+		</partintro>
+		&commands_maven;
+		&commands_ant;
+		&commands_eclipseide;
+	</part>
+	
+	<part id="plugins">
+		<title>Plugins</title>
+		<partintro id="plugins-intro">
+			<para>
+				Anyframe supports easy construction of sample projects equipped with the functions necessary for relevant projects by enabling users to select and install wanted plugins 
+				by providing various plugins composed with reference libraries and sample codes based on various open sources such as Spring, Hibernate, CXF and Struts. 
+					
+			</para>
+		</partintro>
+		&plugins_list;
+		&plugins_structure;
+		&plugins_creatingplugin;
+	</part>
+	
+	<part id="ctip">
+		<title>Continuous Build</title>
+		<partintro id="ctip-intro">
+			<para>
+				A continuous build environment can be created based on Anyframe. Let us look at how this function is used in connection with the build server.
+				Continuous Test and Integration Platform (CTIP) is an automated tool that integrates development, build and test tools used across the whole life cycle of application development. 
+				Anyframe provides the methods to create and integrate this CTIP environment.  
+			</para>
+		</partintro>
+        &ctip_installation;
+        &ctip_integration;
+        &ctip_reporting;
+	</part>
+	
+	<part id="app-server-configurations">
+		<title>App. Server Configurations</title>
+		<partintro id="app-server-configurations-intro">
+			<para>
+				This document adpopted Jetty and Tomcat as WAS to execute sample applications generated by installing the Plugin. 
+				Since the sample applications generated by installing the Plugin are not dependent to a specific WAS, 
+				it is also possible to execute them by deploying in commercial WAS such as WebLogic and JEUS 
+				after packaging them by executing commands such as <emphasis role="bold">mvn clean compile war:war</emphasis>. 
+				Yet, the following measures should be noted since in some cases some versions of libraries referred to by sample applications are not supported by relevant WAS.
+			</para>
+		</partintro>
+		&app_server_configurations_weblogic;
+		&app_server_configurations_jeus;
+		&app_server_configurations_jboss;
+	</part>
+
+</book>

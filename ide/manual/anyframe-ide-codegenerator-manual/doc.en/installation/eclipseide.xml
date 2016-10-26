@@ -1,0 +1,377 @@
+<chapter id="installation_eclipseide">
+	<title>Eclipse IDE</title>
+	<para>
+	The functions of Anyframe IDE tool is provided based on Command Line and also in the Eclipse Plugin type. Here, how to install Anyframe IDE for Eclipse is explained.  
+	</para>
+	<section id="installation_eclipseide_maven">
+	<title>Installation using Maven-based development environment</title>
+		<orderedlist>
+
+			<listitem>
+				<para>Anyframe IDE plugin can be installed through Anyframe Plugin Update Site.
+					When it is not connected to the internet outside or there is a problem in the network, 
+					install it, referring to the following notes [Installing Anyframe IDE Eclipse Plugin without using Update Site].
+				</para>
+
+				<orderedlist>
+					<listitem>
+						<para>Select Help > Install New Software... menu of Eclipse.</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] page: when m2eclipse has not been installed in the Eclipse 
+                        Add by two m2eclipse Plugin Update Sites by clicking Add... button on the top right side.  
+                       Enter m2eclipse Update Site for the name of the first Update Site, and enter <emphasis role="bold">http://m2eclipse.sonatype.org/sites/m2e</emphasis> for the location. 
+                        Enter m2eclipse extras Update Site for the name of the second Update Site, and enter <emphasis role="bold">http://m2eclipse.sonatype.org/sites/m2e-extras</emphasis> for the location. 
+                      If the url address for m2eclipse update site is added in this way, it is installed together when Anyframe IDE Plugin is installed. 
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] page: Add Anyframe Plugin Update Site by clicking Add... button on the top right side. 
+						Enter Anyframe Plugin Update Site for the name and http://dev.anyframejava.org/update for the location.
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] page: At the center will appear Plugin Tree of which the root is Anyframe Plugin Update Site.
+							(Anyframe Common, Anyframe IDE, and Anyframe Query Manager list are searched.) 
+							Prevent other plugins from being installed together by unchecking the "Contact all update sites during install to find
+							required software" checkbox. Yet, <emphasis role="bold">if m2eclipse has not been installed in Eclipse, check the checkbox and let m2eclipse be installed together.</emphasis></para>
+					</listitem>
+					<listitem>
+						<para>[Available Software] page: Select Anyframe IDE in the Plugin Tree and click Next button at the bottom.</para>
+					</listitem>
+					<listitem>
+						<para>[Install Details] page: Anyframe Common plugin is shown under Anyframe IDE. 
+						Since Anyframe Common is necessary when Anyframe IDE is used, it is installed together due to its reference relations.
+							Click Next button after checking it.</para>
+					</listitem>
+					<listitem>
+						<para>[Review Licenses] page: When Plugin is selected on the left, License text appears on the right.
+							For Anyframe Common and Anyframe IDE, agree with "I accept the terms of the license agreements" on the bottom right and click Finish button. 
+			       </para>
+					</listitem>
+					<listitem>
+						<para>[Security Warning] page: Select OK button when asked whether to proceed with installation in the pop-up window. 
+						</para>
+					</listitem>
+					<listitem>
+						<para>[Software Updates] page: The pop-up window is opened and select 'Yes' button for "Would you like to restart now?".</para>
+					</listitem>
+				</orderedlist>
+
+				<warning>
+					<title>Notes before installation using Anyframe Plugin Update Site</title>
+					<para>
+						If Anyframe IDE Plugin has been already installed in dropins, plugins or addins folder of Eclipse, 
+						it can create a problem by overwriting with the plugin to be installed through Update Site. 
+						Thus, always check Anyframe IDE Plugin has been installed in dropins, plugins or addins folder, 
+						and and if it has been installed, install it through Update Site after deleting it. 
+						When it is installed through Update Site, the physical Anyframe IDE Plugin file is located under plugins folder. 
+					</para>
+				</warning>
+			</listitem>
+
+			<listitem>
+				<para>
+					Check whether it has been installed properly through <emphasis role="bold">"Help &gt; About Eclipse Platform (or About
+						Eclipse SDK) &gt; Plug-in Details"</emphasis>. 
+				</para>
+
+				<para>☞ About Eclipse Platform (or About Eclipse SDK) menu can be checked in Help menu in the case of Eclipse for Windows, 
+					and in Eclipse menu in the case of Eclipse for Mac OS X.
+				</para>
+				<para>☞ It can be checked whether org.anyframe.common.eclipse.core_xxx.jar and org.anyframe.ide.eclipse.core_xxx.jar files 
+				have been installed in plugins folder under Eclipse root folder. </para>
+			</listitem>
+
+			<listitem>
+				<para>Installation of the whole Anyframe IDE has finished including Anyframe IDE plugin. 
+				Finish all the configuration by referring to Eclipse Preferences configuration before development using the functions of Anyframe IDE. 
+					</para>
+			</listitem>
+		</orderedlist>
+
+		<note>
+			<title>Installing Anyframe IDE Eclipse Plugin without using Update Site</title>
+
+			<para>Anyframe IDE plugin can be installed using anyframe-X.X.X.zip file downloaded from Anyframe portal site. 
+				</para>
+
+			<orderedlist>
+				<listitem>
+					<para>Download anyframe-X.X.X.zip from Anyframe portal site. </para>
+				</listitem>
+				<listitem>
+					<para>Extract the file and copy two plugin package files (org.anyframe.[product name].eclipse[.*]_x.x.x.jar) in anyframe-X.X.X/ide/eclipse-plugins folder to "[eclipse installation folder]/plugins". 
+						</para>
+					<para>There are two plugin packages in plugins folder as follows.</para>
+					<itemizedlist>
+						<listitem>
+							<para>org.anyframe.common.eclipse.core_x.x.x.jar: Provides common libraries and common menu of Anyframe plugins</para>
+						</listitem>
+
+						<listitem>
+							<para>org.anyframe.ide.eclipse.*_x.x.x.x.jar: Anyframe IDE plugin
+							</para>
+						</listitem>
+					</itemizedlist>
+
+				</listitem>
+			</orderedlist>
+
+			<para>
+				☞ Currently, <emphasis role="bold">Anyframe Common plugin</emphasis> is distributed being included in Anyframe IDE installation files and can be easily installed.
+				Yet, Anyframe Common plugin is a plugin that can be independently distributed and used.
+				Thus, if the Anyframe Common plugin version is updated in the future and you want to use the updated version, 
+				delete the older version Anyframe Common plugin distributed by Anyframe IDE and install the updated plugin package.
+			</para>
+			<para>
+				m2eclipse plugin should be installed through <emphasis role="bold">m2eclipse update site</emphasis> (http://m2eclipse.sonatype.org/sites/m2e, http://m2eclipse.sonatype.org/sites/m2e-extras).
+			</para>
+		</note>
+	</section>
+	
+	<section id="installation_eclipseide_ant">
+	<title>Installation using Ant-based development environment</title>
+		<para>
+			How to install Anyframe IDE Eclipse Plugin during Ant-based development is the same as the installation of Anyframe IDE Eclipse Plugin during Maven-based development.
+			For how to install Anyframe IDE Eclipse Plugin, refer to [<link linkend="installation_eclipseide_maven">Anyframe IDE Eclipse Plugin installation</link>] of Maven-based development.
+		</para>
+	</section>
+	
+	<section id="installation_eclipseide_preferences">
+		<title>Eclipse Preferences setting</title>
+
+		<para>Set configuration necessary to execute the project generated using Anyframe IDE. 
+		    Set the configuration of Anyframe IDE in the Eclipse Preferences window.</para>
+
+		<para>
+		[1] Set Preferences information as follows in the Maven-based development environment.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Project build type setting: Assign the build type of the project to be generated, and set Home information according to the build type. 
+					Depending on the assigned project build type, the project generation page provided by IDE plugin is presented differently. </para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select MAVEN in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>.
+							
+							</para>
+							<para>Maven Home setting: Designates the path where Maven is installed. </para>
+							<table>
+								<title>Setting MAVEN_HOME and Settings.xml</title>
+								<tgroup cols="1">
+									<colspec colnum="1" colname="col1" colwidth="*" />
+
+									<thead>
+										<row>
+											<entry align="center">Setting MAVEN_HOME and Settings.xml</entry>
+										</row>
+									</thead>
+
+									<tbody>
+										<row>
+											<entry>
+												To generate a project adopting Maven build type, Maven should be installed in Local, 
+												and MAVEN_HOME, the system parameter for the installed Maven, should be set.  
+												Also, the Remote Repository information that Maven project should use should be defined in settings.xml.
+												For detailed guides on this, refer to [<ulink url="http://en.anyframejava.org/project/anyframe/quickstart">Maven installation and configuration</ulink>] of Quick Start of Anyframe portal. 
+											</entry>
+										</row>
+									</tbody>
+								</tgroup>
+							</table>
+						</listitem>
+						<listitem>
+							<para>Check User Settings path in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Maven &gt;&gt; User Settings</emphasis></para>
+							<para>User Settings: Set settings.xml file path with Anyframe Repository (http://dev.anyframejava.org/maven/repo) property added. </para>	
+							<para>When a project is generated adopting Maven build type, M2Eclipse should be installed in Eclipse. 
+							It is because the generated project is converted into M2Eclipse project type, 
+							and settings.xml that M2Eclipse references is a file defined in Window &gt;&gt; Preferences &gt;&gt;Maven &gt;&gt; User Settings.
+							Check whether the settings.xml file path with the property of Anyframe Repository (http://dev.anyframejava.org/maven/repo) added is set in Preferences, 
+							and if the path is not right, correct the path. 
+							</para>	
+						</listitem>
+					</itemizedlist>
+
+				</para>
+			</listitem>
+			<listitem>
+				<para>[Optional] Archetype version setting: Archetype can be selected to be used when a project is generated setting the Basic Archetype version and the Service Archetype version.
+				When it is not set, a project is generated using the newest version Archetype. 
+				</para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select MAVEN in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>. 
+							</para>
+							<para>[Optional] Archetype Version setting: archetype version setting</para>
+							<para>
+								Basic Archetype Version and Service Archetype Version can be set. 
+								The list of versions can be checked by selecting the combo box on the right,  
+								and if there is archetype-catalog.xml file in Local environment, the list can be retrieved from this file,  
+								and if there isn't the file in Local environment, download archetype-catalog.xml file from remote Repository and retrieve the version list. 
+								
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+			<listitem>
+				<para>Log Level setting: Sets the log information that is retrieved when Maven commands are executed to be checked according to their levels (ERROR, INFO, DEBUG).
+				The default is INFO level.  
+				</para>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select MAVEN in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+									Anyframe Tools &gt;&gt; IDE</emphasis>
+							</para>
+							<para>Log Level setting: log level setting</para>
+							<para>
+								One log level among ERROR, INFO and DEBUG is selected. 
+								If ERROR is selected, only the log messages provided as error logs will be shown in the same way as "-q" is entered as a command parameter when an actual Maven command is executed. 
+								If INFO is selected, log messages that are basically shown when Maven commands are executed will be displayed. 
+								If DEBUG is selected, debugging log messages will be all shown together in the same way as "--debug" is entered as a command parameter when an actual Maven command is executed. 
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>			
+			<listitem>
+				<para>Server setting: Uses Tomcat v6.0 as WAS to implement applications.</para>
+
+				<para>
+					Click Add.. in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+						Server &gt;&gt; Runtime Environments</emphasis>.
+				</para>
+
+				<para>Name: Apache Tomcat v6.0</para>
+
+				<para>Tomcat Installation directory: [root path where Tomcat is installed]</para>
+
+				<para>JRE: Workbench default JRE</para>
+
+			</listitem>
+		</itemizedlist>
+		
+		<para>
+		[2] Set Preferences information as follows in the Ant-based development environment.
+		</para>		
+		
+    <itemizedlist>
+      <listitem>
+      	<para>Project build type setting: Designates the build type of the project to be generated and sets Home information according to the build type.
+			According to the designated project build type, the project generation page provided by IDE plugin is presented differently.</para>
+      	
+      	<para>
+      	
+      	<itemizedlist>
+	        <listitem>
+		        <para>Select ANT in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt; Anyframe Tools &gt;&gt; IDE</emphasis>.
+					    </para>
+				<para>Anyframe Home: Designates the root path where Anyframe is installed.</para>
+				<para>Offline: Determines whether libraries related to Anyframe will be supported by connecting online.
+					  If it is checked, only the libraries in [root folder path where Anyframe has been installed]/repo are used, 
+					  and if it is not checked, necessary libraries are downloaded from remote when they are not in Local.
+				</para>
+				<table>
+					<title>ANT HOME setting</title>
+					<para>Change the default Ant Home information of Eclipse so that Ant provided when Anyframe is installed can be recognized.
+					
+					</para>
+	              		<tgroup cols="1">
+	              			<colspec colnum="1" colname="col1" colwidth="*"/>
+	              	
+		               		 <thead>
+				                 <row>
+				                 <entry align="center">ANT HOME setting</entry>
+				                 </row>
+			                 </thead>
+		
+			                <tbody>
+				                <row>
+				                    <entry>
+				                    	<itemizedlist>
+											<listitem>
+												<para>Ant Home change: Click <emphasis role="bold">Ant Home.. button on the bottom right of Window &gt;&gt; Preferences &gt;&gt; Ant &gt;&gt; Runtime &gt;&gt; Classpath Tab &gt;&gt; </emphasis>.</para> 
+					    						<para>path: [root path where Anyframe has been installed]/ide/ant</para>
+					    					</listitem>
+										</itemizedlist>
+				                    </entry>
+				                </row>
+							</tbody>
+						</tgroup>
+				</table>
+	        </listitem>
+        </itemizedlist> 
+      	
+      	</para>
+      </listitem>
+	<listitem>
+		<para>[Optional] Archetype version setting: The archetype to be used when the project is generated is selected by setting the Basic Archetype version and the Service Archetype version.
+		If it is not set, the project is generated using the newest version archetype.  
+		</para>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						Select ANT in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+							Anyframe Tools &gt;&gt; IDE</emphasis>.
+						</para>
+					<para>[Optional] Archetype Version setting: archetype version setting</para>
+					<para>
+						Basic Archetype Version and Service Archetype Version can be set. The version list can be checked by selecting the combo box on the right,  
+						and if there is archetype-catalog.xml file in Local environment, the version list will be retrieved from this file,  
+						and if there is not the file in Local environment, download archetype-catalog.xml file from the remote Repository  
+						and retrieve the version list.  
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</listitem>
+	<listitem>
+		<para>Log Level setting: Sets the log information retrieved when Ant commands are executed to be checked according to its levels (ERROR, INFO, DEBUG).
+		INFO level is set as the default.  
+		</para>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						Select ANT in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+							Anyframe Tools &gt;&gt; IDE</emphasis>.
+					</para>
+					<para>Log Level setting: log level setting</para>
+					<para>
+						One log level among ERROR, INFO and DEBUG is selected. If ERROR is selected, only the log messages provided as error logs will be shown 
+						in the same way as ERROR log level is selected when an actual Ant command is executed based on the build script file.  
+						If INFO is selected, the log messages shown basically when Ant commands are executed are displayed. 
+						If DEBUG is selected, debugging log messages will be all shown together in the same way as DEBUG log level was selected when an actual Ant command is executed. 
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</listitem>			  	
+      <listitem>    	
+        <para>Server setting: Uses Tomcat v6.0 as WAS to implement the application.</para>
+
+        <para>Click Add.. in <emphasis role="bold">Window &gt;&gt; Preferences &gt;&gt;
+        Server &gt;&gt; Runtime Environments</emphasis>.</para>
+
+        <para>Name: Apache Tomcat v6.0</para>
+
+        <para>Tomcat Installation directory: [root path where Tomcat is installed]</para>
+
+        <para>JRE: Workbench default JRE</para>
+
+      </listitem>
+    </itemizedlist>
+		
+	</section>
+</chapter>

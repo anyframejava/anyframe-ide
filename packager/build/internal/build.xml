@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<project name="Packaging for internal usage" default="default" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property name="build" value="F:/QuickBuild_JDK6_WS/internal/nightly/build"/>
+	<import file="${build}/build-common.xml" />
+	<import file="${build}/internal/anyframe-plugins.xml" />
+	<property name="dist" value="${build}/../dist/" />
+	<property name="release" value="${build}/../release/" />	
+	<!-- useless 
+	<property name="subv.url.anyframe.sandbox.trunk" value="http://dev.anyframejava.org/subv/anyframe-sandbox/anyframe/trunk" />
+	<property name="subv.url.anyframe.sandbox.tags" value="http://dev.anyframejava.org/subv/anyframe-sandbox/anyframe/tags" />
+	-->
+	<target name="init">
+		<echo>initialize temporary distribution structure</echo>
+		<condition property="is.windows">
+			<os family="windows" />
+		</condition>
+		<if>
+			<equals arg1="${is.windows}" arg2="true"/>
+			<then>
+				<property name="userhome" value="${user.home}" />
+				<property name="mvn.executable" value="mvn.bat" />
+				<property name="m2.repo" value="${userhome}/.m2/repository" />
+				<property name="settings.file" value="maven-settings-local-windows.xml" />
+			</then>
+			<else>
+				<property name="userhome" value="${env.HOME}" />
+				<property name="mvn.executable" value="mvn" />
+				<property name="m2.repo" value="${userhome}/.m2/repository" />
+				<property name="settings.file" value="maven-settings-local.xml" />
+			</else>
+		</if>
+
+		<delete dir="${userhome}/temp/repo" />
+		<delete dir="${basedir}/temp" />
+		<delete dir="${dist}" />
+
+		<mkdir dir="${dist}/anyframe-core-${anyframe.version}/applications" />
+		<mkdir dir="${dist}/anyframe-core-${anyframe.version}/repo" />
+		<mkdir dir="${dist}/anyframe-core-${anyframe.version}/bin" />
+		<mkdir dir="${dist}/anyframe-core-${anyframe.version}/ide/cli/scripts" />
+		<mkdir dir="${dist}/anyframe-core-${anyframe.version}/ide/cli/lib" />
+	</target>
+
+	<target name="make.bin">
+		<ant antfile="${build}/community/build.xml" target="make.bin" />
+	</target>
+
+	<target name="make.ide">
+		<echo>construct ide folder</echo>
+
+		<echo>construct ide/ant, ide/db, ide/inspection, ide/cli/scripts folder</echo>
+		<copy todir="${dist}/anyframe-core-${anyframe.version}/ide" overwrite="true">
+			<fileset dir="${build}/community/template/ide">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+			<fileset dir="${build}/enterprise/template/ide">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+
+		<ant antfile="${build}/community/build.xml" target="make.ide.cli" />
+	</target>
+
+	<target name="make.repo">
+
+		<echo message="construct repo folder" />
+
+		<mkdir dir="${build}/temp/src" />
+		<mkdir dir="${build}/temp/pomfile" />
+
+		<copy todir="${dist}/anyframe-core-${anyframe.version}/repo" overwrite="true">
+			<fileset dir="${build}/community/template/repo">
+				<include name="**/archetype-catalog.xml" />
+				<include name="**/plugin-catalog-*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist}/anyframe-core-${anyframe.version}/repo" overwrite="true">
+			<fileset dir="${build}/internal/template/repo">
+				<include name="**/plugin-catalog-*.xml" />
+			</fileset>
+		</copy>
+
+		<ant antfile="${build}/community/build.xml" target="make.repo.archetype" />
+		<ant antfile="${build}/community/build.xml" target="unzip.essential.plugin" />
+		<ant antfile="${build}/community/build.xml" target="unzip.optional.plugin" />
+		<antcall target="unzip.internal.plugin" />
+		<ant antfile="${build}/community/build.xml" target="make.repo.plugin" />
+
+		<echo>Copy provided-scope library to cli/lib</echo>
+		<copy todir="${dist}/anyframe-core-${anyframe.version}/ide/cli/lib" overwrite="true" flatten="true">
+			<fileset dir="${userhome}/temp/repo">
+				<include name="**/servlet-api/**/servlet-api*.jar" />
+				<include name="**/jsp-api/**/jsp-api*.jar" />
+				<exclude name="**/servlet-api/**/*-sources.jar" />
+				<exclude name="**/jsp-api/**/*-sources.jar" />				
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="unzip.internal.plugin">
+		<echo>copy dependencies of each plugin (internal - org.anyframe.plugin)</echo>
+
+		<for list="${internal-plugins}" param="internal-plugin">
+			<sequential>
+				<artifact:dependencies filesetId="anyframe-plugin" useScope="compile">
+					<dependency groupId="org.anyframe.plugin" artifactId="anyframe-@{internal-plugin}-pi" version="${@{internal-plugin}}" />
+					<localRepository path="${userhome}/temp/repo" />
+				</artifact:dependencies>
+				<unzip src="${userhome}/temp/repo/org/anyframe/plugin/anyframe-@{internal-plugin}-pi/${@{internal-plugin}}/anyframe-@{internal-plugin}-pi-${@{internal-plugin}}.jar" dest="${build}/temp/pomfile/anyframe-@{internal-plugin}-pi">
+					<patternset>
+						<include name="**/plugin-resources/pom.xml" />
+					</patternset>
+				</unzip>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="make.licenses">
+		<echo message="construct licenses folder" />
+		<copy todir="${dist}/anyframe-core-${anyframe.version}/licenses" overwrite="true">
+			<fileset dir="${release}/community/licenses">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist}/anyframe-core-${anyframe.version}" overwrite="true">
+			<fileset dir="${release}/internal">
+				<include name="**/changelog.txt" />
+				<include name="**/license*.txt" />
+				<include name="**/readme.txt" />
+			</fileset>
+			<fileset dir="${release}/community">
+				<include name="**/license.txt" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="zip">
+		<zip destfile="${dist}/anyframe-core-${anyframe.version}-internal.zip" basedir="${dist}" />
+	</target>
+
+	<target name="default" depends="init, make.bin, make.ide, make.repo, make.licenses, zip" />
+
+</project>

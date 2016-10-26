@@ -1,0 +1,7 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--new xplatform service group xml here-->
+<!--XPlatform ${domain.name}-START-->
+        <Service prefixid="#getDomainNameLower(${domain.name})" type="form" url="./#getDomainNameLower(${domain.name})/" version="0" communicationversion="0" />
+<!--XPlatform ${domain.name}-END-->

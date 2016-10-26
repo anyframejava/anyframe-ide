@@ -1,0 +1,7 @@
+#macro( getDomainNameLower $domainName )### START getDomainNameLower
+${domainName.substring(0,1).toLowerCase()}${domainName.substring(1)}##
+#end#### END getDomainNameLower
+<!--${domain.name}-START-->
+    <sqlMap resource="sql/ibatis2/mapping-ibatis2-#getDomainNameLower(${domain.name}).xml"/>		
+<!--${domain.name}-END-->
+<!--Add new file name here-->
