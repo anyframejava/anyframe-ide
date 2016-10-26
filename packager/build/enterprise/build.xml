@@ -2,7 +2,7 @@
 
 <project name="Enterprise Ed. Packaging" default="default" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 	<property name="build" value="F:/QuickBuild_JDK6_WS/enterprise-ide/release/build/" />
-	<property name="updatesite" value="E:/Repo/update/update-enterprise-release" />
+	<property name="updatesite" value="E:/Repo/update/update-release" />
 
 	<import file="${build}/build-common.xml" />
 	<property name="dist" value="${build}/../dist/" />

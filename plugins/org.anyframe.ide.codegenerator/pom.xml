@@ -11,7 +11,7 @@
 
 	<groupId>org.anyframe.ide</groupId>
 	<artifactId>org.anyframe.ide.codegenerator</artifactId>
-	<version>3.1.1</version>
+	<version>3.1.2</version>
 	<name>Anyframe Java IDE Code Generator Project</name>
 
 	<packaging>eclipse-plugin</packaging>

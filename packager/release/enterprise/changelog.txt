@@ -1,6 +1,12 @@
 ﻿Anyframe Java IDE CHANGELOG
 ==========================
 http://www.anyframe-ent.com
+Changes in version 3.1.2 (2014-08-21)
+* 주요 변경 내역
+1) DAO Manager(Enterprise Ed.) - Eclipse Plugin
+  - QueryService 기능 지원
+    . DVO가 자동 생성되는 기능을 생성되지 않도록 설정 추가
+    . query.xml 위치가 기존에는 [기본 디렉토리+package] 위치에 생성되던 것을 [기본디렉토리] 에 생성될수 있도록 설정 추가
 
 Changes in version 3.1.1 (2014-07-25)
 -------------------------------------
@@ -31,6 +37,7 @@ Changes in version 3.1.1 (2014-07-25)
   - Usage Logging
     . 오류 발생 시 대응이 가능하게 파일에 이벤트 중심으로 로그를 남기도록 개선     
   - Mybatis 쿼리 기능 지원
+  	. Mybatis를 사용하는 DAO 클래스와 mapping XML을 생성하는 기능 추가
     . 쿼리 작성시 include 문을 통해서 기존에 작성한 sql 문을 import 할수 있도록 개선
   
 5) VO Manager(Enterprise Ed.) - Eclipse Plugin
@@ -67,10 +74,63 @@ Changes in version 3.1.1 (2014-07-25)
     . [AEJIDE-300] usage logging
     . [AEJIDE-301] DAO Manager - SQL Meta Editor 개발
     . [AEJIDE-323] SQL Validate 기능 개발
-    . [AEJIDE-401] DAO Manager SQL을 작성 시, Mybatis의 정적 include를 사용하고 테스트할 수 있어야 함       
+    . [AEJIDE-358] VO 클래스 상대경로를 지정하면, DAO 클래스에서 VO가 import 되지 않는 문제
+	. [AEJIDE-336] Method type list를 Project Properties 에서 설정 가능하도록 개선
+	. [AEJIDE-341] DmlType 제거 및 DAO Method Type의 xml설정 기능 강화
+	. [AEJIDE-344] 물리클래스를 생성하거나, 기존 DD를 열 때, 소스와의 비교가 제대로 표현되지 않는 버그
+	. [AEJIDE-345] DD를 열 때, 소스와 다른 점이 없는데도, 소스에 변경점이 있다고 표시되는 문제
+	. [AEJIDE-346] Flow Designer - MetaLite 연계
+	. [AEJIDE-347] Flow Designer Connector 리팩토링
+	. [AEJIDE-348] Flow Designer에서 생성한 클래스의 Anyframe IDE 호환성 추가
+	. [AEJIDE-349] Anyframe IDE 3.0.0 버전에 설정정보가 저장되지 않는 버그
+	. [AEJIDE-350] VO Manager, DAO Manager의 MetaLite연계 기능 추가
+	. [AEJIDE-351] MyBatis 지원 기능 추가
+	. [AEJIDE-352] IDE 설정파일이 없을 때 이클립스가 멈추는 문제
+	. [AEJIDE-353] Template refactoring
+	. [AEJIDE-354] DAO, VO 클래스의 super class가 하드코딩 되어 있는 것을 고쳐, 설정 가능하도록 해야 함.
+	. [AEJIDE-355] IPolicy 정리
+	. [AEJIDE-356] 설정파일이 없을 경우 DAO Manager가 멈추는 현상
+    . [AEJIDE-359] DAO 클래스를 DAO Manager로 열면 SQL ID가 표현되지 않는 버그.
+	. [AEJIDE-360] mybatis 쿼리 생성할때... 쿼리에 /* ~~~ */ 코멘트가 안붙는 경우가 발생.
+	. [AEJIDE-361] New - Anyframe - Domain/VO 클래스(데이터베이스 테이블 기준) 화면에서 기본패키지 [편집] 눌렀을때, 나오는 패키지 수가 너무 많으므로, 검색창에 선택된 패키지 이름이 입력되도록.
+	. [AEJIDE-366] *.anyframe.ide.common 제거
+	. [AEJIDE-367] Cello Pilot 프로젝트 테스트 결과 반영
+	. [AEJIDE-368] Eclipse 4.3.1(Kepler)에서도 호환되도록 프로그램 수정
+	. [AEJIDE-370] Rhino 제거
+	. [AEJIDE-371] 사용하지 않거나 불필요한 라이브러리 제거
+	. [AEJIDE-372] Meta Editor의 SQL 실행/테스트 기능 추가
+	. [AEJIDE-373] insert, update, delete의 테스트가 정상적으로 실행되지 않는 문제
+	. [AEJIDE-374] Preference에 저장한 사용자 IDE를 출력할 수 있는 기능 추가
+	. [AEJIDE-375] Mybatis sql mapper 생성시 CDATA 생성과 parsing 기능 추가
+	. [AEJIDE-376] DateTools 추가
+	. [AEJIDE-377] 삼성카드 프로젝트 투입 작업 반영
+	. [AEJIDE-378] 소스코드 생성 velocity template 구성 개선
+	. [AEJIDE-379] Mybatis sql mapper 바로가기 버튼 추가
+	. [AEJIDE-380] DAO 클래스를 읽을 때, result map 정보를 읽지 않는 문제
+	. [AEJIDE-381] sql이 실패하면 실행테스트 여부와 상관 없이 Finish버튼이 눌러짐
+	. [AEJIDE-382] SQL 테스트를 할 때 test value를 임의의 값으로 설정하는 기능 추가
+	. [AEJIDE-383] ContextUtil에 generic 메소드 추가
+	. [AEJIDE-385] Mybatis XML에서 CDATA 자동생성 제거
+	. [AEJIDE-386] 파라미터가 없는 DAO 메소드 생성 기능 추가
+	. [AEJIDE-388] VO 클래스의 바로가기를 overview 화면에 추가
+	. [AEJIDE-389] Table Browser에서 테이블 이름도 SQL 편집 창에 drag & drop 할 수 있는 기능 추가
+	. [AEJIDE-390] Mybatis를 사용할 경우 플러그인 서버에 저장된 파라미터 값을 가져오지 않는다
+	. [AEJIDE-391] Mybatis에서 ${} 형태의 파라미터도 파라미터 추출이 되도록 수정
+	. [AEJIDE-392] DAO 클래스를 재생성했을 때, 기존 DVO의 값이 유지되도록 하는 기능 추가
+	. [AEJIDE-393] Mybatis dynamic SQL에서 custom API 사용
+	. [AEJIDE-394] DAO Manager에서 인자로 Map을 넘길 경우 에러
+	. [AEJIDE-395] DAO Manager에서 인자로 List를 넘길 경우 DVO에서 에러
+	. [AEJIDE-396] Mybatis dynamic sql(trim, if test) 실행 버그
+	. [AEJIDE-398] DB나 DD의 필드 lengh에 따라 다른 자바타입으로 변환하는 기능 추가
+	. [AEJIDE-399] CRUD Gen으로 생성된 SQL의 포맷을 변경
+    . [AEJIDE-401] DAO Manager SQL을 작성 시, Mybatis의 정적 include를 사용하고 테스트할 수 있어야 함
+    . [AEJPS-82] 'for update' 옵션 추가
+	. [AEJPS-83] 수작업 쿼리 메타정보 파싱
+	. [AEJPS-90] DAO 인터페이스 스테레오타입 추가       
   VO Manager(Enterprise Ed.)
     . [AEJIDE-300] usage logging
     . [AEJIDE-324] 전문(메세지) 생성 기능 관련 속성 정의 개선
+    . [AEJIDE-387] 소스 생성을 이클립스의 Save(Ctrl+s) 기능으로 할 수 있는 기능 추가
   UnitTest Manager(Enterprise Ed.)
     . [AEJIDE-300] usage logging
     

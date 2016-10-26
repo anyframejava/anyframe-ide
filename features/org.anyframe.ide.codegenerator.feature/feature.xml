@@ -2,7 +2,7 @@
 <feature
       id="org.anyframe.ide.codegenerator.feature"
       label="Anyframe Java IDE Code Generator"
-      version="3.1.1"
+      version="3.1.2"
       provider-name="SAMSUNG SDS"
       plugin="org.anyframe.ide.common">
 
@@ -272,29 +272,29 @@ each open source software information page.
          id="org.anyframe.ide.codegenerator"
          download-size="0"
          install-size="0"
-         version="3.1.1"
-         unpack="false"/>
-
-   <plugin
-         id="org.anyframe.ide.codegenerator.nl1"
-         download-size="0"
-         install-size="0"
-         version="3.1.1"
-         fragment="true"
+         version="3.1.2"
          unpack="false"/>
 
    <plugin
          id="org.anyframe.ide.common"
          download-size="0"
          install-size="0"
-         version="3.1.1"
+         version="3.1.2"
          unpack="false"/>
 
    <plugin
          id="org.anyframe.ide.common.nl1"
          download-size="0"
          install-size="0"
-         version="3.1.1"
+         version="3.1.2"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.anyframe.ide.codegenerator.nl1"
+         download-size="0"
+         install-size="0"
+         version="3.1.2"
          fragment="true"
          unpack="false"/>
 

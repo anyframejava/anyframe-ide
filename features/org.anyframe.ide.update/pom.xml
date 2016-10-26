@@ -10,7 +10,7 @@
 
 	<groupId>org.anyframe.ide</groupId>
 	<artifactId>org.anyframe.ide.update</artifactId>
-	<version>3.1.1</version>
+	<version>3.1.2</version>
 	<name>Anyframe Java IDE Update Site Project</name>
 
 	<packaging>eclipse-repository</packaging>

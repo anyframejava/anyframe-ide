@@ -2,6 +2,9 @@
 ==========================
 http://www.anyframejava.org
 
+Changes in version 3.1.2 (2014-08-21)
+* N/A
+
 Changes in version 3.1.1 (2014-07-25)
 -------------------------------------
 * 주요 변경 내역
@@ -29,6 +32,7 @@ Changes in version 3.1.1 (2014-07-25)
 * 해결된 이슈 목록
   Common - Eclipse Plugin
     . [AE-140] Configuration File 통합
+    . [AEJIDE-420] DataSource 생성시 NullpointException 처리  
   Code Generator - Eclipse Plugin
     . [AE-141] Domain Generation 기능 개선
     . [AE-142] CRUD Generation 기능 개선
