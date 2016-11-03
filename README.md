@@ -32,7 +32,7 @@ CTIP 서버(Jenkins,Hudson)를 연결하여 CTIP 서버에 job을 등록하고 j
 
 
 ### 설치
-Code Generator를 설치하여 사용하고자 하기 위해서는 ![Anyframe Update Site](http://dev.anyframejava.org/update)를 통해 진행하는 것을 권장한다. 다만 오프라인으로 설치해야 하는 경우에는 설치 파일(anyframe-ide-X.X.X.zip)을 다운로드 받는다. 이 경우에는 Eclipse에 Update Site를 등록할 경우 다운로드받은 zip 파일을 풀어놓은 위치를 설정하도록 한다.
+Code Generator를 설치하여 사용하고자 하기 위해서는 [Anyframe Update Site](http://dev.anyframejava.org/update)를 통해 진행하는 것을 권장한다. 다만 오프라인으로 설치해야 하는 경우에는 설치 파일(anyframe-ide-X.X.X.zip)을 다운로드 받는다. 이 경우에는 Eclipse에 Update Site를 등록할 경우 다운로드받은 zip 파일을 풀어놓은 위치를 설정하도록 한다.
 
 > Anyframe Java IDE Code Generator 3.1.0은 Anyframe Java Core 5.6.0 이상에서 정상 동작한다.
 > Anyframe Java Core 5.5.2나 5.5.1을 사용하기 위해서는 Anyframe Java IDE 3.0.0을 사용하여야 한다.
@@ -41,9 +41,9 @@ Code Generator를 설치하여 사용하고자 하기 위해서는 ![Anyframe Up
 
 ### 리소스
 Code Generator를 개발하기 위해 다음의 오픈소스를 직접적으로 사용하거나 외부 라이브러리로 활용하였다.
-![Anyframe Java Core](https://github.com/anyframejava/anyframe-java-core)
-![Eclipse](http://www.eclipse.org/)
-![Eclipse Data Tools Platform](http://www.eclipse.org/datatools/)
+* [Anyframe Java Core](https://github.com/anyframejava/anyframe-java-core)
+* [Eclipse](http://www.eclipse.org/)
+* [Eclipse Data Tools Platform](http://www.eclipse.org/datatools/)
 
 
 
@@ -51,7 +51,7 @@ Code Generator를 개발하기 위해 다음의 오픈소스를 직접적으로 
 Anyframe Java IDE Query Manager(이하 Query Manager)는 Anyframe의 Query Service를 사용할 때 필요한 데이터베이스 Query문을 관리하고 활용하기 쉽도록 해 주는 Eclipse 플러그인이다.
 
 ### 특징
-!(README_image/AQM-introduction-concept.jpg)
+![](README_image/AQM-introduction-concept.jpg)
 * Query Explorer를 통해 Query ID의 사용여부 및 중복여부를 쉽게 확인 할 수 있고, Query 맵핑 XML 파일의 전체 Outline을 파악 할 수 있다.
 * Query Test Editor를 통해 GUI를 통한 Query 작성 및 테스트/검증 방법을 제공함으로써 Query를 손쉽게 작성할 수 있고, 작성한 Query에 대한 추가적인 테스트 비용을 절감시킨다.
 * Query ID의 중복여부 및 사용여부를 검사하여 이상 있는 부분을 화면에 출력한다. 존재하는 Query ID에 대해서는 해당 Query가 존재하는 Query 맵핑 XML 파일과 Java 코드 간의 편리한 네비게이션 기능을 제공한다.
@@ -87,14 +87,14 @@ Anyframe의 Query Service를 통해 활용하는 다양한 Query문에 대한 �
 * DAO에서 사용한 특정 Query로 손쉽게 이동할 수 있는 네비게이션 기능 제공
 
 ### 설치
-Code Generator를 설치하여 사용하고자 하기 위해서는 ![Anyframe Update Site](http://dev.anyframejava.org/update)를 통해 진행하는 것을 권장한다. 다만 오프라인으로 설치해야 하는 경우에는 설치 파일(anyframe-ide-X.X.X.zip)을 다운로드 받는다. 이 경우에는 Eclipse에 Update Site를 등록할 경우 다운로드받은 zip 파일을 풀어놓은 위치를 설정하도록 한다.
+Code Generator를 설치하여 사용하고자 하기 위해서는 [Anyframe Update Site](http://dev.anyframejava.org/update)를 통해 진행하는 것을 권장한다. 다만 오프라인으로 설치해야 하는 경우에는 설치 파일(anyframe-ide-X.X.X.zip)을 다운로드 받는다. 이 경우에는 Eclipse에 Update Site를 등록할 경우 다운로드받은 zip 파일을 풀어놓은 위치를 설정하도록 한다.
 
 
 #### 리소스
 Query Manager를 개발하기 위해 다음의 오픈소스를 직접적으로 사용하거나 외부 라이브러리로 활용하였다.
 
-![Anyframe Java Core](https://github.com/anyframejava/anyframe-java-core)
-![Eclipse](http://www.eclipse.org/)
-![Eclipse Data Tools Platform](http://www.eclipse.org/datatools/)
+* [Anyframe Java Core](https://github.com/anyframejava/anyframe-java-core)
+* [Eclipse](http://www.eclipse.org/)
+* [Eclipse Data Tools Platform](http://www.eclipse.org/datatools/)
 
 
